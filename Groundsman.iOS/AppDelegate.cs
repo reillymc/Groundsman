@@ -44,7 +44,7 @@ namespace Groundsman.iOS
         public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
         {
             {
-                App.FeatureStore.ImportFeaturesFromFile(url.Path);
+                App.FeatureStore.ImportFeaturesFromFile(url.RelativePath);
             }
             return true;
         }

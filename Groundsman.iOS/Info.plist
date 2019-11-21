@@ -32,5 +32,139 @@
 	<string>6.2</string>
 	<key>CFBundleVersion</key>
 	<string>6.2</string>
+	<key>XSAppIconAssets</key>
+	<string>Assets.xcassets/AppIcon.appiconset</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location permissions are needed to record and display data based on your location.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Location permissions are needed to record and display data based on your location.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location permissions are needed to record and display data based on your location.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Groundsman uses APIs that request access to your calendar for app functionality</string>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeAdd</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Add a Point</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.geoapplads.Groundsman.000</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeAdd</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Add a Line</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.geoapplads.Groundsman.001</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeAdd</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Add a Polygon</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.geoapplads.Groundsman.002</string>
+		</dict>
+	</array>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+			<key>CFBundleTypeName</key>
+			<string>GeoJSON</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.apple.dt.document.geojson</string>
+			</array>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>ezgif.com-gif-maker-11</string>
+			</array>
+		</dict>
+		<dict>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>CFBundleTypeName</key>
+			<string>JSON</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.json</string>
+			</array>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>ezgif.com-gif-maker-5</string>
+			</array>
+		</dict>
+		<dict>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>CFBundleTypeName</key>
+			<string>Text</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>ezgif.com-gif-maker-11</string>
+			</array>
+		</dict>
+		<dict>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>CFBundleTypeName</key>
+			<string>Content</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.content</string>
+			</array>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>ezgif.com-gif-maker-11</string>
+			</array>
+		</dict>
+	</array>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>UISupportsDocumentBrowser</key>
+	<false/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.apple.dt.document.geojson</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://geojson.org/</string>
+			<key>UTTypeDescription</key>
+			<string>GeoJSON file</string>
+			<key>UTTypeIconFile</key>
+			<string>public.jpeg.icns</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.json</string>
+				<string>public.data</string>
+				<string>public.content</string>
+				<string>public.text</string>
+				<string>public.item</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<string>JSON</string>
+				<key>public.filename-extension</key>
+				<array>
+					<string>geojson</string>
+				</array>
+				<key>public.mime-type</key>
+				<string>application/json</string>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>
