@@ -1,12 +1,10 @@
 ﻿using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace Groundsman
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class IDFormView : ContentPage
+    public partial class WelcomeFormView : ContentPage
     {
-        public IDFormView()
+        public WelcomeFormView()
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);

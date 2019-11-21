@@ -2,14 +2,14 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Groundsman"
-             x:Class="Groundsman.DataEntryListView"
+             x:Class="Groundsman.MyFeaturesView"
              Title="My Features"
              BackgroundColor="{DynamicResource bgPrimary}">
     <ContentPage.ToolbarItems>
         <ToolbarItem AutomationId="id_icon" Icon="profile_icon" Command="{Binding IDClickedCommand}" />
     </ContentPage.ToolbarItems>
     <ContentPage.BindingContext>
-        <local:DataEntryListViewModel x:Name="viewModel" />
+        <local:MyFeaturesViewModel x:Name="viewModel" />
     </ContentPage.BindingContext>
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -55,7 +55,7 @@
         <ContentView BackgroundColor="{DynamicResource bgPrimary}" HorizontalOptions="End"  WidthRequest="3000" HeightRequest="60">
             <Button Text="New Feature" HorizontalOptions="Start" VerticalOptions="Start" Image="add_icon_color" Margin="12,0" Command="{Binding ButtonClickedCommand}">
                 <Button.TextColor>
-                    <OnPlatform x:TypeArguments="Color" iOS="#4CAF50" Android="white" />
+                    <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="white" />
                 </Button.TextColor>
             </Button>
         </ContentView>

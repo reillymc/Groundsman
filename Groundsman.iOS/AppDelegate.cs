@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Foundation;
+﻿using Foundation;
 using UIKit;
 
 namespace Groundsman.iOS
@@ -11,7 +7,7 @@ namespace Groundsman.iOS
     // User Interface of the application, as well as listening (and optionally responding) to 
     // application events from iOS.
     [Register("AppDelegate")]
-    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
+    public class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
     {
         //
         // This method is invoked when the application has loaded and is ready to run. In this 
@@ -24,13 +20,11 @@ namespace Groundsman.iOS
         {
             Xamarin.Forms.Forms.Init();
             Xamarin.FormsMaps.Init();
-            var shouldPerformAdditionalDelegateHandling = true;
 
             // Get possible shortcut item
             if (launchOptions != null)
             {
                 LaunchedShortcutItem = launchOptions[UIApplication.LaunchOptionsShortcutItemKey] as UIApplicationShortcutItem;
-                shouldPerformAdditionalDelegateHandling = (LaunchedShortcutItem == null);
             }
             UIColor tintColor = UIColor.FromRGB(76, 175, 80);
             UINavigationBar.Appearance.TintColor = tintColor;
@@ -45,7 +39,7 @@ namespace Groundsman.iOS
         {
             {
                 url.StartAccessingSecurityScopedResource();
-                App.FeatureStore.ImportFeaturesFromFile(url.StandardizedUrl.Path, url.LastPathComponent);
+                _ = App.FeatureStore.ImportFeaturesFromFile(url.StandardizedUrl.Path, url.LastPathComponent);
             }
             return true;
         }

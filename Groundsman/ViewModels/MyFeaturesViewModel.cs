@@ -8,7 +8,7 @@ namespace Groundsman
     /// <summary>
     /// View-model for the page that shows the list of data entries.
     /// </summary>
-    public class DataEntryListViewModel : ViewModelBase
+    public class MyFeaturesViewModel : ViewModelBase
     {
         // Static flag that determines whether the features list should be updated or not.
         public static bool isDirty = true;
@@ -58,7 +58,7 @@ namespace Groundsman
         /// <summary>
         /// View-model constructor.
         /// </summary>
-        public DataEntryListViewModel()
+        public MyFeaturesViewModel()
         {
             ButtonClickedCommand = new Command(async () => await ExecuteButtonClickedCommand());
             IDClickedCommand = new Command(() => IDTappedCommand());

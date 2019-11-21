@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace Groundsman
 {
-    public class IDFormViewModel : ViewModelBase
+    public class WelcomeFormViewModel : ViewModelBase
     {
 
         public ICommand IDSubmitCommand { get; set; }
@@ -23,7 +23,7 @@ namespace Groundsman
             }
         }
 
-        public IDFormViewModel()
+        public WelcomeFormViewModel()
         {
             if (Application.Current.Properties.ContainsKey("UserID") == true)
             {

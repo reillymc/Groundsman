@@ -2,7 +2,7 @@
 
 namespace Groundsman
 {
-    public class ProfileViewModel : ViewModelBase
+    public class ProfileSettingsViewModel : ViewModelBase
     {
         private string _IDEntry;
         public string IDEntry
@@ -15,7 +15,7 @@ namespace Groundsman
             }
         }
 
-        public ProfileViewModel()
+        public ProfileSettingsViewModel()
         {
             if (Application.Current.Properties.ContainsKey("UserID") == true)
             {
@@ -35,7 +35,6 @@ namespace Groundsman
                 {
                     Application.Current.Properties["UserID"] = IDEntry.Substring(0, 30);
                 }
-
             }
             else
             {

@@ -2,8 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-             x:Class="Groundsman.ModifyDetailFormView"
-             x:Name="ModifyDetailFormViewPage"
+             x:Class="Groundsman.EditFeatureDetailsView"
+             x:Name="EditFeatureDetailsViewPage"
              Title=""
              ios:Page.LargeTitleDisplay="Never"
              BackgroundColor="{DynamicResource bgPrimary}">
@@ -43,7 +43,7 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Grid Style="{StaticResource DetailFormPanelGrid}" IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=ModifyDetailFormViewPage}}" Margin="10,0,0,0">
+                                    <Grid Style="{StaticResource DetailFormPanelGrid}" IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}" Margin="10,0,0,0">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
@@ -60,9 +60,9 @@
                                         <Entry Style="{StaticResource EntryStyle}" AutomationId="LongitudeEntry" Text="{Binding Longitude}" Keyboard="Numeric" Grid.Row="1" Grid.Column="1" FontSize="Small" Margin="0,0,0,10"/>
                                         <Label Style="{StaticResource ViewLabelStyle}" AutomationId="AltLabel" Text="Altitude" Grid.Row="0" Grid.Column="2" Margin="0, 9" FontSize="Small" />
                                         <Entry Style="{StaticResource EntryStyle}" AutomationId="AltitudeEntry" Text="{Binding Altitude}" Keyboard="Numeric" Grid.Row="1" Grid.Column="2" FontSize="Small" Margin="0,0,0,10"/>
-                                        <Button Command="{Binding Path=BindingContext.DeletePointCommand, Source={x:Reference Name=ModifyDetailFormViewPage}}" CommandParameter="{Binding .}" IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=ModifyDetailFormViewPage}}" Image="trash_icon_color" Grid.Row="0" Grid.Column="3" WidthRequest="20" HeightRequest="20" IsVisible="{Binding Path=BindingContext.ShowPointDeleteBtn, Source={x:Reference Name=ModifyDetailFormViewPage}}" FontSize="Small" />
-                                        <ActivityIndicator Grid.Row="1" Grid.Column="3" Color="White" IsRunning="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=ModifyDetailFormViewPage}}" IsVisible="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=ModifyDetailFormViewPage}}" />
-                                        <Button Command="{Binding Path=BindingContext.GetFeatureCommand, Source={x:Reference Name=ModifyDetailFormViewPage}}" CommandParameter="{Binding .}" IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=ModifyDetailFormViewPage}}" Image="current_location" Grid.Row="1" Grid.Column="3" WidthRequest="20" HeightRequest="20" Margin="0,0,0,10" />
+                                        <Button Command="{Binding Path=BindingContext.DeletePointCommand, Source={x:Reference Name=EditFeatureDetailsViewPage}}" CommandParameter="{Binding .}" IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}" Image="trash_icon_color" Grid.Row="0" Grid.Column="3" WidthRequest="20" HeightRequest="20" IsVisible="{Binding Path=BindingContext.ShowPointDeleteBtn, Source={x:Reference Name=EditFeatureDetailsViewPage}}" FontSize="Small" />
+                                        <ActivityIndicator Grid.Row="1" Grid.Column="3" Color="{StaticResource greenPrimary}" IsRunning="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=EditFeatureDetailsViewPage}}" IsVisible="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=EditFeatureDetailsViewPage}}" />
+                                        <Button Command="{Binding Path=BindingContext.GetFeatureCommand, Source={x:Reference Name=EditFeatureDetailsViewPage}}" CommandParameter="{Binding .}" IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}" Image="current_location" Grid.Row="1" Grid.Column="3" WidthRequest="20" HeightRequest="20" Margin="0,0,0,10" />
                                     </Grid>
                                 </ViewCell>
                             </DataTemplate>
@@ -70,7 +70,7 @@
                         <ListView.Footer>
                             <Button x:Name="closePolyBtn" Text="Close Polygon" Command="{Binding ClosePolyCommand}">
                                 <Button.TextColor>
-                                    <OnPlatform x:TypeArguments="Color" iOS="#4CAF50" Android="White" />
+                                    <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="White" />
                                 </Button.TextColor>
                             </Button>
                         </ListView.Footer>

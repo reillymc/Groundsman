@@ -1,19 +1,17 @@
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace Groundsman
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ModifyDetailFormView : ContentPage
+    public partial class EditFeatureDetailsView : ContentPage
     {
         /// <summary>
         /// Detail form constructor for when a new entry is being added.
         /// </summary>
         /// <param name="type">The geoJSON geometry type being added.</param>
-        public ModifyDetailFormView(string type)
+        public EditFeatureDetailsView(string type)
         {
             InitializeComponent();
-            this.BindingContext = new DetailFormViewModel(type);
+            this.BindingContext = new FeatureDetailsViewModel(type);
 
             Title = $"New {type}";
 
@@ -24,10 +22,10 @@ namespace Groundsman
         /// Detail form constructor for when an existing entry is being edited.
         /// </summary>
         /// <param name="data">The entry's data as represented by a feature object.</param>
-        public ModifyDetailFormView(Feature data)
+        public EditFeatureDetailsView(Feature data)
         {
             InitializeComponent();
-            this.BindingContext = new DetailFormViewModel(data);
+            this.BindingContext = new FeatureDetailsViewModel(data);
 
             Title = $"Editing {data.Properties.Name}";
 

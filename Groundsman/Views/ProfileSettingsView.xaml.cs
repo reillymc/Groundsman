@@ -1,13 +1,11 @@
 ﻿using System;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace Groundsman
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ProfileView : ContentPage
+    public partial class ProfileSettingsView : ContentPage
     {
-        public ProfileView()
+        public ProfileSettingsView()
         {
             InitializeComponent();
         }

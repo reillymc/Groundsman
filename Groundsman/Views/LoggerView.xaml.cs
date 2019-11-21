@@ -2,9 +2,9 @@
 
 namespace Groundsman
 {
-    public partial class ExportView : ContentPage
+    public partial class LoggerView : ContentPage
     {
-        public ExportView()
+        public LoggerView()
         {
             InitializeComponent();
         }

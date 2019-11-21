@@ -16,13 +16,13 @@
 
         <NavigationPage Title="My Features" Icon="data_icon" BackgroundColor="{DynamicResource bgPrimary}">
             <x:Arguments>
-                <local:DataEntryListView/>
+                <local:MyFeaturesView/>
             </x:Arguments>
         </NavigationPage>    
 
         <NavigationPage Title="Logger" Icon="log_icon" BackgroundColor="{DynamicResource bgPrimary}">
             <x:Arguments>
-                <local:LogView/>
+                <local:LoggerView/>
             </x:Arguments>
         </NavigationPage>
 

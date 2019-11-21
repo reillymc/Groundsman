@@ -214,7 +214,7 @@ namespace Groundsman.Data
             File.WriteAllText(Path.Combine(FileSystem.AppDataDirectory, EMBEDDED_FILENAME), json);
 
             // Mark the features list as dirty so it can refresh.
-            DataEntryListViewModel.isDirty = true;
+            MyFeaturesViewModel.isDirty = true;
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace Groundsman.Data
 
             // Mark the features list as being modified, since the feature types had to be converted to LineStrings for export.
             // The dirty flag will make sure the line features in the list are refreshed back to "Line" types next time that page is viewed.
-            DataEntryListViewModel.isDirty = true;
+            MyFeaturesViewModel.isDirty = true;
 
             return rootobject;
         }
@@ -288,7 +288,7 @@ namespace Groundsman.Data
 
                 SaveCurrentFeaturesToEmbeddedFile();
                 await HomePage.Instance.DisplayAlert("Import Success", "New features have been added to your features list.", "OK");
-                DataEntryListViewModel.isDirty = true;
+                MyFeaturesViewModel.isDirty = true;
                 return true;
             }
             catch (Exception)
@@ -387,7 +387,7 @@ namespace Groundsman.Data
                 {
                     string text = File.ReadAllText(path);
                     bool resultStatus = await ImportFeaturesAsync(text);
-                    DataEntryListViewModel.isDirty = true;
+                    MyFeaturesViewModel.isDirty = true;
                     return resultStatus;
                 }
                 catch (Exception)

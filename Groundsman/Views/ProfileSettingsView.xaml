@@ -2,13 +2,13 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Groundsman"
-             x:Class="Groundsman.ProfileView"
+             x:Class="Groundsman.ProfileSettingsView"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              ios:Page.ModalPresentationStyle="FormSheet"
              Title="Profile Settings"
              BackgroundColor="{DynamicResource bgSecondary}">
     <ContentPage.BindingContext>
-        <local:ProfileViewModel x:Name="viewModel" />
+        <local:ProfileSettingsViewModel x:Name="viewModel" />
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <StackLayout>
@@ -21,7 +21,7 @@
                 <Label Text="Profile Settings" TextColor="{DynamicResource textPrimary}" FontSize="16"  FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" Grid.Row="0" Grid.Column="1" />
                 <Button x:Name="dismissButton" Text="Done" FontSize="16" FontAttributes="Bold" Clicked="OnDismissButtonClicked" HorizontalOptions="End" Grid.Row="0" Grid.Column="2">
                     <Button.TextColor>
-                        <OnPlatform x:TypeArguments="Color" iOS="#4CAF50" Android="White" />
+                        <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="White" />
                     </Button.TextColor>
                 </Button>
             </Grid>
@@ -39,7 +39,7 @@
                                 </Grid.RowDefinitions>
                                 <Label Text="Reset User Data">
                                     <Label.TextColor>
-                                        <OnPlatform x:TypeArguments="Color" iOS="#4CAF50" Android="#4CAF50" />
+                                        <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="{StaticResource greenPrimary}" />
                                     </Label.TextColor>
                                 </Label>
                             </Grid>

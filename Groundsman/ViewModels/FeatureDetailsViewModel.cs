@@ -14,9 +14,8 @@ namespace Groundsman
     /// <summary>
     /// View-model for the page that shows a data entry's details in a form.
     /// </summary>
-    public class DetailFormViewModel : ViewModelBase
+    public class FeatureDetailsViewModel : ViewModelBase
     {
-
         public ICommand GetFeatureCommand { get; set; }
         public ICommand AddPointCommand { get; set; }
         public ICommand DeletePointCommand { get; set; }
@@ -132,7 +131,7 @@ namespace Groundsman
         /// <summary>
         /// View-model constructor for adding new entries.
         /// </summary>
-        public DetailFormViewModel(string entryType)
+        public FeatureDetailsViewModel(string entryType)
         {
             thisEntryType = entryType;
             thisEntryID = AppConstants.NEW_ENTRY_ID;
@@ -152,8 +151,6 @@ namespace Groundsman
                     case "Polygon":
                         minPoints = 4;
                         break;
-                    default:
-                        break;
                 }
 
                 GeolocationPoints = new ObservableCollection<Point>();
@@ -172,7 +169,7 @@ namespace Groundsman
         /// <summary>
         /// View-model constructor for viewing/editing existing entries.
         /// </summary>
-        public DetailFormViewModel(Feature data)
+        public FeatureDetailsViewModel(Feature data)
         {
 
 

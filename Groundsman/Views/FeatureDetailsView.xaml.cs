@@ -1,17 +1,15 @@
 ﻿using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace Groundsman
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ExistingDetailFormView : ContentPage
+    public partial class FeatureDetailsView : ContentPage
     {
-        public ExistingDetailFormView(Feature data)
+        public FeatureDetailsView(Feature data)
         {
             InitializeComponent();
-            BindingContext = new DetailFormViewModel(data);
+            BindingContext = new FeatureDetailsViewModel(data);
 
-            Title = $"View {data.Geometry.Type}";
+            Title = data.Properties.Name;
         }
 
         private void listView_ItemTapped(object sender, ItemTappedEventArgs e)

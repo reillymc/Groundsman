@@ -1,5 +1,4 @@
 ﻿using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 using Xamarin.Forms.Maps;
 using System;
 using Plugin.Permissions.Abstractions;
@@ -7,7 +6,6 @@ using Plugin.Permissions;
 
 namespace Groundsman
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MapView : ContentPage
     {
         public MapView()

@@ -7,8 +7,7 @@ using CoreGraphics;
 using Groundsman.iOS.Renderers;
 using Groundsman;
 
-[assembly: ExportRenderer(typeof(ModifyDetailFormView), typeof(KeyboardOverelayRenderer))]
-//[assembly: ExportRenderer(typeof(Data), typeof(KeyboardOverelayRenderer))]
+[assembly: ExportRenderer(typeof(EditFeatureDetailsView), typeof(KeyboardOverelayRenderer))]
 
 namespace Groundsman.iOS.Renderers
 {

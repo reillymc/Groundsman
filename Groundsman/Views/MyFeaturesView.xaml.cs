@@ -1,13 +1,11 @@
 ﻿using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace Groundsman
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DataEntryListView : ContentPage
+    public partial class MyFeaturesView : ContentPage
     {
 
-        public DataEntryListView()
+        public MyFeaturesView()
         {
             InitializeComponent();
         }
@@ -16,9 +14,9 @@ namespace Groundsman
         {
             base.OnAppearing();
 
-            if (((DataEntryListViewModel)BindingContext).RefreshListCommand.CanExecute(null))
+            if (((MyFeaturesViewModel)BindingContext).RefreshListCommand.CanExecute(null))
             {
-                ((DataEntryListViewModel)BindingContext).RefreshListCommand.Execute(null);
+                ((MyFeaturesViewModel)BindingContext).RefreshListCommand.Execute(null);
             }
         }
 

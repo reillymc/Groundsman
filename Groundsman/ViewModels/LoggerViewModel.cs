@@ -11,7 +11,7 @@ using System.IO;
 
 namespace Groundsman
 {
-    public class LogViewModel : ViewModelBase
+    public class LoggerViewModel : ViewModelBase
     {
         private CancellationTokenSource cts;
         private double lat;
@@ -48,7 +48,7 @@ namespace Groundsman
             }
         }
 
-        public LogViewModel()
+        public LoggerViewModel()
         {
 
             StartButtonClickCommand = new Command(() =>

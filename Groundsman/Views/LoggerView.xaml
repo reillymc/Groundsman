@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Groundsman.LogView"
+             x:Class="Groundsman.LoggerView"
              xmlns:local="clr-namespace:Groundsman"
              Title="Logger"
              BackgroundColor="{DynamicResource bgPrimary}">
     <ContentPage.BindingContext>
-        <local:LogViewModel x:Name="viewModel" />
+        <local:LoggerViewModel x:Name="viewModel" />
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <Grid Margin="10,10">
@@ -38,17 +38,17 @@
                     <StackLayout Orientation="Horizontal" Grid.Row="2" HorizontalOptions="CenterAndExpand">
                         <Button Grid.Row="2" AutomationId="ToggleButton" Text="Toggle Logging" Command="{Binding StartButtonClickCommand}" Padding="10, 0">
                             <Button.TextColor>
-                                <OnPlatform x:TypeArguments="Color" iOS="#4CAF50" Android="white" />
+                                <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="white" />
                             </Button.TextColor>
                         </Button>
                         <Button Grid.Row="2" AutomationId="ClearButton" Text="Clear" Command="{Binding ClearButtonClickCommand}" Padding="10, 0">
                             <Button.TextColor>
-                                <OnPlatform x:TypeArguments="Color" iOS="#4CAF50" Android="white" />
+                                <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="white" />
                             </Button.TextColor>
                         </Button>
                         <Button Grid.Row="2" AutomationId="ExportButton" Text="Export" Command="{Binding ExportButtonClickCommand}" Padding="10, 0">
                             <Button.TextColor>
-                                <OnPlatform x:TypeArguments="Color" iOS="#4CAF50" Android="white" />
+                                <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="white" />
                             </Button.TextColor>
                         </Button>
                     </StackLayout>
