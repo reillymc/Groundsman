@@ -304,7 +304,7 @@ namespace Groundsman.Data
                 App.FeatureStore.CurrentFeatures.AddRange(importedRootObject.Features);
 
                 await SaveCurrentFeaturesToEmbeddedFile();
-                await HomePage.Instance.DisplayAlert("File Import", "File imported successfully. New features have been added to your features list.", "OK");
+                await HomePage.Instance.DisplayAlert("Import Success", "New features have been added to your features list.", "OK");
                 DataEntryListViewModel.isDirty = true;
                 return true;
             }
@@ -399,25 +399,26 @@ namespace Groundsman.Data
         /// </summary>
         /// <param name="path">path to file.</param>
         /// <returns></returns>
-        public async Task<bool> ImportFeaturesFromFile(string path)
+        public async Task<bool> ImportFeaturesFromFile(string path, string fileName)
         {
-            //TODO: Add confirmation alert
-            try
+            var confirmation = await HomePage.Instance.DisplayAlert("Import File", $"Do you want to add the features in '{fileName}' to your features list?", "Yes", "No");
+            if (confirmation)
             {
-                string text = File.ReadAllText(path);
-                bool resultStatus = await ImportFeaturesAsync(text);
-                DataEntryListViewModel.isDirty = true;
-                return resultStatus;
+                try
+                {
+                    string text = File.ReadAllText(path);
+                    bool resultStatus = await ImportFeaturesAsync(text);
+                    DataEntryListViewModel.isDirty = true;
+                    return resultStatus;
+                }
+                catch (Exception ex)
+                {
+                    await HomePage.Instance.DisplayAlert("Import Error", "An unknown error occured when trying to process this file.", "OK");
+                    Debug.WriteLine(ex);
+                }
             }
-            catch (Exception ex)
-            {
-                await HomePage.Instance.DisplayAlert("Import Error", "An unknown error occured when trying to process this file.", "OK");
-                Debug.WriteLine(ex);
-                return false;
-            }
+            return false;
         }
-
-
 
         /// <summary>
         /// If necessary, creates a new ID that is unique to all current features stored.
