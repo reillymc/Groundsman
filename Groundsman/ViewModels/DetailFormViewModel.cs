@@ -313,7 +313,7 @@ namespace Groundsman
             bool yesResponse = await HomePage.Instance.DisplayAlert("Delete Feature", "Are you sure you want to delete this feature?", "Yes", "No");
             if (yesResponse)
             {
-                await App.FeatureStore.DeleteFeatureAsync(thisEntryID);
+                App.FeatureStore.DeleteFeatureAsync(thisEntryID);
                 await HomePage.Instance.Navigation.PopToRootAsync();
             }
 
@@ -343,7 +343,7 @@ namespace Groundsman
 
             Feature featureToSave = CreateFeatureFromInput();
 
-            await App.FeatureStore.SaveFeatureAsync(featureToSave);
+            App.FeatureStore.SaveFeatureAsync(featureToSave);
             await HomePage.Instance.Navigation.PopToRootAsync();
 
             _isBusy = false;

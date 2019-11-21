@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -14,7 +13,7 @@ namespace Groundsman.Data
     {
 
         public List<Feature> CurrentFeatures { get; set; } = new List<Feature>();
-        private string DATA_PATH = FileSystem.AppDataDirectory + "/";
+        private readonly string DATA_PATH = FileSystem.AppDataDirectory + "/";
         private const string EMBEDDED_FILENAME = "locations.json";
         private const string LOG_FILENAME = "log.csv";
 
@@ -23,11 +22,9 @@ namespace Groundsman.Data
             return Task.Run(async () =>
             {
                 string featuresFile = GetFeaturesFile();
-                Debug.WriteLine("{0}", featuresFile);
                 var rootobject = JsonConvert.DeserializeObject<RootObject>(featuresFile);
                 if (rootobject == null)
                 {
-                    Debug.WriteLine("\n\n::::::::::::::::::::::DESERIALIZATION FAILED");
                     throw new Exception();
                 }
 
@@ -44,7 +41,6 @@ namespace Groundsman.Data
 
         private async Task<bool> TryParseFeature(Feature feature)
         {
-
             // Ensure the feature has valid GeoJSON fields supplied.
             if (feature == null || feature.Type == null || feature.Geometry == null || feature.Geometry.Type == null || feature.Geometry.Coordinates == null)
             {
@@ -67,9 +63,9 @@ namespace Groundsman.Data
             // If author ID hasn't been set on the feature, default it to the user's ID.
             if (string.IsNullOrWhiteSpace(feature.Properties.AuthorId))
             {
-                if (App.Current.Properties.ContainsKey("UserID"))
+                if (Xamarin.Forms.Application.Current.Properties.ContainsKey("UserID"))
                 {
-                    feature.Properties.AuthorId = App.Current.Properties["UserID"] as string;
+                    feature.Properties.AuthorId = Xamarin.Forms.Application.Current.Properties["UserID"] as string;
                 }
                 else
                 {
@@ -81,7 +77,6 @@ namespace Groundsman.Data
             DateTime dummy;
             if (feature.Properties.Date == null || DateTime.TryParse(feature.Properties.Date, out dummy) == false)
             {
-                Debug.WriteLine($"\n\n::::::::::::::::::::::BAD DATE VALUE: {feature.Properties.Date}, DEFAULTING TO DateTime.Now");
                 feature.Properties.Date = DateTime.Now.ToShortDateString();
             }
 
@@ -160,24 +155,18 @@ namespace Groundsman.Data
             return point;
         }
 
-        public async Task<bool> DeleteFeatureAsync(int featureID)
+        public void DeleteFeatureAsync(int featureID)
         {
             Feature featureToDelete = App.FeatureStore.CurrentFeatures.Find((feature) => (feature.Properties.Id == featureID));
             bool deleteSuccessful = App.FeatureStore.CurrentFeatures.Remove(featureToDelete);
 
             if (deleteSuccessful)
             {
-                await SaveCurrentFeaturesToEmbeddedFile();
-                return true;
-            }
-            else
-            {
-                Debug.WriteLine($"\n\n:::::::::::::::::::::::FAILED TO DELETE FEATURE OF ID: {featureID}");
-                return false;
+                SaveCurrentFeaturesToEmbeddedFile();
             }
         }
 
-        public async Task<bool> SaveFeatureAsync(Feature feature)
+        public void SaveFeatureAsync(Feature feature)
         {
             // If this is a newly added feature, generate an ID and add it immediately.
             if (feature.Properties.Id == AppConstants.NEW_ENTRY_ID)
@@ -202,27 +191,21 @@ namespace Groundsman.Data
                 {
                     App.FeatureStore.CurrentFeatures[indexToEdit] = feature;
                 }
-                else
-                {
-                    Debug.WriteLine($"\n\n::::::::::::::::::::::FAILED TO SAVE EDIT FOR FEATURE WITH ID: {feature.Properties.Id}");
-                    return false;
-                }
             }
 
-            await SaveCurrentFeaturesToEmbeddedFile();
-            return true;
+            SaveCurrentFeaturesToEmbeddedFile();
         }
 
-        public async Task SaveAllCurrentFeaturesAsync()
+        public void SaveAllCurrentFeaturesAsync()
         {
-            await SaveCurrentFeaturesToEmbeddedFile();
+            SaveCurrentFeaturesToEmbeddedFile();
         }
 
         /// <summary>
         /// Formats the list of current features into valid geojson, then writes it to the embedded file.
         /// </summary>
         /// <returns></returns>
-        private async Task SaveCurrentFeaturesToEmbeddedFile()
+        private void SaveCurrentFeaturesToEmbeddedFile()
         {
             var objToSave = FormatCurrentFeaturesIntoGeoJSON();
 
@@ -260,10 +243,10 @@ namespace Groundsman.Data
             return rootobject;
         }
 
-        public async Task DeleteAllFeatures()
+        public void DeleteAllFeatures()
         {
             App.FeatureStore.CurrentFeatures.Clear();
-            await SaveCurrentFeaturesToEmbeddedFile();
+            SaveCurrentFeaturesToEmbeddedFile();
         }
 
         /// <summary>
@@ -303,15 +286,14 @@ namespace Groundsman.Data
                 // Finally, add all the imported features to the current features list.
                 App.FeatureStore.CurrentFeatures.AddRange(importedRootObject.Features);
 
-                await SaveCurrentFeaturesToEmbeddedFile();
+                SaveCurrentFeaturesToEmbeddedFile();
                 await HomePage.Instance.DisplayAlert("Import Success", "New features have been added to your features list.", "OK");
                 DataEntryListViewModel.isDirty = true;
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await HomePage.Instance.DisplayAlert("Invalid File Contents", "Ensure your file only contains data in valid GeoJSON format.", "OK");
-                Debug.WriteLine(ex);
                 return false;
             }
         }
@@ -345,7 +327,6 @@ namespace Groundsman.Data
                 {
                     text = reader.ReadToEnd();
                 }
-                Debug.WriteLine("\n\n::::::::::::::::::::::No File");
                 return text;
             }
         }
@@ -365,7 +346,6 @@ namespace Groundsman.Data
                 {
                     text = reader.ReadToEnd();
                 }
-                Debug.WriteLine("\n\n::::::::::::::::::::::No File");
                 return text;
             }
         }
@@ -382,14 +362,13 @@ namespace Groundsman.Data
                 var json = JsonConvert.SerializeObject(rootobject, Formatting.Indented);
 
                 // String cleaning
-                if (json.StartsWith("[")) json = json.Substring(1);
-                if (json.EndsWith("]")) json = json.TrimEnd(']');
+                if (json.StartsWith("[", StringComparison.Ordinal)) json = json.Substring(1);
+                if (json.EndsWith("]", StringComparison.Ordinal)) json = json.TrimEnd(']');
                 return json;
 
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
                 throw ex;
             }
         }
@@ -411,10 +390,9 @@ namespace Groundsman.Data
                     DataEntryListViewModel.isDirty = true;
                     return resultStatus;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     await HomePage.Instance.DisplayAlert("Import Error", "An unknown error occured when trying to process this file.", "OK");
-                    Debug.WriteLine(ex);
                 }
             }
             return false;

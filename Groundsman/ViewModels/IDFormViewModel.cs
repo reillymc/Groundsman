@@ -54,7 +54,7 @@ namespace Groundsman
                         if (feature.Properties.AuthorId == prevID)
                         {
                             feature.Properties.AuthorId = IDEntry;
-                            await App.FeatureStore.SaveFeatureAsync(feature);
+                            App.FeatureStore.SaveFeatureAsync(feature);
                         }
                     }
                 }

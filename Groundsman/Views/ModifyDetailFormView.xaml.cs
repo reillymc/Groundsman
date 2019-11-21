@@ -42,12 +42,12 @@ namespace Groundsman
         {
             if (type == "Polygon")
             {
-                addPointBtn.Image = "add_icon_color";
+                addPointBtn.ImageSource = "add_icon_color";
                 addPointBtn.IsVisible = true;
                 closePolyBtn.IsVisible = true;
             }
             else if (type == "Line"){
-                addPointBtn.Image = "add_icon_color";
+                addPointBtn.ImageSource = "add_icon_color";
                 addPointBtn.IsVisible = true;
                 closePolyBtn.IsVisible = false;
             } else

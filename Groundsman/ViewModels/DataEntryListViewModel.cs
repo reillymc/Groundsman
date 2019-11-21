@@ -151,7 +151,7 @@ namespace Groundsman
             bool yesResponse = await HomePage.Instance.DisplayAlert("Delete Feature", "Are you sure you want to delete this feature?", "Yes", "No");
             if (yesResponse)
             {
-                await App.FeatureStore.DeleteFeatureAsync(feature.Properties.Id);
+                App.FeatureStore.DeleteFeatureAsync(feature.Properties.Id);
             }
             ExecuteRefreshListCommand();
 
