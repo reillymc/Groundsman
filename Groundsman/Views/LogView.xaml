@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Groundsman.LogView"
+             xmlns:local="clr-namespace:Groundsman"
+             Title="Logger"
+             BackgroundColor="{DynamicResource bgPrimary}">
+    <ContentPage.BindingContext>
+        <local:LogViewModel x:Name="viewModel" />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <Grid Margin="10,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Frame Style="{StaticResource FrameStyle}" Grid.Row="0">
+                <FlexLayout Style="{StaticResource ContainerStyleRow}" HeightRequest="40">
+                    <Label Style="{StaticResource InputLabelStyle}" Grid.Row="0" Grid.Column="0" Margin="10" Text="Logging Interval (seconds): " />
+                    <Entry Text="{Binding IntervalEntry}" Keyboard="Numeric" Grid.Row="0" Grid.Column="1" FontSize="Small" WidthRequest="70" HorizontalOptions="End" Margin="0,0,10,0" />
+                </FlexLayout>
+            </Frame>
+            <Frame Style="{StaticResource FrameStyle}" Grid.Row="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height=".9*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label Style="{StaticResource InputLabelStyle}" Text="Log File: (Time, Latitude, Longitude, Altitude) " Grid.Row="0" Grid.Column="0" Margin="10" />
+                    <Frame Style="{StaticResource FrameStyle}" Grid.Row="1" Margin="0">
+                        <Editor Style="{StaticResource EditorStyle}" Text="{Binding TextEntry}" IsSpellCheckEnabled="false" FontSize="Micro" IsEnabled="true" >
+                            <Editor.PlaceholderColor>
+                                <OnPlatform x:TypeArguments="Color" iOS="Gray" Android="Gray" />
+                            </Editor.PlaceholderColor>
+                        </Editor>
+                    </Frame>
+                    <StackLayout Orientation="Horizontal" Grid.Row="2" HorizontalOptions="CenterAndExpand">
+                        <Button Grid.Row="2" AutomationId="ToggleButton" Text="Toggle Logging" Command="{Binding StartButtonClickCommand}" Padding="10, 0">
+                            <Button.TextColor>
+                                <OnPlatform x:TypeArguments="Color" iOS="#4CAF50" Android="white" />
+                            </Button.TextColor>
+                        </Button>
+                        <Button Grid.Row="2" AutomationId="ClearButton" Text="Clear" Command="{Binding ClearButtonClickCommand}" Padding="10, 0">
+                            <Button.TextColor>
+                                <OnPlatform x:TypeArguments="Color" iOS="#4CAF50" Android="white" />
+                            </Button.TextColor>
+                        </Button>
+                        <Button Grid.Row="2" AutomationId="ExportButton" Text="Export" Command="{Binding ExportButtonClickCommand}" Padding="10, 0">
+                            <Button.TextColor>
+                                <OnPlatform x:TypeArguments="Color" iOS="#4CAF50" Android="white" />
+                            </Button.TextColor>
+                        </Button>
+                    </StackLayout>
+                </Grid>
+            </Frame>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

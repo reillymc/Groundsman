@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Groundsman.ImportView"
+             xmlns:local="clr-namespace:Groundsman"
+             Title="Import"
+             BackgroundColor="{DynamicResource bgPrimary}">
+    <ContentPage.BindingContext>
+        <local:ImportViewModel x:Name="viewModel" />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <Grid Margin="10,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height=".2*" />
+                <RowDefinition Height=".8*" />
+            </Grid.RowDefinitions>
+            <Frame Style="{StaticResource FrameStyle}" Grid.Row="0">
+                <FlexLayout Style="{StaticResource ContainerStyle}">
+                    <Label Style="{StaticResource HeaderStyle}" Text="Import GeoJSON from File" />
+                    <Label Style="{StaticResource SubheaderStyle}" Text="To import a GeoJSON file, share the file via share sheet and select the Groundsman icon.">
+                        <Label.IsVisible>
+                            <OnPlatform x:TypeArguments="x:Boolean" iOS="true" Android="false" />
+                        </Label.IsVisible>
+                    </Label>
+                    <Button AutomationId="ImportButton" Margin="20,2,20,0" TextColor="White" Text="Import File" Command="{Binding ButtonClickCommand}">
+                        <Button.IsVisible>
+                            <OnPlatform x:TypeArguments="x:Boolean" iOS="false" Android="true" />
+                        </Button.IsVisible>
+                    </Button>
+                </FlexLayout>
+            </Frame>
+            <Frame Style="{StaticResource FrameStyle}" Grid.Row="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height=".1*" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height=".2*" />
+                    </Grid.RowDefinitions>
+                    <Label Style="{StaticResource HeaderStyle}" Grid.Row="0" Text="Paste GeoJSON from Clipboard"/>
+                    <Frame Style="{StaticResource EditorFrameStyle}" Grid.Row="1">
+                        <Editor Style="{StaticResource EditorStyle}" Text="{Binding TextEntry}" Placeholder="Paste valid GeoJSON here..." IsSpellCheckEnabled="false" FontSize="Micro">
+                            <Editor.PlaceholderColor>
+                                <OnPlatform x:TypeArguments="Color" iOS="Gray" Android="Gray" />
+                            </Editor.PlaceholderColor>
+                        </Editor>
+                    </Frame>
+                    <Button Style="{StaticResource ButtonStyle}" Command="{Binding TextButtonClickCommand}" Grid.Row="2" Text="Import Text"/>
+                </Grid>
+            </Frame>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

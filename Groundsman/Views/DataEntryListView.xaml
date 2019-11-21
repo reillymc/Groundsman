@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Groundsman"
+             x:Class="Groundsman.DataEntryListView"
+             Title="My Features"
+             BackgroundColor="{DynamicResource bgPrimary}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem AutomationId="id_icon" Icon="profile_icon" Command="{Binding IDClickedCommand}" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.BindingContext>
+        <local:DataEntryListViewModel x:Name="viewModel" />
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:ItemTappedEventArgsToItemTappedConverter x:Key="TappedItemConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <StackLayout>
+        <ListView x:Name="listView" ItemsSource="{Binding EntryListSource, Source={x:Reference Name=viewModel}}" HasUnevenRows="True" SeparatorColor="LightGray">
+            <ListView.Behaviors>
+                <local:ListViewItemTappedBehaviour Command="{Binding ItemTappedCommand}" Converter="{StaticResource TappedItemConverter}" />
+            </ListView.Behaviors>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <ViewCell.ContextActions>
+                            <MenuItem Command="{Binding EditEntryCommand, Source={x:Reference Name=viewModel}}" CommandParameter="{Binding .}" Text="Edit" />
+                            <MenuItem Command="{Binding DeleteEntryCommand, Source={x:Reference Name=viewModel}}" CommandParameter="{Binding .}" Text="Delete" IsDestructive="True" />
+                        </ViewCell.ContextActions>
+                        <!-- Grid definition of 2x4 for each label entry -->
+                        <StackLayout Orientation="Horizontal" Padding="10,4,10,4">
+                            <!--Each label is created using the grid layout, with an icon at the front and 2 vertically layered text strings.-->
+                            <Image Source="{Binding Properties.TypeIconPath}" HeightRequest="36" WidthRequest="36" HorizontalOptions="Center" VerticalOptions="Center" />
+                            <StackLayout Orientation="Vertical">
+                                <Label Style="{StaticResource ListLabelStyle}" Text="{Binding Properties.Name}"/>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding Properties.Date, StringFormat='{0:d/M/yy}'}" TextColor="{DynamicResource textSecondary}" HorizontalTextAlignment="Start" FontSize="Small" LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding Properties.AuthorId, StringFormat='{0:N}'}" TextColor="{DynamicResource textTertiary}" HorizontalTextAlignment="Start" FontSize="Small" LineBreakMode="TailTruncation" />
+                                </StackLayout>
+                            </StackLayout>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.Footer>
+                <StackLayout Orientation="Vertical">
+                    <Label Text="{Binding FeatureCount, StringFormat='{0} Features', Source={x:Reference Name=viewModel}}" TextColor="{DynamicResource textSecondary}"  Margin="10" FontSize="Small"/>
+
+                </StackLayout>
+            </ListView.Footer>
+
+        </ListView>
+        <ContentView BackgroundColor="{DynamicResource bgPrimary}" HorizontalOptions="End"  WidthRequest="3000" HeightRequest="60">
+            <Button Text="New Feature" HorizontalOptions="Start" VerticalOptions="Start" Image="add_icon_color" Margin="12,0" Command="{Binding ButtonClickedCommand}">
+                <Button.TextColor>
+                    <OnPlatform x:TypeArguments="Color" iOS="#4CAF50" Android="white" />
+                </Button.TextColor>
+            </Button>
+        </ContentView>
+    </StackLayout>
+
+</ContentPage>

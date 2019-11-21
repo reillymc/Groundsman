@@ -1,4 +1,5 @@
 ﻿using System;
+using Groundsman.Data;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -6,11 +7,19 @@ namespace Groundsman
 {
     public partial class App : Application
     {
+        public static FeatureStore FeatureStore { get; private set; }
+        public static string AppTheme { get; set; }
+
         public App()
         {
             InitializeComponent();
-
-            MainPage = new MainPage();
+            FeatureStore = new FeatureStore();
+            MainPage = new NavigationPage(HomePage.Instance);
+            // If the user ID hasn't been set yet, prompt the user to create one upon app launch.
+            if (Current.Properties.ContainsKey("UserID") == false)
+            {
+                MainPage.Navigation.PushModalAsync(new IDFormView());
+            }
         }
 
         protected override void OnStart()

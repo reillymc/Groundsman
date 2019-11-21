@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Groundsman.ExportView"
+             xmlns:local="clr-namespace:Groundsman"
+             Title="Export"
+             BackgroundColor="{DynamicResource bgPrimary}">
+    <ContentPage.BindingContext>
+        <local:ExportViewModel x:Name="viewModel" />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <Grid Margin="10">
+            <Frame Style="{StaticResource FrameStyle}" Grid.Row="0">
+                <FlexLayout Style="{StaticResource ContainerStyle}">
+                    <Label Style="{StaticResource HeaderStyle}" Text="Export Features"/>
+                    <Label Style="{StaticResource SubheaderStyle}" Text="Save to file or share your features via another app"/>
+                    <Button Style="{StaticResource ButtonStyle}" Command="{Binding ShareButtonClickCommand}" Text="Export"/>
+                </FlexLayout>
+            </Frame>
+            <Frame Style="{StaticResource FrameStyle}" Grid.Row="1" >
+                <FlexLayout Style="{StaticResource ContainerStyle}">
+                    <Label Style="{StaticResource HeaderStyle}" Text="Send Features"/>
+                    <Entry Style="{StaticResource EntryStyle}" Text="{Binding EmailEntry}" AutomationId="emailEntered" Placeholder="Email" Keyboard="Email" />
+                    <Button Style="{StaticResource ButtonStyle}" Command="{Binding ExportButtonClickCommand}" Text="Send"/>
+                </FlexLayout>
+            </Frame>
+            <Frame Style="{StaticResource FrameStyle}" Grid.Row="2">
+                <FlexLayout Style="{StaticResource ContainerStyle}">
+                    <Label Style="{StaticResource HeaderStyle}" Text="Copy Features"/>
+                    <Label Style="{StaticResource SubheaderStyle}" Text="Copy feature list to clipboard"/>
+                    <Button Style="{StaticResource ButtonStyle}" Command="{Binding BackupButtonClickCommand}" Text="Copy"/>
+                </FlexLayout>
+            </Frame>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
