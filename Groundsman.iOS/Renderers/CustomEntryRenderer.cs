@@ -2,9 +2,10 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using System.Drawing;
 using UIKit;
+using Groundsman.iOS.Renderers;
 
-[assembly: ExportRenderer(typeof(Entry), typeof(Groundsman.CustomEntryRenderer))]
-namespace Groundsman
+[assembly: ExportRenderer(typeof(Entry), typeof(CustomEntryRenderer))]
+namespace Groundsman.iOS.Renderers
 
 {
     public class CustomEntryRenderer : EntryRenderer

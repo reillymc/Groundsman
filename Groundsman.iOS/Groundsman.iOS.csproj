@@ -73,6 +73,7 @@
     <Compile Include="Renderers\ExtendedPageRenderer.cs" />
     <Compile Include="Renderers\CustomEntryRenderer.cs" />
     <Compile Include="Misc\ShortcutIdentifier.cs" />
+    <Compile Include="Renderers\CustomMapRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
