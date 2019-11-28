@@ -3,6 +3,8 @@ using Xamarin.Forms.Maps;
 using System;
 using Plugin.Permissions.Abstractions;
 using Plugin.Permissions;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Groundsman
 {
@@ -83,6 +85,20 @@ namespace Groundsman
                 }
                 //}
             });
+
+            //List<Point> logFile = App.FeatureStore.GetLogFileObject();
+
+            //Polyline logPolyline = new Polyline
+            //{
+            //    StrokeColor = Color.OrangeRed,
+            //    StrokeWidth = 5,
+            //};
+            //logFile.ForEach((Point point) =>
+            //{
+            //    Debug.WriteLine(point.Latitude);
+            //    logPolyline.Geopath.Add(new Position(point.Latitude, point.Longitude));
+            //});
+            //map.MapElements.Add(logPolyline);
         }
 
         void OnMapClicked(object sender, MapClickedEventArgs e)

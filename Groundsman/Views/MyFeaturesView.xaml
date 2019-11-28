@@ -48,7 +48,7 @@
                     <Label Text="{Binding FeatureCount, StringFormat='{0} Features', Source={x:Reference Name=viewModel}}" TextColor="{DynamicResource textSecondary}"  Padding="10" FontSize="Small"/>
             </ListView.Footer>
         </ListView>
-        <Button AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1.0,1.0,-1,-1" Margin="10" WidthRequest="40" HeightRequest="40" BorderRadius="20" BackgroundColor="{StaticResource greenPrimary}" Image="add_icon" Command="{Binding ButtonClickedCommand}"/>
+        <Button AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1.0,1.0,-1,-1" Margin="10" WidthRequest="50" HeightRequest="50" BorderRadius="25" BackgroundColor="{StaticResource greenPrimary}" Image="add_icon" Command="{Binding ButtonClickedCommand}"/>
     </AbsoluteLayout>
 
 </ContentPage>

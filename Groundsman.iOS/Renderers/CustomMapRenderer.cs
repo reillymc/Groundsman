@@ -33,7 +33,7 @@ namespace Groundsman.iOS.Renderers
             button.Layer.ShadowRadius = 4;
             button.Layer.BorderWidth = 1;
             button.Layer.CornerRadius = 4;
-            button.Layer.MasksToBounds = true;
+            button.Layer.MasksToBounds = false;
             button.TranslatesAutoresizingMaskIntoConstraints = false;
             nativeMap.AddSubview(button);
             button.TopAnchor.ConstraintEqualTo(nativeMap.TopAnchor, 90).Active = true;
