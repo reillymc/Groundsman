@@ -35,17 +35,17 @@ namespace Groundsman
         /// <param name="type">Data entry type</param>
         public void ShowNewDetailFormPage(string type)
         {
-            Navigation.PushAsync(new EditFeatureDetailsView(type));
+            Navigation.PushModalAsync(new EditFeatureDetailsView(type));
         }
 
         public void ShowEditDetailFormPage(Feature entryToEdit)
         {
-            Navigation.PushAsync(new EditFeatureDetailsView(entryToEdit));
+            Navigation.PushModalAsync(new EditFeatureDetailsView(entryToEdit));
         }
 
         public async Task ShowExistingDetailFormPage(Feature data)
         {
-            await Navigation.PushAsync(new FeatureDetailsView(data));
+            await Navigation.PushModalAsync(new FeatureDetailsView(data));
         }
 
         public void ShowProfileSettingsPage()
