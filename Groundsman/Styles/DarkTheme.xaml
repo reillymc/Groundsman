@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              x:Class="Groundsman.Styles.DarkTheme"
              Source="DefaultTheme.xaml">
 
@@ -10,5 +11,7 @@
     <Color x:Key="textPrimary">#FFFFFF</Color>
     <Color x:Key="textSecondary">#a0a0a0</Color>
     <Color x:Key="textTertiary">#707070</Color>
+
+    <ios:BlurEffectStyle x:Key="blurEffect">Dark</ios:BlurEffectStyle>
 
 </ResourceDictionary>   

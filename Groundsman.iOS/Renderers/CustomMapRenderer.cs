@@ -6,6 +6,7 @@ using MapKit;
 using UIKit;
 using Xamarin.Forms.Platform.iOS;
 using Xamarin.Forms.Maps.iOS;
+using CoreGraphics;
 
 [assembly: ExportRenderer(typeof(CustomMap), typeof(CustomMapRenderer))]
 namespace Groundsman.iOS.Renderers
@@ -19,7 +20,10 @@ namespace Groundsman.iOS.Renderers
             if (e.OldElement == null && e.NewElement != null)
             {
                 MKMapView nativeMap = Control as MKMapView;
+                nativeMap.ShowsCompass = false;
                 AddUserTrackingButton(nativeMap);
+
+                
             }
         }
 
@@ -35,9 +39,20 @@ namespace Groundsman.iOS.Renderers
             button.Layer.CornerRadius = 4;
             button.Layer.MasksToBounds = false;
             button.TranslatesAutoresizingMaskIntoConstraints = false;
+
+            MKCompassButton compass = MKCompassButton.FromMapView(nativeMap);
+            compass.CompassVisibility = MKFeatureVisibility.Visible;
+            compass.Frame = new CGRect(new CGPoint(45 , 45), compass.Frame.Size);
+            compass.TranslatesAutoresizingMaskIntoConstraints = false;
+
             nativeMap.AddSubview(button);
-            button.TopAnchor.ConstraintEqualTo(nativeMap.TopAnchor, 90).Active = true;
+            nativeMap.AddSubview(compass);
+
+            button.TopAnchor.ConstraintEqualTo(nativeMap.TopAnchor, 50).Active = true;
             button.RightAnchor.ConstraintEqualTo(nativeMap.RightAnchor, -4).Active = true;
+
+            compass.TopAnchor.ConstraintEqualTo(nativeMap.TopAnchor, 100).Active = true;
+            compass.RightAnchor.ConstraintEqualTo(nativeMap.RightAnchor, -6).Active = true;
         }
     }
 }
