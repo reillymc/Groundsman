@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace Groundsman
@@ -8,15 +9,27 @@ namespace Groundsman
         /// Detail form constructor for when a new entry is being added.
         /// </summary>
         /// <param name="type">The geoJSON geometry type being added.</param>
-        public EditFeatureDetailsView(string type)
+        public EditFeatureDetailsView()
         {
             InitializeComponent();
-            this.BindingContext = new FeatureDetailsViewModel(type);
+            BindingContext = new FeatureDetailsViewModel();
+            geolocationListView.ChildAdded += OnChildAdded;
+            
+            Title = "New Feature";
 
-            Title = $"New {type}";
-
-            DetermineAddPointBtnVisability(type);
+            //DetermineAddPointBtnVisability(type);
         }
+
+        void OnChildAdded(object sender, ElementEventArgs e)
+        {
+            //Debug.WriteLine("{0}     {1}", geolocationListView.Children.Count);
+            listCell.Height = geolocationListView.Children.Count * 80;
+            //geolocationListView.BackgroundColor = Color.Aqua;
+            listCell.ForceUpdateSize();
+            //this.ForceLayout();
+
+        }
+
 
         /// <summary>
         /// Detail form constructor for when an existing entry is being edited.
@@ -42,22 +55,22 @@ namespace Groundsman
             {
                 addPointBtn.ImageSource = "add_icon_color";
                 addPointBtn.IsVisible = true;
-                closePolyBtn.IsVisible = true;
+                //closePolyBtn.IsVisible = true;
             }
             else if (type == "Line"){
                 addPointBtn.ImageSource = "add_icon_color";
                 addPointBtn.IsVisible = true;
-                closePolyBtn.IsVisible = false;
+                //closePolyBtn.IsVisible = false;
             } else
             {
                 addPointBtn.IsVisible = false;
-                closePolyBtn.IsVisible = false;
+                //closePolyBtn.IsVisible = false;
             }
         }
 
         private void listView_ItemTapped(object sender, ItemTappedEventArgs e)
         {
-            geolocationListView.SelectedItem = null;
+            //geolocationListView.SelectedItem = null;
         }
 
         // Android button spam fix: force all opened pages to go back to main page.
@@ -66,6 +79,8 @@ namespace Groundsman
             HomePage.Instance.Navigation.PopToRootAsync();
             return true;
         }
+
+   
 
         protected override async void OnDisappearing()
         {

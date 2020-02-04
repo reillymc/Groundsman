@@ -1,5 +1,6 @@
 ﻿using Foundation;
 using UIKit;
+using Plugin.Segmented.Control.iOS;
 
 namespace Groundsman.iOS
 {
@@ -20,7 +21,7 @@ namespace Groundsman.iOS
         {
             Xamarin.Forms.Forms.Init();
             Xamarin.FormsMaps.Init();
-
+            SegmentedControlRenderer.Initialize();
             // Get possible shortcut item
             if (launchOptions != null)
             {
