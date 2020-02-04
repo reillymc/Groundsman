@@ -3,7 +3,9 @@ using Plugin.FilePicker.Abstractions;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System;
+using System.Diagnostics;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Groundsman
@@ -46,8 +48,8 @@ namespace Groundsman
                         if (fileData != null)
                         {
                             string contents = System.Text.Encoding.UTF8.GetString(fileData.DataArray);
-                            //await App.FeaturesManager.ImportFeaturesAsync(contents);
-                            //Debug.WriteLine("yo000000u {0}", fileData.FileName); 
+                            await App.FeatureStore.ImportFeaturesAsync(contents);
+                            Debug.WriteLine("yo000000u {0}", fileData.FileName); 
                         }
                     }
                     else
@@ -77,7 +79,7 @@ namespace Groundsman
             {
                 try
                 {
-                    string contents = TextEntry;
+                    string contents = await Clipboard.GetTextAsync();
                     await App.FeatureStore.ImportFeaturesAsync(contents);
                     TextEntry = "";
                 }
