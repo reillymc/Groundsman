@@ -18,7 +18,7 @@
     </ContentPage.Resources>
 
     <AbsoluteLayout x:Name="absLayout">
-        <ListView HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}" x:Name="listView" ItemsSource="{Binding EntryListSource, Source={x:Reference Name=viewModel}}" HasUnevenRows="True" SeparatorColor="LightGray">
+        <ListView HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}" x:Name="listView" ItemsSource="{Binding EntryListSource, Source={x:Reference Name=viewModel}}" HasUnevenRows="True" SeparatorColor="{DynamicResource bgTertiary}">
             <ListView.Behaviors>
                 <local:ListViewItemTappedBehaviour Command="{Binding ItemTappedCommand}" Converter="{StaticResource TappedItemConverter}" />
             </ListView.Behaviors>

@@ -7,6 +7,7 @@
 
     <Color x:Key="bgPrimary">#000000</Color>
     <Color x:Key="bgSecondary">#111111</Color>
+    <Color x:Key="bgTertiary">#303030</Color>
 
     <Color x:Key="textPrimary">#FFFFFF</Color>
     <Color x:Key="textSecondary">#a0a0a0</Color>

@@ -29,11 +29,12 @@
                     </Grid.RowDefinitions>
                     <Label Style="{StaticResource InputLabelStyle}" Text="Log File: (Time, Latitude, Longitude, Altitude) " Grid.Row="0" Grid.Column="0" Margin="10" />
                     <Frame Style="{StaticResource FrameStyle}" Grid.Row="1" Margin="0">
-                        <Editor Style="{StaticResource EditorStyle}" Text="{Binding TextEntry}" IsSpellCheckEnabled="false" FontSize="Micro" IsEnabled="true" >
-                            <Editor.PlaceholderColor>
-                                <OnPlatform x:TypeArguments="Color" iOS="Gray" Android="Gray" />
-                            </Editor.PlaceholderColor>
-                        </Editor>
+                        <ScrollView x:Name="ScrollBox">
+                            <Label x:Name="logLabel" PropertyChanged="LogLabel_PropertyChanged" Style="{StaticResource EditorStyle}" Text="{Binding TextEntry}"   FontSize="Micro" IsEnabled="true" >
+                            
+                        </Label>
+                        </ScrollView>
+                        
                     </Frame>
                     <StackLayout Orientation="Horizontal" Grid.Row="2" HorizontalOptions="CenterAndExpand">
                         <Button Grid.Row="2" AutomationId="ToggleButton" Text="Toggle Logging" Command="{Binding StartButtonClickCommand}" Padding="10, 0">

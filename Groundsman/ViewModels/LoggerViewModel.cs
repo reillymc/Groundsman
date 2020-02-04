@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Plugin.Share;
 using System.IO;
+using System.Diagnostics;
 
 namespace Groundsman
 {
@@ -100,7 +101,7 @@ namespace Groundsman
         {
             if (cts != null) cts.Cancel();
             cts = new CancellationTokenSource();
-            var ignore = UpdaterAsync(cts.Token);
+            var ignore = UpdaterAsync(new TimeSpan(0, 0, IntervalEntry), cts.Token);
             isLogging = true;
         }
 
@@ -111,14 +112,12 @@ namespace Groundsman
             isLogging = false;
         }
 
-        public async Task UpdaterAsync(CancellationToken ct)
+        public async Task UpdaterAsync(TimeSpan interval, CancellationToken ct)
         {
-            while (!ct.IsCancellationRequested)
+            while (true)
             {
-                await GetGeoLocation();
-                string newEntry = string.Format("{0}, {1}, {2}, {3} \n", DateTime.Now, lat, lon, alt);
-                TextEntry += newEntry;
-                await Task.Delay(IntervalEntry * 999, ct);
+                await Task.Delay(interval, ct);
+                GetGeoLocation();
             }
         }
 
@@ -139,6 +138,8 @@ namespace Groundsman
                         lon = location.Longitude;
                         alt = location.Altitude ?? 0;
                     }
+                    string newEntry = string.Format("{0}, {1}, {2}, {3} \n", DateTime.Now, lat, lon, alt);
+                    TextEntry += newEntry;
                 }
                 else
                 {
