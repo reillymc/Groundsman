@@ -5,6 +5,7 @@
              x:Class="Groundsman.FeatureDetailsView"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              ios:Page.ModalPresentationStyle="FormSheet"
+             ios:Page.LargeTitleDisplay="Never"
              Title=""
              BackgroundColor="{DynamicResource bgPrimary}">
     <ContentPage.ToolbarItems>

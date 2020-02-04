@@ -124,7 +124,7 @@ namespace Groundsman
                     {
                         pointString += string.Format("{0}, {1}, {2} \n", points[i].Latitude, points[i].Longitude, points[i].Altitude);
                     }
-                    HomePage.Instance.DisplayAlert(feature.Properties.Name, pointString, "Dismiss");
+                    Navigation.PushModalAsync(new FeatureDetailsView(feature));
                 }
             });
         }
