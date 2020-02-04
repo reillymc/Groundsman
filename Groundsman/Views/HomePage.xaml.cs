@@ -35,7 +35,7 @@ namespace Groundsman
         /// <param name="type">Data entry type</param>
         public void ShowNewDetailFormPage(string type)
         {
-            Navigation.PushModalAsync(new EditFeatureDetailsView());
+            Navigation.PushModalAsync(new EditFeatureDetailsView(type));
         }
 
         public void ShowEditDetailFormPage(Feature entryToEdit)
@@ -45,7 +45,7 @@ namespace Groundsman
 
         public async Task ShowExistingDetailFormPage(Feature data)
         {
-            await Navigation.PushAsync(new FeatureDetailsView(data));
+            await Navigation.PushModalAsync(new FeatureDetailsView(data));
         }
 
         public void ShowProfileSettingsPage()
@@ -59,7 +59,19 @@ namespace Groundsman
         /// <returns></returns>
         public async Task ShowDetailFormOptions()
         {
-            await Navigation.PushModalAsync(new EditFeatureDetailsView());
+            var action = await DisplayActionSheet("Select a Data Type", "Cancel", null, "Point", "Line", "Polygon");
+            switch (action)
+            {
+                case "Point":
+                    ShowNewDetailFormPage("Point");
+                    break;
+                case "Line":
+                    ShowNewDetailFormPage("Line");
+                    break;
+                case "Polygon":
+                    ShowNewDetailFormPage("Polygon");
+                    break;
+            }
         }
     }
 }

@@ -22,7 +22,6 @@ namespace Groundsman
         public ICommand AddMetadataFieldCommand { get; set; }
         public ICommand DeleteMetadataFieldCommand { get; set; }
         public ICommand OnSaveUpdatedCommand { get; set; }
-        public ICommand OnDismissCommand { get; set; }
         public ICommand DeleteEntryCommand { get; set; }
         public ICommand ClosePolyCommand { get; set; }
 
@@ -84,17 +83,6 @@ namespace Groundsman
             }
         }
 
-        private int _GeolocationHeight;
-        public int GeolocationHeight
-        {
-            get { return _GeolocationHeight; }
-            set
-            {
-                _GeolocationHeight = value;
-                OnPropertyChanged();
-            }
-        }
-
         private int _numPointFields;
         public int NumPointFields
         {
@@ -102,7 +90,6 @@ namespace Groundsman
             set
             {
                 _numPointFields = value;
-                GeolocationHeight = NumPointFields * 100;
                 OnPropertyChanged();
                 OnPropertyChanged("ShowPointDeleteBtn");
             }
@@ -144,9 +131,9 @@ namespace Groundsman
         /// <summary>
         /// View-model constructor for adding new entries.
         /// </summary>
-        public FeatureDetailsViewModel()
+        public FeatureDetailsViewModel(string entryType)
         {
-            string entryType = "Point";
+            thisEntryType = entryType;
             thisEntryID = AppConstants.NEW_ENTRY_ID;
 
             DateEntry = DateTime.Now.ToShortDateString();
@@ -230,12 +217,8 @@ namespace Groundsman
 
             OnSaveUpdatedCommand = new Command(async () => await OnSaveUpdateActivated());
 
-            OnDismissCommand = new Command(async () => OnDismissActivated());
-
             ClosePolyCommand = new Command(() => ClosePoly());
         }
-
-        
 
         /// <summary>
         /// Queries the current device's location coordinates
@@ -358,14 +341,9 @@ namespace Groundsman
             Feature featureToSave = CreateFeatureFromInput();
 
             App.FeatureStore.SaveFeatureAsync(featureToSave);
-            await HomePage.Instance.Navigation.PopModalAsync();
+            await HomePage.Instance.Navigation.PopToRootAsync();
 
             _isBusy = false;
-        }
-
-        private void OnDismissActivated()
-        {
-            HomePage.Instance.Navigation.PopModalAsync();
         }
 
         /// <summary>

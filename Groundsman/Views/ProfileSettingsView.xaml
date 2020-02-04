@@ -25,14 +25,14 @@
                     </Button.TextColor>
                 </Button>
             </Grid>
-            <TableView BackgroundColor="{DynamicResource bgSecondary}" Intent="Settings">
+            <TableView BackgroundColor="{DynamicResource bgPrimary}" Intent="Settings">
                 <TableRoot>
                     <TableSection Title="Profile">
                         <EntryCell LabelColor="{DynamicResource textPrimary}" Label="User ID:" Text="{Binding IDEntry}" Placeholder="Enter Your User ID Here"/>
                     </TableSection>
                     <TableSection>
                         <ViewCell Tapped="OnViewCellTapped">
-                            <Grid Padding="15,12" BackgroundColor="{DynamicResource bgPrimary}">
+                            <Grid Margin="15,12">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
