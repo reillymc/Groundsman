@@ -57,7 +57,7 @@
                             <StackLayout Orientation="Horizontal" Padding="15,0" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
                                 <Label Text="{Binding Source={x:Reference stepperDecimal}, Path=Value}" VerticalOptions="Center"></Label>
                                 <Label Text="Decimal Places" VerticalOptions="Center"></Label>
-                                <Stepper x:Name="stepperDecimal" Maximum="10" Increment="1" HorizontalOptions="EndAndExpand" Value="{Binding DecimalAccuracyEntry}" ValueChanged="OnStepperValueChanged" ></Stepper>
+                                <Stepper x:Name="stepperDecimal" Maximum="12" Increment="1" HorizontalOptions="EndAndExpand" Value="{Binding DecimalAccuracyEntry}" ValueChanged="OnStepperValueChanged" ></Stepper>
                             </StackLayout>
                         </ViewCell>
 

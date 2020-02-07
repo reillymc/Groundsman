@@ -7,10 +7,6 @@ namespace Groundsman {
         public static readonly int GPS_DIGIT_PRECISION = 9;
         public static readonly GeolocationAccuracy GPS_ACCURACY = GeolocationAccuracy.Medium;
 
-        public static void RoundGPSPosition(Point point) {
-            point.Latitude = Math.Round(point.Latitude, GPS_DIGIT_PRECISION);
-            point.Longitude = Math.Round(point.Longitude, GPS_DIGIT_PRECISION);
-            point.Altitude = Math.Round(point.Altitude, GPS_DIGIT_PRECISION);
-        }
+        
     }
 }

@@ -103,7 +103,7 @@ namespace Groundsman
             while (true)
             {
                 await Task.Delay(interval, ct);
-                Point location = await Services.GeolocationService.GetGeoLocation();
+                Point location = await Services.GetGeoLocation();
                 if (location != null)
                 {
                     string newEntry = string.Format("{0}, {1}, {2}, {3}\n", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), location.Latitude, location.Longitude, location.Altitude);

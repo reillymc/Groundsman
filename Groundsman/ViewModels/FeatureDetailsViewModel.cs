@@ -6,8 +6,7 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json.Linq;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
+using System.Diagnostics;
 
 namespace Groundsman
 {
@@ -171,8 +170,6 @@ namespace Groundsman
         /// </summary>
         public FeatureDetailsViewModel(Feature data)
         {
-
-
             thisEntryType = data.Geometry.Type;
             thisEntryID = data.Properties.Id;
             switch (thisEntryType)
@@ -208,7 +205,7 @@ namespace Groundsman
         /// </summary>
         private void InitCommandBindings()
         {
-            GetFeatureCommand = new Command<Point>(async (point) => { await GetGeoLocation(point); });
+            GetFeatureCommand = new Command<Point>(async (point) => { await GetDataPoint(point); });
 
             AddPointCommand = new Command(() => AddPoint());
             DeletePointCommand = new Command<Point>((item) => DeletePoint(item));
@@ -224,11 +221,11 @@ namespace Groundsman
         /// Queries the current device's location coordinates
         /// </summary>
         /// <param name="point">Point to set GPS data to.</param>
-        private async Task GetGeoLocation(Point point)
+        private async Task GetDataPoint(Point point)
         {
             GeolocationEntryEnabled = false;
             LoadingIconActive = true;
-            Point location = await Services.GeolocationService.GetGeoLocation();
+            Point location = await Services.GetGeoLocation();
             if (location != null)
             {
                 point.Latitude = location.Latitude;
@@ -292,14 +289,9 @@ namespace Groundsman
         /// </summary>
         async Task OnSaveUpdateActivated()
         {
+            Debug.WriteLine("HERE");
             if (_isBusy) return;
             _isBusy = true;
-
-            // Ensure geolocation points are only accurate up to the specified digit precision.
-            foreach (var point in GeolocationPoints)
-            {
-                AppConstants.RoundGPSPosition(point);
-            }
 
             // Do validation checks here.
             if (await FeatureEntryIsValid() == false)

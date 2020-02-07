@@ -144,7 +144,6 @@ namespace Groundsman.Data
             double altitude = (coords.Length == 3) ? (double)coords[2] : 0.0;
 
             Point point = new Point(latitude, longitude, altitude);
-            AppConstants.RoundGPSPosition(point);
             return point;
         }
 

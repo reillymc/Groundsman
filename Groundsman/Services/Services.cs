@@ -4,12 +4,13 @@ using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using Xamarin.Essentials;
 
-namespace Groundsman.Services
+namespace Groundsman
 {
-    public class GeolocationService
+    public class Services
     {
         private static GeolocationAccuracy geolocationAccuracy;
         private static Point point;
+        private static int decimalAccuracy;
 
         /// <summary>
         /// Queries the current device's location coordinates
@@ -23,6 +24,7 @@ namespace Groundsman.Services
                 3 => GeolocationAccuracy.Low,
                 _ => GeolocationAccuracy.Medium,
             };
+            decimalAccuracy = Preferences.Get("DataDecimalAccuracy", 8);
             try
             {
                 var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
@@ -33,7 +35,7 @@ namespace Groundsman.Services
                     var location = await Geolocation.GetLocationAsync(request);
                     if (location != null)
                     {
-                        point = new Point(location.Latitude, location.Longitude, location.Altitude ?? 0.0);
+                        point = new Point(Math.Round(location.Latitude, decimalAccuracy), Math.Round(location.Longitude, decimalAccuracy), Math.Round(location.Altitude ?? 0.0, decimalAccuracy));
                         return point;
                     }
                 }
