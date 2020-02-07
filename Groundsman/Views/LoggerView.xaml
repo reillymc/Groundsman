@@ -37,7 +37,7 @@
                         
                     </Frame>
                     <StackLayout Orientation="Horizontal" Grid.Row="2" HorizontalOptions="CenterAndExpand">
-                        <Button Grid.Row="2" AutomationId="ToggleButton" Text="Toggle Logging" Command="{Binding StartButtonClickCommand}" Padding="10, 0">
+                        <Button Grid.Row="2" AutomationId="ToggleButton" Text="{Binding ToggleButtonLabel}" Command="{Binding ToggleButtonClickCommand}" Padding="10, 0">
                             <Button.TextColor>
                                 <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="white" />
                             </Button.TextColor>
