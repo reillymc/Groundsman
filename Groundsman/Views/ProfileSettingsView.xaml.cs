@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Groundsman
@@ -22,6 +24,23 @@ namespace Groundsman
             {
                 App.FeatureStore.DeleteAllFeatures();
                 await HomePage.Instance.DisplayAlert("Reset User Data", "Your user data has been erased.", "Ok");
+            }
+        }
+
+        void OnStepperValueChanged(object sender, ValueChangedEventArgs e)
+        {
+            int value = (int)e.NewValue;
+            Preferences.Set("DataDecimalAccuracy", value);
+        }
+
+        void OnPickerSelectedIndexChanged(object sender, EventArgs e)
+        {
+            var picker = (Picker)sender;
+            int selectedIndex = picker.SelectedIndex;
+            Debug.WriteLine(selectedIndex);
+            if (selectedIndex != -1)
+            {
+                Preferences.Set("GPSPrecision", selectedIndex);
             }
         }
 
