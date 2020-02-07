@@ -18,9 +18,6 @@ namespace Groundsman
         public ICommand ClearButtonClickCommand { set; get; }
         public ICommand ExportButtonClickCommand { set; get; }
         private CancellationTokenSource cts;
-        private double lat;
-        private double lon;
-        private double alt;
         public bool isLogging;
 
         private string _textEntry;
@@ -106,7 +103,16 @@ namespace Groundsman
             while (true)
             {
                 await Task.Delay(interval, ct);
-                _ = GetGeoLocation();
+                Point location = await Services.GeolocationService.GetGeoLocation();
+                if (location != null)
+                {
+                    string newEntry = string.Format("{0}, {1}, {2}, {3}\n", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), location.Latitude, location.Longitude, location.Altitude);
+                    TextEntry += newEntry;
+                }
+                else
+                {
+                    StopUpdate();
+                }
             }
         }
 
@@ -121,39 +127,6 @@ namespace Groundsman
                 Title = "Groundsman Logfile",
                 File = new ShareFile(Path.Combine(FileSystem.AppDataDirectory, LOG_FILENAME), "text/csv")
             });
-        }
-
-        private async Task GetGeoLocation()
-        {
-            try
-            {
-                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
-
-                if (status == PermissionStatus.Granted)
-                {
-                    // Gets current location of device (MORE ACCURATE, but slower)
-                    var request = new GeolocationRequest(GeolocationAccuracy.Medium);
-                    var location = await Geolocation.GetLocationAsync(request);
-                    if (location != null)
-                    {
-                        lat = location.Latitude;
-                        lon = location.Longitude;
-                        alt = location.Altitude ?? 0;
-                    }
-                    string newEntry = string.Format("{0}, {1}, {2}, {3}\n", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), lat, lon, alt);
-                    TextEntry += newEntry;
-                }
-                else
-                {
-                    StopUpdate();
-                    await HomePage.Instance.DisplayAlert("Permissions Error", "Location permissions for Groundsman must be enabled to utilise this feature.", "Ok");
-                }
-            }
-            catch (Exception)
-            {
-                await HomePage.Instance.DisplayAlert("Geolocation Error", "Location services must be enabled to utilise this feature", "Ok");
-                throw new Exception();
-            }
         }
     }
 }

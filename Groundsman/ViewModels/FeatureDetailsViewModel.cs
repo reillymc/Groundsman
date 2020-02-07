@@ -226,47 +226,17 @@ namespace Groundsman
         /// <param name="point">Point to set GPS data to.</param>
         private async Task GetGeoLocation(Point point)
         {
-            try
+            GeolocationEntryEnabled = false;
+            LoadingIconActive = true;
+            Point location = await Services.GeolocationService.GetGeoLocation();
+            if (location != null)
             {
-                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
-                // Disable interaction with entries to prevent errors.
-                GeolocationEntryEnabled = false;
-                LoadingIconActive = true;
-
-                if (status == PermissionStatus.Granted)
-                {
-                    // Gets current location of device (MORE ACCURATE, but slower)
-                    var request = new GeolocationRequest(GeolocationAccuracy.Medium);
-                    var location = await Geolocation.GetLocationAsync(request);
-
-                    // Re-enable interaction.
-                    LoadingIconActive = false;
-                    GeolocationEntryEnabled = true;
-
-                    if (location != null)
-                    {
-                        point.Latitude = location.Latitude;
-                        point.Longitude = location.Longitude;
-                        point.Altitude = location.Altitude ?? 0.0;
-                    }
-                }
-                else
-                {
-                    await HomePage.Instance.DisplayAlert("Location Permissions Required", "Enable location permissions for Groundsman in settings to use this feature.", "Ok");
-                    // Re-enable interaction.
-                    LoadingIconActive = false;
-                    GeolocationEntryEnabled = true;
-                }
+                point.Latitude = location.Latitude;
+                point.Longitude = location.Longitude;
+                point.Altitude = location.Altitude;
             }
-            catch (Exception)
-            {
-                await HomePage.Instance.DisplayAlert("Location Permissions Error", "Enable location permissions for Groundsman in settings to use this feature.", "Ok");
-                point.Latitude = point.Longitude = point.Altitude = 0.0;
-                // Re-enable interaction.
-                LoadingIconActive = false;
-                GeolocationEntryEnabled = true;
-                //throw ex;
-            }
+            GeolocationEntryEnabled = true;
+            LoadingIconActive = false;
         }
 
         /// <summary>

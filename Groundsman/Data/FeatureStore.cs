@@ -12,7 +12,6 @@ namespace Groundsman.Data
 {
     public class FeatureStore
     {
-
         public List<Feature> CurrentFeatures { get; set; } = new List<Feature>();
         private readonly string DATA_PATH = FileSystem.AppDataDirectory + "/";
         private const string EMBEDDED_FILENAME = "locations.json";

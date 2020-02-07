@@ -35,6 +35,7 @@
     <Folder Include="Misc\" />
     <Folder Include="Converters\" />
     <Folder Include="Behaviors\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="ViewModels\GoogleMapViewModel.cs" />
