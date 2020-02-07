@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Groundsman"
+             xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
              x:Class="Groundsman.MyFeaturesView"
              Title="My Features"
              BackgroundColor="{DynamicResource bgPrimary}">
@@ -20,7 +21,7 @@
     <AbsoluteLayout x:Name="absLayout">
         <ListView HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}" x:Name="listView" ItemsSource="{Binding EntryListSource, Source={x:Reference Name=viewModel}}" HasUnevenRows="True" SeparatorColor="{DynamicResource bgTertiary}">
             <ListView.Behaviors>
-                <local:ListViewItemTappedBehaviour Command="{Binding ItemTappedCommand}" Converter="{StaticResource TappedItemConverter}" />
+                <behaviors:ListViewItemTappedBehaviour Command="{Binding ItemTappedCommand}" Converter="{StaticResource TappedItemConverter}" />
             </ListView.Behaviors>
             <ListView.ItemTemplate>
                 <DataTemplate>

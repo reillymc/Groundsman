@@ -1,6 +1,4 @@
-﻿using System;
-using Xamarin.Essentials;
-using Xamarin.Forms;
+﻿using Xamarin.Essentials;
 
 namespace Groundsman
 {
@@ -21,39 +19,23 @@ namespace Groundsman
 
         public int GPSPrecisionEntry { get; set; }
 
-
         public ProfileSettingsViewModel()
         {
-            if (Application.Current.Properties.ContainsKey("UserID") == true)
-            {
-                _IDEntry = Application.Current.Properties["UserID"] as string;
-            }
+            IDEntry = Preferences.Get("UserID", "Groundsman");
             DecimalAccuracyEntry = Preferences.Get("DataDecimalAccuracy", 8);
-            GPSPrecisionEntry = (Preferences.Get("GPSPrecision", 2));
+            GPSPrecisionEntry = Preferences.Get("GPSPrecision", 2);
         }
 
         private void HandleTextChanged()
         {
             if (string.IsNullOrWhiteSpace(IDEntry) == false)
             {
-                if (IDEntry.Length <= 30)
-                {
-                    Application.Current.Properties["UserID"] = IDEntry;
-                }
-                else
-                {
-                    Application.Current.Properties["UserID"] = IDEntry.Substring(0, 30);
-                }
+                Preferences.Set("UserID", IDEntry);
             }
             else
             {
-                Application.Current.Properties["UserID"] = "Default";
+                Preferences.Set("UserID", "Groundsman");
             }
-        }
-
-        private void HandlePrefsChanged()
-        {
-            //DecimalAccuracyValue = Preferences.Get("DataDecimalAccuracy", 8);
         }
     }
 }

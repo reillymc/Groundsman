@@ -2,7 +2,8 @@
 using System.Windows.Input;
 using Xamarin.Forms;
 
-namespace Groundsman {
+namespace Groundsman.Behaviors
+{
     public class ListViewItemTappedBehaviour : Behavior<ListView> {
 
         public static readonly BindableProperty CommandProperty =

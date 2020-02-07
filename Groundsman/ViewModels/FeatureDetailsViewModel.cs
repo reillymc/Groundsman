@@ -352,23 +352,16 @@ namespace Groundsman
         /// <returns>A feature object formed from input values</returns>
         private Feature CreateFeatureFromInput()
         {
-            Feature feature = new Feature();
-
-            feature.Type = "Feature";
-            feature.Properties = new Properties();
+            Feature feature = new Feature
+            {
+                Type = "Feature",
+                Properties = new Properties()
+            };
 
             // A new entry will have an ID of NEW_ENTRY_ID as assigned from the constructor,
             // otherwise an ID will already be set for editing entries.
             feature.Properties.Id = thisEntryID;
-
-            if (Application.Current.Properties.ContainsKey("UserID"))
-            {
-                feature.Properties.AuthorId = Application.Current.Properties["UserID"] as string;
-            }
-            else
-            {
-                feature.Properties.AuthorId = string.Empty;
-            }
+            feature.Properties.AuthorId = Preferences.Get("UserID", "Groundsman");
 
             // Name and date of the feature.
             feature.Properties.Name = NameEntry;

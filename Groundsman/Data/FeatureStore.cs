@@ -64,14 +64,7 @@ namespace Groundsman.Data
             // If author ID hasn't been set on the feature, default it to the user's ID.
             if (string.IsNullOrWhiteSpace(feature.Properties.AuthorId))
             {
-                if (Xamarin.Forms.Application.Current.Properties.ContainsKey("UserID"))
-                {
-                    feature.Properties.AuthorId = Xamarin.Forms.Application.Current.Properties["UserID"] as string;
-                }
-                else
-                {
-                    feature.Properties.AuthorId = string.Empty;
-                }
+                feature.Properties.AuthorId = Preferences.Get("UserID", "Groundsman");
             }
 
             // If the date field is missing or invalid, convert it into DateTime.Now.

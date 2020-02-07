@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Groundsman"
+             xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
              x:Class="Groundsman.ProfileSettingsView"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              ios:Page.ModalPresentationStyle="FormSheet"
@@ -28,13 +29,19 @@
             <TableView BackgroundColor="{DynamicResource bgPrimary}" Intent="Settings">
                 <TableRoot>
                     <TableSection Title="Profile">
-                        <EntryCell LabelColor="{DynamicResource textPrimary}" Label="User ID:" Text="{Binding IDEntry}" Placeholder="Enter Your User ID Here"/>
+                        <ViewCell>
+                            <Entry Margin="5,0" TextColor="{DynamicResource textPrimary}" Text="{Binding IDEntry}" Placeholder="User ID">
+                                <Entry.Behaviors>
+                                    <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </ViewCell>
                     </TableSection>
                     <TableSection Title="GPS and Data Precision">
                         <ViewCell>
                             <StackLayout Orientation="Horizontal" Padding="15,0" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
-                                <Label Text="GPS Accuracy" FontSize="Header" VerticalOptions="Center"></Label>
-                                <Picker x:Name="picker" Title="Medium" HorizontalOptions="EndAndExpand" WidthRequest="95" TitleColor="Black" SelectedIndexChanged="OnPickerSelectedIndexChanged" SelectedIndex="{Binding GPSPrecisionEntry}">
+                                <Label Text="GPS Accuracy" VerticalOptions="Center"></Label>
+                                <Picker x:Name="picker" HorizontalOptions="EndAndExpand" WidthRequest="95" TitleColor="Black" SelectedIndexChanged="OnPickerSelectedIndexChanged" SelectedIndex="{Binding GPSPrecisionEntry}">
                                     <Picker.ItemsSource>
                                         <x:Array Type="{x:Type x:String}">
                                             <x:String>Best</x:String>
@@ -48,8 +55,8 @@
                         </ViewCell>
                         <ViewCell>
                             <StackLayout Orientation="Horizontal" Padding="15,0" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
-                                <Label Text="{Binding Source={x:Reference stepperDecimal}, Path=Value}" FontSize="Header" VerticalOptions="Center"></Label>
-                                <Label Text="Decimal Places" FontSize="Header" VerticalOptions="Center"></Label>
+                                <Label Text="{Binding Source={x:Reference stepperDecimal}, Path=Value}" VerticalOptions="Center"></Label>
+                                <Label Text="Decimal Places" VerticalOptions="Center"></Label>
                                 <Stepper x:Name="stepperDecimal" Maximum="10" Increment="1" HorizontalOptions="EndAndExpand" Value="{Binding DecimalAccuracyEntry}" ValueChanged="OnStepperValueChanged" ></Stepper>
                             </StackLayout>
                         </ViewCell>

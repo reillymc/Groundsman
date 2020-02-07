@@ -1,7 +1,6 @@
-﻿using System;
-using Groundsman.Data;
+﻿using Groundsman.Data;
+using Xamarin.Essentials;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace Groundsman
 {
@@ -16,7 +15,7 @@ namespace Groundsman
             FeatureStore = new FeatureStore();
             MainPage = new NavigationPage(HomePage.Instance);
             // If the user ID hasn't been set yet, prompt the user to create one upon app launch.
-            if (Current.Properties.ContainsKey("UserID") == false)
+            if (!Preferences.ContainsKey("UserID"))
             {
                 MainPage.Navigation.PushModalAsync(new WelcomeFormView());
             }
