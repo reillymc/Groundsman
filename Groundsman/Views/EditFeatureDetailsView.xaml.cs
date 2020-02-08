@@ -27,7 +27,7 @@ namespace Groundsman
             InitializeComponent();
             this.BindingContext = new FeatureDetailsViewModel(data);
 
-            Title = $"Editing {data.Properties.Name}";
+            Title = data.Properties.Name;
 
             DetermineAddPointBtnVisability(data.Geometry.Type);
         }

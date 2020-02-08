@@ -6,7 +6,6 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json.Linq;
-using System.Diagnostics;
 
 namespace Groundsman
 {
@@ -289,7 +288,6 @@ namespace Groundsman
         /// </summary>
         async Task OnSaveUpdateActivated()
         {
-            Debug.WriteLine("HERE");
             if (_isBusy) return;
             _isBusy = true;
 
