@@ -1,12 +1,13 @@
-﻿using System;
-using Xamarin.Essentials;
+﻿using Xamarin.Essentials;
 
 namespace Groundsman {
     public static class AppConstants {
-        public static readonly int NEW_ENTRY_ID = -1;
-        public static readonly int GPS_DIGIT_PRECISION = 9;
-        public static readonly GeolocationAccuracy GPS_ACCURACY = GeolocationAccuracy.Medium;
+        private static readonly string DATA_PATH = FileSystem.AppDataDirectory + "/";
+        private static readonly string FEATURES_FILENAME = "locations.json";
+        private static readonly string LOG_FILENAME = "log.csv";
 
-        
+        public static readonly string NEW_ENTRY_ID = "-1";
+        public static readonly string FEATURES_FILE = DATA_PATH + FEATURES_FILENAME;
+        public static readonly string LOG_FILE = DATA_PATH + LOG_FILENAME;
     }
 }

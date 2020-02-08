@@ -28,7 +28,7 @@ namespace Groundsman
         private int minPoints;
 
         // A reference to this entry's ID.
-        private int thisEntryID;
+        private string thisEntryID;
 
         // A reference to this entry's type of structure.
         private string thisEntryType;

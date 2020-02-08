@@ -35,6 +35,7 @@ namespace Groundsman
         {
             ButtonClickCommand = new Command(async () =>
             {
+                //TODO: exception handling - 
                 try
                 {
                     var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Storage);

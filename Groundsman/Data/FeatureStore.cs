@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -13,10 +14,6 @@ namespace Groundsman.Data
     public class FeatureStore
     {
         public List<Feature> CurrentFeatures { get; set; } = new List<Feature>();
-        private readonly string DATA_PATH = FileSystem.AppDataDirectory + "/";
-        private const string EMBEDDED_FILENAME = "locations.json";
-        private const string LOG_FILENAME = "log.csv";
-
         public Task<List<Feature>> GetFeaturesAsync()
         {
             return Task.Run(async () =>
@@ -25,6 +22,7 @@ namespace Groundsman.Data
                 var rootobject = JsonConvert.DeserializeObject<RootObject>(featuresFile);
                 if (rootobject == null)
                 {
+                    //TODO: handle exception allowing to export corrupted file/erase and start over
                     throw new Exception();
                 }
 
@@ -42,99 +40,74 @@ namespace Groundsman.Data
         private async Task<bool> TryParseFeature(Feature feature)
         {
             // Ensure the feature has valid GeoJSON fields supplied.
-            if (feature == null || feature.Type == null || feature.Geometry == null || feature.Geometry.Type == null || feature.Geometry.Coordinates == null)
+            if (feature != null && feature.Type != null && feature.Geometry != null && feature.Geometry.Type != null && feature.Geometry.Coordinates != null)
             {
-                await HomePage.Instance.DisplayAlert("Invalid File", "Ensure your file only contains data in valid GeoJSON format.", "OK");
-                return false;
-            }
+                // Immediately convert LineStrings to Line for use in the rest of the codebase. 
+                // This will be converted back to LineString before serialization back to json.
+                if (feature.Geometry.Type == "LineString")
+                {
+                    feature.Geometry.Type = "Line";
+                }
 
-            // Immediately convert LineStrings to Line for use in the rest of the codebase. 
-            // This will be converted back to LineString before serialization back to json.
-            if (feature.Geometry.Type == "LineString")
-            {
-                feature.Geometry.Type = "Line";
-            }
-
-            if (string.IsNullOrWhiteSpace(feature.Properties.Name))
-            {
-                feature.Properties.Name = "Unnamed " + feature.Geometry.Type;
-            }
-
-            // If author ID hasn't been set on the feature, default it to the user's ID.
-            if (string.IsNullOrWhiteSpace(feature.Properties.AuthorId))
-            {
-                feature.Properties.AuthorId = Preferences.Get("UserID", "Groundsman");
-            }
-
-            // If the date field is missing or invalid, convert it into DateTime.Now.
-            DateTime dummy;
-            if (feature.Properties.Date == null || DateTime.TryParse(feature.Properties.Date, out dummy) == false)
-            {
-                feature.Properties.Date = DateTime.Now.ToShortDateString();
-            }
-
-            // Determine the icon used for each feature based on it's geometry type.
-            if (feature.Geometry.Type == "Point")
-            {
-                feature.Properties.TypeIconPath = "point_icon.png";
-            }
-            else if (feature.Geometry.Type == "Line")
-            {
-                feature.Properties.TypeIconPath = "line_icon.png";
-            }
-            else if (feature.Geometry.Type == "Polygon")
-            {
-                feature.Properties.TypeIconPath = "area_icon.png";
-            }
-            else
-            {
-                await HomePage.Instance.DisplayAlert("Import Error", "Groundsman currently only supports feature types of Point, Line, and Polygon.", "OK");
-                return false;
-            }
-
-            // Initialise xamarin coordinates list.
-            feature.Properties.Xamarincoordinates = new List<Point>();
-
-            // Properly deserialize the list of coordinates into an app-use-specific list of Points (XamarinCoordinates).
-            {
+                feature.Properties.Xamarincoordinates = new List<Point>();
                 object[] trueCoords;
 
-                if (feature.Geometry.Type == "Point")
+                // Determine if feature is supported and if so convert its points and add appropriate icon
+                switch (feature.Geometry.Type)
                 {
-                    trueCoords = feature.Geometry.Coordinates.ToArray();
-                    feature.Properties.Xamarincoordinates.Add(JsonCoordToXamarinPoint(trueCoords));
-
-                }
-                else if (feature.Geometry.Type == "Line")
-                {
-                    // Iterates the root coordinates (List<object>),
-                    // then casts each element in the list to a Jarray which contain the actual coordinates.
-                    for (int i = 0; i < feature.Geometry.Coordinates.Count; i++)
-                    {
-                        trueCoords = ((JArray)feature.Geometry.Coordinates[i]).ToObject<object[]>();
+                    case "Point":
+                        feature.Properties.TypeIconPath = "point_icon.png";
+                        trueCoords = feature.Geometry.Coordinates.ToArray();
                         feature.Properties.Xamarincoordinates.Add(JsonCoordToXamarinPoint(trueCoords));
-                    }
-                }
-                else if (feature.Geometry.Type == "Polygon")
-                {
-                    // Iterates the root coordinates (List<object>), and casts each element in the list to a Jarray, 
-                    // then casts each Jarray's element to another Jarray which contain the actual coordinates.
-                    for (int i = 0; i < feature.Geometry.Coordinates.Count; i++)
-                    {
-                        for (int j = 0; j < ((JArray)feature.Geometry.Coordinates[i]).Count; j++)
+                        break;
+                    case "Line":
+                        feature.Properties.TypeIconPath = "line_icon.png";
+                        // Iterates the root coordinates (List<object>),
+                        // then casts each element in the list to a Jarray which contain the actual coordinates.
+                        for (int i = 0; i < feature.Geometry.Coordinates.Count; i++)
                         {
-                            trueCoords = ((JArray)(((JArray)feature.Geometry.Coordinates[i])[j])).ToObject<object[]>();
+                            trueCoords = ((JArray)feature.Geometry.Coordinates[i]).ToObject<object[]>();
                             feature.Properties.Xamarincoordinates.Add(JsonCoordToXamarinPoint(trueCoords));
                         }
-                    }
+                        break;
+                    case "Polygon":
+                        feature.Properties.TypeIconPath = "area_icon.png";
+                        // Iterates the root coordinates (List<object>), and casts each element in the list to a Jarray, 
+                        // then casts each Jarray's element to another Jarray which contain the actual coordinates.
+                        for (int i = 0; i < feature.Geometry.Coordinates.Count; i++)
+                        {
+                            for (int j = 0; j < ((JArray)feature.Geometry.Coordinates[i]).Count; j++)
+                            {
+                                trueCoords = ((JArray)(((JArray)feature.Geometry.Coordinates[i])[j])).ToObject<object[]>();
+                                feature.Properties.Xamarincoordinates.Add(JsonCoordToXamarinPoint(trueCoords));
+                            }
+                        }
+                        break;
+                    default:
+                        await HomePage.Instance.DisplayAlert("Unsupported Feature", "Groundsman currently only supports feature types of Point, Line, and Polygon.", "OK");
+                        return false;
                 }
-                else
-                {
-                    return false;
-                }
-            }
 
-            return true;
+                // If author ID hasn't been set on the feature, default it to the user's ID.
+                if (string.IsNullOrWhiteSpace(feature.Properties.AuthorId))
+                {
+                    feature.Properties.AuthorId = Preferences.Get("UserID", "Groundsman");
+                }
+
+                // Add default name if empty
+                if (string.IsNullOrWhiteSpace(feature.Properties.Name))
+                {
+                    feature.Properties.Name = "Unnamed " + feature.Geometry.Type;
+                }
+
+                // If the date field is missing or invalid, convert it into DateTime.Now.
+                if (feature.Properties.Date == null || DateTime.TryParse(feature.Properties.Date, out _) == false)
+                {
+                    feature.Properties.Date = DateTime.Now.ToShortDateString();
+                }
+                return true;
+            }
+            return false;
         }
 
         private Point JsonCoordToXamarinPoint(object[] coords)
@@ -147,7 +120,7 @@ namespace Groundsman.Data
             return point;
         }
 
-        public void DeleteFeatureAsync(int featureID)
+        public void DeleteFeatureAsync(string featureID)
         {
             Feature featureToDelete = App.FeatureStore.CurrentFeatures.Find((feature) => (feature.Properties.Id == featureID));
             bool deleteSuccessful = App.FeatureStore.CurrentFeatures.Remove(featureToDelete);
@@ -163,7 +136,7 @@ namespace Groundsman.Data
             // If this is a newly added feature, generate an ID and add it immediately.
             if (feature.Properties.Id == AppConstants.NEW_ENTRY_ID)
             {
-                TryGetUniqueFeatureID(feature);
+                feature.Properties.Id = Guid.NewGuid().ToString(); //TODO use existing method
                 App.FeatureStore.CurrentFeatures.Add(feature);
             }
             else
@@ -203,7 +176,7 @@ namespace Groundsman.Data
 
             // Save the rootobject to file.
             var json = JsonConvert.SerializeObject(objToSave);
-            File.WriteAllText(Path.Combine(FileSystem.AppDataDirectory, EMBEDDED_FILENAME), json);
+            File.WriteAllText(AppConstants.FEATURES_FILE, json);
 
             // Mark the features list as dirty so it can refresh.
             MyFeaturesViewModel.isDirty = true;
@@ -246,47 +219,78 @@ namespace Groundsman.Data
         /// </summary>
         /// <param name="fileContents">The string of geojson to import from.</param>
         /// <returns></returns>
-        public async Task<bool> ImportFeaturesAsync(string fileContents)
+        public async Task<bool> ImportFeaturesAsync(string importContents)
         {
+            // Ensure file contents are structured in a valid GeoJSON format.
+            RootObject importedFeaturesData = null;
+            RootObject validatedFeatures = new RootObject
+            {
+                Features = new List<Feature>()
+            };
+            int successfulImport = 0;
+            int failedImport = 0;
+
             try
             {
-                // Ensure file contents are structured in a valid GeoJSON format.
-                var importedRootObject = JsonConvert.DeserializeObject<RootObject>(fileContents);
-                if (importedRootObject == null)
-                {
-                    await HomePage.Instance.DisplayAlert("Invalid File Contents", "Ensure your file only contains data in valid GeoJSON format.", "OK");
-                    return false;
-                }
+                importedFeaturesData = JsonConvert.DeserializeObject<RootObject>(importContents);
+            }
+            catch (Exception ex)
+            {
+                await HomePage.Instance.DisplayAlert("Import Failed", string.Format("Groundsman can only import valid GeoJSON and encountered an error:\n{0}", ex.Message), "OK");
+            }
 
-                // Loop through all imported features and make sure they are valid.
-                foreach (var importedFeature in importedRootObject.Features)
+            if (importedFeaturesData != null)
+            {
+                // Loop through all imported features and make sure they are valid and ensuring there are no ID clashes.
+                foreach (var importedFeature in importedFeaturesData.Features)
                 {
                     bool parseResult = await TryParseFeature(importedFeature);
-                    //TODO: importedFeature.properties.authorId etc - clense data on import
-                    if (parseResult == false)
+                    if (parseResult)
                     {
-                        return false;
-                    }
-                }
+                        EnsureUniqueID(importedFeature);
 
-                // Loop through all imported features one by one, ensuring there are no ID clashes.
-                foreach (var importedFeature in importedRootObject.Features)
-                {
-                    TryGetUniqueFeatureID(importedFeature);
+                        validatedFeatures.Features.Add(importedFeature);
+                        successfulImport++;
+                    }
+                    else
+                    {
+                        failedImport++;
+                    }
+
                 }
 
                 // Finally, add all the imported features to the current features list.
-                App.FeatureStore.CurrentFeatures.AddRange(importedRootObject.Features);
+                App.FeatureStore.CurrentFeatures.AddRange(validatedFeatures.Features);
 
                 SaveCurrentFeaturesToEmbeddedFile();
-                await HomePage.Instance.DisplayAlert("Import Success", "New features have been added to your features list.", "OK");
+                await HomePage.Instance.DisplayAlert("Import Success", string.Format("{0} new features have been added to your features list. {1} features failed to import.", successfulImport, failedImport), "OK");
                 MyFeaturesViewModel.isDirty = true;
                 return true;
             }
-            catch (Exception)
+
+            return false;
+
+
+        }
+
+        private static void EnsureUniqueID(Feature feature)
+        {
+            // Generate feature ID
+            //TODO: avoid ID collisions
+            if (feature.Properties.Id == null)
             {
-                await HomePage.Instance.DisplayAlert("Invalid File Contents", "Ensure your file only contains data in valid GeoJSON format.", "OK");
-                return false;
+                feature.Properties.Id = Guid.NewGuid().ToString();
+            }
+            else
+            {
+                foreach (var existingFeature in App.FeatureStore.CurrentFeatures)
+                {
+                    if (feature.Properties.Id == existingFeature.Properties.Id && feature != existingFeature)
+                    {
+                        Debug.WriteLine("hi");
+                        feature.Properties.Id = Guid.NewGuid().ToString();
+                    }
+                }
             }
         }
 
@@ -294,9 +298,9 @@ namespace Groundsman.Data
         {
             // Attempt to open the embedded file on the device. 
             // If it exists return it, else create a new embedded file from a json source file.
-            if (File.Exists(DATA_PATH + LOG_FILENAME))
+            if (File.Exists(AppConstants.LOG_FILE))
             {
-                return File.ReadAllText(DATA_PATH + LOG_FILENAME);
+                return File.ReadAllText(AppConstants.LOG_FILE);
             }
             else
             {
@@ -308,9 +312,9 @@ namespace Groundsman.Data
         {
             // Attempt to open the embedded file on the device. 
             // If it exists return it, else create a new embedded file from a json source file.
-            if (File.Exists(DATA_PATH + LOG_FILENAME))
+            if (File.Exists(AppConstants.LOG_FILE))
             {
-                List<Point> logList = File.ReadAllLines(DATA_PATH + LOG_FILENAME).Select(x => new Point
+                List<Point> logList = File.ReadAllLines(AppConstants.LOG_FILE).Select(x => new Point
                 (
                     x[1],
                     x[2],
@@ -326,9 +330,9 @@ namespace Groundsman.Data
 
         public string GetEmbeddedFile()
         {
-            if (File.Exists(DATA_PATH + EMBEDDED_FILENAME))
+            if (File.Exists(AppConstants.FEATURES_FILE))
             {
-                return File.ReadAllText(DATA_PATH + EMBEDDED_FILENAME);
+                return File.ReadAllText(AppConstants.FEATURES_FILE);
             }
             else
             {
@@ -345,9 +349,9 @@ namespace Groundsman.Data
 
         public string GetFeaturesFile()
         {
-            if (File.Exists(Path.Combine(FileSystem.AppDataDirectory, EMBEDDED_FILENAME)))
+            if (File.Exists(AppConstants.FEATURES_FILE))
             {
-                return File.ReadAllText(Path.Combine(FileSystem.AppDataDirectory, EMBEDDED_FILENAME));
+                return File.ReadAllText(AppConstants.FEATURES_FILE);
             }
             else
             {
@@ -410,39 +414,6 @@ namespace Groundsman.Data
             return false;
         }
 
-        /// <summary>
-        /// If necessary, creates a new ID that is unique to all current features stored.
-        /// </summary>
-        /// <returns>The original ID if no clashes were found, else a new unique ID.</returns>
-        public static void TryGetUniqueFeatureID(Feature featureToCheck)
-        {
-            bool validID = false;
 
-            while (validID == false)
-            {
-                validID = true;
-
-                if (featureToCheck.Properties.Id == AppConstants.NEW_ENTRY_ID)
-                {
-                    validID = false;
-                }
-                else
-                {
-                    foreach (var feature in App.FeatureStore.CurrentFeatures)
-                    {
-                        if (featureToCheck.Properties.Id == feature.Properties.Id && featureToCheck != feature)
-                        {
-                            validID = false;
-                            break;
-                        }
-                    }
-                }
-
-                if (validID == false)
-                {
-                    featureToCheck.Properties.Id = DateTime.Now.GetHashCode();
-                }
-            }
-        }
     }
 }

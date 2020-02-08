@@ -13,7 +13,7 @@ namespace Groundsman
 
     public class Properties
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string AuthorId { get; set; }
         public string MetadataStringValue { get; set; }
         public int MetadataIntegerValue { get; set; }
