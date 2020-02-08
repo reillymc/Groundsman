@@ -6,7 +6,6 @@ using Groundsman.iOS.Renderers;
 
 [assembly: ExportRenderer(typeof(Entry), typeof(CustomEntryRenderer))]
 namespace Groundsman.iOS.Renderers
-
 {
     public class CustomEntryRenderer : EntryRenderer
     {

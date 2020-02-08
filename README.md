@@ -6,14 +6,12 @@ The app was originally developed for QUT GIS students.
 # Information
 - Groundsman is written in C# and built for iOS and Android with Xamarin in Visual Studio.
 - Groundsman is built around the MVVM archetecture.
-
 - The Groundsman project targets the .NET Standard 2.1 framework
-- Minimum requirements include iOS 11.0 and Android 7.0
+- Minimum system requirements: iOS 11.0 and Android 7.0
 
 The following packages are used:
 - Newtonsoft.Json
 - Plugin.Permissions
-- Plugin.Share
 - Xamarin.Essentials
 - Xamarin.Forms
 - Xamarin.Forms.Maps

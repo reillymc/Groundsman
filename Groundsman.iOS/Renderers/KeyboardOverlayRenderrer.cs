@@ -8,7 +8,6 @@ using Groundsman.iOS.Renderers;
 using Groundsman;
 
 [assembly: ExportRenderer(typeof(EditFeatureDetailsView), typeof(KeyboardOverelayRenderer))]
-
 namespace Groundsman.iOS.Renderers
 {
     public class KeyboardOverelayRenderer : PageRenderer

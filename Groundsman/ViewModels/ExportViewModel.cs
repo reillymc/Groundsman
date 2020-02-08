@@ -1,10 +1,5 @@
-﻿using Plugin.Share;
-using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Xamarin.Forms;
-using System.Net.Mail;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using Xamarin.Essentials;
 using System.IO;
 
@@ -33,11 +28,6 @@ namespace Groundsman
         /// </summary>
         public ExportViewModel()
         {
-
-            // If share button clicked
-            if (!CrossShare.IsSupported)
-                return;
-
             ExperimentalFeatures.Enable("ShareFileRequest_Experimental");
             ShareButtonClickCommand = new Command(async () =>
             {

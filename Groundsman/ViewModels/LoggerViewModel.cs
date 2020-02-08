@@ -1,12 +1,9 @@
-﻿using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
-using System;
+﻿using System;
 using System.Windows.Input;
 using Xamarin.Forms;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
-using Plugin.Share;
 using System.IO;
 
 namespace Groundsman
@@ -118,8 +115,6 @@ namespace Groundsman
 
         private async void ExportLog()
         {
-            if (!CrossShare.IsSupported)
-                return;
             File.WriteAllText(Path.Combine(FileSystem.AppDataDirectory, LOG_FILENAME), TextEntry);
             ExperimentalFeatures.Enable("ShareFileRequest_Experimental");
             await Share.RequestAsync(new ShareFileRequest

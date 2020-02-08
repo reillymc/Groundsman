@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.qutgeodev.groundsman" android:versionCode="7" android:versionName="6.2" android:installLocation="auto">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.qutgeodev.groundsman" android:installLocation="auto" android:versionName="8" android:versionCode="8">
 	<uses-sdk android:minSdkVersion="24" android:targetSdkVersion="28" />
 	<application android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:label="Groundsman">
 		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyDaeurrZExaOrUGhn5Q9_g447PSC7DOfHM" />
