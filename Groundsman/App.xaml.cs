@@ -7,12 +7,14 @@ namespace Groundsman
     public partial class App : Application
     {
         public static FeatureStore FeatureStore { get; private set; }
+        public static LogStore LogStore { get; private set; }
         public static string AppTheme { get; set; }
 
         public App()
         {
             InitializeComponent();
             FeatureStore = new FeatureStore();
+            LogStore = new LogStore();
             MainPage = new NavigationPage(HomePage.Instance);
             // If the user ID hasn't been set yet, prompt the user to create one upon app launch.
             if (!Preferences.ContainsKey("UserID"))

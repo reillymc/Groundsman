@@ -1,19 +1,14 @@
-﻿using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
-using System;
+﻿using System;
 using System.Windows.Input;
 using Xamarin.Forms;
 using System.Threading;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
-using Plugin.Share;
 using System.IO;
 
 namespace Groundsman
 {
     public class LoggerViewModel : ViewModelBase
     {
-        private const string LOG_FILENAME = "log.csv";
         public ICommand ToggleButtonClickCommand { set; get; }
         public ICommand ClearButtonClickCommand { set; get; }
         public ICommand ExportButtonClickCommand { set; get; }
@@ -76,9 +71,10 @@ namespace Groundsman
                 TextEntry = "";
             });
 
-            ExportButtonClickCommand = new Command(() =>
+            ExportButtonClickCommand = new Command(async () =>
             {
-                ExportLog();
+                File.WriteAllText(AppConstants.LOG_FILE, TextEntry);
+                await App.LogStore.ExportLogFile();
             });
         }
 
@@ -114,19 +110,6 @@ namespace Groundsman
                     StopUpdate();
                 }
             }
-        }
-
-        private async void ExportLog()
-        {
-            if (!CrossShare.IsSupported)
-                return;
-            File.WriteAllText(Path.Combine(FileSystem.AppDataDirectory, LOG_FILENAME), TextEntry);
-            ExperimentalFeatures.Enable("ShareFileRequest_Experimental");
-            await Share.RequestAsync(new ShareFileRequest
-            {
-                Title = "Groundsman Logfile",
-                File = new ShareFile(Path.Combine(FileSystem.AppDataDirectory, LOG_FILENAME), "text/csv")
-            });
         }
     }
 }

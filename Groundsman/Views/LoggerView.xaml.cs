@@ -14,15 +14,13 @@ namespace Groundsman
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
         }
 
-        void LogLabel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void LogLabel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (appeared)
             {
-                this.ScrollBox.ScrollToAsync(logLabel, ScrollToPosition.End, true);
-
+                ScrollBox.ScrollToAsync(logLabel, ScrollToPosition.End, true);
             }
         }
     }
