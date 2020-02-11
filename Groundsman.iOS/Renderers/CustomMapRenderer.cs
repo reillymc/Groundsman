@@ -22,8 +22,6 @@ namespace Groundsman.iOS.Renderers
                 MKMapView nativeMap = Control as MKMapView;
                 nativeMap.ShowsCompass = false;
                 AddUserTrackingButton(nativeMap);
-
-                
             }
         }
 

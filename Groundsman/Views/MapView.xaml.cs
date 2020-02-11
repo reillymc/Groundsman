@@ -3,8 +3,6 @@ using Xamarin.Forms.Maps;
 using System;
 using Plugin.Permissions.Abstractions;
 using Plugin.Permissions;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Groundsman
 {
@@ -14,8 +12,23 @@ namespace Groundsman
         {
             NavigationPage.SetHasNavigationBar(this, false);
             InitializeComponent();
-            map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(-27.47004901089882, 153.021072), Distance.FromMiles(1.0)));
+            CenterMapOnUser();
             map.MapClicked += OnMapClicked;
+        }
+
+        // Only center map on user if location permissions are granted
+        private async void CenterMapOnUser()
+        {
+            if (CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location).Result == PermissionStatus.Granted)
+            {
+                Point location = await Services.GetGeoLocation();
+                map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(location.Latitude, location.Longitude), Distance.FromMiles(1.0)));
+            }
+            else
+            {
+                map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(-27.47004901089882, 153.021072), Distance.FromMiles(1.0)));
+                await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
+            }
         }
 
         private void CleanFeaturesOnMap()
@@ -31,19 +44,6 @@ namespace Groundsman
             {
                 var points = feature.Properties.Xamarincoordinates;
 
-                // One day before the feature, so it works for showing all feature
-                DateTime beforeDate = DateTime.Parse(feature.Properties.Date).AddDays(-1);
-
-                //if (Date_filter.Equals("Today"))
-                //    beforeDate = DateTime.Today.AddDays(-1);
-                //else if (Date_filter.Equals("Last 7 days"))
-                //    beforeDate = DateTime.Now.AddDays(-7);
-                //else if (Date_filter.Equals("Last month"))
-                //    beforeDate = DateTime.Now.AddDays(-30);
-
-                // feature is earily than before date
-                //if (DateTime.Compare(beforeDate, DateTime.Parse(feature.properties.date)) < 0)
-                //{
                 if (feature.Geometry.Type.Equals("Point"))
                 {
                     Pin pin = new Pin
@@ -83,7 +83,7 @@ namespace Groundsman
 
                     map.MapElements.Add(polygon);
                 }
-                //}
+                
             });
 
             //List<Point> logFile = App.FeatureStore.GetLogFileObject();
