@@ -3,17 +3,24 @@ using Xamarin.Forms.Maps;
 using System;
 using Plugin.Permissions.Abstractions;
 using Plugin.Permissions;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Groundsman
 {
     public partial class MapView : ContentPage
     {
+        private CancellationTokenSource cts;
         public MapView()
         {
             NavigationPage.SetHasNavigationBar(this, false);
             InitializeComponent();
             CenterMapOnUser();
             map.MapClicked += OnMapClicked;
+            cts = new CancellationTokenSource();
+            //_ = MapLogUpdaterAsync(new TimeSpan(0, 0, 1), cts.Token);
         }
 
         // Only center map on user if location permissions are granted
@@ -86,19 +93,29 @@ namespace Groundsman
                 
             });
 
-            //List<Point> logFile = App.FeatureStore.GetLogFileObject();
+            
+        }
 
-            //Polyline logPolyline = new Polyline
-            //{
-            //    StrokeColor = Color.OrangeRed,
-            //    StrokeWidth = 5,
-            //};
-            //logFile.ForEach((Point point) =>
-            //{
-            //    Debug.WriteLine(point.Latitude);
-            //    logPolyline.Geopath.Add(new Position(point.Latitude, point.Longitude));
-            //});
-            //map.MapElements.Add(logPolyline);
+        private async Task MapLogUpdaterAsync(TimeSpan interval, CancellationToken ct)
+        {
+            while (true)
+            {
+                await Task.Delay(interval, ct);
+
+                List<Point> logFile = App.LogStore.GetLogFileObject();
+
+                Polyline logPolyline = new Polyline
+                {
+                    StrokeColor = Color.DarkOrange,
+                    StrokeWidth = 3,
+                };
+                logFile.ForEach((Point point) =>
+                {
+                    Debug.WriteLine("POINT: {0}, {1}", point.Latitude, point.Longitude);
+                    logPolyline.Geopath.Add(new Position(point.Latitude, point.Longitude));
+                });
+                map.MapElements.Add(logPolyline);
+            }
         }
 
         void OnMapClicked(object sender, MapClickedEventArgs e)
@@ -176,12 +193,13 @@ namespace Groundsman
             }
             return false;
         }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
             CleanFeaturesOnMap();
             DrawAllGeoDataOnTheMap();
-
+            
             if (CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location).Result == PermissionStatus.Granted)
             {
                 map.IsShowingUser = true;

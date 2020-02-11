@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,17 +26,19 @@ namespace Groundsman.Data
 
         public List<Point> GetLogFileObject()
         {
-            // Attempt to open the embedded file on the device. 
-            // If it exists return it, else create a new embedded file from a json source file.
+            // Casts to doubles without error handeling currently
             if (File.Exists(AppConstants.LOG_FILE))
             {
-                List<Point> logList = File.ReadAllLines(AppConstants.LOG_FILE).Select(x => new Point
-                (
-                    x[1],
-                    x[2],
-                    x[3]
-                )).ToList();
-                return logList;
+                List<Point> logPoints = new List<Point>();
+                string[] logList = File.ReadAllLines(AppConstants.LOG_FILE);
+                foreach(string pointString in logList)
+                {
+                    string[] stringArray = pointString.Split(",");
+                    Point point = new Point(double.Parse(stringArray[1]), double.Parse(stringArray[2]), double.Parse(stringArray[3]));
+                    Debug.WriteLine(point);
+                    logPoints.Add(point);
+                }
+                return logPoints;
             }
             else
             {
