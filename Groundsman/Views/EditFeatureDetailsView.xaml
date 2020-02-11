@@ -92,7 +92,7 @@
                             <ColumnDefinition Width="0.72*" />
                         </Grid.ColumnDefinitions>
                         <Label Style="{StaticResource ViewLabelStyle}" Text="String: " Grid.Row="1" Grid.Column="0" FontSize="Small" HorizontalOptions="Start" VerticalTextAlignment="Center" />
-                        <Entry Text="{Binding MetadataStringEntry}" Keyboard="Default" Grid.Row="1" Grid.Column="1" FontSize="Small" HorizontalOptions="Fill" />
+                        <Entry Text="{Binding MetadataStringEntry}" Keyboard="Default" Placeholder="Enter string..." Grid.Row="1" Grid.Column="1" FontSize="Small" HorizontalOptions="Fill" />
                         <Label Style="{StaticResource ViewLabelStyle}" Text="Integer: " Grid.Row="2" Grid.Column="0" FontSize="Small" HorizontalOptions="Start" VerticalTextAlignment="Center" />
                         <Entry Text="{Binding MetadataIntegerEntry}" Keyboard="Numeric" Grid.Row="2" Grid.Column="1" FontSize="Small" HorizontalOptions="Fill" />
                         <Label Style="{StaticResource ViewLabelStyle}" Text="Float: " Grid.Row="3" Grid.Column="0" FontSize="Small" HorizontalOptions="Start" VerticalTextAlignment="Center" />

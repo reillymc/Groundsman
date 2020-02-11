@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
@@ -35,7 +33,6 @@ namespace Groundsman.Data
                 {
                     string[] stringArray = pointString.Split(",");
                     Point point = new Point(double.Parse(stringArray[1]), double.Parse(stringArray[2]), double.Parse(stringArray[3]));
-                    Debug.WriteLine(point);
                     logPoints.Add(point);
                 }
                 return logPoints;

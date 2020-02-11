@@ -4,7 +4,6 @@ using System;
 using Plugin.Permissions.Abstractions;
 using Plugin.Permissions;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Threading;
 
@@ -111,7 +110,6 @@ namespace Groundsman
                 };
                 logFile.ForEach((Point point) =>
                 {
-                    Debug.WriteLine("POINT: {0}, {1}", point.Latitude, point.Longitude);
                     logPolyline.Geopath.Add(new Position(point.Latitude, point.Longitude));
                 });
                 map.MapElements.Add(logPolyline);

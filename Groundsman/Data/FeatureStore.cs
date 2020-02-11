@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -346,7 +345,6 @@ namespace Groundsman.Data
                 {
                     if (feature.Properties.Id == existingFeature.Properties.Id && feature != existingFeature)
                     {
-                        Debug.WriteLine("hi");
                         feature.Properties.Id = Guid.NewGuid().ToString();
                     }
                 }

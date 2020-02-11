@@ -16,8 +16,10 @@
             </Grid.RowDefinitions>
             <Frame Style="{StaticResource FrameStyle}" Grid.Row="0">
                 <FlexLayout Style="{StaticResource ContainerStyleRow}" HeightRequest="40">
-                    <Label Style="{StaticResource InputLabelStyle}" Grid.Row="0" Grid.Column="0" Margin="10" Text="Logging Interval (seconds): " />
-                    <Entry Text="{Binding IntervalEntry}" Keyboard="Numeric" Grid.Row="0" Grid.Column="1" FontSize="Small" WidthRequest="70" HorizontalOptions="End" Margin="0,0,10,0" />
+                    <Label Style="{StaticResource InputLabelStyle}" Grid.Row="0" Grid.Column="0" Margin="10,0,0,0" Text="Logging Interval: " />
+                    <Entry Text="{Binding IntervalEntry}" TextColor="{StaticResource textSecondary}" HorizontalTextAlignment="End" Keyboard="Numeric" Grid.Row="0" Grid.Column="1" FontSize="Small" WidthRequest="44" Margin="0,6,0,0" />
+                    <Label Style="{StaticResource InputLabelStyle}" Grid.Row="0" Grid.Column="0" Margin="0" Text="seconds" HorizontalOptions="Start"/>
+
                 </FlexLayout>
             </Frame>
             <Frame Style="{StaticResource FrameStyle}" Grid.Row="1">
