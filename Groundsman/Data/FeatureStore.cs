@@ -7,6 +7,10 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Plugin.FilePicker;
+using Plugin.FilePicker.Abstractions;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using Xamarin.Essentials;
 
 namespace Groundsman.Data
@@ -14,6 +18,7 @@ namespace Groundsman.Data
     public class FeatureStore
     {
         public List<Feature> CurrentFeatures { get; set; } = new List<Feature>();
+
         public Task<List<Feature>> GetFeaturesAsync()
         {
             return Task.Run(async () =>
@@ -273,6 +278,61 @@ namespace Groundsman.Data
 
         }
 
+        public async Task ImportFeaturesFromFile()
+        {
+            //TODO: exception handling - 
+            try
+            {
+                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Storage);
+
+                // If permissions allowed, prompt the user to pick a file.
+                if (status == PermissionStatus.Granted)
+                {
+                    FileData fileData = await CrossFilePicker.Current.PickFile();
+
+                    // If the user didn't cancel, import the contents of the file they selected.
+                    if (fileData != null)
+                    {
+                        string contents = System.Text.Encoding.UTF8.GetString(fileData.DataArray);
+                        await App.FeatureStore.ImportFeaturesAsync(contents);
+                    }
+                }
+                else
+                {
+
+                    // Display storage permission popup if permission is not be established, display alert if the user declines 
+                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Storage))
+                    {
+                        await HomePage.Instance.DisplayAlert("Permissions Error", "Storage permissions for Groundsman must be enabled to utilise this feature.", "Ok", "OK");
+                    }
+
+                    // If the user accepts the permission get the resulting value and check the if the key exists
+                    var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Storage);
+                    if (results.ContainsKey(Permission.Storage))
+                    {
+                        status = results[Permission.Storage];
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task ImportFeaturesFromClipboard()
+        {
+            try
+            {
+                string contents = await Clipboard.GetTextAsync();
+                await App.FeatureStore.ImportFeaturesAsync(contents);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         private static void EnsureUniqueID(Feature feature)
         {
             // Generate feature ID
@@ -387,6 +447,22 @@ namespace Groundsman.Data
             {
                 throw ex;
             }
+        }
+
+        public async Task ExportFeatures()
+        {
+            await Share.RequestAsync(new ShareFileRequest
+            {
+                Title = "Features Export",
+                File = new ShareFile(AppConstants.FEATURES_FILE, "text/plain")
+            });
+        }
+
+        public async Task CopyFeaturesToClipboard()
+        {
+            string textFile = GetEmbeddedFile();
+            await Clipboard.SetTextAsync(textFile);
+            await HomePage.Instance.DisplayAlert("Copy Features", "Features successfully copied to clipboard.", "OK");
         }
 
         /// <summary>

@@ -21,7 +21,7 @@
                 <FlexLayout Style="{StaticResource ContainerStyle}">
                     <Label Style="{StaticResource HeaderStyle}" Text="Copy Features"/>
                     <Label Style="{StaticResource SubheaderStyle}" Text="Copy GeoJSON feature collection to clipboard"/>
-                    <Button Style="{StaticResource ButtonStyle}" Command="{Binding BackupButtonClickCommand}" Text="Copy"/>
+                    <Button Style="{StaticResource ButtonStyle}" Command="{Binding CopyButtonClickCommand}" Text="Copy"/>
                 </FlexLayout>
             </Frame>
         </Grid>

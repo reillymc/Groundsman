@@ -22,7 +22,7 @@
                             <OnPlatform x:TypeArguments="x:Boolean" iOS="true" Android="false" />
                         </Label.IsVisible>
                     </Label>
-                    <Button Style="{StaticResource ButtonStyle}" Text="Import File" Command="{Binding ButtonClickCommand}"/>
+                    <Button Style="{StaticResource ButtonStyle}" Text="Import File" Command="{Binding ImportFileButtonClickCommand}"/>
                 </FlexLayout>
             </Frame>
             <Frame Style="{StaticResource FrameStyle}" Grid.Row="1">
@@ -32,7 +32,7 @@
                     <Frame Style="{StaticResource EditorFrameStyle}" Grid.Row="1">
                         <Label Style="{StaticResource SubheaderStyle}" Text="Import copied/exported GeoJSON feature collection on clipboard"/>
                     </Frame>
-                    <Button Style="{StaticResource ButtonStyle}" Command="{Binding TextButtonClickCommand}" Grid.Row="2" Text="Import Features"/>
+                    <Button Style="{StaticResource ButtonStyle}" Command="{Binding ImportClipboardButtonClickCommand}" Grid.Row="2" Text="Import Features"/>
                 </FlexLayout>
             </Frame>
         </Grid>
