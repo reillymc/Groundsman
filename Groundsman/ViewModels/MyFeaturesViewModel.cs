@@ -61,7 +61,7 @@ namespace Groundsman
         public MyFeaturesViewModel()
         {
             ButtonClickedCommand = new Command(async () => await ExecuteButtonClickedCommand());
-            IDClickedCommand = new Command(() => IDTappedCommand());
+            IDClickedCommand = new Command(async () => await IDTappedCommandAsync());
             ItemTappedCommand = new Command<Feature>(async (data) => await ExecuteItemTappedCommand(data));
             RefreshListCommand = new Command(() => ExecuteRefreshListCommand());
             EditEntryCommand = new Command<Feature>((feature) => EditFeatureEntry(feature));
@@ -83,12 +83,12 @@ namespace Groundsman
             _isBusy = false;
         }
 
-        private void IDTappedCommand()
+        private async Task IDTappedCommandAsync()
         {
             if (_isBusy) return;
             _isBusy = true;
 
-            HomePage.Instance.ShowProfileSettingsPage();
+            await HomePage.Instance.ShowShareSheetAsync();
 
             _isBusy = false;
         }

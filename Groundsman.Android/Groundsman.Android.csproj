@@ -264,7 +264,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Groundsman\Groundsman.csproj">
-      <Project>{B3D87493-1DCF-4840-A1AE-AE73CDB618B0}</Project>
+      <Project>{6F42BAC3-2D9B-4FA8-960D-FE794023CAF2}</Project>
       <Name>Groundsman</Name>
     </ProjectReference>
   </ItemGroup>

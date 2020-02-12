@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Groundsman.AddFeatureView"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.ModalPresentationStyle="FormSheet">
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="#f5f6f6">
+            <Grid Margin="15, 7, 15, 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Text="Add New Feature" TextColor="{DynamicResource textPrimary}" FontSize="16"  FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" Grid.Row="0" Grid.Column="1" />
+                <Button x:Name="dismissButton" Text="Cancel" FontSize="16" FontAttributes="Bold" Clicked="OnDismissButtonClicked" HorizontalOptions="End" Grid.Row="0" Grid.Column="2">
+                    <Button.TextColor>
+                        <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="White" />
+                    </Button.TextColor>
+                </Button>
+            </Grid>
+            <BoxView HeightRequest="0.3" Color="#c0c0c2"></BoxView>
+            <Grid Padding="20">
+                <Button Grid.Column="0" Grid.Row="0" Text="Point" ContentLayout="Top, 0" ImageSource="point_icon" TextColor="Green" CornerRadius="5" BackgroundColor="White" Clicked="Point_Button_Clicked"/>
+                <Button Grid.Column="1" Grid.Row="0" Text="Line" ContentLayout="Top, 0" ImageSource="line_icon" TextColor="Green" CornerRadius="5" BackgroundColor="White" Clicked="Line_Button_Clicked"/>
+                <Button Grid.Column="2" Grid.Row="0" Text="Polygon" ContentLayout="Top, 0" ImageSource="area_icon" TextColor="Green" CornerRadius="5" BackgroundColor="White" Clicked="Polygon_Button_Clicked"/>
+            </Grid>
+            <Grid Padding="20, 0">
+                <Button Grid.Column="0" Grid.Row="0" Text="Import from File" ContentLayout="Right, 100" ImageSource="import_icon" TextColor="Green" CornerRadius="5" BackgroundColor="White" Clicked="Import_Button_Clicked"/>
+                <Button Grid.Column="0" Grid.Row="1" Text="Paste from Clipboard" ContentLayout="Right, 80" ImageSource="add_icon_color" TextColor="Green" CornerRadius="5" BackgroundColor="White" Clicked="Paste_Button_Clicked" HorizontalOptions="FillAndExpand"/>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

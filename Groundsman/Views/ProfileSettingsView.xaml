@@ -4,82 +4,65 @@
              xmlns:local="clr-namespace:Groundsman"
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
              x:Class="Groundsman.ProfileSettingsView"
-             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-             ios:Page.ModalPresentationStyle="FormSheet"
-             Title="Profile Settings"
+             Title="Settings"
              BackgroundColor="{DynamicResource bgSecondary}">
     <ContentPage.BindingContext>
         <local:ProfileSettingsViewModel x:Name="viewModel" />
     </ContentPage.BindingContext>
     <ContentPage.Content>
-        <StackLayout>
-            <Grid Margin="15, 7, 15, 0" >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Label Text="Groundsman Settings" TextColor="{DynamicResource textPrimary}" FontSize="16"  FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" Grid.Row="0" Grid.Column="1" />
-                <Button x:Name="dismissButton" Text="Done" FontSize="16" FontAttributes="Bold" Clicked="OnDismissButtonClicked" HorizontalOptions="End" Grid.Row="0" Grid.Column="2">
-                    <Button.TextColor>
-                        <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="White" />
-                    </Button.TextColor>
-                </Button>
-            </Grid>
-            <TableView BackgroundColor="{DynamicResource bgPrimary}" Intent="Settings">
-                <TableRoot>
-                    <TableSection Title="Profile">
-                        <ViewCell>
-                            <Entry Margin="7,0" TextColor="{DynamicResource textPrimary}" Text="{Binding IDEntry}" Placeholder="User ID">
-                                <Entry.Behaviors>
-                                    <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
-                                </Entry.Behaviors>
-                            </Entry>
-                        </ViewCell>
-                    </TableSection>
-                    <TableSection Title="GPS and Data Precision">
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal" Padding="15,0" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
-                                <Label Text="GPS Accuracy" VerticalOptions="Center" TextColor="{DynamicResource textPrimary}"></Label>
-                                <Picker x:Name="picker" HorizontalOptions="EndAndExpand" WidthRequest="95" TitleColor="Black" SelectedIndexChanged="OnPickerSelectedIndexChanged" SelectedIndex="{Binding GPSPrecisionEntry}">
-                                    <Picker.ItemsSource>
-                                        <x:Array Type="{x:Type x:String}">
-                                            <x:String>Best</x:String>
-                                            <x:String>High</x:String>
-                                            <x:String>Medium</x:String>
-                                            <x:String>Low</x:String>
-                                        </x:Array>
-                                    </Picker.ItemsSource>
-                                </Picker>
-                            </StackLayout>
-                        </ViewCell>
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal" Padding="15,0" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
-                                <Label Text="{Binding Source={x:Reference stepperDecimal}, Path=Value}" VerticalOptions="Center" TextColor="{DynamicResource textPrimary}"></Label>
-                                <Label Text="Decimal Places" VerticalOptions="Center" TextColor="{DynamicResource textPrimary}"></Label>
-                                <Stepper x:Name="stepperDecimal" Maximum="12" Increment="1" HorizontalOptions="EndAndExpand" Value="{Binding DecimalAccuracyEntry}" ValueChanged="OnStepperValueChanged" ></Stepper>
-                            </StackLayout>
-                        </ViewCell>
+        <TableView BackgroundColor="{DynamicResource bgPrimary}" Intent="Settings">
+            <TableRoot>
+                <TableSection Title="Profile">
+                    <ViewCell>
+                        <Entry Margin="7,0" TextColor="{DynamicResource textPrimary}" Text="{Binding IDEntry}" Placeholder="User ID">
+                            <Entry.Behaviors>
+                                <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
+                            </Entry.Behaviors>
+                        </Entry>
+                    </ViewCell>
+                </TableSection>
+                <TableSection Title="GPS and Data Precision">
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" Padding="15,0" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
+                            <Label Text="GPS Accuracy" VerticalOptions="Center" TextColor="{DynamicResource textPrimary}"></Label>
+                            <Picker x:Name="picker" HorizontalOptions="EndAndExpand" WidthRequest="95" TitleColor="Black" SelectedIndexChanged="OnPickerSelectedIndexChanged" SelectedIndex="{Binding GPSPrecisionEntry}">
+                                <Picker.ItemsSource>
+                                    <x:Array Type="{x:Type x:String}">
+                                        <x:String>Best</x:String>
+                                        <x:String>High</x:String>
+                                        <x:String>Medium</x:String>
+                                        <x:String>Low</x:String>
+                                    </x:Array>
+                                </Picker.ItemsSource>
+                            </Picker>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" Padding="15,0" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
+                            <Label Text="{Binding Source={x:Reference stepperDecimal}, Path=Value}" VerticalOptions="Center" TextColor="{DynamicResource textPrimary}"></Label>
+                            <Label Text="Decimal Places" VerticalOptions="Center" TextColor="{DynamicResource textPrimary}"></Label>
+                            <Stepper x:Name="stepperDecimal" Maximum="12" Increment="1" HorizontalOptions="EndAndExpand" Value="{Binding DecimalAccuracyEntry}" ValueChanged="OnStepperValueChanged" ></Stepper>
+                        </StackLayout>
+                    </ViewCell>
 
-                    </TableSection>
+                </TableSection>
 
-                    <TableSection>
-                        <ViewCell Tapped="OnViewCellTapped">
-                            <Grid Margin="15,12">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Label Text="Reset User Data">
-                                    <Label.TextColor>
-                                        <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="{StaticResource greenPrimary}" />
-                                    </Label.TextColor>
-                                </Label>
-                            </Grid>
-                        </ViewCell>
-                    </TableSection>
-                </TableRoot>
-            </TableView>
-        </StackLayout>
+                <TableSection>
+                    <ViewCell Tapped="OnViewCellTapped">
+                        <Grid Margin="15,12">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Label Text="Reset User Data">
+                                <Label.TextColor>
+                                    <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="{StaticResource greenPrimary}" />
+                                </Label.TextColor>
+                            </Label>
+                        </Grid>
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+        </TableView>
     </ContentPage.Content>
 </ContentPage>
