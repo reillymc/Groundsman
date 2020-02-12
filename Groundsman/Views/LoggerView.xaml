@@ -5,6 +5,9 @@
              xmlns:local="clr-namespace:Groundsman"
              Title="Logger"
              BackgroundColor="{DynamicResource bgPrimary}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem AutomationId="id_icon" Icon="share_icon" Command="{Binding ShareButtonClickCommand}" />
+    </ContentPage.ToolbarItems>
     <ContentPage.BindingContext>
         <local:LoggerViewModel x:Name="viewModel" />
     </ContentPage.BindingContext>
@@ -45,11 +48,6 @@
                             </Button.TextColor>
                         </Button>
                         <Button Grid.Row="2" AutomationId="ClearButton" Text="Clear" Command="{Binding ClearButtonClickCommand}" Padding="10, 0">
-                            <Button.TextColor>
-                                <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="white" />
-                            </Button.TextColor>
-                        </Button>
-                        <Button Grid.Row="2" AutomationId="ExportButton" Text="Export" Command="{Binding ExportButtonClickCommand}" Padding="10, 0">
                             <Button.TextColor>
                                 <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="white" />
                             </Button.TextColor>

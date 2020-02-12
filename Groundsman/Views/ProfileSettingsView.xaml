@@ -4,8 +4,7 @@
              xmlns:local="clr-namespace:Groundsman"
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
              x:Class="Groundsman.ProfileSettingsView"
-             Title="Settings"
-             BackgroundColor="{DynamicResource bgSecondary}">
+             Title="Settings">
     <ContentPage.BindingContext>
         <local:ProfileSettingsViewModel x:Name="viewModel" />
     </ContentPage.BindingContext>
@@ -49,7 +48,7 @@
 
                 <TableSection>
                     <ViewCell Tapped="OnViewCellTapped">
-                        <Grid Margin="15,12">
+                        <Grid Margin="15,12" VerticalOptions="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
