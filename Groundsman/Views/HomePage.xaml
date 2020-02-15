@@ -3,15 +3,9 @@
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
             android:TabbedPage.ToolbarPlacement="Bottom"
-            android:TabbedPage.BarBackgroundColor="White"
-            android:TabbedPage.BarSelectedItemColor="Black"
-            android:TabbedPage.BarTextColor="Black"
             xmlns:local="clr-namespace:Groundsman;assembly=Groundsman"
             NavigationPage.HasNavigationBar="false"
-            x:Class="Groundsman.HomePage"
-            SelectedTabColor="{DynamicResource textPrimary}"
-            BarBackgroundColor="{DynamicResource bgPrimary}"
-            BarTextColor="{DynamicResource textPrimary}">
+            x:Class="Groundsman.HomePage">
     <TabbedPage.Children>
 
         <NavigationPage Title="My Features" Icon="data_icon" BackgroundColor="{DynamicResource bgPrimary}">

@@ -8,7 +8,12 @@ namespace Groundsman
     {
         public static FeatureStore FeatureStore { get; private set; }
         public static LogStore LogStore { get; private set; }
-        public static string AppTheme { get; set; }
+        public static Theme AppTheme { get; set; }
+        public enum Theme
+        {
+            Light,
+            Dark
+        }
 
         public App()
         {
