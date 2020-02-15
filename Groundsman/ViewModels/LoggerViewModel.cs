@@ -11,7 +11,7 @@ namespace Groundsman
     {
         public ICommand ToggleButtonClickCommand { set; get; }
         public ICommand ClearButtonClickCommand { set; get; }
-        public ICommand ExportButtonClickCommand { set; get; }
+        public ICommand ShareButtonClickCommand { set; get; }
         private CancellationTokenSource cts;
         public bool isLogging;
 
@@ -72,7 +72,7 @@ namespace Groundsman
                 File.WriteAllText(AppConstants.LOG_FILE, TextEntry);
             });
 
-            ExportButtonClickCommand = new Command(async () =>
+            ShareButtonClickCommand = new Command(async () =>
             {
                 File.WriteAllText(AppConstants.LOG_FILE, TextEntry);
                 await App.LogStore.ExportLogFile();

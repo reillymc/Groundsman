@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Groundsman.AddFeatureView"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.ModalPresentationStyle="FormSheet">
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="{DynamicResource bgSecondary}">
+            <StackLayout BackgroundColor="{DynamicResource bgPrimary}">
+                <Grid Margin="15, 7, 15, 0" BackgroundColor="{DynamicResource bg}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="Add New Feature" TextColor="{DynamicResource textPrimary}" FontSize="16"  FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" Grid.Row="0" Grid.Column="1" />
+                    <Button x:Name="dismissButton" Text="Cancel" FontSize="16" FontAttributes="Bold" Clicked="OnDismissButtonClicked" HorizontalOptions="End" Grid.Row="0" Grid.Column="2">
+                        <Button.TextColor>
+                            <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="White" />
+                        </Button.TextColor>
+                    </Button>
+                </Grid>
+                <BoxView HeightRequest="0.3" Color="{DynamicResource bgTertiary}"></BoxView>
+            </StackLayout>
+
+            <Grid Padding="20">
+                <Frame Grid.Row="0" Grid.Column="0" HasShadow="False" Padding="10" x:Name="pointFrame" BackgroundColor="{DynamicResource bgPrimary}">
+                    <StackLayout Orientation="Vertical">
+                        <Image Source="point_icon" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" WidthRequest="30"/>
+                        <Label Text="Point" TextColor="Green" HorizontalOptions="Center" VerticalOptions="End"/>
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Row="0" Grid.Column="1" HasShadow="False" Padding="10" x:Name="lineFrame" BackgroundColor="{DynamicResource bgPrimary}">
+                    <StackLayout Orientation="Vertical">
+                        <Image Source="line_icon" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" WidthRequest="30"/>
+                        <Label Text="Line" TextColor="Green" HorizontalOptions="Center" VerticalOptions="End"/>
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Row="0" Grid.Column="2" HasShadow="False" Padding="10" x:Name="polygonFrame" BackgroundColor="{DynamicResource bgPrimary}">
+                    <StackLayout Orientation="Vertical">
+                        <Image Source="area_icon" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" WidthRequest="30"/>
+                        <Label Text="Polygon" TextColor="Green" HorizontalOptions="Center" VerticalOptions="End"/>
+                    </StackLayout>
+                </Frame>
+            </Grid>
+            <Grid Padding="20, 0">
+                <Frame Grid.Row="0" Grid.Column="0" HasShadow="False" x:Name="importFrame" HeightRequest="16" BackgroundColor="{DynamicResource bgPrimary}">
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                        <Label Text="Import from File" TextColor="Green" HorizontalOptions="StartAndExpand" VerticalOptions="End"/>
+                        <Image Source="import_icon" HorizontalOptions="Center" VerticalOptions="EndAndExpand"/>
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Row="1" Grid.Column="0" HasShadow="False" x:Name="pasteFrame" HeightRequest="16" BackgroundColor="{DynamicResource bgPrimary}">
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                        <Label Text="Paste from Clipboard" TextColor="Green" HorizontalOptions="StartAndExpand" VerticalOptions="End"/>
+                        <Image Source="export_icon" HorizontalOptions="Center" VerticalOptions="EndAndExpand"/>
+                    </StackLayout>
+                </Frame>
+            </Grid>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

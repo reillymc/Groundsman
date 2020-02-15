@@ -93,7 +93,7 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\Groundsman\Groundsman.csproj">
-      <Project>{B3D87493-1DCF-4840-A1AE-AE73CDB618B0}</Project>
+      <Project>{6F42BAC3-2D9B-4FA8-960D-FE794023CAF2}</Project>
       <Name>Groundsman</Name>
     </ProjectReference>
   </ItemGroup>
@@ -101,6 +101,8 @@
     <Folder Include="Renderers\" />
     <Folder Include="Misc\" />
     <Folder Include="Assets.xcassets\add_icon.imageset\" />
+    <Folder Include="Assets.xcassets\share_icon.imageset\" />
+    <Folder Include="Assets.xcassets\profile_icon.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="Resources\iTunesArtwork%402x" />

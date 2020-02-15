@@ -7,7 +7,7 @@
              Title="My Features"
              BackgroundColor="{DynamicResource bgPrimary}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem AutomationId="id_icon" Icon="profile_icon" Command="{Binding IDClickedCommand}" />
+        <ToolbarItem AutomationId="id_icon" Icon="share_icon" Command="{Binding IDClickedCommand}" />
     </ContentPage.ToolbarItems>
     <ContentPage.BindingContext>
         <local:MyFeaturesViewModel x:Name="viewModel" />

@@ -48,9 +48,9 @@ namespace Groundsman
             await Navigation.PushAsync(new FeatureDetailsView(data));
         }
 
-        public void ShowProfileSettingsPage()
+        public async Task ShowShareSheetAsync()
         {
-            Navigation.PushModalAsync(new ProfileSettingsView());
+            await App.FeatureStore.ExportFeatures();
         }
 
         /// <summary>
@@ -59,19 +59,7 @@ namespace Groundsman
         /// <returns></returns>
         public async Task ShowDetailFormOptions()
         {
-            var action = await DisplayActionSheet("Select a Data Type", "Cancel", null, "Point", "Line", "Polygon");
-            switch (action)
-            {
-                case "Point":
-                    ShowNewDetailFormPage("Point");
-                    break;
-                case "Line":
-                    ShowNewDetailFormPage("Line");
-                    break;
-                case "Polygon":
-                    ShowNewDetailFormPage("Polygon");
-                    break;
-            }
+            await Navigation.PushModalAsync(new AddFeatureView());
         }
     }
 }

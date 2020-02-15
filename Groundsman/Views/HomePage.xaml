@@ -32,15 +32,9 @@
             </x:Arguments>
         </NavigationPage>
 
-        <NavigationPage Title="Import" Icon="import_icon" BackgroundColor="{DynamicResource bgPrimary}">
+        <NavigationPage Title="Settings" Icon="profile_icon" BackgroundColor="{DynamicResource bgPrimary}">
             <x:Arguments>
-                <local:ImportView/>
-            </x:Arguments>
-        </NavigationPage>
-
-        <NavigationPage Title="Export" Icon="export_icon" BackgroundColor="{DynamicResource bgPrimary}">
-            <x:Arguments>
-                <local:ExportView/>
+                <local:ProfileSettingsView/>
             </x:Arguments>
         </NavigationPage>
 
