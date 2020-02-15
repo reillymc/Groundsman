@@ -116,12 +116,10 @@ namespace Groundsman
             if (isDirty)
             {
                 isDirty = false;
-
                 Device.BeginInvokeOnMainThread(async () =>
                 {
                     // Do a full re-read of the embedded file to get the most current list of features.
-                    App.FeatureStore.CurrentFeatures = await Task.Run(() => App.FeatureStore.GetFeaturesAsync());
-                    EntryListSource = App.FeatureStore.CurrentFeatures;
+                    EntryListSource = await App.FeatureStore.GetFeaturesAsync();
                     FeatureCount = EntryListSource.Count;
                 });
             }

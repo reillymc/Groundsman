@@ -17,7 +17,7 @@ namespace Groundsman
             NavigationPage.SetHasNavigationBar(this, false);
             InitializeComponent();
             CenterMapOnUser();
-            map.MapClicked += OnMapClicked;
+            map.MapClicked += OnMapClickedAsync;
             cts = new CancellationTokenSource();
             //_ = MapLogUpdaterAsync(new TimeSpan(0, 0, 1), cts.Token);
         }
@@ -43,10 +43,11 @@ namespace Groundsman
             map.Pins.Clear();
         }
 
-        public void DrawAllGeoDataOnTheMap()
+        public async Task DrawFeatures()
         {
             // Using CurrentFeature to draw the geodata on the map
-            App.FeatureStore.CurrentFeatures.ForEach((Feature feature) =>
+            List<Feature> Features = await App.FeatureStore.GetFeaturesAsync();
+            Features.ForEach((Feature feature) =>
             {
                 var points = feature.Properties.Xamarincoordinates;
 
@@ -116,10 +117,10 @@ namespace Groundsman
             }
         }
 
-        void OnMapClicked(object sender, MapClickedEventArgs e)
+        async void OnMapClickedAsync(object sender, MapClickedEventArgs e)
         {
-
-            App.FeatureStore.CurrentFeatures.ForEach((Feature feature) =>
+            List<Feature> Features = await App.FeatureStore.GetFeaturesAsync();
+            Features.ForEach((Feature feature) =>
             {
                 bool ItemHit = false;
                 Point[] points = feature.Properties.Xamarincoordinates.ToArray();
@@ -174,7 +175,6 @@ namespace Groundsman
                     inside = !inside;
                 }
             }
-
             return inside;
         }
 
@@ -196,7 +196,7 @@ namespace Groundsman
         {
             base.OnAppearing();
             CleanFeaturesOnMap();
-            DrawAllGeoDataOnTheMap();
+            _ = DrawFeatures();
             
             if (CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location).Result == PermissionStatus.Granted)
             {

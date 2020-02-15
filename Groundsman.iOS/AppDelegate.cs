@@ -39,7 +39,7 @@ namespace Groundsman.iOS
         {
             {
                 url.StartAccessingSecurityScopedResource();
-                _ = App.FeatureStore.ImportFeaturesFromFile(url.StandardizedUrl.Path, url.LastPathComponent);
+                _ = App.FeatureStore.ImportFeaturesFromFileURL(url.StandardizedUrl.Path, url.LastPathComponent);
             }
             return true;
         }
