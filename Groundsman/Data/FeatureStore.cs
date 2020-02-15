@@ -35,7 +35,7 @@ namespace Groundsman.Data
                 {
                     await TryParseFeature(feature);
                 }
-
+                CurrentFeatures = rootobject.Features;
                 return rootobject.Features;
             });
         }
