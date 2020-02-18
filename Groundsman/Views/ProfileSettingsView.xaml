@@ -46,20 +46,19 @@
 
                 </TableSection>
 
-                <TableSection>
+                <TableSection Title="Feature List">
+                    <SwitchCell Text="Show Points on Map"></SwitchCell>
+                    <SwitchCell Text="Show Lines on Map"></SwitchCell>
+                    <SwitchCell Text="Show Polygons on Map"></SwitchCell>
                     <ViewCell Tapped="OnViewCellTapped">
-                        <Grid Margin="15,12" VerticalOptions="Center">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Label Text="Reset User Data">
-                                <Label.TextColor>
-                                    <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="{StaticResource greenPrimary}" />
-                                </Label.TextColor>
-                            </Label>
-                        </Grid>
+                        <StackLayout Orientation="Horizontal" Padding="15,0" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
+                            <Label Text="Clear All Features" TextColor="{StaticResource greenPrimary}"/>
+                        </StackLayout>
                     </ViewCell>
+                </TableSection>
+
+                <TableSection Title="Logger">
+                    <SwitchCell Text="Show Log Path on Map"></SwitchCell>
                 </TableSection>
             </TableRoot>
         </TableView>

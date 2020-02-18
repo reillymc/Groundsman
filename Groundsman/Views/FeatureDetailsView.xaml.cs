@@ -26,6 +26,7 @@ namespace Groundsman
         // Android button spam fix: force all opened pages to go back to main page.
         protected override bool OnBackButtonPressed()
         {
+            base.OnBackButtonPressed();
             HomePage.Instance.Navigation.PopToRootAsync();
             return true;
         }

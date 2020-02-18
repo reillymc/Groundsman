@@ -81,23 +81,18 @@
             <Frame Style="{StaticResource FrameStyle}" VerticalOptions="Start" HeightRequest="200">
                 <StackLayout>
                     <Label Style="{StaticResource ViewLabelStyle}" Text="Metadata" />
-                    <Grid Padding="10, 0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.27*" />
-                            <ColumnDefinition Width="0.72*" />
-                        </Grid.ColumnDefinitions>
-                        <Label Style="{StaticResource ViewLabelStyle}" Text="String: " Grid.Row="1" Grid.Column="0" FontSize="Small" HorizontalOptions="Start" VerticalTextAlignment="Center" />
-                        <Entry Text="{Binding MetadataStringEntry}" Keyboard="Default" Placeholder="Enter string..." Grid.Row="1" Grid.Column="1" FontSize="Small" HorizontalOptions="Fill" />
-                        <Label Style="{StaticResource ViewLabelStyle}" Text="Integer: " Grid.Row="2" Grid.Column="0" FontSize="Small" HorizontalOptions="Start" VerticalTextAlignment="Center" />
-                        <Entry Text="{Binding MetadataIntegerEntry}" Keyboard="Numeric" Grid.Row="2" Grid.Column="1" FontSize="Small" HorizontalOptions="Fill" />
-                        <Label Style="{StaticResource ViewLabelStyle}" Text="Float: " Grid.Row="3" Grid.Column="0" FontSize="Small" HorizontalOptions="Start" VerticalTextAlignment="Center" />
-                        <Entry Text="{Binding MetadataFloatEntry}" Keyboard="Numeric" Grid.Row="3" Grid.Column="1" FontSize="Small" HorizontalOptions="Fill" />
-                    </Grid>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Style="{StaticResource ViewLabelStyle}" Text="String:" FontSize="Small" VerticalTextAlignment="Center" HorizontalOptions="Start" MinimumWidthRequest="120"/>
+                        <Entry Text="{Binding MetadataStringEntry}" Keyboard="Default" Placeholder="Enter string..." FontSize="Small" HorizontalOptions="FillAndExpand" />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Style="{StaticResource ViewLabelStyle}" Text="Integer:" FontSize="Small" VerticalTextAlignment="Center" MinimumWidthRequest="120"/>
+                        <Entry Text="{Binding MetadataIntegerEntry}" Keyboard="Numeric" FontSize="Small" HorizontalOptions="FillAndExpand" />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Style="{StaticResource ViewLabelStyle}" Text="Float:" FontSize="Small" VerticalTextAlignment="Center" MinimumWidthRequest="120"/>
+                        <Entry Text="{Binding MetadataFloatEntry}" Keyboard="Numeric" FontSize="Small" HorizontalOptions="FillAndExpand" />
+                    </StackLayout>
                 </StackLayout>
             </Frame>
         </StackLayout>
