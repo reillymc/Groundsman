@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
 using Xamarin.Forms;
 
 namespace Groundsman
@@ -23,10 +21,6 @@ namespace Groundsman
         public HomePage()
         {
             InitializeComponent();
-            if (CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location).Result != PermissionStatus.Granted)
-            {
-                CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
-            }
         }
 
         /// <summary>

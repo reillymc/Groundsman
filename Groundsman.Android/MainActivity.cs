@@ -1,9 +1,7 @@
 ﻿using Android.App;
 using Android.Content.PM;
-using Android.Runtime;
 using Android.Views;
 using Android.OS;
-using Plugin.Permissions;
 using Plugin.CurrentActivity;
 using Android.Content.Res;
 using Groundsman.Styles;
@@ -57,14 +55,7 @@ namespace Groundsman.Droid
         /// <param name="requestCode"></param>
         /// <param name="permissions"></param>
         /// <param name="grantResults"></param>
-        public override void OnRequestPermissionsResult(int requestCode,
-   string[] permissions, [GeneratedEnum] Permission[] grantResults)
-        {
-            PermissionsImplementation.Current.OnRequestPermissionsResult
-                  (requestCode, permissions, grantResults);
-            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-
+        
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
             // Check if the selected toolbar button's id equals the back button id.

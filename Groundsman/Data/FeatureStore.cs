@@ -7,8 +7,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
 using Xamarin.Essentials;
 
 namespace Groundsman.Data
@@ -340,7 +338,7 @@ namespace Groundsman.Data
             //TODO: exception handling - 
             try
             {
-                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Storage);
+                var status = await Services.CheckAndRequestPermissionAsync(new Permissions.StorageRead());
 
                 // If permissions allowed, prompt the user to pick a file.
                 if (status == PermissionStatus.Granted)
@@ -356,19 +354,7 @@ namespace Groundsman.Data
                 }
                 else
                 {
-
-                    // Display storage permission popup if permission is not be established, display alert if the user declines 
-                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Storage))
-                    {
-                        await HomePage.Instance.DisplayAlert("Permissions Error", "Storage permissions for Groundsman must be enabled to utilise this feature.", "Ok", "OK");
-                    }
-
-                    // If the user accepts the permission get the resulting value and check the if the key exists
-                    var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Storage);
-                    if (results.ContainsKey(Permission.Storage))
-                    {
-                        status = results[Permission.Storage];
-                    }
+                    await HomePage.Instance.DisplayAlert("Permissions Error", "Storage permissions for Groundsman must be enabled to utilise this feature.", "Ok", "OK");
                 }
             }
             catch (Exception ex)

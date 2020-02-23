@@ -5,7 +5,8 @@
             android:TabbedPage.ToolbarPlacement="Bottom"
             xmlns:local="clr-namespace:Groundsman;assembly=Groundsman"
             NavigationPage.HasNavigationBar="false"
-            x:Class="Groundsman.HomePage">
+            x:Class="Groundsman.HomePage"
+            SelectedTabColor="{DynamicResource textPrimary}">
     <TabbedPage.Children>
 
         <NavigationPage Title="My Features" Icon="data_icon" BackgroundColor="{DynamicResource bgPrimary}">

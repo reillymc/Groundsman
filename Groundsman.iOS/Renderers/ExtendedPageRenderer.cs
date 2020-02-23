@@ -69,19 +69,19 @@ namespace Groundsman.iOS.Renderers
         {
             if (TraitCollection.UserInterfaceStyle == UIUserInterfaceStyle.Dark)
             {
-                if (App.AppTheme == "dark")
+                if (App.AppTheme == App.Theme.Dark)
                     return;
 
                 Xamarin.Forms.Application.Current.Resources = new DarkTheme();
 
-                App.AppTheme = "dark";
+                App.AppTheme = App.Theme.Dark;
             }
             else
             {
-                if (App.AppTheme != "dark")
+                if (App.AppTheme != App.Theme.Dark)
                     return;
                 Xamarin.Forms.Application.Current.Resources = new LightTheme();
-                App.AppTheme = "light";
+                App.AppTheme = App.Theme.Light;
             }
         }
     }

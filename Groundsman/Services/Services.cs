@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
 using Xamarin.Essentials;
 
 namespace Groundsman
@@ -13,8 +11,9 @@ namespace Groundsman
         private static int decimalAccuracy;
 
         /// <summary>
-        /// Queries the current device's location coordinates
+        /// Queries the current location of the device
         /// </summary>
+        /// <returns>A point object containing the device's current location</returns>
         public static async Task<Point> GetGeoLocation()
         {
             geolocationAccuracy = Preferences.Get("GPSPrecision", 2) switch
@@ -27,7 +26,7 @@ namespace Groundsman
             decimalAccuracy = Preferences.Get("DataDecimalAccuracy", 8);
             try
             {
-                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+                var status = await CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
                 if (status == PermissionStatus.Granted)
                 {
                     // Gets current location of device (MORE ACCURATE, but slower)
@@ -51,6 +50,24 @@ namespace Groundsman
                 throw new Exception();
             }
             return null;
+        }
+
+        /// <summary>
+        /// Method to check persmission status of given permission
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="permission">Permission type</param>
+        /// <returns>Permission status</returns>
+        public static async Task<PermissionStatus> CheckAndRequestPermissionAsync<T>(T permission)
+            where T : Permissions.BasePermission
+        {
+            var status = await permission.CheckStatusAsync();
+            if (status != PermissionStatus.Granted)
+            {
+                status = await permission.RequestAsync();
+            }
+
+            return status;
         }
     }
 }

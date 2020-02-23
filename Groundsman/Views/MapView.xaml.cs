@@ -1,8 +1,6 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using System;
-using Plugin.Permissions.Abstractions;
-using Plugin.Permissions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
@@ -29,15 +27,16 @@ namespace Groundsman
         // Only center map on user if location permissions are granted
         private async void CenterMapOnUser()
         {
-            if (CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location).Result == PermissionStatus.Granted)
+            var status = await Services.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
+            if (status != PermissionStatus.Granted)
             {
-                Point location = await Services.GetGeoLocation();
-                map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(location.Latitude, location.Longitude), Distance.FromMiles(1.0)));
+                map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(-27.47004901089882, 153.021072), Distance.FromMiles(1.0)));
+                return;
             }
             else
             {
-                map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(-27.47004901089882, 153.021072), Distance.FromMiles(1.0)));
-                await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
+                Point location = await Services.GetGeoLocation();
+                map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(location.Latitude, location.Longitude), Distance.FromMiles(1.0)));
             }
         }
 
@@ -196,20 +195,21 @@ namespace Groundsman
             return false;
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
             CleanFeaturesOnMap();
             _ = DrawFeatures();
 
-            if (CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location).Result == PermissionStatus.Granted)
+
+            var status = await Services.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
+            if (status == PermissionStatus.Granted)
             {
                 map.IsShowingUser = true;
             }
             else
             {
                 map.IsShowingUser = false;
-                CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
             }
         }
     }
