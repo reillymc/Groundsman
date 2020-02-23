@@ -6,6 +6,7 @@ using Plugin.Permissions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
+using Xamarin.Essentials;
 
 namespace Groundsman
 {
@@ -19,7 +20,10 @@ namespace Groundsman
             CenterMapOnUser();
             map.MapClicked += OnMapClickedAsync;
             cts = new CancellationTokenSource();
-            //_ = MapLogUpdaterAsync(new TimeSpan(0, 0, 1), cts.Token);
+            if (Preferences.Get("ShowLogPathOnMap", true))
+            {
+                _ = MapLogUpdaterAsync(new TimeSpan(0, 0, 1), cts.Token);
+            }
         }
 
         // Only center map on user if location permissions are granted
@@ -51,7 +55,7 @@ namespace Groundsman
             {
                 var points = feature.Properties.Xamarincoordinates;
 
-                if (feature.Geometry.Type.Equals("Point"))
+                if (feature.Geometry.Type.Equals("Point") && Preferences.Get("ShowPointsOnMap", true))
                 {
                     Pin pin = new Pin
                     {
@@ -62,7 +66,7 @@ namespace Groundsman
                     };
                     map.Pins.Add(pin);
                 }
-                else if (feature.Geometry.Type.Equals("Line"))
+                else if (feature.Geometry.Type.Equals("Line") && Preferences.Get("ShowLinesOnMap", true))
                 {
                     Polyline polyline = new Polyline
                     {
@@ -75,7 +79,7 @@ namespace Groundsman
                     });
                     map.MapElements.Add(polyline);
                 }
-                else if (feature.Geometry.Type.Equals("Polygon"))
+                else if (feature.Geometry.Type.Equals("Polygon") && Preferences.Get("ShowPolygonsOnMap", true))
                 {
                     Polygon polygon = new Polygon
                     {
@@ -90,10 +94,10 @@ namespace Groundsman
 
                     map.MapElements.Add(polygon);
                 }
-                
+
             });
 
-            
+
         }
 
         private async Task MapLogUpdaterAsync(TimeSpan interval, CancellationToken ct)
@@ -197,7 +201,7 @@ namespace Groundsman
             base.OnAppearing();
             CleanFeaturesOnMap();
             _ = DrawFeatures();
-            
+
             if (CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location).Result == PermissionStatus.Granted)
             {
                 map.IsShowingUser = true;

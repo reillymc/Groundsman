@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -54,6 +53,24 @@ namespace Groundsman
             }
         }
 
-        
+        private void ShowPointsOnMapChanged(object sender, ToggledEventArgs e)
+        {
+            Preferences.Set("ShowPointsOnMap", e.Value);
+        }
+
+        private void ShowLinesOnMapChanged(object sender, ToggledEventArgs e)
+        {
+            Preferences.Set("ShowLinesOnMap", e.Value);
+        }
+
+        private void ShowPolygonsOnMapChanged(object sender, ToggledEventArgs e)
+        {
+            Preferences.Set("ShowPolygonsOnMap", e.Value);
+        }
+
+        private void ShowLogPathOnMapChanged(object sender, ToggledEventArgs e)
+        {
+            Preferences.Set("ShowLogPathOnMap", e.Value);
+        }
     }
 }
