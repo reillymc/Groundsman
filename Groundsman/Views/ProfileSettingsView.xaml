@@ -17,12 +17,6 @@
                             <Entry.Behaviors>
                                 <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
                             </Entry.Behaviors>
-                            <Entry.FontSize>
-                                <OnPlatform x:TypeArguments="x:Double">
-                                    <On Platform="Android" Value="14" />
-                                    <On Platform="iOS" Value="16" />
-                                </OnPlatform>
-                            </Entry.FontSize>
                         </Entry>
                     </ViewCell>
                 </TableSection>
@@ -39,12 +33,6 @@
                                         <x:String>Low</x:String>
                                     </x:Array>
                                 </Picker.ItemsSource>
-                                <Picker.FontSize>
-                                <OnPlatform x:TypeArguments="x:Double">
-                                    <On Platform="Android" Value="14" />
-                                    <On Platform="iOS" Value="16" />
-                                </OnPlatform>
-                            </Picker.FontSize>
                             </Picker>
                         </StackLayout>
                     </ViewCell>

@@ -25,12 +25,12 @@ namespace Groundsman
         public ProfileSettingsViewModel()
         {
             IDEntry = Preferences.Get("UserID", "Groundsman");
-            DecimalAccuracyEntry = Preferences.Get("DataDecimalAccuracy", 8);
+            DecimalAccuracyEntry = Preferences.Get("DataDecimalAccuracy", 6);
             GPSPrecisionEntry = Preferences.Get("GPSPrecision", 2);
             ShowPointsOnMap = Preferences.Get("ShowPointsOnMap", true);
             ShowLinesOnMap = Preferences.Get("ShowLinesOnMap", true);
             ShowPolygonsOnMap = Preferences.Get("ShowPolygonsOnMap", true);
-            ShowLogPathOnMap = Preferences.Get("ShowLogPathOnMap", true);
+            ShowLogPathOnMap = Preferences.Get("ShowLogPathOnMap", false);
         }
 
         private void HandleTextChanged()

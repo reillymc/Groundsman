@@ -105,7 +105,7 @@ namespace Groundsman
                 {
                     string newEntry = string.Format("{0}, {1}, {2}, {3}\n", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), location.Latitude, location.Longitude, location.Altitude);
                     TextEntry += newEntry;
-                    //File.WriteAllText(AppConstants.LOG_FILE, TextEntry);
+                    File.WriteAllText(AppConstants.LOG_FILE, TextEntry);
                 }
                 else
                 {

@@ -17,11 +17,6 @@ namespace Groundsman
             InitializeComponent();
             CenterMapOnUser();
             map.MapClicked += OnMapClickedAsync;
-            cts = new CancellationTokenSource();
-            if (Preferences.Get("ShowLogPathOnMap", true))
-            {
-                _ = MapLogUpdaterAsync(new TimeSpan(0, 0, 1), cts.Token);
-            }
         }
 
         // Only center map on user if location permissions are granted
@@ -53,7 +48,6 @@ namespace Groundsman
             Features.ForEach((Feature feature) =>
             {
                 var points = feature.Properties.Xamarincoordinates;
-
                 if (feature.Geometry.Type.Equals("Point") && Preferences.Get("ShowPointsOnMap", true))
                 {
                     Pin pin = new Pin
@@ -90,13 +84,9 @@ namespace Groundsman
                     {
                         polygon.Geopath.Add(new Position(point.Latitude, point.Longitude));
                     });
-
                     map.MapElements.Add(polygon);
                 }
-
             });
-
-
         }
 
         private async Task MapLogUpdaterAsync(TimeSpan interval, CancellationToken ct)
@@ -104,9 +94,7 @@ namespace Groundsman
             while (true)
             {
                 await Task.Delay(interval, ct);
-
                 List<Point> logFile = App.LogStore.GetLogFileObject();
-
                 Polyline logPolyline = new Polyline
                 {
                     StrokeColor = Color.DarkOrange,
@@ -201,6 +189,11 @@ namespace Groundsman
             CleanFeaturesOnMap();
             _ = DrawFeatures();
 
+            if (Preferences.Get("ShowLogPathOnMap", true))
+            {
+                cts = new CancellationTokenSource();
+                _ = MapLogUpdaterAsync(new TimeSpan(0, 0, 1), cts.Token);
+            }
 
             var status = await Services.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
             if (status == PermissionStatus.Granted)
@@ -211,6 +204,16 @@ namespace Groundsman
             {
                 map.IsShowingUser = false;
             }
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            if (cts != null)
+            {
+                cts.Cancel();
+            }
+            
         }
     }
 }

@@ -54,7 +54,7 @@
                 <Frame Grid.Row="1" Grid.Column="0" HasShadow="False" x:Name="pasteFrame" HeightRequest="16" BackgroundColor="{DynamicResource bgPrimary}">
                     <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                         <Label Text="Paste from Clipboard" TextColor="Green" HorizontalOptions="StartAndExpand" VerticalOptions="End"/>
-                        <Image Source="export_icon" HorizontalOptions="Center" VerticalOptions="EndAndExpand"/>
+                        <Image Source="paste_icon" HorizontalOptions="Center" VerticalOptions="EndAndExpand"/>
                     </StackLayout>
                 </Frame>
             </Grid>
