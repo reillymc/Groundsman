@@ -27,60 +27,60 @@ namespace Groundsman.Data
                     throw new Exception();
                 }
 
-                rootobject.Type = "FeatureCollection";
+                rootobject.type = "FeatureCollection";
 
-                foreach (var feature in rootobject.Features)
+                foreach (var feature in rootobject.features)
                 {
                     await TryParseFeature(feature);
                 }
-                CurrentFeatures = rootobject.Features;
-                return rootobject.Features;
+                CurrentFeatures = rootobject.features;
+                return rootobject.features;
             });
         }
 
         private async Task<bool> TryParseFeature(Feature feature)
         {
             // Ensure the feature has valid GeoJSON fields supplied.
-            if (feature != null && feature.Type != null && feature.Geometry != null && feature.Geometry.Type != null && feature.Geometry.Coordinates != null)
+            if (feature != null && feature.type != null && feature.geometry != null && feature.geometry.type != null && feature.geometry.coordinates != null)
             {
                 // Immediately convert LineStrings to Line for use in the rest of the codebase. 
                 // This will be converted back to LineString before serialization back to json.
-                if (feature.Geometry.Type == "LineString")
+                if (feature.geometry.type == "LineString")
                 {
-                    feature.Geometry.Type = "Line";
+                    feature.geometry.type = "Line";
                 }
 
-                feature.Properties.Xamarincoordinates = new List<Point>();
+                feature.properties.xamarincoordinates = new List<Point>();
                 object[] trueCoords;
 
                 // Determine if feature is supported and if so convert its points and add appropriate icon
-                switch (feature.Geometry.Type)
+                switch (feature.geometry.type)
                 {
                     case "Point":
-                        feature.Properties.TypeIconPath = "point_icon.png";
-                        trueCoords = feature.Geometry.Coordinates.ToArray();
-                        feature.Properties.Xamarincoordinates.Add(JsonCoordToXamarinPoint(trueCoords));
+                        feature.properties.typeIconPath = "point_icon.png";
+                        trueCoords = feature.geometry.coordinates.ToArray();
+                        feature.properties.xamarincoordinates.Add(JsonCoordToXamarinPoint(trueCoords));
                         break;
                     case "Line":
-                        feature.Properties.TypeIconPath = "line_icon.png";
+                        feature.properties.typeIconPath = "line_icon.png";
                         // Iterates the root coordinates (List<object>),
                         // then casts each element in the list to a Jarray which contain the actual coordinates.
-                        for (int i = 0; i < feature.Geometry.Coordinates.Count; i++)
+                        for (int i = 0; i < feature.geometry.coordinates.Count; i++)
                         {
-                            trueCoords = ((JArray)feature.Geometry.Coordinates[i]).ToObject<object[]>();
-                            feature.Properties.Xamarincoordinates.Add(JsonCoordToXamarinPoint(trueCoords));
+                            trueCoords = ((JArray)feature.geometry.coordinates[i]).ToObject<object[]>();
+                            feature.properties.xamarincoordinates.Add(JsonCoordToXamarinPoint(trueCoords));
                         }
                         break;
                     case "Polygon":
-                        feature.Properties.TypeIconPath = "area_icon.png";
+                        feature.properties.typeIconPath = "area_icon.png";
                         // Iterates the root coordinates (List<object>), and casts each element in the list to a Jarray, 
                         // then casts each Jarray's element to another Jarray which contain the actual coordinates.
-                        for (int i = 0; i < feature.Geometry.Coordinates.Count; i++)
+                        for (int i = 0; i < feature.geometry.coordinates.Count; i++)
                         {
-                            for (int j = 0; j < ((JArray)feature.Geometry.Coordinates[i]).Count; j++)
+                            for (int j = 0; j < ((JArray)feature.geometry.coordinates[i]).Count; j++)
                             {
-                                trueCoords = ((JArray)(((JArray)feature.Geometry.Coordinates[i])[j])).ToObject<object[]>();
-                                feature.Properties.Xamarincoordinates.Add(JsonCoordToXamarinPoint(trueCoords));
+                                trueCoords = ((JArray)(((JArray)feature.geometry.coordinates[i])[j])).ToObject<object[]>();
+                                feature.properties.xamarincoordinates.Add(JsonCoordToXamarinPoint(trueCoords));
                             }
                         }
                         break;
@@ -90,21 +90,21 @@ namespace Groundsman.Data
                 }
 
                 // If author ID hasn't been set on the feature, default it to the user's ID.
-                if (string.IsNullOrWhiteSpace(feature.Properties.AuthorId))
+                if (string.IsNullOrWhiteSpace(feature.properties.author))
                 {
-                    feature.Properties.AuthorId = Preferences.Get("UserID", "Groundsman");
+                    feature.properties.author = Preferences.Get("UserID", "Groundsman");
                 }
 
                 // Add default name if empty
-                if (string.IsNullOrWhiteSpace(feature.Properties.Name))
+                if (string.IsNullOrWhiteSpace(feature.properties.name))
                 {
-                    feature.Properties.Name = "Unnamed " + feature.Geometry.Type;
+                    feature.properties.name = "Unnamed " + feature.geometry.type;
                 }
 
                 // If the date field is missing or invalid, convert it into DateTime.Now.
-                if (feature.Properties.Date == null || DateTime.TryParse(feature.Properties.Date, out _) == false)
+                if (feature.properties.date == null || DateTime.TryParse(feature.properties.date, out _) == false)
                 {
-                    feature.Properties.Date = DateTime.Now.ToShortDateString();
+                    feature.properties.date = DateTime.Now.ToShortDateString();
                 }
                 return true;
             }
@@ -125,20 +125,7 @@ namespace Groundsman.Data
         {
             // Generate feature ID
             //TODO: avoid ID collisions
-            if (feature.Properties.Id == null)
-            {
-                feature.Properties.Id = Guid.NewGuid().ToString();
-            }
-            else
-            {
-                foreach (var existingFeature in App.FeatureStore.CurrentFeatures)
-                {
-                    if (feature.Properties.Id == existingFeature.Properties.Id && feature != existingFeature)
-                    {
-                        feature.Properties.Id = Guid.NewGuid().ToString();
-                    }
-                }
-            }
+            feature.properties.id = Guid.NewGuid().ToString();
         }
 
         public string GetFeaturesFile()
@@ -162,7 +149,7 @@ namespace Groundsman.Data
 
         public void DeleteFeatureAsync(string featureID)
         {
-            Feature featureToDelete = App.FeatureStore.CurrentFeatures.Find((feature) => (feature.Properties.Id == featureID));
+            Feature featureToDelete = App.FeatureStore.CurrentFeatures.Find((feature) => (feature.properties.id == featureID));
             bool deleteSuccessful = App.FeatureStore.CurrentFeatures.Remove(featureToDelete);
 
             if (deleteSuccessful)
@@ -174,9 +161,9 @@ namespace Groundsman.Data
         public void SaveFeatureAsync(Feature feature)
         {
             // If this is a newly added feature, generate an ID and add it immediately.
-            if (feature.Properties.Id == AppConstants.NEW_ENTRY_ID)
+            if (feature.properties.id == AppConstants.NEW_ENTRY_ID)
             {
-                feature.Properties.Id = Guid.NewGuid().ToString(); //TODO use existing method
+                feature.properties.id = Guid.NewGuid().ToString(); //TODO use existing method
                 App.FeatureStore.CurrentFeatures.Add(feature);
             }
             else
@@ -185,7 +172,7 @@ namespace Groundsman.Data
                 int indexToEdit = -1;
                 for (int i = 0; i < App.FeatureStore.CurrentFeatures.Count; i++)
                 {
-                    if (App.FeatureStore.CurrentFeatures[i].Properties.Id == feature.Properties.Id)
+                    if (App.FeatureStore.CurrentFeatures[i].properties.id == feature.properties.id)
                     {
                         indexToEdit = i;
                         break;
@@ -223,16 +210,18 @@ namespace Groundsman.Data
         /// <returns></returns>
         private RootObject FormatCurrentFeaturesIntoGeoJSON()
         {
-            var rootobject = new RootObject();
-            rootobject.Type = "FeatureCollection";
-            rootobject.Features = App.FeatureStore.CurrentFeatures;
+            var rootobject = new RootObject
+            {
+                type = "FeatureCollection",
+                features = App.FeatureStore.CurrentFeatures
+            };
 
-            foreach (var feature in rootobject.Features)
+            foreach (var feature in rootobject.features)
             {
                 // Convert Lines back into LineStrings for valid geojson.
-                if (feature.Geometry.Type == "Line")
+                if (feature.geometry.type == "Line")
                 {
-                    feature.Geometry.Type = "LineString";
+                    feature.geometry.type = "LineString";
                 }
             }
 
@@ -260,7 +249,7 @@ namespace Groundsman.Data
             RootObject importedFeaturesData = null;
             RootObject validatedFeatures = new RootObject
             {
-                Features = new List<Feature>()
+                features = new List<Feature>()
             };
             int successfulImport = 0;
             int failedImport = 0;
@@ -277,14 +266,13 @@ namespace Groundsman.Data
             if (importedFeaturesData != null)
             {
                 // Loop through all imported features and make sure they are valid and ensuring there are no ID clashes.
-                foreach (var importedFeature in importedFeaturesData.Features)
+                foreach (var importedFeature in importedFeaturesData.features)
                 {
                     bool parseResult = await TryParseFeature(importedFeature);
                     if (parseResult)
                     {
                         EnsureUniqueID(importedFeature);
-
-                        validatedFeatures.Features.Add(importedFeature);
+                        validatedFeatures.features.Add(importedFeature);
                         successfulImport++;
                     }
                     else
@@ -295,7 +283,7 @@ namespace Groundsman.Data
                 }
 
                 // Finally, add all the imported features to the current features list.
-                App.FeatureStore.CurrentFeatures.AddRange(validatedFeatures.Features);
+                App.FeatureStore.CurrentFeatures.AddRange(validatedFeatures.features);
 
                 SaveCurrentFeaturesToEmbeddedFile();
                 await HomePage.Instance.DisplayAlert("Import Success", string.Format("{0} new features have been added to your features list. {1} features failed to import.", successfulImport, failedImport), "OK");

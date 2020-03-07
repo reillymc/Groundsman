@@ -47,19 +47,19 @@ namespace Groundsman
             List<Feature> Features = await App.FeatureStore.GetFeaturesAsync();
             Features.ForEach((Feature feature) =>
             {
-                var points = feature.Properties.Xamarincoordinates;
-                if (feature.Geometry.Type.Equals("Point") && Preferences.Get("ShowPointsOnMap", true))
+                var points = feature.properties.xamarincoordinates;
+                if (feature.geometry.type.Equals("Point") && Preferences.Get("ShowPointsOnMap", true))
                 {
                     Pin pin = new Pin
                     {
-                        Label = feature.Properties.Name,
+                        Label = feature.properties.name,
                         Address = string.Format("{0}, {1}, {2}", points[0].Latitude, points[0].Longitude, points[0].Altitude),
                         Type = PinType.Place,
                         Position = new Position(points[0].Latitude, points[0].Longitude)
                     };
                     map.Pins.Add(pin);
                 }
-                else if (feature.Geometry.Type.Equals("Line") && Preferences.Get("ShowLinesOnMap", true))
+                else if (feature.geometry.type.Equals("Line") && Preferences.Get("ShowLinesOnMap", true))
                 {
                     Polyline polyline = new Polyline
                     {
@@ -72,7 +72,7 @@ namespace Groundsman
                     });
                     map.MapElements.Add(polyline);
                 }
-                else if (feature.Geometry.Type.Equals("Polygon") && Preferences.Get("ShowPolygonsOnMap", true))
+                else if (feature.geometry.type.Equals("Polygon") && Preferences.Get("ShowPolygonsOnMap", true))
                 {
                     Polygon polygon = new Polygon
                     {
@@ -114,12 +114,12 @@ namespace Groundsman
             Features.ForEach((Feature feature) =>
             {
                 bool ItemHit = false;
-                Point[] points = feature.Properties.Xamarincoordinates.ToArray();
-                if (feature.Geometry.Type.Equals("Polygon"))
+                Point[] points = feature.properties.xamarincoordinates.ToArray();
+                if (feature.geometry.type.Equals("Polygon"))
                 {
                     ItemHit |= IsPointInPolygon(new Point(e.Position.Latitude, e.Position.Longitude, 0), points);
                 }
-                else if (feature.Geometry.Type.Equals("Line"))
+                else if (feature.geometry.type.Equals("Line"))
                 {
                     ItemHit |= IsPointOnLine(new Point(e.Position.Latitude, e.Position.Longitude, 0), points);
                 }
@@ -213,7 +213,7 @@ namespace Groundsman
             {
                 cts.Cancel();
             }
-            
+
         }
     }
 }

@@ -5,7 +5,6 @@
              x:Class="Groundsman.FeatureDetailsView"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              ios:Page.ModalPresentationStyle="FormSheet"
-             ios:Page.LargeTitleDisplay="Never"
              BackgroundColor="{DynamicResource bgPrimary}">
     <ContentPage.ToolbarItems>
         <ToolbarItem Icon="delete_icon" Command="{Binding DeleteEntryCommand}" />

@@ -10,7 +10,7 @@ namespace Groundsman
             InitializeComponent();
             BindingContext = new FeatureDetailsViewModel(data);
 
-            Title = data.Properties.Name;
+            Title = data.properties.name;
         }
 
         private void listView_ItemTapped(object sender, ItemTappedEventArgs e)

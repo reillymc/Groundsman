@@ -169,8 +169,8 @@ namespace Groundsman
         /// </summary>
         public FeatureDetailsViewModel(Feature data)
         {
-            thisEntryType = data.Geometry.Type;
-            thisEntryID = data.Properties.Id;
+            thisEntryType = data.geometry.type;
+            thisEntryID = data.properties.id;
             switch (thisEntryType)
             {
                 case "Point":
@@ -184,18 +184,18 @@ namespace Groundsman
                     break;
             }
 
-            NameEntry = data.Properties.Name;
-            DateEntry = DateTime.Parse(data.Properties.Date).ToShortDateString();
+            NameEntry = data.properties.name;
+            DateEntry = DateTime.Parse(data.properties.date).ToShortDateString();
 
-            GeolocationPoints = new ObservableCollection<Point>(data.Properties.Xamarincoordinates);
+            GeolocationPoints = new ObservableCollection<Point>(data.properties.xamarincoordinates);
             GeolocationEntryEnabled = true;
 
-            MetadataStringEntry = data.Properties.MetadataStringValue;
-            MetadataIntegerEntry = data.Properties.MetadataIntegerValue;
-            MetadataFloatEntry = data.Properties.MetadataFloatValue;
+            MetadataStringEntry = data.properties.metadataStringValue;
+            MetadataIntegerEntry = data.properties.metadataIntegerValue;
+            MetadataFloatEntry = data.properties.metadataFloatValue;
 
             LoadingIconActive = false;
-            NumPointFields = data.Properties.Xamarincoordinates.Count;
+            NumPointFields = data.properties.xamarincoordinates.Count;
             InitCommandBindings();
         }
 
@@ -314,43 +314,51 @@ namespace Groundsman
         {
             Feature feature = new Feature
             {
-                Type = "Feature",
-                Properties = new Properties()
+                type = "Feature",
+                properties = new Properties()
             };
 
             // A new entry will have an ID of NEW_ENTRY_ID as assigned from the constructor,
             // otherwise an ID will already be set for editing entries.
-            feature.Properties.Id = thisEntryID;
-            feature.Properties.AuthorId = Preferences.Get("UserID", "Groundsman");
-
-            // Name and date of the feature.
-            feature.Properties.Name = NameEntry;
-            feature.Properties.Date = DateTime.Parse(DateEntry).ToShortDateString();
-
-            // Metadata fields.
-            feature.Properties.MetadataStringValue = MetadataStringEntry;
-            feature.Properties.MetadataIntegerValue = MetadataIntegerEntry;
-            feature.Properties.MetadataFloatValue = MetadataFloatEntry;
+            feature.properties.id = thisEntryID;
+            feature.properties.author  = Preferences.Get("UserID", "Groundsman");
 
             // Feature type (Point, Line, Polygon).
-            feature.Geometry = new Geometry();
-            feature.Geometry.Type = thisEntryType;
+            feature.geometry = new Geometry();
+            feature.geometry.type = thisEntryType;
+
+            // Name and date of the feature.
+            if (string.IsNullOrEmpty(NameEntry))
+            {
+                feature.properties.name = "Unnamed " + feature.geometry.type;
+            } else
+            {
+                feature.properties.name = NameEntry;
+            }
+            feature.properties.date = DateTime.Parse(DateEntry).ToShortDateString();
+
+            // Metadata fields.
+            feature.properties.metadataStringValue = MetadataStringEntry;
+            feature.properties.metadataIntegerValue = MetadataIntegerEntry;
+            feature.properties.metadataFloatValue = MetadataFloatEntry;
+
+            
 
             // Converts our xamarin coordinate data back into a valid geojson structure.
             {
                 switch (thisEntryType)
                 {
                     case "Point":
-                        feature.Geometry.Coordinates = new List<object>() {
+                        feature.geometry.coordinates = new List<object>() {
                         GeolocationPoints[0].Longitude,
                         GeolocationPoints[0].Latitude,
                         GeolocationPoints[0].Altitude };
                         break;
                     case "Line":
-                        feature.Geometry.Coordinates = new List<object>(GeolocationPoints.Count);
+                        feature.geometry.coordinates = new List<object>(GeolocationPoints.Count);
                         for (int i = 0; i < GeolocationPoints.Count; i++)
                         {
-                            feature.Geometry.Coordinates.Add(new JArray(new double[3] {
+                            feature.geometry.coordinates.Add(new JArray(new double[3] {
                             GeolocationPoints[i].Longitude,
                             GeolocationPoints[i].Latitude,
                             GeolocationPoints[i].Altitude }));
@@ -361,7 +369,7 @@ namespace Groundsman
                         // This specific method of structuring points means that users will not
                         // be able to create multiple shapes in one polygon (whereas true GEOJSON allows that).
                         // This doesn't matter since our app interface can't allow for it anyway.
-                        feature.Geometry.Coordinates = new List<object>(GeolocationPoints.Count);
+                        feature.geometry.coordinates = new List<object>(GeolocationPoints.Count);
                         List<object> innerPoints = new List<object>(GeolocationPoints.Count);
                         for (int i = 0; i < GeolocationPoints.Count; i++)
                         {
@@ -370,7 +378,7 @@ namespace Groundsman
                             GeolocationPoints[i].Latitude,
                             GeolocationPoints[i].Altitude }));
                         }
-                        feature.Geometry.Coordinates.Add(innerPoints);
+                        feature.geometry.coordinates.Add(innerPoints);
                         break;
                 }
             }
@@ -384,12 +392,6 @@ namespace Groundsman
         private async Task<bool> FeatureEntryIsValid()
         {
             /// Begin validation checks.
-            if (string.IsNullOrEmpty(NameEntry))
-            {
-                await HomePage.Instance.DisplayAlert("Incomplete Entry", "Feature name must not be empty.", "OK");
-                return false;
-            }
-
             switch (thisEntryType)
             {
                 case "Polygon":
@@ -425,7 +427,7 @@ namespace Groundsman
                 case "Point":
                     if (GeolocationPoints.Count != 1)
                     {
-                        await HomePage.Instance.DisplayAlert("Impossible Entry", "A point must only contain 1 data point.", "OK");
+                        await HomePage.Instance.DisplayAlert("Unsupported Entry", "A point must only contain 1 data point.", "OK");
                         return false;
                     }
 
