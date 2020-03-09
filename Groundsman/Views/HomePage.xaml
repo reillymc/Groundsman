@@ -7,7 +7,8 @@
             NavigationPage.HasNavigationBar="false"
             NavigationPage.BackButtonTitle="My Features"
             x:Class="Groundsman.HomePage"
-            SelectedTabColor="{DynamicResource textPrimary}">
+            SelectedTabColor="{DynamicResource textPrimary}"
+            UnselectedTabColor="{DynamicResource textSecondary}" >
     <TabbedPage.Children>
 
         <NavigationPage Title="My Features" Icon="data_icon" BackgroundColor="{DynamicResource bgPrimary}">
