@@ -6,10 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="4.5.0.356" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.5.1" />
+    <PackageReference Include="Xamarin.Forms" Version="4.5.0.617" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.5.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Xamarin.Forms.Maps" Version="4.5.0.356" />
+    <PackageReference Include="Xamarin.Forms.Maps" Version="4.5.0.617" />
     <PackageReference Include="Xamarin.Plugin.FilePicker" Version="2.1.34" />
   </ItemGroup>
   <ItemGroup>
