@@ -20,7 +20,7 @@ namespace Groundsman
         public ICommand AddMetadataFieldCommand { get; set; }
         public ICommand DeleteMetadataFieldCommand { get; set; }
         public ICommand OnSaveUpdatedCommand { get; set; }
-        public ICommand DeleteEntryCommand { get; set; }
+        public ICommand ShareEntryCommand { get; set; }
         public ICommand ClosePolyCommand { get; set; }
 
         // Property binding to determine if the delete button for metadata fields is visible, which is based on the type of this entry.
@@ -209,7 +209,7 @@ namespace Groundsman
             AddPointCommand = new Command(() => AddPoint());
             DeletePointCommand = new Command<Point>((item) => DeletePoint(item));
 
-            DeleteEntryCommand = new Command(async () => await DeleteFeatureEntry());
+            ShareEntryCommand = new Command(async () => await DeleteFeatureEntry());
 
             OnSaveUpdatedCommand = new Command(async () => await OnSaveUpdateActivated());
 

@@ -396,6 +396,15 @@ namespace Groundsman.Data
             });
         }
 
+        public async Task ExportFeature(Feature feature)
+        {
+            await Share.RequestAsync(new ShareFileRequest
+            {
+                Title = "Features Export",
+                File = new Share(feature, "text/plain")
+            });
+        }
+
         public async Task CopyFeaturesToClipboard()
         {
             string textFile = GetFeaturesFile();

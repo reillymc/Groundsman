@@ -7,7 +7,7 @@
              ios:Page.ModalPresentationStyle="FormSheet"
              BackgroundColor="{DynamicResource bgPrimary}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="delete_icon" Command="{Binding DeleteEntryCommand}" />
+        <ToolbarItem Icon="share_icon" Command="{Binding ShareEntryCommand}" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout Margin="10,10,10,20">
