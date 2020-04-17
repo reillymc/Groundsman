@@ -209,7 +209,7 @@ namespace Groundsman
             AddPointCommand = new Command(() => AddPoint());
             DeletePointCommand = new Command<Point>((item) => DeletePoint(item));
 
-            ShareEntryCommand = new Command(async () => await DeleteFeatureEntry());
+            ShareEntryCommand = new Command(async () => await App.FeatureStore.ExportFeature(thisEntryID));
 
             OnSaveUpdatedCommand = new Command(async () => await OnSaveUpdateActivated());
 
@@ -249,7 +249,6 @@ namespace Groundsman
             _isBusy = false;
         }
 
-
         /// <summary>
         /// Deletes a geolocation point from the list.
         /// </summary>
@@ -261,25 +260,6 @@ namespace Groundsman
 
             GeolocationPoints.Remove(item);
             NumPointFields--;
-            _isBusy = false;
-        }
-
-        /// <summary>
-        /// Deletes the entire feature from the list of current features and saves changes to the embedded file.
-        /// </summary>
-        /// <returns></returns>
-        private async Task DeleteFeatureEntry()
-        {
-            if (_isBusy) return;
-            _isBusy = true;
-
-            bool yesResponse = await HomePage.Instance.DisplayAlert("Delete Feature", "Are you sure you want to delete this feature?", "Yes", "No");
-            if (yesResponse)
-            {
-                App.FeatureStore.DeleteFeatureAsync(thisEntryID);
-                await HomePage.Instance.Navigation.PopToRootAsync();
-            }
-
             _isBusy = false;
         }
 

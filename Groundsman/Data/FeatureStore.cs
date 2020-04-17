@@ -387,6 +387,23 @@ namespace Groundsman.Data
             }
         }
 
+        public string ExportFeatureToJson(RootObject rootobject)
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(rootobject, Formatting.Indented);
+                // String cleaning
+                if (json.StartsWith("[", StringComparison.Ordinal)) json = json.Substring(1);
+                if (json.EndsWith("]", StringComparison.Ordinal)) json = json.TrimEnd(']');
+                return json;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task ExportFeatures()
         {
             await Share.RequestAsync(new ShareFileRequest
@@ -396,12 +413,20 @@ namespace Groundsman.Data
             });
         }
 
-        public async Task ExportFeature(Feature feature)
+        public async Task ExportFeature(string featureID)
         {
-            await Share.RequestAsync(new ShareFileRequest
+            List<Feature> featureList = new List<Feature>();
+            featureList.Add(App.FeatureStore.CurrentFeatures.Find((feature) => (feature.properties.id == featureID)));
+            var rootobject = new RootObject
             {
-                Title = "Features Export",
-                File = new Share(feature, "text/plain")
+                type = "FeatureCollection",
+                features = featureList
+            };
+        
+            await Share.RequestAsync(new ShareTextRequest
+            {
+                Title = featureList[0].properties.name,
+                Text = (ExportFeatureToJson(rootobject))
             });
         }
 
