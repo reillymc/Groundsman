@@ -56,15 +56,5 @@ namespace Groundsman
         {
             await Navigation.PopModalAsync();
         }
-
-        protected override async void OnDisappearing()
-        {
-            base.OnDisappearing();
-
-            if (Navigation.ModalStack.Count > 0)
-            {
-                await Navigation.PopModalAsync();
-            }
-        }
     }
 }
