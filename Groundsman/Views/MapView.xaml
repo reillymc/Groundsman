@@ -6,9 +6,12 @@
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              Title="Map"
              BackgroundColor="{DynamicResource bgPrimary}">
-        <AbsoluteLayout HorizontalOptions="FillAndExpand"
+    <ContentPage.BindingContext>
+        <local:MapViewModel x:Name="viewModel" />
+        </ContentPage.BindingContext>
+    <AbsoluteLayout HorizontalOptions="FillAndExpand"
 VerticalOptions="FillAndExpand">
-        <local:CustomMap x:Name="map" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1"  />
+        <ContentView Content="{Binding Map}" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1"/>
         <BoxView ios:VisualElement.BlurEffect="{DynamicResource blurEffect}" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,0.055"></BoxView>
     </AbsoluteLayout>
 </ContentPage>
