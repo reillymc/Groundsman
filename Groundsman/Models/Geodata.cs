@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using Xamarin.Forms;
 
 //Geodata.cs defines the models for geoJSON data to serialize into and from.
 namespace Groundsman
@@ -26,14 +27,26 @@ namespace Groundsman
         public string typeIconPath { get; set; }
     }
 
-    public class Geometry {
+    public class Geometry
+    {
         public string type { get; set; }
         public List<object> coordinates { get; set; }
     }
 
-    public class RootObject
+    public class RootObject : BindableObject
     {
         public string type { get; set; }
-        public List<Feature> features { get; set; }
+
+        public static readonly BindableProperty FeatureCollection
+            =
+         BindableProperty.Create("features", typeof(List<Feature>),
+                                  typeof(RootObject),
+                                  default(List<Feature>));
+
+        public List<Feature> features
+        {
+            get { return (List<Feature>)GetValue(FeatureCollection); }
+            set { SetValue(FeatureCollection, value); }
+        }
     }
 }

@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -8,7 +11,7 @@ namespace Groundsman
     /// <summary>
     /// View-model for the page that shows the list of data entries.
     /// </summary>
-    public class MyFeaturesViewModel : ViewModelBase
+    public class MyFeaturesViewModel : INotifyPropertyChanged
     {
         // Static flag that determines whether the features list should be updated or not.
         public static bool isDirty = true;
@@ -22,38 +25,48 @@ namespace Groundsman
 
         private bool _isBusy;
 
-        private int _featureCount;
+        private int featureCount;
         public int FeatureCount
         {
-            get { return _featureCount; }
+            get { return featureCount; }
             set
             {
-                _featureCount = value;
-                OnPropertyChanged();
+                featureCount = value;
             }
         }
 
-        private List<Feature> _entryListSource;
-        public List<Feature> EntryListSource
+
+        ObservableCollection<Feature> featureListItems = new ObservableCollection<Feature>();
+
+        public ObservableCollection<Feature> FeatureListItems
         {
-            get { return _entryListSource; }
+            get { return featureListItems; }
             set
             {
-                _entryListSource = value;
-                OnPropertyChanged();
+                // OnPropertyChanged should not be called if the property value
+                // does not change.
+                if (featureListItems == value)
+                    return;
+                featureListItems = value;
             }
         }
 
-        private bool _isRefreshing;
-        public bool IsRefreshing
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        void OnPropertyChanged(string propertyName = null)
         {
-            get { return _isRefreshing; }
-            set
-            {
-                _isRefreshing = value;
-                OnPropertyChanged(nameof(IsRefreshing));
-            }
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+                handler(this, new PropertyChangedEventArgs(propertyName));
         }
+
+
+
+
+
+
+
+
 
         /// <summary>
         /// View-model constructor.
@@ -118,13 +131,19 @@ namespace Groundsman
                 isDirty = false;
                 Device.BeginInvokeOnMainThread(async () =>
                 {
-                    // Do a full re-read of the embedded file to get the most current list of features.
-                    EntryListSource = await App.FeatureStore.GetFeaturesAsync();
-                    FeatureCount = EntryListSource.Count;
+                    featureListItems.Clear();
+                    // Do a full re-read of the embedded file to get the most current list of features.                    
+                    foreach (Feature feature in await App.FeatureStore.GetFeaturesAsync())
+                    {
+                        featureListItems.Add(feature);
+                        Debug.WriteLine("Here");
+                    }
+                    featureCount = featureListItems.Count;
                 });
+                
             }
 
-            IsRefreshing = false;
+            //IsRefreshing = false;
         }
 
         /// <summary>
