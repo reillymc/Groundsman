@@ -330,8 +330,21 @@ namespace Groundsman
             feature.properties.metadataFloatValue = MetadataFloatEntry;
 
             feature.properties.xamarincoordinates = GeolocationPoints;
-            feature.properties.typeIconPath = _typeIconPath;
 
+            switch (feature.geometry.type)
+            {
+                case "Point":
+                    feature.properties.typeIconPath = "point_icon.png";
+                    break;
+                case "Line":
+                    feature.properties.typeIconPath = "line_icon.png";
+                    break;
+                case "Polygon":
+                    feature.properties.typeIconPath = "area_icon.png";
+                    break;
+                default:
+                    break;
+            }
             // Converts our xamarin coordinate data back into a valid geojson structure.
             {
                 switch (thisEntryType)

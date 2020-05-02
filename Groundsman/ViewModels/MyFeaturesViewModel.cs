@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -11,82 +10,62 @@ namespace Groundsman
     /// </summary>
     public class MyFeaturesViewModel : INotifyPropertyChanged
     {
-        // Static flag that determines whether the features list should be updated or not.
-        public static bool isDirty = true;
-
-        public ICommand ButtonClickedCommand { set; get; }
-        public ICommand IDClickedCommand { set; get; }
+        public ICommand AddButtonTappedCommand { set; get; }
+        public ICommand ShareButtonTappedCommand { set; get; }
         public ICommand ItemTappedCommand { set; get; }
         public ICommand EditEntryCommand { get; set; }
         public ICommand DeleteEntryCommand { get; set; }
 
-        private bool _isBusy;
-
         RootObject featureList = new RootObject();
-
         public RootObject FeatureList
         {
             get { return featureList; }
             set
             {
-                // OnPropertyChanged should not be called if the property value
-                // does not change.
                 if (featureList == value)
                     return;
                 featureList = value;
-                OnPropertyChanged();
-                Debug.WriteLine("Changed");
+                //PropertyChanged
             }
         }
 
+        private bool _isBusy;
         public event PropertyChangedEventHandler PropertyChanged;
-
-        void OnPropertyChanged(string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-
-
-
-
-
-
-
 
         /// <summary>
         /// View-model constructor.
         /// </summary>
         public MyFeaturesViewModel()
         {
-            ButtonClickedCommand = new Command(async () => await ExecuteButtonClickedCommand());
-            IDClickedCommand = new Command(async () => await IDTappedCommandAsync());
-            ItemTappedCommand = new Command<Feature>(async (data) => await ExecuteItemTappedCommand(data));
-            EditEntryCommand = new Command<Feature>((feature) => EditFeatureEntry(feature));
-            DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeatureEntry(feature));
+            AddButtonTappedCommand = new Command(async () => await AddButtonTapped());
+            ShareButtonTappedCommand = new Command(async () => await ShowShareSheet());
+            ItemTappedCommand = new Command<Feature>(async (data) => await ShowFeatureDetailsPage(data));
+            EditEntryCommand = new Command<Feature>(async (feature) => await ShowEditFeatureDetailsPage(feature));
+            DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
 
             GetFeatures();
-
         }
 
         /// <summary>
         /// Opens the ExistingDetailFormView page showing more detail about the feature the user tapped on in the list.
         /// </summary>
-        /// <param name="data">Feature tapped on.</param>
+        /// <param name="data">Feature tapped on to be displayed.</param>
         /// <returns></returns>
-        private async Task ExecuteItemTappedCommand(Feature data)
+        private async Task ShowFeatureDetailsPage(Feature data)
         {
             if (_isBusy) return;
             _isBusy = true;
 
-            await HomePage.Instance.ShowExistingDetailFormPage(data);
+            await HomePage.Instance.ShowDetailFormPage(data);
 
             _isBusy = false;
         }
 
-        private async Task IDTappedCommandAsync()
+        /// <summary>
+        /// Shows native share sheet that exports all features.
+        /// </summary>
+        /// <returns></returns>
+        private async Task ShowShareSheet()
         {
             if (_isBusy) return;
             _isBusy = true;
@@ -100,37 +79,36 @@ namespace Groundsman
         /// Opens up the dialog box where the user can select between Point, Line, and Polygon feature types to add.
         /// </summary>
         /// <returns></returns>
-        private async Task ExecuteButtonClickedCommand()
+        private async Task AddButtonTapped()
         {
             if (_isBusy) return;
             _isBusy = true;
 
-            await HomePage.Instance.ShowDetailFormOptions();
+            await HomePage.Instance.ShowAddFeaturePage();
 
             _isBusy = false;
-        }
-
-        private async void GetFeatures()
-        {
-            await App.FeatureStore.FetchFeaturesFromFile();
-            FeatureList.features = App.FeatureStore.CurrentFeatures;
         }
 
         /// <summary>
         /// Displays the edit page for the selected feature.
         /// </summary>
         /// <param name="feature">Feature to edit.</param>
-        private void EditFeatureEntry(Feature feature)
+        private async Task ShowEditFeatureDetailsPage(Feature feature)
         {
             if (_isBusy) return;
             _isBusy = true;
 
-            HomePage.Instance.ShowEditDetailFormPage(feature);
+            await HomePage.Instance.ShowEditDetailFormPage(feature);
 
             _isBusy = false;
         }
 
-        private async Task DeleteFeatureEntry(Feature feature)
+        /// <summary>
+        /// Call the Feature Store to delete seleted feature.
+        /// </summary>
+        /// <param name="feature">Feature to delete.</param>
+        /// <returns></returns>
+        private async Task DeleteFeature(Feature feature)
         {
             if (_isBusy) return;
             _isBusy = true;
@@ -140,7 +118,17 @@ namespace Groundsman
             {
                 App.FeatureStore.DeleteFeatureAsync(feature);
             }
+
             _isBusy = false;
+        }
+
+        /// <summary>
+        /// Call the feature store to fetch from file and then set the resulting current features to the list source collection.
+        /// </summary>
+        private async void GetFeatures()
+        {
+            await App.FeatureStore.FetchFeaturesFromFile();
+            FeatureList.features = App.FeatureStore.CurrentFeatures;
         }
     }
 }
