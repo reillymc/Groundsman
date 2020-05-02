@@ -6,6 +6,7 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 
 namespace Groundsman
 {
@@ -27,6 +28,7 @@ namespace Groundsman
         public bool ShowPointDeleteBtn { get { return _numPointFields > minPoints; } }
         private int minPoints;
 
+        private Feature thisFeature = new Feature();
         // A reference to this entry's ID.
         private string thisEntryID;
 
@@ -126,6 +128,8 @@ namespace Groundsman
             }
         }
 
+        private string _typeIconPath;
+
         /// <summary>
         /// View-model constructor for adding new entries.
         /// </summary>
@@ -169,6 +173,7 @@ namespace Groundsman
         /// </summary>
         public FeatureDetailsViewModel(Feature data)
         {
+            thisFeature = data;
             thisEntryType = data.geometry.type;
             thisEntryID = data.properties.id;
             switch (thisEntryType)
@@ -186,13 +191,15 @@ namespace Groundsman
 
             NameEntry = data.properties.name;
             DateEntry = DateTime.Parse(data.properties.date).ToShortDateString();
-
+            Debug.WriteLine("{0}, {1}", data.properties.date, data.properties.xamarincoordinates[0].Latitude);
             GeolocationPoints = new ObservableCollection<Point>(data.properties.xamarincoordinates);
             GeolocationEntryEnabled = true;
 
             MetadataStringEntry = data.properties.metadataStringValue;
             MetadataIntegerEntry = data.properties.metadataIntegerValue;
             MetadataFloatEntry = data.properties.metadataFloatValue;
+
+            _typeIconPath = data.properties.typeIconPath;
 
             LoadingIconActive = false;
             NumPointFields = data.properties.xamarincoordinates.Count;
@@ -209,7 +216,7 @@ namespace Groundsman
             AddPointCommand = new Command(() => AddPoint());
             DeletePointCommand = new Command<Point>((item) => DeletePoint(item));
 
-            ShareEntryCommand = new Command(async () => await App.FeatureStore.ExportFeature(thisEntryID));
+            ShareEntryCommand = new Command(async () => await App.FeatureStore.ExportFeature(thisFeature));
 
             OnSaveUpdatedCommand = new Command(async () => await OnSaveUpdateActivated());
 
@@ -322,7 +329,8 @@ namespace Groundsman
             feature.properties.metadataIntegerValue = MetadataIntegerEntry;
             feature.properties.metadataFloatValue = MetadataFloatEntry;
 
-            
+            feature.properties.xamarincoordinates = GeolocationPoints;
+            feature.properties.typeIconPath = _typeIconPath;
 
             // Converts our xamarin coordinate data back into a valid geojson structure.
             {

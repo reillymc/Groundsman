@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
 using Xamarin.Essentials;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Xamarin.Forms.Internals;
 
 namespace Groundsman
 {
@@ -44,22 +47,22 @@ namespace Groundsman
         public async Task DrawFeatures()
         {
             // Using CurrentFeature to draw the geodata on the map
-            List<Feature> Features = await App.FeatureStore.GetFeaturesAsync();
-            Features.ForEach((Feature feature) =>
+            ObservableCollection<Feature> Features = await App.FeatureStore.FetchFeaturesFromFile();
+            for (int i = 0; i < Features.Count; i++)
             {
-                var points = feature.properties.xamarincoordinates;
-                if (feature.geometry.type.Equals("Point") && Preferences.Get("ShowPointsOnMap", true))
+                var points = Features[i].properties.xamarincoordinates;
+                if (Features[i].geometry.type.Equals("Point") && Preferences.Get("ShowPointsOnMap", true))
                 {
                     Pin pin = new Pin
                     {
-                        Label = feature.properties.name,
+                        Label = Features[i].properties.name,
                         Address = string.Format("{0}, {1}, {2}", points[0].Latitude, points[0].Longitude, points[0].Altitude),
                         Type = PinType.Place,
                         Position = new Position(points[0].Latitude, points[0].Longitude)
                     };
                     map.Pins.Add(pin);
                 }
-                else if (feature.geometry.type.Equals("Line") && Preferences.Get("ShowLinesOnMap", true))
+                else if (Features[i].geometry.type.Equals("Line") && Preferences.Get("ShowLinesOnMap", true))
                 {
                     Polyline polyline = new Polyline
                     {
@@ -72,7 +75,7 @@ namespace Groundsman
                     });
                     map.MapElements.Add(polyline);
                 }
-                else if (feature.geometry.type.Equals("Polygon") && Preferences.Get("ShowPolygonsOnMap", true))
+                else if (Features[i].geometry.type.Equals("Polygon") && Preferences.Get("ShowPolygonsOnMap", true))
                 {
                     Polygon polygon = new Polygon
                     {
@@ -86,7 +89,7 @@ namespace Groundsman
                     });
                     map.MapElements.Add(polygon);
                 }
-            });
+            }
         }
 
         private async Task MapLogUpdaterAsync(TimeSpan interval, CancellationToken ct)
@@ -110,16 +113,16 @@ namespace Groundsman
 
         async void OnMapClickedAsync(object sender, MapClickedEventArgs e)
         {
-            List<Feature> Features = await App.FeatureStore.GetFeaturesAsync();
-            Features.ForEach((Feature feature) =>
+            ObservableCollection<Feature> Features = await App.FeatureStore.FetchFeaturesFromFile();
+            for (int i = 0; i < Features.Count; i++)
             {
                 bool ItemHit = false;
-                Point[] points = feature.properties.xamarincoordinates.ToArray();
-                if (feature.geometry.type.Equals("Polygon"))
+                Point[] points = Features[i].properties.xamarincoordinates.ToArray();
+                if (Features[i].geometry.type.Equals("Polygon"))
                 {
                     ItemHit |= IsPointInPolygon(new Point(e.Position.Latitude, e.Position.Longitude, 0), points);
                 }
-                else if (feature.geometry.type.Equals("Line"))
+                else if (Features[i].geometry.type.Equals("Line"))
                 {
                     ItemHit |= IsPointOnLine(new Point(e.Position.Latitude, e.Position.Longitude, 0), points);
                 }
@@ -127,13 +130,13 @@ namespace Groundsman
                 if (ItemHit)
                 {
                     string pointString = "";
-                    for (int i = 0; i < points.Length; i++)
+                    for (int j = 0; j < points.Length; j++)
                     {
-                        pointString += string.Format("{0}, {1}, {2} \n", points[i].Latitude, points[i].Longitude, points[i].Altitude);
+                        pointString += string.Format("{0}, {1}, {2} \n", points[j].Latitude, points[j].Longitude, points[j].Altitude);
                     }
-                    Navigation.PushModalAsync(new FeatureDetailsView(feature));
+                    await Navigation.PushModalAsync(new FeatureDetailsView(Features[i]));
                 }
-            });
+            }
         }
 
         public bool IsPointInPolygon(Point p, Point[] polygon)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -14,9 +15,9 @@ namespace Groundsman.Data
 {
     public class FeatureStore
     {
-        private List<Feature> CurrentFeatures { get; set; } = new List<Feature>();
+        public ObservableCollection<Feature> CurrentFeatures = new ObservableCollection<Feature>();
 
-        public Task<List<Feature>> GetFeaturesAsync()
+        public Task<ObservableCollection<Feature>> FetchFeaturesFromFile()
         {
             return Task.Run(async () =>
             {
@@ -35,7 +36,7 @@ namespace Groundsman.Data
                     await TryParseFeature(feature);
                 }
                 CurrentFeatures = rootobject.features;
-                return rootobject.features;
+                return CurrentFeatures;
             });
         }
 
@@ -51,7 +52,7 @@ namespace Groundsman.Data
                     feature.geometry.type = "Line";
                 }
 
-                feature.properties.xamarincoordinates = new List<Point>();
+                feature.properties.xamarincoordinates = new ObservableCollection<Point>();
                 object[] trueCoords;
 
                 // Determine if feature is supported and if so convert its points and add appropriate icon
@@ -148,11 +149,9 @@ namespace Groundsman.Data
             }
         }
 
-        public void DeleteFeatureAsync(string featureID)
+        public void DeleteFeatureAsync(Feature feature)
         {
-            Feature featureToDelete = App.FeatureStore.CurrentFeatures.Find((feature) => (feature.properties.id == featureID));
-            bool deleteSuccessful = App.FeatureStore.CurrentFeatures.Remove(featureToDelete);
-
+            bool deleteSuccessful = App.FeatureStore.CurrentFeatures.Remove(feature);
             if (deleteSuccessful)
             {
                 SaveCurrentFeaturesToEmbeddedFile();
@@ -175,6 +174,7 @@ namespace Groundsman.Data
                 {
                     if (App.FeatureStore.CurrentFeatures[i].properties.id == feature.properties.id)
                     {
+                        Debug.WriteLine("index {0}", i);
                         indexToEdit = i;
                         break;
                     }
@@ -183,7 +183,9 @@ namespace Groundsman.Data
                 if (indexToEdit != -1)
                 {
                     App.FeatureStore.CurrentFeatures[indexToEdit] = feature;
+
                 }
+                
             }
 
             SaveCurrentFeaturesToEmbeddedFile();
@@ -233,6 +235,40 @@ namespace Groundsman.Data
             return rootobject;
         }
 
+
+
+
+        /// <summary>
+        /// Formats the list of current features into valid geojson, then writes it to the embedded file.
+        /// </summary>
+        /// <returns></returns>
+        public void SaveFeaturesToFile(RootObject rootObject)
+        {
+            var objToSave = FormatFeaturesGeoJSON(rootObject);
+            var json = JsonConvert.SerializeObject(objToSave);
+            File.WriteAllText(AppConstants.FEATURES_FILE, json);
+        }
+
+        /// <summary>
+        /// Takes the current list of features and prepare the contents into a valid geoJSON serializable structure.
+        /// </summary>
+        /// <returns></returns>
+        private RootObject FormatFeaturesGeoJSON(RootObject rootObject)
+        {
+            foreach (var feature in rootObject.features)
+            {
+                // Convert Lines back into LineStrings for valid geojson.
+                if (feature.geometry.type == "Line")
+                {
+                    feature.geometry.type = "LineString";
+                }
+            }
+            return rootObject;
+        }
+
+
+
+
         public void DeleteAllFeatures()
         {
             App.FeatureStore.CurrentFeatures.Clear();
@@ -250,7 +286,7 @@ namespace Groundsman.Data
             RootObject importedFeaturesData = null;
             RootObject validatedFeatures = new RootObject
             {
-                features = new List<Feature>()
+                features = new ObservableCollection<Feature>()
             };
             int successfulImport = 0;
             int failedImport = 0;
@@ -274,6 +310,7 @@ namespace Groundsman.Data
                     {
                         EnsureUniqueID(importedFeature);
                         validatedFeatures.features.Add(importedFeature);
+                        App.FeatureStore.CurrentFeatures.Add(importedFeature);
                         successfulImport++;
                     }
                     else
@@ -282,9 +319,6 @@ namespace Groundsman.Data
                     }
 
                 }
-
-                // Finally, add all the imported features to the current features list.
-                App.FeatureStore.CurrentFeatures.AddRange(validatedFeatures.features);
 
                 SaveCurrentFeaturesToEmbeddedFile();
                 await HomePage.Instance.DisplayAlert("Import Success", string.Format("{0} new features have been added to your features list. {1} features failed to import.", successfulImport, failedImport), "OK");
@@ -414,16 +448,16 @@ namespace Groundsman.Data
             });
         }
 
-        public async Task ExportFeature(string featureID)
+        public async Task ExportFeature(Feature feature)
         {
-            List<Feature> featureList = new List<Feature>();
-            featureList.Add(App.FeatureStore.CurrentFeatures.Find((feature) => (feature.properties.id == featureID)));
+            ObservableCollection<Feature> featureList = new ObservableCollection<Feature>();
+            featureList.Add(feature);
             var rootobject = new RootObject
             {
                 type = "FeatureCollection",
                 features = featureList
             };
-        
+
             await Share.RequestAsync(new ShareTextRequest
             {
                 Title = featureList[0].properties.name,

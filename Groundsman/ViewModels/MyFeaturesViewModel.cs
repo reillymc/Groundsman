@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -19,35 +17,25 @@ namespace Groundsman
         public ICommand ButtonClickedCommand { set; get; }
         public ICommand IDClickedCommand { set; get; }
         public ICommand ItemTappedCommand { set; get; }
-        public ICommand RefreshListCommand { set; get; }
         public ICommand EditEntryCommand { get; set; }
         public ICommand DeleteEntryCommand { get; set; }
 
         private bool _isBusy;
 
-        private int featureCount;
-        public int FeatureCount
+        RootObject featureList = new RootObject();
+
+        public RootObject FeatureList
         {
-            get { return featureCount; }
-            set
-            {
-                featureCount = value;
-            }
-        }
-
-
-        ObservableCollection<Feature> featureListItems = new ObservableCollection<Feature>();
-
-        public ObservableCollection<Feature> FeatureListItems
-        {
-            get { return featureListItems; }
+            get { return featureList; }
             set
             {
                 // OnPropertyChanged should not be called if the property value
                 // does not change.
-                if (featureListItems == value)
+                if (featureList == value)
                     return;
-                featureListItems = value;
+                featureList = value;
+                OnPropertyChanged();
+                Debug.WriteLine("Changed");
             }
         }
 
@@ -76,9 +64,11 @@ namespace Groundsman
             ButtonClickedCommand = new Command(async () => await ExecuteButtonClickedCommand());
             IDClickedCommand = new Command(async () => await IDTappedCommandAsync());
             ItemTappedCommand = new Command<Feature>(async (data) => await ExecuteItemTappedCommand(data));
-            RefreshListCommand = new Command(() => ExecuteRefreshListCommand());
             EditEntryCommand = new Command<Feature>((feature) => EditFeatureEntry(feature));
             DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeatureEntry(feature));
+
+            GetFeatures();
+
         }
 
         /// <summary>
@@ -120,30 +110,10 @@ namespace Groundsman
             _isBusy = false;
         }
 
-        /// <summary>
-        /// Refreshes the list of current locations by re-reading the embedded file contents.
-        /// </summary>
-        private void ExecuteRefreshListCommand()
+        private async void GetFeatures()
         {
-            // Only update the list if it has changed as indicated by the dirty flag.
-            if (isDirty)
-            {
-                isDirty = false;
-                Device.BeginInvokeOnMainThread(async () =>
-                {
-                    featureListItems.Clear();
-                    // Do a full re-read of the embedded file to get the most current list of features.                    
-                    foreach (Feature feature in await App.FeatureStore.GetFeaturesAsync())
-                    {
-                        featureListItems.Add(feature);
-                        Debug.WriteLine("Here");
-                    }
-                    featureCount = featureListItems.Count;
-                });
-                
-            }
-
-            //IsRefreshing = false;
+            await App.FeatureStore.FetchFeaturesFromFile();
+            FeatureList.features = App.FeatureStore.CurrentFeatures;
         }
 
         /// <summary>
@@ -168,10 +138,8 @@ namespace Groundsman
             bool yesResponse = await HomePage.Instance.DisplayAlert("Delete Feature", "Are you sure you want to delete this feature?", "Yes", "No");
             if (yesResponse)
             {
-                App.FeatureStore.DeleteFeatureAsync(feature.properties.id);
+                App.FeatureStore.DeleteFeatureAsync(feature);
             }
-            ExecuteRefreshListCommand();
-
             _isBusy = false;
         }
     }
