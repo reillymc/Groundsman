@@ -38,11 +38,8 @@ namespace Groundsman
     {
         public string type { get; set; }
 
-        public static readonly BindableProperty FeatureCollection
-            =
-         BindableProperty.Create("features", typeof(ObservableCollection<Feature>),
-                                  typeof(RootObject),
-                                  default(ObservableCollection<Feature>));
+        [JsonIgnore]
+        public static readonly BindableProperty FeatureCollection = BindableProperty.Create("features", typeof(ObservableCollection<Feature>), typeof(RootObject), default(ObservableCollection<Feature>));
 
         public ObservableCollection<Feature> features
         {

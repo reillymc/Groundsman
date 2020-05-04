@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 using Xamarin.Forms.Maps;
 
 namespace Groundsman
@@ -20,7 +23,7 @@ namespace Groundsman
         {
             Map = new CustomMap();
             CenterMapOnUser();
-            Map.MapClicked += OnMapClickedAsync;
+            Map.MapClicked += OnMapClicked;
         }
 
         public CustomMap Map { get; private set; }
@@ -47,10 +50,10 @@ namespace Groundsman
             Map.Pins.Clear();
         }
 
-        public async void DrawFeatures()
+        public void DrawFeatures()
         {
             // Using CurrentFeature to draw the geodata on the map
-            List<Feature> Features = await App.FeatureStore.GetFeaturesAsync();
+            ObservableCollection<Feature> Features = App.FeatureStore.CurrentFeatures;
             Features.ForEach((Feature feature) =>
             {
                 var points = feature.properties.xamarincoordinates;
@@ -65,8 +68,9 @@ namespace Groundsman
                     };
                     Map.Pins.Add(pin);
                 }
-                else if (feature.geometry.type.Equals("Line") && Preferences.Get("ShowLinesOnMap", true))
+                else if ((feature.geometry.type.Equals("Line") || feature.geometry.type.Equals("LineString")) && Preferences.Get("ShowLinesOnMap", true))
                 {
+                    Debug.WriteLine("Line");
                     Polyline polyline = new Polyline
                     {
                         StrokeColor = Color.OrangeRed,
@@ -145,9 +149,9 @@ namespace Groundsman
             }
         }
 
-        async void OnMapClickedAsync(object sender, MapClickedEventArgs e)
+        void OnMapClicked(object sender, MapClickedEventArgs e)
         {
-            List<Feature> Features = await App.FeatureStore.GetFeaturesAsync();
+            ObservableCollection<Feature> Features = App.FeatureStore.CurrentFeatures;
             Features.ForEach(async (Feature feature) =>
             {
                 bool ItemHit = false;
@@ -156,7 +160,7 @@ namespace Groundsman
                 {
                     ItemHit |= IsPointInPolygon(new Point(e.Position.Latitude, e.Position.Longitude, 0), points);
                 }
-                else if (feature.geometry.type.Equals("Line"))
+                else if (feature.geometry.type.Equals("Line") || feature.geometry.type.Equals("LineString"))
                 {
                     ItemHit |= IsPointOnLine(new Point(e.Position.Latitude, e.Position.Longitude, 0), points);
                 }
@@ -169,7 +173,7 @@ namespace Groundsman
                         pointString += string.Format("{0}, {1}, {2} \n", points[i].Latitude, points[i].Longitude, points[i].Altitude);
                     }
                     Debug.WriteLine("Tapped {0}", feature.properties.name);
-                    await HomePage.Instance.ShowExistingDetailFormPage(feature);
+                    await HomePage.Instance.ShowDetailFormPage(feature);
                 }
             });
         }
