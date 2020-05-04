@@ -21,6 +21,7 @@ namespace Groundsman
             FeatureStore = new FeatureStore();
             LogStore = new LogStore();
             MainPage = new NavigationPage(HomePage.Instance);
+
             // If the user ID hasn't been set yet, prompt the user to create one upon app launch.
             if (!Preferences.ContainsKey("UserID"))
             {

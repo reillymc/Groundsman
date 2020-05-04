@@ -30,15 +30,5 @@ namespace Groundsman
             HomePage.Instance.Navigation.PopToRootAsync();
             return true;
         }
-
-        protected override async void OnDisappearing()
-        {
-            base.OnDisappearing();
-
-            if (Navigation.ModalStack.Count > 0)
-            {
-                await Navigation.PopModalAsync();
-            }
-        }
     }
 }

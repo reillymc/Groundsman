@@ -27,21 +27,34 @@ namespace Groundsman
         /// Asynchronously adds DetailFormView to the top of the navigation stack.
         /// </summary>
         /// <param name="type">Data entry type</param>
-        public void ShowNewDetailFormPage(string type)
+        public async Task ShowNewDetailFormPage(string type)
         {
-            Navigation.PushAsync(new EditFeatureDetailsView(type));
+            await Navigation.PushAsync(new EditFeatureDetailsView(type));
         }
 
-        public void ShowEditDetailFormPage(Feature entryToEdit)
+        /// <summary>
+        /// Shows the edit feature detials page for an existing feature
+        /// </summary>
+        /// <param name="feature"></param>
+        public async Task ShowEditDetailFormPage(Feature feature)
         {
-            Navigation.PushAsync(new EditFeatureDetailsView(entryToEdit));
+            await Navigation.PushAsync(new EditFeatureDetailsView(feature));
         }
 
-        public async Task ShowExistingDetailFormPage(Feature data)
+        /// <summary>
+        /// Shows the feature details page for an existing feature
+        /// </summary>
+        /// <param name="feature">Feature to get and display data from</param>
+        /// <returns></returns>
+        public async Task ShowDetailFormPage(Feature feature)
         {
-            await Navigation.PushAsync(new FeatureDetailsView(data));
+            await Navigation.PushAsync(new FeatureDetailsView(feature));
         }
 
+        /// <summary>
+        /// Displays native device share sheet to export feature list
+        /// </summary>
+        /// <returns></returns>
         public async Task ShowShareSheetAsync()
         {
             await App.FeatureStore.ExportFeatures();
@@ -51,7 +64,7 @@ namespace Groundsman
         /// Displays a pop-up user interface to navigate to different data entry types
         /// </summary>
         /// <returns></returns>
-        public async Task ShowDetailFormOptions()
+        public async Task ShowAddFeaturePage()
         {
             await Navigation.PushModalAsync(new AddFeatureView());
         }
