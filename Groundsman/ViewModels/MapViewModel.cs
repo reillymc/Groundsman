@@ -172,8 +172,27 @@ namespace Groundsman
                     {
                         pointString += string.Format("{0}, {1}, {2} \n", points[i].Latitude, points[i].Longitude, points[i].Altitude);
                     }
-                    Debug.WriteLine("Tapped {0}", feature.properties.name);
-                    await HomePage.Instance.ShowDetailFormPage(feature);
+
+                    string result = await HomePage.Instance.DisplayActionSheet(feature.properties.name, "Dismiss", "Delete", "View", "Edit");
+
+                    switch (result)
+                    {
+                        case "Delete":
+                            bool yesResponse = await HomePage.Instance.DisplayAlert("Delete Feature", "Are you sure you want to delete this feature?", "Yes", "No");
+                            if (yesResponse)
+                            {
+                                App.FeatureStore.DeleteFeatureAsync(feature);
+                            }
+                            break;
+                        case "View":
+                            await HomePage.Instance.ShowDetailFormPage(feature);
+                            break;
+                        case "Edit":
+                            await HomePage.Instance.ShowEditDetailFormPage(feature);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             });
         }

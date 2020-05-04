@@ -43,7 +43,7 @@ namespace Groundsman
             EditEntryCommand = new Command<Feature>(async (feature) => await ShowEditFeatureDetailsPage(feature));
             DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
 
-            GetFeatures();
+            _ = GetFeatures();
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Groundsman
         /// <summary>
         /// Call the feature store to fetch from file and then set the resulting current features to the list source collection.
         /// </summary>
-        private async void GetFeatures()
+        private async Task GetFeatures()
         {
             await App.FeatureStore.FetchFeaturesFromFile();
             FeatureList.features = App.FeatureStore.CurrentFeatures;

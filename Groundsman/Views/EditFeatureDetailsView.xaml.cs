@@ -44,7 +44,8 @@ namespace Groundsman
                 addPointBtn.IsVisible = true;
                 closePolyBtn.IsVisible = true;
             }
-            else if (type == "Line"){
+            else if (type == "Line" || type == "LineString")
+            {
                 addPointBtn.ImageSource = "add_icon_color";
                 addPointBtn.IsVisible = true;
                 closePolyBtn.IsVisible = false;

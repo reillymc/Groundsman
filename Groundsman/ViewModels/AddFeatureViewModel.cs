@@ -1,5 +1,4 @@
-﻿using System;
-namespace Groundsman
+﻿namespace Groundsman
 {
     public class AddFeatureViewModel
     {

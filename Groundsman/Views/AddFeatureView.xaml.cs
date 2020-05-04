@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Groundsman
@@ -15,7 +14,7 @@ namespace Groundsman
             pointTapRecogniser.Tapped += async (sender, e) =>
             {
                 await Navigation.PopModalAsync();
-                HomePage.Instance.ShowNewDetailFormPage("Point");
+                await HomePage.Instance.ShowNewDetailFormPage("Point");
             };
             pointFrame.GestureRecognizers.Add(pointTapRecogniser);
 
@@ -23,7 +22,7 @@ namespace Groundsman
             lineTapRecogniser.Tapped += async (sender, e) =>
             {
                 await Navigation.PopModalAsync();
-                HomePage.Instance.ShowNewDetailFormPage("Line");
+                await HomePage.Instance.ShowNewDetailFormPage("Line");
             };
             lineFrame.GestureRecognizers.Add(lineTapRecogniser);
 
@@ -31,7 +30,7 @@ namespace Groundsman
             polygonTapRecogniser.Tapped += async (sender, e) =>
             {
                 await Navigation.PopModalAsync();
-                HomePage.Instance.ShowNewDetailFormPage("Polygon");
+                await HomePage.Instance.ShowNewDetailFormPage("Polygon");
             };
             polygonFrame.GestureRecognizers.Add(polygonTapRecogniser);
 

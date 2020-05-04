@@ -308,7 +308,7 @@ namespace Groundsman
             // A new entry will have an ID of NEW_ENTRY_ID as assigned from the constructor,
             // otherwise an ID will already be set for editing entries.
             feature.properties.id = thisEntryID;
-            feature.properties.author  = Preferences.Get("UserID", "Groundsman");
+            feature.properties.author = Preferences.Get("UserID", "Groundsman");
 
             // Feature type (Point, Line, Polygon).
             feature.geometry = new Geometry();
@@ -318,7 +318,8 @@ namespace Groundsman
             if (string.IsNullOrEmpty(NameEntry))
             {
                 feature.properties.name = "Unnamed " + feature.geometry.type;
-            } else
+            }
+            else
             {
                 feature.properties.name = NameEntry;
             }
@@ -392,7 +393,7 @@ namespace Groundsman
         /// <returns>True if the form contains valid data.</returns>
         private async Task<bool> FeatureEntryIsValid()
         {
-            /// Begin validation checks.
+            // Begin validation checks.
             switch (thisEntryType)
             {
                 case "Polygon":
@@ -415,7 +416,6 @@ namespace Groundsman
                             return false;
                         }
                     }
-
                     break;
                 case "Line":
                     if (GeolocationPoints.Count < 2)
@@ -423,7 +423,6 @@ namespace Groundsman
                         await HomePage.Instance.DisplayAlert("Incomplete Entry", "A line must contain at least 2 data points.", "OK");
                         return false;
                     }
-
                     break;
                 case "Point":
                     if (GeolocationPoints.Count != 1)
@@ -431,10 +430,8 @@ namespace Groundsman
                         await HomePage.Instance.DisplayAlert("Unsupported Entry", "A point must only contain 1 data point.", "OK");
                         return false;
                     }
-
                     break;
             }
-
             return true;
         }
 
@@ -452,6 +449,5 @@ namespace Groundsman
 
             _isBusy = false;
         }
-
     }
 }

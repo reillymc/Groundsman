@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -178,7 +177,6 @@ namespace Groundsman.Data
                 {
                     if (App.FeatureStore.CurrentFeatures[i].properties.id == feature.properties.id)
                     {
-                        Debug.WriteLine("index {0}", i);
                         indexToEdit = i;
                         break;
                     }
