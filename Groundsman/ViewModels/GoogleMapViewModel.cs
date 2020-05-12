@@ -21,7 +21,7 @@ namespace Groundsman
         // Related to Shape Filter
         public List<string> Shape_options
         {
-            get { return new List<string> { "All", "Point", "Line", "Polygon" }; }
+            get { return new List<string> { "All", "Point", "LineString", "Polygon" }; }
 
             set
             {
@@ -123,7 +123,7 @@ namespace Groundsman
                     {
                         GoogleMapManager.DropPins(Pins, feature.properties.name, points);
                     }
-                    else if (feature.geometry.type.Equals("Line") && (shape_filter.Equals("Line") || shape_filter.Equals("All")))
+                    else if (feature.geometry.type.Equals("LineString") && (shape_filter.Equals("Line") || shape_filter.Equals("All")))
                     {
                         GoogleMapManager.DrawLine(Polylines, feature.properties.name, points);
                     }
