@@ -63,7 +63,11 @@ namespace Groundsman
                         Label = feature.properties.name,
                         Address = string.Format("{0}, {1}, {2}", points[0].Latitude, points[0].Longitude, points[0].Altitude),
                         Type = PinType.Place,
-                        Position = new Position(points[0].Latitude, points[0].Longitude)
+                        Position = new Position(points[0].Latitude, points[0].Longitude),                        
+                    };
+                    pin.MarkerClicked += async (sender, e) =>
+                    {
+                        await DisplayFeatureActionMenuAsync(feature);
                     };
                     Map.Pins.Add(pin);
                 }
@@ -165,35 +169,34 @@ namespace Groundsman
 
                 if (ItemHit)
                 {
-                    string pointString = "";
-                    for (int i = 0; i < points.Length; i++)
-                    {
-                        pointString += string.Format("{0}, {1}, {2} \n", points[i].Latitude, points[i].Longitude, points[i].Altitude);
-                    }
-
-                    string result = await HomePage.Instance.DisplayActionSheet(feature.properties.name, "Dismiss", "Delete", "View", "Edit");
-
-                    switch (result)
-                    {
-                        case "Delete":
-                            bool yesResponse = await HomePage.Instance.DisplayAlert("Delete Feature", "Are you sure you want to delete this feature?", "Yes", "No");
-                            if (yesResponse)
-                            {
-                                App.FeatureStore.DeleteFeatureAsync(feature);
-                                RefreshMap();
-                            }
-                            break;
-                        case "View":
-                            await HomePage.Instance.ShowDetailFormPage(feature);
-                            break;
-                        case "Edit":
-                            await HomePage.Instance.ShowEditDetailFormPage(feature);
-                            break;
-                        default:
-                            break;
-                    }
+                    await DisplayFeatureActionMenuAsync(feature);
                 }
             });
+        }
+
+        async Task DisplayFeatureActionMenuAsync(Feature feature)
+        {
+            string result = await HomePage.Instance.DisplayActionSheet(feature.properties.name, "Dismiss", "Delete", "View", "Edit");
+
+            switch (result)
+            {
+                case "Delete":
+                    bool yesResponse = await HomePage.Instance.DisplayAlert("Delete Feature", "Are you sure you want to delete this feature?", "Yes", "No");
+                    if (yesResponse)
+                    {
+                        App.FeatureStore.DeleteFeatureAsync(feature);
+                        RefreshMap();
+                    }
+                    break;
+                case "View":
+                    await HomePage.Instance.ShowDetailFormPage(feature);
+                    break;
+                case "Edit":
+                    await HomePage.Instance.ShowEditDetailFormPage(feature);
+                    break;
+                default:
+                    break;
+            }
         }
 
         public bool IsPointInPolygon(Point p, Point[] polygon)
