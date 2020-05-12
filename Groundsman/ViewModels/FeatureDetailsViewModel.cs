@@ -6,7 +6,6 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json.Linq;
-using System.Diagnostics;
 
 namespace Groundsman
 {
@@ -191,7 +190,6 @@ namespace Groundsman
 
             NameEntry = data.properties.name;
             DateEntry = DateTime.Parse(data.properties.date).ToShortDateString();
-            Debug.WriteLine("{0}, {1}", data.properties.date, data.properties.xamarincoordinates[0].Latitude);
             GeolocationPoints = new ObservableCollection<Point>(data.properties.xamarincoordinates);
             GeolocationEntryEnabled = true;
 

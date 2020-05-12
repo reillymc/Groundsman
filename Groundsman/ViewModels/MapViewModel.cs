@@ -182,6 +182,7 @@ namespace Groundsman
                             if (yesResponse)
                             {
                                 App.FeatureStore.DeleteFeatureAsync(feature);
+                                RefreshMap();
                             }
                             break;
                         case "View":

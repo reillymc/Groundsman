@@ -11,7 +11,7 @@ namespace Groundsman
         public EditFeatureDetailsView(string type)
         {
             InitializeComponent();
-            this.BindingContext = new FeatureDetailsViewModel(type);
+            BindingContext = new FeatureDetailsViewModel(type);
 
             Title = $"New {type}";
 
@@ -25,7 +25,7 @@ namespace Groundsman
         public EditFeatureDetailsView(Feature data)
         {
             InitializeComponent();
-            this.BindingContext = new FeatureDetailsViewModel(data);
+            BindingContext = new FeatureDetailsViewModel(data);
 
             Title = data.properties.name;
 
