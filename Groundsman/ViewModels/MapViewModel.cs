@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -68,9 +67,8 @@ namespace Groundsman
                     };
                     Map.Pins.Add(pin);
                 }
-                else if ((feature.geometry.type.Equals("Line") || feature.geometry.type.Equals("LineString")) && Preferences.Get("ShowLinesOnMap", true))
+                else if (feature.geometry.type.Equals("LineString") && Preferences.Get("ShowLinesOnMap", true))
                 {
-                    Debug.WriteLine("Line");
                     Polyline polyline = new Polyline
                     {
                         StrokeColor = Color.OrangeRed,
@@ -160,7 +158,7 @@ namespace Groundsman
                 {
                     ItemHit |= IsPointInPolygon(new Point(e.Position.Latitude, e.Position.Longitude, 0), points);
                 }
-                else if (feature.geometry.type.Equals("Line") || feature.geometry.type.Equals("LineString"))
+                else if (feature.geometry.type.Equals("LineString"))
                 {
                     ItemHit |= IsPointOnLine(new Point(e.Position.Latitude, e.Position.Longitude, 0), points);
                 }

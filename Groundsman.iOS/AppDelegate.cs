@@ -61,7 +61,7 @@ namespace Groundsman.iOS
                     handled = true;
                     break;
                 case ShortcutIdentifier.Second:
-                    HomePage.Instance.ShowNewDetailFormPage("Line");
+                    HomePage.Instance.ShowNewDetailFormPage("LineString");
                     handled = true;
                     break;
                 case ShortcutIdentifier.Third:

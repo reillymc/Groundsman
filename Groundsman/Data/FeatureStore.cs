@@ -43,13 +43,6 @@ namespace Groundsman.Data
             // Ensure the feature has valid GeoJSON fields supplied.
             if (feature != null && feature.type != null && feature.geometry != null && feature.geometry.type != null && feature.geometry.coordinates != null)
             {
-                // Immediately convert LineStrings to Line for use in the rest of the codebase. 
-                // This will be converted back to LineString before serialization back to json.
-                if (feature.geometry.type == "LineString")
-                {
-                    feature.geometry.type = "Line";
-                }
-
                 feature.properties.xamarincoordinates = new ObservableCollection<Point>();
                 object[] trueCoords;
 
@@ -61,7 +54,7 @@ namespace Groundsman.Data
                         trueCoords = feature.geometry.coordinates.ToArray();
                         feature.properties.xamarincoordinates.Add(JsonCoordToXamarinPoint(trueCoords));
                         break;
-                    case "Line":
+                    case "LineString":
                         feature.properties.typeIconPath = "line_icon.png";
                         // Iterates the root coordinates (List<object>),
                         // then casts each element in the list to a Jarray which contain the actual coordinates.
@@ -214,21 +207,8 @@ namespace Groundsman.Data
                 type = "FeatureCollection",
                 features = App.FeatureStore.CurrentFeatures
             };
-
-            foreach (var feature in rootobject.features)
-            {
-                // Convert Lines back into LineStrings for valid geojson.
-                if (feature.geometry.type == "Line")
-                {
-                    feature.geometry.type = "LineString";
-                }
-            }
-
             return rootobject;
         }
-
-
-
 
         /// <summary>
         /// Formats the list of current features into valid geojson, then writes it to the embedded file.
@@ -236,30 +216,9 @@ namespace Groundsman.Data
         /// <returns></returns>
         public void SaveFeaturesToFile(RootObject rootObject)
         {
-            var objToSave = FormatFeaturesGeoJSON(rootObject);
-            var json = JsonConvert.SerializeObject(objToSave);
+            var json = JsonConvert.SerializeObject(rootObject);
             File.WriteAllText(AppConstants.FEATURES_FILE, json);
         }
-
-        /// <summary>
-        /// Takes the current list of features and prepare the contents into a valid geoJSON serializable structure.
-        /// </summary>
-        /// <returns></returns>
-        private RootObject FormatFeaturesGeoJSON(RootObject rootObject)
-        {
-            foreach (var feature in rootObject.features)
-            {
-                // Convert Lines back into LineStrings for valid geojson.
-                if (feature.geometry.type == "Line")
-                {
-                    feature.geometry.type = "LineString";
-                }
-            }
-            return rootObject;
-        }
-
-
-
 
         public void DeleteAllFeatures()
         {

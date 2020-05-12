@@ -22,7 +22,7 @@ namespace Groundsman
             lineTapRecogniser.Tapped += async (sender, e) =>
             {
                 await Navigation.PopModalAsync();
-                await HomePage.Instance.ShowNewDetailFormPage("Line");
+                await HomePage.Instance.ShowNewDetailFormPage("LineString");
             };
             lineFrame.GestureRecognizers.Add(lineTapRecogniser);
 

@@ -13,7 +13,15 @@ namespace Groundsman
             InitializeComponent();
             BindingContext = new FeatureDetailsViewModel(type);
 
-            Title = $"New {type}";
+            // Set title to just 'Line' instead of 'LineString'
+            if (type == "LineString")
+            {
+                Title = $"New Line";
+            } else
+            {
+                Title = $"New {type}";
+            }
+            
 
             DetermineAddPointBtnVisability(type);
         }
@@ -44,7 +52,7 @@ namespace Groundsman
                 addPointBtn.IsVisible = true;
                 closePolyBtn.IsVisible = true;
             }
-            else if (type == "Line" || type == "LineString")
+            else if (type == "LineString")
             {
                 addPointBtn.ImageSource = "add_icon_color";
                 addPointBtn.IsVisible = true;
