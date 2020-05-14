@@ -34,12 +34,12 @@ namespace Groundsman
         public List<object> coordinates { get; set; }
     }
 
-    public class RootObject : BindableObject
+    public class GeoJSONObject : BindableObject
     {
         public string type { get; set; }
 
         [JsonIgnore]
-        public static readonly BindableProperty FeatureCollection = BindableProperty.Create("features", typeof(ObservableCollection<Feature>), typeof(RootObject), default(ObservableCollection<Feature>));
+        public static readonly BindableProperty FeatureCollection = BindableProperty.Create("features", typeof(ObservableCollection<Feature>), typeof(GeoJSONObject), default(ObservableCollection<Feature>));
 
         public ObservableCollection<Feature> features
         {

@@ -18,12 +18,15 @@ namespace Groundsman
         public App()
         {
             InitializeComponent();
-            FeatureStore = new FeatureStore();
+            FeatureStore = new FeatureStore();           
             LogStore = new LogStore();
             MainPage = new NavigationPage(HomePage.Instance);
 
+            //Lead in features from file for the My Features and Map views.
+            _ = FeatureStore.FetchFeaturesFromFile();
+
             // If the user ID hasn't been set yet, prompt the user to create one upon app launch.
-            if (!Preferences.ContainsKey("UserID"))
+            if (Preferences.Get("UserID", "Groundsman") == "Groundsman")
             {
                 MainPage.Navigation.PushModalAsync(new WelcomeFormView());
             }

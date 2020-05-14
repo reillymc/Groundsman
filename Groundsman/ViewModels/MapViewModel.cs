@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,12 +16,16 @@ namespace Groundsman
     public class MapViewModel : ViewModelBase
     {
         private CancellationTokenSource cts;
+        private GeoJSONObject GeoJSONStore = new GeoJSONObject();
 
         public MapViewModel()
         {
             Map = new CustomMap();
             CenterMapOnUser();
             Map.MapClicked += OnMapClicked;
+
+            // Set feature list to current list from feature store
+            GeoJSONStore.features = App.FeatureStore.GeoJSONStore.features;
         }
 
         public CustomMap Map { get; private set; }
@@ -52,8 +55,7 @@ namespace Groundsman
         public void DrawFeatures()
         {
             // Using CurrentFeature to draw the geodata on the map
-            ObservableCollection<Feature> Features = App.FeatureStore.CurrentFeatures;
-            Features.ForEach((Feature feature) =>
+            GeoJSONStore.features.ForEach((Feature feature) =>
             {
                 var points = feature.properties.xamarincoordinates;
                 if (feature.geometry.type.Equals("Point") && Preferences.Get("ShowPointsOnMap", true))
@@ -153,8 +155,7 @@ namespace Groundsman
 
         void OnMapClicked(object sender, MapClickedEventArgs e)
         {
-            ObservableCollection<Feature> Features = App.FeatureStore.CurrentFeatures;
-            Features.ForEach(async (Feature feature) =>
+            GeoJSONStore.features.ForEach(async (Feature feature) =>
             {
                 bool ItemHit = false;
                 Point[] points = feature.properties.xamarincoordinates.ToArray();

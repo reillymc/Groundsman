@@ -16,15 +16,15 @@ namespace Groundsman
         public ICommand EditEntryCommand { get; set; }
         public ICommand DeleteEntryCommand { get; set; }
 
-        RootObject featureList = new RootObject();
-        public RootObject FeatureList
+        private GeoJSONObject geoJSONStore = new GeoJSONObject();
+        public GeoJSONObject GeoJSONStore
         {
-            get { return featureList; }
+            get { return geoJSONStore; }
             set
             {
-                if (featureList == value)
+                if (geoJSONStore == value)
                     return;
-                featureList = value;
+                geoJSONStore = value;
                 //PropertyChanged
             }
         }
@@ -43,7 +43,8 @@ namespace Groundsman
             EditEntryCommand = new Command<Feature>(async (feature) => await ShowEditFeatureDetailsPage(feature));
             DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
 
-            _ = GetFeatures();
+            // Set feature list to current list from feature store
+            GeoJSONStore.features = App.FeatureStore.GeoJSONStore.features;
         }
 
         /// <summary>
@@ -120,15 +121,6 @@ namespace Groundsman
             }
 
             _isBusy = false;
-        }
-
-        /// <summary>
-        /// Call the feature store to fetch from file and then set the resulting current features to the list source collection.
-        /// </summary>
-        private async Task GetFeatures()
-        {
-            await App.FeatureStore.FetchFeaturesFromFile();
-            FeatureList.features = App.FeatureStore.CurrentFeatures;
         }
     }
 }

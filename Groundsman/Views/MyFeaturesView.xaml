@@ -19,7 +19,7 @@
     </ContentPage.Resources>
 
     <AbsoluteLayout x:Name="absLayout">
-        <ListView HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}" x:Name="listView" ItemsSource="{Binding FeatureList.features, Source={x:Reference Name=viewModel}}" HasUnevenRows="True" SeparatorColor="{DynamicResource bgTertiary}">
+        <ListView HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}" x:Name="listView" ItemsSource="{Binding GeoJSONStore.features, Source={x:Reference Name=viewModel}}" HasUnevenRows="True" SeparatorColor="{DynamicResource bgTertiary}">
             <ListView.Behaviors>
                 <behaviors:ListViewItemTappedBehaviour Command="{Binding ItemTappedCommand}" Converter="{StaticResource TappedItemConverter}" />
             </ListView.Behaviors>
@@ -46,7 +46,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.Footer>
-                    <Label Text="{Binding FeatureList.features.Count, StringFormat='{0} Features', Source={x:Reference Name=viewModel}}" TextColor="{DynamicResource textSecondary}"  Padding="10" FontSize="Small"/>
+                    <Label Text="{Binding GeoJSONStore.features.Count, StringFormat='{0} Features', Source={x:Reference Name=viewModel}}" TextColor="{DynamicResource textSecondary}"  Padding="10" FontSize="Small"/>
             </ListView.Footer>
         </ListView>
         <Button AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1.0,1.0,-1,-1" Margin="10" WidthRequest="50" HeightRequest="50" BorderRadius="25" BackgroundColor="{StaticResource greenPrimary}" Image="add_icon" Command="{Binding AddButtonTappedCommand}"/>
