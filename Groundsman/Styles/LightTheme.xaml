@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-             x:Class="Groundsman.Styles.LightTheme"
-             Source="DefaultTheme.xaml">
+<ResourceDictionary x:Class="Groundsman.Styles.LightTheme"
+                    xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+                    Source="DefaultTheme.xaml">
 
     <Color x:Key="bgPrimary">#FFFFFF</Color>
     <Color x:Key="bgSecondary">#f5f6f6</Color>

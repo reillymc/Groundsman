@@ -1,37 +1,46 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<TabbedPage ClassId="TabbedHomePage" xmlns="http://xamarin.com/schemas/2014/forms"
+<?xml version="1.0" encoding="UTF-8" ?>
+<TabbedPage x:Class="Groundsman.HomePage"
+            xmlns="http://xamarin.com/schemas/2014/forms"
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
-            android:TabbedPage.ToolbarPlacement="Bottom"
             xmlns:local="clr-namespace:Groundsman;assembly=Groundsman"
-            NavigationPage.HasNavigationBar="false"
+            android:TabbedPage.ToolbarPlacement="Bottom"
+            ClassId="TabbedHomePage"
             NavigationPage.BackButtonTitle="My Features"
-            x:Class="Groundsman.HomePage"
+            NavigationPage.HasNavigationBar="false"
             SelectedTabColor="{DynamicResource textPrimary}"
-            UnselectedTabColor="{DynamicResource textSecondary}" >
+            UnselectedTabColor="{DynamicResource textSecondary}">
     <TabbedPage.Children>
 
-        <NavigationPage Title="My Features" Icon="data_icon" BackgroundColor="{DynamicResource bgPrimary}">
+        <NavigationPage Title="My Features"
+                        BackgroundColor="{DynamicResource bgPrimary}"
+                        Icon="data_icon">
             <x:Arguments>
-                <local:MyFeaturesView/>
-            </x:Arguments>
-        </NavigationPage>    
-
-        <NavigationPage Title="Logger" Icon="log_icon" BackgroundColor="{DynamicResource bgPrimary}">
-            <x:Arguments>
-                <local:LoggerView/>
+                <local:MyFeaturesView />
             </x:Arguments>
         </NavigationPage>
 
-        <NavigationPage Title="Map" Icon="map_icon" BackgroundColor="{DynamicResource bgPrimary}">
+        <NavigationPage Title="Logger"
+                        BackgroundColor="{DynamicResource bgPrimary}"
+                        Icon="log_icon">
             <x:Arguments>
-                <local:MapView/>
+                <local:LoggerView />
             </x:Arguments>
         </NavigationPage>
 
-        <NavigationPage Title="Settings" Icon="settings_icon" BackgroundColor="{DynamicResource bgPrimary}">
+        <NavigationPage Title="Map"
+                        BackgroundColor="{DynamicResource bgPrimary}"
+                        Icon="map_icon">
             <x:Arguments>
-                <local:ProfileSettingsView/>
+                <local:MapView />
+            </x:Arguments>
+        </NavigationPage>
+
+        <NavigationPage Title="Settings"
+                        BackgroundColor="{DynamicResource bgPrimary}"
+                        Icon="settings_icon">
+            <x:Arguments>
+                <local:ProfileSettingsView />
             </x:Arguments>
         </NavigationPage>
 

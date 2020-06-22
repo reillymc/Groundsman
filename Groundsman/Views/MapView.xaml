@@ -1,17 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Groundsman.MapView"
+             xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Groundsman.MapView"
-             xmlns:local="clr-namespace:Groundsman"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             xmlns:local="clr-namespace:Groundsman"
              Title="Map"
              BackgroundColor="{DynamicResource bgPrimary}">
     <ContentPage.BindingContext>
         <local:MapViewModel x:Name="viewModel" />
-        </ContentPage.BindingContext>
-    <AbsoluteLayout HorizontalOptions="FillAndExpand"
-VerticalOptions="FillAndExpand">
-        <ContentView Content="{Binding Map}" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1"/>
-        <BoxView ios:VisualElement.BlurEffect="{DynamicResource blurEffect}" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,0.055"></BoxView>
+    </ContentPage.BindingContext>
+    <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <ContentView AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     Content="{Binding Map}" />
+        <BoxView ios:VisualElement.BlurEffect="{DynamicResource blurEffect}"
+                 AbsoluteLayout.LayoutBounds="{OnIdiom Phone='0,0,1,0.055',
+                                                       Tablet='0,0,1,0.022'}"
+                 AbsoluteLayout.LayoutFlags="All" />
     </AbsoluteLayout>
 </ContentPage>

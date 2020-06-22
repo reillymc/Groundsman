@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Groundsman.ProfileSettingsView"
+             xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Groundsman"
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
-             x:Class="Groundsman.ProfileSettingsView"
+             xmlns:local="clr-namespace:Groundsman"
              Title="Settings">
     <ContentPage.BindingContext>
         <local:ProfileSettingsViewModel x:Name="viewModel" />
@@ -13,7 +13,10 @@
             <TableRoot>
                 <TableSection Title="Profile">
                     <ViewCell>
-                        <Entry Margin="7,0" TextColor="{DynamicResource textPrimary}" Text="{Binding IDEntry}" Placeholder="User ID">
+                        <Entry Margin="7,0"
+                               Placeholder="User ID"
+                               Text="{Binding IDEntry}"
+                               TextColor="{DynamicResource textPrimary}">
                             <Entry.Behaviors>
                                 <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
                             </Entry.Behaviors>
@@ -22,9 +25,19 @@
                 </TableSection>
                 <TableSection Title="GPS and Data Precision">
                     <ViewCell>
-                        <StackLayout Orientation="Horizontal" Padding="15,0" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
-                            <Label Text="GPS Accuracy" VerticalOptions="Center" TextColor="{DynamicResource textPrimary}"></Label>
-                            <Picker x:Name="picker" HorizontalOptions="EndAndExpand" WidthRequest="95" TitleColor="Black" SelectedIndexChanged="OnPickerSelectedIndexChanged" SelectedIndex="{Binding GPSPrecisionEntry}">
+                        <StackLayout Padding="15,0"
+                                     HorizontalOptions="FillAndExpand"
+                                     Orientation="Horizontal"
+                                     VerticalOptions="CenterAndExpand">
+                            <Label Text="GPS Accuracy"
+                                   TextColor="{DynamicResource textPrimary}"
+                                   VerticalOptions="Center" />
+                            <Picker x:Name="picker"
+                                    HorizontalOptions="EndAndExpand"
+                                    SelectedIndex="{Binding GPSPrecisionEntry}"
+                                    SelectedIndexChanged="OnPickerSelectedIndexChanged"
+                                    TitleColor="Black"
+                                    WidthRequest="95">
                                 <Picker.ItemsSource>
                                     <x:Array Type="{x:Type x:String}">
                                         <x:String>Best</x:String>
@@ -37,25 +50,48 @@
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout Orientation="Horizontal" Padding="15,0" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
-                            <Label Text="{Binding Source={x:Reference stepperDecimal}, Path=Value}" VerticalOptions="Center" TextColor="{DynamicResource textPrimary}"></Label>
-                            <Label Text="Decimal Places" VerticalOptions="Center" TextColor="{DynamicResource textPrimary}"></Label>
-                            <Stepper x:Name="stepperDecimal" Maximum="12" Increment="1" HorizontalOptions="EndAndExpand" Value="{Binding DecimalAccuracyEntry}" ValueChanged="OnStepperValueChanged" ></Stepper>
+                        <StackLayout Padding="15,0"
+                                     HorizontalOptions="FillAndExpand"
+                                     Orientation="Horizontal"
+                                     VerticalOptions="CenterAndExpand">
+                            <Label Text="{Binding Source={x:Reference stepperDecimal}, Path=Value}"
+                                   TextColor="{DynamicResource textPrimary}"
+                                   VerticalOptions="Center" />
+                            <Label Text="Decimal Places"
+                                   TextColor="{DynamicResource textPrimary}"
+                                   VerticalOptions="Center" />
+                            <Stepper x:Name="stepperDecimal"
+                                     HorizontalOptions="EndAndExpand"
+                                     Increment="1"
+                                     Maximum="12"
+                                     ValueChanged="OnStepperValueChanged"
+                                     Value="{Binding DecimalAccuracyEntry}" />
                         </StackLayout>
                     </ViewCell>
                 </TableSection>
                 <TableSection Title="Feature List">
-                    <SwitchCell Text="Show Points on Map" OnChanged="ShowPointsOnMapChanged" On="{Binding ShowPointsOnMap}"/>
-                    <SwitchCell Text="Show Lines on Map" OnChanged="ShowLinesOnMapChanged" On="{Binding ShowLinesOnMap}"/>
-                    <SwitchCell Text="Show Polygons on Map" OnChanged="ShowPolygonsOnMapChanged" On="{Binding ShowPolygonsOnMap}"/>
+                    <SwitchCell On="{Binding ShowPointsOnMap}"
+                                OnChanged="ShowPointsOnMapChanged"
+                                Text="Show Points on Map" />
+                    <SwitchCell On="{Binding ShowLinesOnMap}"
+                                OnChanged="ShowLinesOnMapChanged"
+                                Text="Show Lines on Map" />
+                    <SwitchCell On="{Binding ShowPolygonsOnMap}"
+                                OnChanged="ShowPolygonsOnMapChanged"
+                                Text="Show Polygons on Map" />
                     <ViewCell Tapped="OnViewCellTapped">
-                        <StackLayout Orientation="Horizontal" Padding="15,0" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
-                            <Label Text="Clear All Features" TextColor="{StaticResource greenPrimary}"/>
+                        <StackLayout Padding="15,0"
+                                     HorizontalOptions="FillAndExpand"
+                                     Orientation="Horizontal"
+                                     VerticalOptions="CenterAndExpand">
+                            <Label Text="Clear All Features" TextColor="{StaticResource greenPrimary}" />
                         </StackLayout>
                     </ViewCell>
                 </TableSection>
                 <TableSection Title="Logger">
-                    <SwitchCell Text="Show Log Path on Map" OnChanged="ShowLogPathOnMapChanged" On="{Binding ShowLogPathOnMap}"/>
+                    <SwitchCell On="{Binding ShowLogPathOnMap}"
+                                OnChanged="ShowLogPathOnMapChanged"
+                                Text="Show Log Path on Map" />
                 </TableSection>
             </TableRoot>
         </TableView>

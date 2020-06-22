@@ -1,12 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Groundsman.LoggerView"
+             xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Groundsman.LoggerView"
              xmlns:local="clr-namespace:Groundsman"
              Title="Logger"
              BackgroundColor="{DynamicResource bgPrimary}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem AutomationId="id_icon" Icon="share_icon" Command="{Binding ShareButtonClickCommand}" />
+        <ToolbarItem AutomationId="id_icon"
+                     Command="{Binding ShareButtonClickCommand}"
+                     Icon="share_icon" />
     </ContentPage.ToolbarItems>
     <ContentPage.BindingContext>
         <local:LoggerViewModel x:Name="viewModel" />
@@ -17,39 +19,79 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Frame Style="{StaticResource FrameStyle}" Grid.Row="0">
-                <FlexLayout Style="{StaticResource ContainerStyleRow}" HeightRequest="40">
-                    <Label Style="{StaticResource InputLabelStyle}" Grid.Row="0" Grid.Column="0" Margin="10,0,0,0" Text="Logging Interval: " />
-                    <Entry Text="{Binding IntervalEntry}" TextColor="{StaticResource textSecondary}" HorizontalTextAlignment="End" Keyboard="Numeric" Grid.Row="0" Grid.Column="1" FontSize="Small" WidthRequest="44" Margin="0,6,0,0" />
-                    <Label Style="{StaticResource InputLabelStyle}" Grid.Row="0" Grid.Column="0" Margin="0" Text="seconds" HorizontalOptions="Start"/>
+            <Frame Grid.Row="0" Style="{StaticResource FrameStyle}">
+                <FlexLayout HeightRequest="40" Style="{StaticResource ContainerStyleRow}">
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Margin="10,0,0,0"
+                           Style="{StaticResource InputLabelStyle}"
+                           Text="Logging Interval: " />
+                    <Entry Grid.Row="0"
+                           Grid.Column="1"
+                           Margin="0,6,0,0"
+                           FontSize="Small"
+                           HorizontalTextAlignment="End"
+                           Keyboard="Numeric"
+                           Text="{Binding IntervalEntry}"
+                           TextColor="{StaticResource textSecondary}"
+                           WidthRequest="44" />
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Margin="0"
+                           HorizontalOptions="Start"
+                           Style="{StaticResource InputLabelStyle}"
+                           Text="seconds" />
 
                 </FlexLayout>
             </Frame>
-            <Frame Style="{StaticResource FrameStyle}" Grid.Row="1">
+            <Frame Grid.Row="1" Style="{StaticResource FrameStyle}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height=".9*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Label Style="{StaticResource InputLabelStyle}" Text="Log File: (Time, Latitude, Longitude, Altitude) " Grid.Row="0" Grid.Column="0" Margin="10" />
-                    <Frame Style="{StaticResource FrameStyle}" Grid.Row="1" Margin="0">
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Margin="10"
+                           Style="{StaticResource InputLabelStyle}"
+                           Text="Log File: (Time, Latitude, Longitude, Altitude) " />
+                    <Frame Grid.Row="1"
+                           Margin="0"
+                           Style="{StaticResource FrameStyle}">
                         <ScrollView x:Name="ScrollBox">
-                            <Label x:Name="logLabel" PropertyChanged="LogLabel_PropertyChanged" Style="{StaticResource EditorStyle}" Text="{Binding TextEntry}"   FontSize="Micro" IsEnabled="true" >
-                            
-                        </Label>
+                            <Label x:Name="logLabel"
+                                   FontSize="Micro"
+                                   IsEnabled="true"
+                                   PropertyChanged="LogLabel_PropertyChanged"
+                                   Style="{StaticResource EditorStyle}"
+                                   Text="{Binding TextEntry}" />
                         </ScrollView>
-                        
+
                     </Frame>
-                    <StackLayout Orientation="Horizontal" Grid.Row="2" HorizontalOptions="CenterAndExpand">
-                        <Button Grid.Row="2" AutomationId="ToggleButton" Text="{Binding ToggleButtonLabel}" Command="{Binding ToggleButtonClickCommand}" Padding="10, 0">
+                    <StackLayout Grid.Row="2"
+                                 HorizontalOptions="CenterAndExpand"
+                                 Orientation="Horizontal">
+                        <Button Grid.Row="2"
+                                Padding="10,0"
+                                AutomationId="ToggleButton"
+                                Command="{Binding ToggleButtonClickCommand}"
+                                Text="{Binding ToggleButtonLabel}">
                             <Button.TextColor>
-                                <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="white" />
+                                <OnPlatform x:TypeArguments="Color"
+                                            Android="white"
+                                            iOS="{StaticResource greenPrimary}" />
                             </Button.TextColor>
                         </Button>
-                        <Button Grid.Row="2" AutomationId="ClearButton" Text="Clear" Command="{Binding ClearButtonClickCommand}" Padding="10, 0">
+                        <Button Grid.Row="2"
+                                Padding="10,0"
+                                AutomationId="ClearButton"
+                                Command="{Binding ClearButtonClickCommand}"
+                                Text="Clear">
                             <Button.TextColor>
-                                <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="white" />
+                                <OnPlatform x:TypeArguments="Color"
+                                            Android="white"
+                                            iOS="{StaticResource greenPrimary}" />
                             </Button.TextColor>
                         </Button>
                     </StackLayout>
