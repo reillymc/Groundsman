@@ -6,6 +6,7 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json.Linq;
+using Groundsman.Services;
 
 namespace Groundsman
 {
@@ -229,7 +230,7 @@ namespace Groundsman
         {
             GeolocationEntryEnabled = false;
             LoadingIconActive = true;
-            Point location = await Services.GetGeoLocation();
+            Point location = await HelperServices.GetGeoLocation();
             if (location != null)
             {
                 point.Latitude = location.Latitude;

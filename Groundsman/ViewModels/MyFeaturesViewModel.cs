@@ -1,3 +1,4 @@
+using Groundsman.Services;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -32,19 +33,23 @@ namespace Groundsman
         private bool _isBusy;
         public event PropertyChangedEventHandler PropertyChanged;
 
+        NavigationService navigationService;
+
         /// <summary>
         /// View-model constructor.
         /// </summary>
         public MyFeaturesViewModel()
         {
-            AddButtonTappedCommand = new Command(async () => await AddButtonTapped());
-            ShareButtonTappedCommand = new Command(async () => await ShowShareSheet());
-            ItemTappedCommand = new Command<Feature>(async (data) => await ShowFeatureDetailsPage(data));
-            EditEntryCommand = new Command<Feature>(async (feature) => await ShowEditFeatureDetailsPage(feature));
+            AddButtonTappedCommand = new Command(async () => AddButtonTapped());
+            ShareButtonTappedCommand = new Command(async () => ShowShareSheet());
+            ItemTappedCommand = new Command<Feature>(async (data) => ShowFeatureDetailsPage(data));
+            EditEntryCommand = new Command<Feature>(async (feature) => ShowEditFeatureDetailsPage(feature));
             DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
 
             // Set feature list to current list from feature store
             GeoJSONStore.features = App.FeatureStore.GeoJSONStore.features;
+
+            navigationService = new NavigationService();
         }
 
         /// <summary>
@@ -52,12 +57,12 @@ namespace Groundsman
         /// </summary>
         /// <param name="data">Feature tapped on to be displayed.</param>
         /// <returns></returns>
-        private async Task ShowFeatureDetailsPage(Feature data)
+        private void ShowFeatureDetailsPage(Feature data)
         {
             if (_isBusy) return;
             _isBusy = true;
 
-            await HomePage.Instance.ShowDetailFormPage(data);
+            navigationService.NavigateToDetailPage(data);
 
             _isBusy = false;
         }
@@ -66,12 +71,12 @@ namespace Groundsman
         /// Shows native share sheet that exports all features.
         /// </summary>
         /// <returns></returns>
-        private async Task ShowShareSheet()
+        private void ShowShareSheet()
         {
             if (_isBusy) return;
             _isBusy = true;
 
-            await HomePage.Instance.ShowShareSheetAsync();
+            navigationService.InvokeShareSheetAsync();
 
             _isBusy = false;
         }
@@ -80,12 +85,12 @@ namespace Groundsman
         /// Opens up the dialog box where the user can select between Point, Line, and Polygon feature types to add.
         /// </summary>
         /// <returns></returns>
-        private async Task AddButtonTapped()
+        private void AddButtonTapped()
         {
             if (_isBusy) return;
             _isBusy = true;
 
-            await HomePage.Instance.ShowAddFeaturePage();
+            navigationService.PushAddFeaturePage();
 
             _isBusy = false;
         }
@@ -94,12 +99,12 @@ namespace Groundsman
         /// Displays the edit page for the selected feature.
         /// </summary>
         /// <param name="feature">Feature to edit.</param>
-        private async Task ShowEditFeatureDetailsPage(Feature feature)
+        private void ShowEditFeatureDetailsPage(Feature feature)
         {
             if (_isBusy) return;
             _isBusy = true;
 
-            await HomePage.Instance.ShowEditDetailFormPage(feature);
+            navigationService.NavigateToEditPage(feature);
 
             _isBusy = false;
         }

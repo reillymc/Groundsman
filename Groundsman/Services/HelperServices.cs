@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
-namespace Groundsman
+namespace Groundsman.Services
 {
-    public class Services
+    public class HelperServices
     {
         private static GeolocationAccuracy geolocationAccuracy;
         private static Point point;

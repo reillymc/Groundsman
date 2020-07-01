@@ -1,4 +1,5 @@
 ﻿using Foundation;
+using Groundsman.Services;
 using UIKit;
 
 namespace Groundsman.iOS
@@ -16,6 +17,9 @@ namespace Groundsman.iOS
         //
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
+
+        NavigationService navigationService;
+
         public override bool FinishedLaunching(UIApplication uiApplication, NSDictionary launchOptions)
         {
             Xamarin.Forms.Forms.Init();
@@ -52,20 +56,20 @@ namespace Groundsman.iOS
 
             // Anything to process?
             if (shortcutItem == null) return false;
-
+            navigationService = new NavigationService();
             // Take action based on the shortcut type
             switch (shortcutItem.Type)
             {
                 case ShortcutIdentifier.First:
-                    HomePage.Instance.ShowNewDetailFormPage("Point");
+                    navigationService.NavigateToNewEditPage("Point");
                     handled = true;
                     break;
                 case ShortcutIdentifier.Second:
-                    HomePage.Instance.ShowNewDetailFormPage("LineString");
+                    navigationService.NavigateToNewEditPage("LineString");
                     handled = true;
                     break;
                 case ShortcutIdentifier.Third:
-                    HomePage.Instance.ShowNewDetailFormPage("Polygon");
+                    navigationService.NavigateToNewEditPage("Polygon");
                     handled = true;
                     break;
             }

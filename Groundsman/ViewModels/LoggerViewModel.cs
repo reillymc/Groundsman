@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
+using Groundsman.Services;
 
 namespace Groundsman
 {
@@ -100,7 +101,7 @@ namespace Groundsman
             while (true)
             {
                 await Task.Delay(interval, ct);
-                Point location = await Services.GetGeoLocation();
+                Point location = await HelperServices.GetGeoLocation();
                 if (location != null)
                 {
                     string newEntry = string.Format("{0}, {1}, {2}, {3}\n", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), location.Latitude, location.Longitude, location.Altitude);

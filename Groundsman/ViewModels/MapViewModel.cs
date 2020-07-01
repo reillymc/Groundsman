@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Groundsman.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -17,7 +18,7 @@ namespace Groundsman
     {
         private CancellationTokenSource cts;
         private GeoJSONObject GeoJSONStore = new GeoJSONObject();
-
+        NavigationService navigationService;
         public MapViewModel()
         {
             Map = new CustomMap();
@@ -26,6 +27,8 @@ namespace Groundsman
 
             // Set feature list to current list from feature store
             GeoJSONStore.features = App.FeatureStore.GeoJSONStore.features;
+
+            navigationService = new NavigationService();
         }
 
         public CustomMap Map { get; private set; }
@@ -33,7 +36,7 @@ namespace Groundsman
         // Only center map on user if location permissions are granted
         private async void CenterMapOnUser()
         {
-            var status = await Services.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
+            var status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
             if (status != PermissionStatus.Granted)
             {
                 Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(-27.47004901089882, 153.021072), Distance.FromMiles(1.0)));
@@ -41,7 +44,7 @@ namespace Groundsman
             }
             else
             {
-                Point location = await Services.GetGeoLocation();
+                Point location = await HelperServices.GetGeoLocation();
                 Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(location.Latitude, location.Longitude), Distance.FromMiles(1.0)));
             }
         }
@@ -115,7 +118,7 @@ namespace Groundsman
                 _ = MapLogUpdaterAsync(new TimeSpan(0, 0, 1), cts.Token);
             }
             //SetShowingUser
-            var status = await Services.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
+            var status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
             if (status == PermissionStatus.Granted)
             {
                 Map.IsShowingUser = true;
@@ -177,12 +180,12 @@ namespace Groundsman
 
         async Task DisplayFeatureActionMenuAsync(Feature feature)
         {
-            string result = await HomePage.Instance.DisplayActionSheet(feature.properties.name, "Dismiss", "Delete", "View", "Edit");
+            string result = await navigationService.GetCurrentPage().DisplayActionSheet(feature.properties.name, "Dismiss", "Delete", "View", "Edit");
 
             switch (result)
             {
                 case "Delete":
-                    bool yesResponse = await HomePage.Instance.DisplayAlert("Delete Feature", "Are you sure you want to delete this feature?", "Yes", "No");
+                    bool yesResponse = await navigationService.GetCurrentPage().DisplayAlert("Delete Feature", "Are you sure you want to delete this feature?", "Yes", "No");
                     if (yesResponse)
                     {
                         App.FeatureStore.DeleteFeatureAsync(feature);
@@ -190,10 +193,10 @@ namespace Groundsman
                     }
                     break;
                 case "View":
-                    await HomePage.Instance.ShowDetailFormPage(feature);
+                    navigationService.NavigateToDetailPage(feature);
                     break;
                 case "Edit":
-                    await HomePage.Instance.ShowEditDetailFormPage(feature);
+                    navigationService.NavigateToEditPage(feature);
                     break;
                 default:
                     break;

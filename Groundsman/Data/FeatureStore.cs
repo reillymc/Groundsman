@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using Xamarin.Essentials;
+using Groundsman.Services;
 
 namespace Groundsman.Data
 {
@@ -128,7 +129,7 @@ namespace Groundsman.Data
             //TODO: exception handling - 
             try
             {
-                var status = await Services.CheckAndRequestPermissionAsync(new Permissions.StorageRead());
+                var status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.StorageRead());
 
                 // If permissions allowed, prompt the user to pick a file.
                 if (status == PermissionStatus.Granted)
