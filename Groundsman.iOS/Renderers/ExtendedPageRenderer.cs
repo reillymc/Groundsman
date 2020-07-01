@@ -15,7 +15,7 @@ namespace Groundsman.iOS.Renderers
             base.ViewWillAppear(animated);
             if (NavigationController != null)
             {
-                if (UIDevice.CurrentDevice.CheckSystemVersion(12, 0))
+                if (UIDevice.CurrentDevice.CheckSystemVersion(13, 0))
                 {
                     NavigationController.NavigationBar.PrefersLargeTitles = true;
                     NavigationItem.LargeTitleDisplayMode = UINavigationItemLargeTitleDisplayMode.Automatic;
@@ -56,7 +56,7 @@ namespace Groundsman.iOS.Renderers
         public override void TraitCollectionDidChange(UITraitCollection previousTraitCollection)
         {
             base.TraitCollectionDidChange(previousTraitCollection);
-            if (UIDevice.CurrentDevice.CheckSystemVersion(12, 0))
+            if (UIDevice.CurrentDevice.CheckSystemVersion(13, 0))
             {
                 if (TraitCollection.UserInterfaceStyle != previousTraitCollection.UserInterfaceStyle)
                 {
