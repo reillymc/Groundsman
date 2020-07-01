@@ -243,7 +243,11 @@ namespace Groundsman.Data
                 SaveCurrentFeaturesToEmbeddedFile();
                 if (notify)
                 {
-                    await HomePage.Instance.DisplayAlert("Import Success", string.Format("{0} new features have been added to your features list. {1} features failed to import.", successfulImport, failedImport), "OK");
+                    if(failedImport > 0)
+                    {
+                        await HomePage.Instance.DisplayAlert("Import Results", string.Format("{0} new features have been added to your features list. {1} features failed to import.", successfulImport, failedImport), "OK");
+                    }
+                    await HomePage.Instance.DisplayAlert("Import Success", string.Format("{0} new features have been added to your features list.", successfulImport), "OK");
                 }
                 return true;
             }
