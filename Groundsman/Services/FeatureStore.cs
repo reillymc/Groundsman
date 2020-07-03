@@ -70,7 +70,6 @@ namespace Groundsman.Services
 
         public async Task<bool> UpdateItemAsync(Feature item)
         {
-            // Otherwise we are saving over an existing feature, so override its contents without changing ID.
             for (int i = 0; i < features.Count; i++)
             {
                 if (features[i].properties.id == item.properties.id)
@@ -79,6 +78,7 @@ namespace Groundsman.Services
                     return true;
                 }
             }
+            //notify cant find feature (or insert as new feature)
             return false;
         }
 
@@ -112,9 +112,8 @@ namespace Groundsman.Services
             return text;
         }
 
-
         //handle notifying errors and success counts where method called from
-        private async Task<int> ImportFeaturesAsync(string importContents, bool notify)
+        public async Task<int> ImportFeaturesAsync(string importContents, bool notify)
         {
             Debug.WriteLine(importContents);
             // Ensure file contents are structured in a valid GeoJSON format.
@@ -150,7 +149,6 @@ namespace Groundsman.Services
             }
             return successfulImport;
         }
-
 
         private static bool TryParseFeature(Feature feature)
         {
@@ -248,5 +246,8 @@ namespace Groundsman.Services
             File.WriteAllText(AppConstants.FEATURES_FILE, json);
             return true;
         }
+
+
+
     }
 }

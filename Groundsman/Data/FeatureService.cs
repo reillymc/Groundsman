@@ -1,29 +1,16 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
+using System;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
-using System.Collections.Generic;
 
 namespace Groundsman.Services
 {
     public class FeatureService
     {
-
-        ///// <summary>
-        ///// clears all features and reloads the example featureset
-        ///// </summary>
-        //public static void DeleteAllFeatures()
-        //{
-        //    SaveCurrentFeaturesToEmbeddedFile();
-
-        //    _ = ImportFeaturesAsync(GetDefaultFile(), false);
-        //}
 
         /// <summary>
         /// Imports features from a specified filepath.
@@ -79,18 +66,6 @@ namespace Groundsman.Services
             }
         }
 
-        public async Task ImportFeaturesFromClipboard()
-        {
-            try
-            {
-                string contents = await Clipboard.GetTextAsync();
-                //await ImportFeaturesAsync(contents, true);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
 
         public static async Task ExportFeatures()
         {

@@ -107,6 +107,7 @@ namespace Groundsman.ViewModels
             if (yesResponse)
             {
                 await featureStore.DeleteItemAsync(feature);
+                GetFeatures();
             }
 
             _isBusy = false;

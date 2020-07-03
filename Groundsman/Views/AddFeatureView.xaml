@@ -47,6 +47,9 @@
                        Padding="10"
                        BackgroundColor="{DynamicResource bgPrimary}"
                        HasShadow="False">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Point" />
+                    </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical">
                         <Image HorizontalOptions="Center"
                                Source="point_icon"
@@ -64,6 +67,9 @@
                        Padding="10"
                        BackgroundColor="{DynamicResource bgPrimary}"
                        HasShadow="False">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="LineString" />
+                    </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical">
                         <Image HorizontalOptions="Center"
                                Source="line_icon"
@@ -81,6 +87,9 @@
                        Padding="10"
                        BackgroundColor="{DynamicResource bgPrimary}"
                        HasShadow="False">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Polygon" />
+                    </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical">
                         <Image HorizontalOptions="Center"
                                Source="area_icon"
@@ -100,6 +109,9 @@
                        BackgroundColor="{DynamicResource bgPrimary}"
                        HasShadow="False"
                        HeightRequest="16">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="File" />
+                    </Frame.GestureRecognizers>
                     <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                         <Label HorizontalOptions="StartAndExpand"
                                Text="Import from File"
@@ -116,6 +128,9 @@
                        BackgroundColor="{DynamicResource bgPrimary}"
                        HasShadow="False"
                        HeightRequest="16">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Clipboard" />
+                    </Frame.GestureRecognizers>
                     <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                         <Label HorizontalOptions="StartAndExpand"
                                Text="Paste from Clipboard"
