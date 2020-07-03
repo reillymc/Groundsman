@@ -17,7 +17,7 @@ namespace Groundsman
         {
             InitializeComponent();
             DependencyService.Register<FeatureStore>();
-
+            FeatureStore.GetItemsAsync(true);
             LogStore = new LogStore();
             MainPage = new NavigationPage(HomePage.Instance);
 

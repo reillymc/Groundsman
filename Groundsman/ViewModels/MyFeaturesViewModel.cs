@@ -87,7 +87,7 @@ namespace Groundsman.ViewModels
             if (_isBusy) return;
             _isBusy = true;
 
-            await navigationService.NavigateToDetailPage(feature);
+            await navigationService.NavigateToEditPage(feature);
 
             _isBusy = false;
         }
@@ -118,8 +118,7 @@ namespace Groundsman.ViewModels
         public async void GetFeatures()
         {
             ObservableCollection<Feature> updates = await featureStore.GetItemsAsync();
-            FeatureList.Clear();
-            FeatureList.AddRange(updates);
+            FeatureList.ReplaceRange(updates);
         }
     }
 }

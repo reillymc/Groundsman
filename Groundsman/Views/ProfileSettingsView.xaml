@@ -76,11 +76,14 @@
                     <SwitchCell On="{Binding ShowPolygonsOnMap}"
                                 OnChanged="ShowPolygonsOnMapChanged"
                                 Text="Show Polygons on Map" />
-                    <ViewCell Tapped="OnViewCellTapped">
+                    <ViewCell>
                         <StackLayout Padding="15,0"
                                      HorizontalOptions="FillAndExpand"
                                      Orientation="Horizontal"
                                      VerticalOptions="CenterAndExpand">
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding DeleteAllFeatures}" />
+                            </StackLayout.GestureRecognizers>
                             <Label Text="Clear All Features" TextColor="{StaticResource greenPrimary}" />
                         </StackLayout>
                     </ViewCell>

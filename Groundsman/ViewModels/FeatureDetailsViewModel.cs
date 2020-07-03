@@ -287,8 +287,19 @@ namespace Groundsman.ViewModels
             }
 
             Feature featureToSave = CreateFeatureFromInput();
-
-            await featureStore.AddItemAsync(featureToSave);
+            bool success;
+            if (featureToSave.properties.id == AppConstants.NEW_ENTRY_ID)
+            {
+                success = await featureStore.AddItemAsync(featureToSave);
+                
+            } else
+            {
+                success = await featureStore.UpdateItemAsync(featureToSave);
+            }
+            if (!success)
+            {
+                await HomePage.Instance.DisplayAlert("Save Error", "Feature not saved.", "OK");
+            }
             await HomePage.Instance.Navigation.PopToRootAsync();
 
             _isBusy = false;
