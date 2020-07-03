@@ -10,28 +10,28 @@ namespace Groundsman.Services
 {
     public class NavigationService
     {
-        public async void NavigateToDetailPage(Feature feature)
+        public async Task NavigateToDetailPage(Feature feature)
         {
             var currentPage = GetCurrentPage();
 
             await currentPage.Navigation.PushAsync(new FeatureDetailsView(feature));
         }
 
-        public async void NavigateToEditPage(Feature feature)
+        public async Task NavigateToEditPage(Feature feature)
         {
             var currentPage = GetCurrentPage();
 
             await currentPage.Navigation.PushAsync(new EditFeatureDetailsView(feature));
         }
 
-        public async void NavigateToNewEditPage(string type)
+        public async Task NavigateToNewEditPage(string type)
         {
             var currentPage = GetCurrentPage();
 
             await currentPage.Navigation.PushAsync(new EditFeatureDetailsView(type));
         }
 
-        public async void PushAddFeaturePage()
+        public async Task PushAddFeaturePage()
         {
             var currentPage = GetCurrentPage();
             if (DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Version < new Version(13, 0))
@@ -44,7 +44,7 @@ namespace Groundsman.Services
             
         }
 
-        public async void NavigateBack(bool modal)
+        public async Task NavigateBack(bool modal)
         {
             var currentPage = GetCurrentPage();
 
@@ -65,9 +65,9 @@ namespace Groundsman.Services
             return currentPage;
         }
 
-        public async void InvokeShareSheetAsync()
+        public async Task InvokeShareSheetAsync()
         {
-            await App.FeatureStore.ExportFeatures();
+            await FeatureService.ExportFeatures();
         }
     }
 }

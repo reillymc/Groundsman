@@ -43,7 +43,7 @@ namespace Groundsman
             importTapRecogniser.Tapped += async (sender, e) =>
             {
                 navigationService.NavigateBack(modal);
-                await App.FeatureStore.ImportFeaturesFromFile();
+                //await App.FeatureStore.GetItemsAsync();
             };
             importFrame.GestureRecognizers.Add(importTapRecogniser);
 
@@ -51,7 +51,7 @@ namespace Groundsman
             pasteTapRecogniser.Tapped += async (sender, e) =>
             {
                 navigationService.NavigateBack(modal);
-                await App.FeatureStore.ImportFeaturesFromClipboard();
+                //await App.FeatureStore.ImportFeaturesFromClipboard();
             };
             pasteFrame.GestureRecognizers.Add(pasteTapRecogniser);
         }

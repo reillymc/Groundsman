@@ -1,8 +1,8 @@
 ﻿using Xamarin.Essentials;
 
-namespace Groundsman
+namespace Groundsman.ViewModels
 {
-    public class ProfileSettingsViewModel : ViewModelBase
+    public class ProfileSettingsViewModel : BaseViewModel
     {
         private string _IDEntry;
         public string IDEntry

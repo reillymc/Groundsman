@@ -1,6 +1,7 @@
-﻿namespace Groundsman
+﻿using System;
+namespace Groundsman.ViewModels
 {
-    public class AddFeatureViewModel
+    public class AddFeatureViewModel : BaseViewModel
     {
         public AddFeatureViewModel()
         {

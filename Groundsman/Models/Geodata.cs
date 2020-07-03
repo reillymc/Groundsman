@@ -23,7 +23,7 @@ namespace Groundsman
         public float metadataFloatValue { get; set; }
         public string id { get; set; }
         [JsonIgnore]
-        public ObservableCollection<Point> xamarincoordinates { get; set; }
+        public List<Point> xamarincoordinates { get; set; }
         [JsonIgnore]
         public string typeIconPath { get; set; }
     }
@@ -37,14 +37,7 @@ namespace Groundsman
     public class GeoJSONObject : BindableObject
     {
         public string type { get; set; }
+        public ObservableCollection<Feature> features { get; set;  }
 
-        [JsonIgnore]
-        public static readonly BindableProperty FeatureCollection = BindableProperty.Create("features", typeof(ObservableCollection<Feature>), typeof(GeoJSONObject), default(ObservableCollection<Feature>));
-
-        public ObservableCollection<Feature> features
-        {
-            get { return (ObservableCollection<Feature>)GetValue(FeatureCollection); }
-            set { SetValue(FeatureCollection, value); }
-        }
     }
 }

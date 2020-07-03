@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Groundsman.ViewModels;
+using System;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -6,9 +7,11 @@ namespace Groundsman
 {
     public partial class ProfileSettingsView : ContentPage
     {
+        ProfileSettingsViewModel viewModel;
         public ProfileSettingsView()
         {
             InitializeComponent();
+            BindingContext = viewModel = new ProfileSettingsViewModel();
         }
 
         async void OnDismissButtonClicked(object sender, EventArgs args)
@@ -37,7 +40,7 @@ namespace Groundsman
             bool yesResponse = await HomePage.Instance.DisplayAlert("Reset User Data", "This will permanently erase all saved features. Do you wish to continue?", "Yes", "No");
             if (yesResponse)
             {
-                App.FeatureStore.DeleteAllFeatures();
+                //App.FeatureStore.DeleteAllFeatures();
                 await HomePage.Instance.DisplayAlert("Reset User Data", "Your user data has been erased.", "Ok");
             }
         }

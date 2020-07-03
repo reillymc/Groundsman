@@ -6,14 +6,15 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 using Groundsman.Services;
 
-namespace Groundsman
+namespace Groundsman.ViewModels
 {
     /// <summary>
     /// View-model for the page that shows a data entry's details in a form.
     /// </summary>
-    public class FeatureDetailsViewModel : ViewModelBase
+    public class FeatureDetailsViewModel : BaseViewModel
     {
         public ICommand GetFeatureCommand { get; set; }
         public ICommand AddPointCommand { get; set; }
@@ -37,7 +38,7 @@ namespace Groundsman
 
         private bool _isBusy;
 
-        public ObservableCollection<Point> GeolocationPoints { get; set; }
+        public List<Point> GeolocationPoints { get; set; }
 
         private string _dateEntry;
         public string DateEntry
@@ -147,7 +148,7 @@ namespace Groundsman
                     case "Point":
                         minPoints = 1;
                         break;
-                    case "LineString":
+                    case "Line":
                         minPoints = 2;
                         break;
                     case "Polygon":
@@ -155,7 +156,7 @@ namespace Groundsman
                         break;
                 }
 
-                GeolocationPoints = new ObservableCollection<Point>();
+                GeolocationPoints = new List<Point>();
                 for (int i = 0; i < minPoints; i++)
                 {
                     AddPoint();
@@ -181,7 +182,7 @@ namespace Groundsman
                 case "Point":
                     minPoints = 1;
                     break;
-                case "LineString":
+                case "Line":
                     minPoints = 2;
                     break;
                 case "Polygon":
@@ -191,7 +192,8 @@ namespace Groundsman
 
             NameEntry = data.properties.name;
             DateEntry = DateTime.Parse(data.properties.date).ToShortDateString();
-            GeolocationPoints = new ObservableCollection<Point>(data.properties.xamarincoordinates);
+            Debug.WriteLine("{0}, {1}", data.properties.date, data.properties.xamarincoordinates[0].Latitude);
+            GeolocationPoints = new List<Point>(data.properties.xamarincoordinates);
             GeolocationEntryEnabled = true;
 
             MetadataStringEntry = data.properties.metadataStringValue;
@@ -215,7 +217,7 @@ namespace Groundsman
             AddPointCommand = new Command(() => AddPoint());
             DeletePointCommand = new Command<Point>((item) => DeletePoint(item));
 
-            ShareEntryCommand = new Command(async () => await App.FeatureStore.ExportFeature(thisFeature));
+            ShareEntryCommand = new Command(async () => await FeatureService.ExportFeature(thisFeature));
 
             OnSaveUpdatedCommand = new Command(async () => await OnSaveUpdateActivated());
 
@@ -286,7 +288,7 @@ namespace Groundsman
 
             Feature featureToSave = CreateFeatureFromInput();
 
-            App.FeatureStore.SaveFeatureAsync(featureToSave);
+            await featureStore.UpdateItemAsync(featureToSave);
             await HomePage.Instance.Navigation.PopToRootAsync();
 
             _isBusy = false;
@@ -307,7 +309,7 @@ namespace Groundsman
             // A new entry will have an ID of NEW_ENTRY_ID as assigned from the constructor,
             // otherwise an ID will already be set for editing entries.
             feature.properties.id = thisEntryID;
-            feature.properties.author = Preferences.Get("UserID", "Groundsman");
+            feature.properties.author  = Preferences.Get("UserID", "Groundsman");
 
             // Feature type (Point, Line, Polygon).
             feature.geometry = new Geometry();
@@ -317,8 +319,7 @@ namespace Groundsman
             if (string.IsNullOrEmpty(NameEntry))
             {
                 feature.properties.name = "Unnamed " + feature.geometry.type;
-            }
-            else
+            } else
             {
                 feature.properties.name = NameEntry;
             }
@@ -336,7 +337,7 @@ namespace Groundsman
                 case "Point":
                     feature.properties.typeIconPath = "point_icon.png";
                     break;
-                case "LineString":
+                case "Line":
                     feature.properties.typeIconPath = "line_icon.png";
                     break;
                 case "Polygon":
@@ -355,7 +356,7 @@ namespace Groundsman
                         GeolocationPoints[0].Latitude,
                         GeolocationPoints[0].Altitude };
                         break;
-                    case "LineString":
+                    case "Line":
                         feature.geometry.coordinates = new List<object>(GeolocationPoints.Count);
                         for (int i = 0; i < GeolocationPoints.Count; i++)
                         {
@@ -392,7 +393,7 @@ namespace Groundsman
         /// <returns>True if the form contains valid data.</returns>
         private async Task<bool> FeatureEntryIsValid()
         {
-            // Begin validation checks.
+            /// Begin validation checks.
             switch (thisEntryType)
             {
                 case "Polygon":
@@ -415,13 +416,15 @@ namespace Groundsman
                             return false;
                         }
                     }
+
                     break;
-                case "LineString":
+                case "Line":
                     if (GeolocationPoints.Count < 2)
                     {
                         await HomePage.Instance.DisplayAlert("Incomplete Entry", "A line must contain at least 2 data points.", "OK");
                         return false;
                     }
+
                     break;
                 case "Point":
                     if (GeolocationPoints.Count != 1)
@@ -429,8 +432,10 @@ namespace Groundsman
                         await HomePage.Instance.DisplayAlert("Unsupported Entry", "A point must only contain 1 data point.", "OK");
                         return false;
                     }
+
                     break;
             }
+
             return true;
         }
 
@@ -448,5 +453,6 @@ namespace Groundsman
 
             _isBusy = false;
         }
+
     }
 }

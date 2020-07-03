@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.IO;
 using Groundsman.Services;
 
-namespace Groundsman
+namespace Groundsman.ViewModels
 {
-    public class LoggerViewModel : ViewModelBase
+    public class LoggerViewModel : BaseViewModel
     {
         public ICommand ToggleButtonClickCommand { set; get; }
         public ICommand ClearButtonClickCommand { set; get; }

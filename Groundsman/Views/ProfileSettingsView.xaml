@@ -5,9 +5,6 @@
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
              xmlns:local="clr-namespace:Groundsman"
              Title="Settings">
-    <ContentPage.BindingContext>
-        <local:ProfileSettingsViewModel x:Name="viewModel" />
-    </ContentPage.BindingContext>
     <ContentPage.Content>
         <TableView BackgroundColor="{DynamicResource bgPrimary}" Intent="Settings">
             <TableRoot>

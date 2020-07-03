@@ -8,30 +8,26 @@ using Newtonsoft.Json.Linq;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using Xamarin.Essentials;
-using Groundsman.Services;
+using System.Collections.Generic;
 
-namespace Groundsman.Data
+namespace Groundsman.Services
 {
-    public class FeatureStore
+    public class FeatureService
     {
-        /// <summary>
-        /// GeoJSONObject that stores the current feature list during runtime
-        /// </summary>
-        public GeoJSONObject GeoJSONStore = new GeoJSONObject()
-        {
-            type = "FeatureCollection",
-            features = new ObservableCollection<Feature>()
-        };
+
+
+        NavigationService navigationService = new NavigationService();
 
         /// <summary>
         /// Get features list from file
         /// </summary>
         /// <returns></returns>
-        public async Task FetchFeaturesFromFile()
+        public static async Task<ObservableCollection<Feature>> FetchFeaturesFromFile()
         {
             string featuresFile = GetFeaturesFile();
-            bool success = await ImportFeaturesAsync(featuresFile, false);
-            if (!success)
+            ObservableCollection<Feature> Imported = await ImportFeaturesAsync(featuresFile, false);
+            return Imported;
+            if (Imported != null)
             {
                 var confirmation = await HomePage.Instance.DisplayAlert("Feature List Error", $"Groundsman has detected that your stored feature list is corrupt and cannot be opened. You may copy your data and modify it with an external editor to be GeoJSON compliant then import it again.", "Copy to Clipboard and Erase", "Erase");
                 if (confirmation)
@@ -39,73 +35,27 @@ namespace Groundsman.Data
                     await Clipboard.SetTextAsync(featuresFile);
                     
                 }
-                DeleteAllFeatures();
+                //DeleteAllFeatures();
             }
         }
 
-        /// <summary>
-        /// Delete selected feature
-        /// </summary>
-        /// <param name="feature"></param>
-        public void DeleteFeatureAsync(Feature feature)
-        {
-            bool deleteSuccessful = GeoJSONStore.features.Remove(feature);
-            if (deleteSuccessful)
-            {
-                SaveCurrentFeaturesToEmbeddedFile();
-            }
-        }
 
-        /// <summary>
-        /// Add a feature to the feature list and call save features to file
-        /// </summary>
-        /// <param name="feature"></param>
-        public void SaveFeatureAsync(Feature feature)
-        {
-            // If this is a newly added feature, generate an ID and add it immediately.
-            if (feature.properties.id == AppConstants.NEW_ENTRY_ID)
-            {
-                EnsureUniqueID(feature);
-                GeoJSONStore.features.Add(feature);
-            }
-            else
-            {
-                // Otherwise we are saving over an existing feature, so override its contents without changing ID.
-                int indexToEdit = -1;
-                for (int i = 0; i < GeoJSONStore.features.Count; i++)
-                {
-                    if (GeoJSONStore.features[i].properties.id == feature.properties.id)
-                    {
-                        indexToEdit = i;
-                        break;
-                    }
-                }
+        ///// <summary>
+        ///// clears all features and reloads the example featureset
+        ///// </summary>
+        //public static void DeleteAllFeatures()
+        //{
+        //    SaveCurrentFeaturesToEmbeddedFile();
 
-                if (indexToEdit != -1)
-                {
-                    GeoJSONStore.features[indexToEdit] = feature;
-                }
-            }
-            SaveCurrentFeaturesToEmbeddedFile();
-        }
-
-        /// <summary>
-        /// clears all features and reloads the example featureset
-        /// </summary>
-        public void DeleteAllFeatures()
-        {
-            GeoJSONStore.features.Clear();
-            SaveCurrentFeaturesToEmbeddedFile();
-
-            _ = ImportFeaturesAsync(GetDefaultFile(), false);
-        }
+        //    _ = ImportFeaturesAsync(GetDefaultFile(), false);
+        //}
 
         /// <summary>
         /// Imports features from a specified filepath.
         /// </summary>
         /// <param name="path">path to file.</param>
         /// <returns></returns>
-        public async Task<bool> ImportFeaturesFromFileURL(string path, string fileName)
+        public async Task<ObservableCollection<Feature>> ImportFeaturesFromFileURL(string path, string fileName)
         {
             var confirmation = await HomePage.Instance.DisplayAlert("Import File", $"Do you want to add the features in '{fileName}' to your features list?", "Yes", "No");
             if (confirmation)
@@ -113,15 +63,15 @@ namespace Groundsman.Data
                 try
                 {
                     string text = File.ReadAllText(path);
-                    bool resultStatus = await ImportFeaturesAsync(text, true);
-                    return resultStatus;
+                    ObservableCollection<Feature> Imported = await ImportFeaturesAsync(text, true);
+                    return Imported;
                 }
                 catch (Exception)
                 {
                     await HomePage.Instance.DisplayAlert("Import Error", "An unknown error occured when trying to process this file.", "OK");
                 }
             }
-            return false;
+            return null;
         }
 
         public async Task ImportFeaturesFromFile()
@@ -140,7 +90,7 @@ namespace Groundsman.Data
                     if (fileData != null)
                     {
                         string contents = System.Text.Encoding.UTF8.GetString(fileData.DataArray);
-                        await App.FeatureStore.ImportFeaturesAsync(contents, true);
+                        await ImportFeaturesAsync(contents, true);
                     }
                 }
                 else
@@ -167,7 +117,7 @@ namespace Groundsman.Data
             }
         }
 
-        public async Task ExportFeatures()
+        public static async Task ExportFeatures()
         {
             await Share.RequestAsync(new ShareFileRequest
             {
@@ -176,7 +126,7 @@ namespace Groundsman.Data
             });
         }
 
-        public async Task ExportFeature(Feature feature)
+        public static async Task ExportFeature(Feature feature)
         {
             ObservableCollection<Feature> featureList = new ObservableCollection<Feature>
             {
@@ -195,9 +145,14 @@ namespace Groundsman.Data
             });
         }
 
-        public async Task CopyFeaturesToClipboard()
+        public async Task CopyFeaturesToClipboard(ObservableCollection<Feature> features)
         {
-            string textFile = JsonConvert.SerializeObject(GeoJSONStore, Formatting.Indented);
+            GeoJSONObject geoJSONObject = new GeoJSONObject
+            {
+                type = "FeatureCollection",
+                features = features
+            };
+            string textFile = JsonConvert.SerializeObject(geoJSONObject, Formatting.Indented);
             await Clipboard.SetTextAsync(textFile);
             await HomePage.Instance.DisplayAlert("Copy Features", "Features successfully copied to clipboard.", "OK");
         }
@@ -207,8 +162,9 @@ namespace Groundsman.Data
         /// </summary>
         /// <param name="fileContents">The string of geojson to import from.</param>
         /// <returns></returns>
-        private async Task<bool> ImportFeaturesAsync(string importContents, bool notify)
+        private static async Task<ObservableCollection<Feature>> ImportFeaturesAsync(string importContents, bool notify)
         {
+            ObservableCollection<Feature> imports = new ObservableCollection<Feature>();
             // Ensure file contents are structured in a valid GeoJSON format.
             GeoJSONObject importedFeaturesData = null;
             int successfulImport = 0;
@@ -228,11 +184,11 @@ namespace Groundsman.Data
                 // Loop through all imported features and make sure they are valid and ensuring there are no ID clashes.
                 foreach (var importedFeature in importedFeaturesData.features)
                 {
-                    bool parseResult = await TryParseFeature(importedFeature);
+                    bool parseResult = TryParseFeature(importedFeature);
                     if (parseResult)
                     {
                         EnsureUniqueID(importedFeature);
-                        GeoJSONStore.features.Add(importedFeature);
+                        imports.Add(importedFeature);
                         successfulImport++;
                     }
                     else
@@ -241,7 +197,7 @@ namespace Groundsman.Data
                     }
                 }
 
-                SaveCurrentFeaturesToEmbeddedFile();
+                
                 if (notify)
                 {
                     if(failedImport > 0)
@@ -250,20 +206,27 @@ namespace Groundsman.Data
                     }
                     await HomePage.Instance.DisplayAlert("Import Success", string.Format("{0} new features have been added to your features list.", successfulImport), "OK");
                 }
-                return true;
+
             }
-            return false;
+            return imports;
         }
 
         /// <summary>
         /// Formats the list of current features into valid geojson, then writes it to the embedded file.
         /// </summary>
         /// <returns></returns>
-        private void SaveCurrentFeaturesToEmbeddedFile()
+        public static bool SaveCurrentFeaturesToEmbeddedFile(ObservableCollection<Feature> features)
         {
+            GeoJSONObject geoJSONObject = new GeoJSONObject
+            {
+                type = "FeatureCollection",
+                features = features
+            };
             // Save the rootobject to file.
-            var json = JsonConvert.SerializeObject(GeoJSONStore);
+            var json = JsonConvert.SerializeObject(geoJSONObject);
             File.WriteAllText(AppConstants.FEATURES_FILE, json);
+
+            return true;
         }
 
         /// <summary>
@@ -271,12 +234,12 @@ namespace Groundsman.Data
         /// </summary>
         /// <param name="feature"></param>
         /// <returns></returns>
-        private async Task<bool> TryParseFeature(Feature feature)
+        private static bool TryParseFeature(Feature feature)
         {
             // Ensure the feature has valid GeoJSON fields supplied.
             if (feature != null && feature.type != null && feature.geometry != null && feature.geometry.type != null && feature.geometry.coordinates != null)
             {
-                feature.properties.xamarincoordinates = new ObservableCollection<Point>();
+                feature.properties.xamarincoordinates = new List<Point>();
                 object[] trueCoords;
 
                 // Determine if feature is supported and if so convert its points and add appropriate icon
@@ -311,7 +274,6 @@ namespace Groundsman.Data
                         }
                         break;
                     default:
-                        await HomePage.Instance.DisplayAlert("Unsupported Feature", "Groundsman currently only supports feature types of Point, Line, and Polygon.", "OK");
                         return false;
                 }
 
@@ -342,7 +304,7 @@ namespace Groundsman.Data
         /// </summary>
         /// <param name="coords"></param>
         /// <returns></returns>
-        private Point JsonCoordToXamarinPoint(object[] coords)
+        private static Point JsonCoordToXamarinPoint(object[] coords)
         {
             double longitude = (double)coords[0];
             double latitude = (double)coords[1];
@@ -356,7 +318,7 @@ namespace Groundsman.Data
         /// 
         /// </summary>
         /// <param name="feature"></param>
-        private static void EnsureUniqueID(Feature feature)
+        public static void EnsureUniqueID(Feature feature)
         {
             // Generate feature ID
             //TODO: avoid ID collisions
@@ -367,7 +329,7 @@ namespace Groundsman.Data
         /// 
         /// </summary>
         /// <returns></returns>
-        private string GetFeaturesFile()
+        private static string GetFeaturesFile()
         {
             if (File.Exists(AppConstants.FEATURES_FILE))
             {
@@ -375,7 +337,8 @@ namespace Groundsman.Data
             }
             else
             {
-                return GetDefaultFile();
+                return null;
+                //return GetDefaultFile();
             }
         }
 
@@ -383,16 +346,16 @@ namespace Groundsman.Data
         /// 
         /// </summary>
         /// <returns></returns>
-        private string GetDefaultFile()
-        {
-            var assembly = IntrospectionExtensions.GetTypeInfo(GetType()).Assembly;
-            Stream stream = assembly.GetManifestResourceStream("Groundsman.locationsAutoGenerated.json");
-            string text = "";
-            using (var reader = new StreamReader(stream))
-            {
-                text = reader.ReadToEnd();
-            }
-            return text;
-        }
+        //private static string GetDefaultFile()
+        //{
+        //    var assembly = IntrospectionExtensions.GetTypeInfo(GetType()).Assembly;
+        //    Stream stream = assembly.GetManifestResourceStream("Groundsman.locationsAutoGenerated.json");
+        //    string text = "";
+        //    using (var reader = new StreamReader(stream))
+        //    {
+        //        text = reader.ReadToEnd();
+        //    }
+        //    return text;
+        //}
     }
 }
