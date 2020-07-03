@@ -17,8 +17,8 @@ namespace Groundsman.ViewModels
         public NavigationService navigationService = new NavigationService();
         public DialogService dialogService = new DialogService();
 
-        private ObservableCollection<Feature> featureList = new ObservableCollection<Feature>();
-        public ObservableCollection<Feature> FeatureList
+        private ObservableRangeCollection<Feature> featureList = new ObservableRangeCollection<Feature>();
+        public ObservableRangeCollection<Feature> FeatureList
         {
             get { return featureList; }
             set

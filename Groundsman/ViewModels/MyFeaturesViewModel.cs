@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -11,11 +12,11 @@ namespace Groundsman.ViewModels
     /// </summary>
     public class MyFeaturesViewModel : BaseViewModel
     {
-        public ICommand AddButtonTappedCommand { set; get; }
-        public ICommand ShareButtonTappedCommand { set; get; }
-        public ICommand ItemTappedCommand { set; get; }
-        public ICommand EditEntryCommand { get; set; }
-        public ICommand DeleteEntryCommand { get; set; }
+        public Command AddButtonTappedCommand { set; get; }
+        public Command ShareButtonTappedCommand { set; get; }
+        public Command ItemTappedCommand { set; get; }
+        public Command EditEntryCommand { get; set; }
+        public Command DeleteEntryCommand { get; set; }
 
         private bool _isBusy;
 
@@ -82,6 +83,7 @@ namespace Groundsman.ViewModels
         /// <param name="feature">Feature to edit.</param>
         private async Task ShowEditFeatureDetailsPage(Feature feature)
         {
+            Debug.WriteLine("HIIII");
             if (_isBusy) return;
             _isBusy = true;
 
@@ -97,6 +99,7 @@ namespace Groundsman.ViewModels
         /// <returns></returns>
         private async Task DeleteFeature(Feature feature)
         {
+            Debug.WriteLine("HIIII");
             if (_isBusy) return;
             _isBusy = true;
 
@@ -112,9 +115,11 @@ namespace Groundsman.ViewModels
         /// <summary>
         /// Call the feature store to fetch from file and then set the resulting current features to the list source collection.
         /// </summary>
-        private async void GetFeatures()
+        public async void GetFeatures()
         {
-            FeatureList = await featureStore.GetItemsAsync();
+            ObservableCollection<Feature> updates = await featureStore.GetItemsAsync();
+            FeatureList.Clear();
+            FeatureList.AddRange(updates);
         }
     }
 }

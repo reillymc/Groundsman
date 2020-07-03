@@ -1,6 +1,7 @@
 ﻿using Groundsman.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -21,9 +22,6 @@ namespace Groundsman.ViewModels
             Map = new CustomMap();
             CenterMapOnUser();
             Map.MapClicked += OnMapClicked;
-
-            // Set feature list to current list from feature store
-            GetFeatures();
         }
 
         public CustomMap Map { get; private set; }
@@ -103,6 +101,7 @@ namespace Groundsman.ViewModels
 
         public async void RefreshMap()
         {
+            GetFeatures();
             CleanFeatures();
             DrawFeatures();
 
@@ -247,7 +246,8 @@ namespace Groundsman.ViewModels
 
         private async void GetFeatures()
         {
-            FeatureList = await featureStore.GetItemsAsync();
+            ObservableCollection<Feature> updates = await featureStore.GetItemsAsync();
+            FeatureList.ReplaceRange(updates);
         }
     }
 }

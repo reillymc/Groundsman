@@ -55,7 +55,8 @@ namespace Groundsman.Services
 
         public async Task<ObservableCollection<Feature>> GetItemsAsync(bool forceRefresh = false)
         {
-            ObservableCollection<Feature> features = await FeatureService.FetchFeaturesFromFile();
+            ObservableCollection<Feature> fetched = await FeatureService.FetchFeaturesFromFile();
+            features = fetched;
             return features;
         }
 

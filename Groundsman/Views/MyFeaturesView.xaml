@@ -68,7 +68,7 @@
             <ListView.Footer>
                 <Label Padding="10"
                        FontSize="Small"
-                       Text="{Binding GeoJSONStore.features.Count, StringFormat='{0} Features'}"
+                       Text="{Binding FeatureList.Count, StringFormat='{0} Features'}"
                        TextColor="{DynamicResource textSecondary}" />
             </ListView.Footer>
         </ListView>

@@ -16,7 +16,7 @@ namespace Groundsman
         }
 
 
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
             viewModel.RefreshMap();

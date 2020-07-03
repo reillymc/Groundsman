@@ -148,7 +148,7 @@ namespace Groundsman.ViewModels
                     case "Point":
                         minPoints = 1;
                         break;
-                    case "Line":
+                    case "LineString":
                         minPoints = 2;
                         break;
                     case "Polygon":
@@ -182,7 +182,7 @@ namespace Groundsman.ViewModels
                 case "Point":
                     minPoints = 1;
                     break;
-                case "Line":
+                case "LineString":
                     minPoints = 2;
                     break;
                 case "Polygon":
@@ -288,7 +288,7 @@ namespace Groundsman.ViewModels
 
             Feature featureToSave = CreateFeatureFromInput();
 
-            await featureStore.UpdateItemAsync(featureToSave);
+            await featureStore.AddItemAsync(featureToSave);
             await HomePage.Instance.Navigation.PopToRootAsync();
 
             _isBusy = false;
@@ -337,7 +337,7 @@ namespace Groundsman.ViewModels
                 case "Point":
                     feature.properties.typeIconPath = "point_icon.png";
                     break;
-                case "Line":
+                case "LineString":
                     feature.properties.typeIconPath = "line_icon.png";
                     break;
                 case "Polygon":
@@ -356,7 +356,7 @@ namespace Groundsman.ViewModels
                         GeolocationPoints[0].Latitude,
                         GeolocationPoints[0].Altitude };
                         break;
-                    case "Line":
+                    case "LineString":
                         feature.geometry.coordinates = new List<object>(GeolocationPoints.Count);
                         for (int i = 0; i < GeolocationPoints.Count; i++)
                         {
@@ -418,7 +418,7 @@ namespace Groundsman.ViewModels
                     }
 
                     break;
-                case "Line":
+                case "LineString":
                     if (GeolocationPoints.Count < 2)
                     {
                         await HomePage.Instance.DisplayAlert("Incomplete Entry", "A line must contain at least 2 data points.", "OK");
