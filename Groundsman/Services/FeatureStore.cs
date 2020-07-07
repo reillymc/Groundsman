@@ -4,7 +4,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -108,37 +107,40 @@ namespace Groundsman.Services
         //handle notifying errors and success counts where method called from
         public async Task<int> ImportFeaturesAsync(string importContents, bool notify)
         {
-            Debug.WriteLine(importContents);
-            // Ensure file contents are structured in a valid GeoJSON format.
-            GeoJSONObject importedFeaturesData = new GeoJSONObject();
             int successfulImport = 0;
             int failedImport = 0;
             try
             {
-                importedFeaturesData = JsonConvert.DeserializeObject<GeoJSONObject>(importContents);
-            }
-            catch (Exception ex)
-            {
-                var confirmation = await HomePage.Instance.DisplayAlert("Feature List Error", $"Groundsman has detected that your data is corrupt and cannot be opened. You may copy your data and modify it with an external editor to be GeoJSON compliant then import it again.", "Copy to Clipboard and Erase", "Erase");
-                if (confirmation)
+                GeoJSONObject importedFeaturesData = JsonConvert.DeserializeObject<GeoJSONObject>(importContents);
+                if (importedFeaturesData != null)
                 {
-                    await Clipboard.SetTextAsync(importContents);
-                }
-            }
-
-            if (importedFeaturesData != null)
-            {
-                foreach (Feature importedFeature in importedFeaturesData.features)
-                {
-                    if (await AddItemAsync(importedFeature))
+                    foreach (Feature importedFeature in importedFeaturesData.features)
                     {
-                        successfulImport++;
+                        if (await AddItemAsync(importedFeature))
+                        {
+                            successfulImport++;
+                        }
+                        else
+                        {
+                            failedImport++;
+                        }
+                    }
+                }
+                if (notify)
+                {
+                    if (failedImport == 0)
+                    {
+                        await HomePage.Instance.DisplayAlert("Import Complete", $"Groundsman imported {successfulImport} new features.", "Ok");
                     }
                     else
                     {
-                        failedImport++;
+                        await HomePage.Instance.DisplayAlert("Import Complete", $"Groundsman imported {successfulImport} new features. {failedImport} features failed to import", "Ok");
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                await HomePage.Instance.DisplayAlert("Import Error", $"Groundsman can only import valid GeoJSON. Error: {ex.Message}", "Ok");
             }
             return successfulImport;
         }
