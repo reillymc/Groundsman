@@ -217,7 +217,7 @@ namespace Groundsman.ViewModels
             AddPointCommand = new Command(() => AddPoint());
             DeletePointCommand = new Command<Point>((item) => DeletePoint(item));
 
-            ShareEntryCommand = new Command(async () => await FeatureService.ExportFeature(thisFeature));
+            ShareEntryCommand = new Command(async () => await featureStore.ExportFeatures(new ObservableCollection<Feature> { thisFeature }));
 
             OnSaveUpdatedCommand = new Command(async () => await OnSaveUpdateActivated());
 

@@ -64,10 +64,5 @@ namespace Groundsman.Services
 
             return currentPage;
         }
-
-        public async Task InvokeShareSheetAsync()
-        {
-            await FeatureService.ExportFeatures();
-        }
     }
 }

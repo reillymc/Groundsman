@@ -6,9 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
@@ -32,7 +30,7 @@ namespace Groundsman.Services
             {
                 //EnsureUniqueID(importedFeature);
                 features.Add(item);
-                var save = SaveFeaturesToFile(features);
+                var save = SaveFeaturesToFile(features, AppConstants.FEATURES_FILE);
             }
 
             return parseResult;
@@ -41,7 +39,7 @@ namespace Groundsman.Services
         public async Task<bool> DeleteItemAsync(Feature item)
         {
             bool deleteSuccessful = features.Remove(item);
-            var save = SaveFeaturesToFile(features);
+            var save = SaveFeaturesToFile(features, AppConstants.FEATURES_FILE);
             return save;
         }
 
@@ -49,7 +47,7 @@ namespace Groundsman.Services
         {
             features.Clear();
             int successful = await ImportFeaturesAsync(GetTemplateFile(), false);
-            var save = SaveFeaturesToFile(features);
+            var save = SaveFeaturesToFile(features, AppConstants.FEATURES_FILE);
             return save;
         }
 
@@ -81,11 +79,6 @@ namespace Groundsman.Services
             //notify cant find feature (or insert as new feature)
             return false;
         }
-
-
-
-
-
 
         private string GetFeaturesFile()
         {
@@ -235,7 +228,7 @@ namespace Groundsman.Services
             return point;
         }
 
-        public bool SaveFeaturesToFile(ObservableCollection<Feature> features)
+        public bool SaveFeaturesToFile(ObservableCollection<Feature> features, string FileName)
         {
             GeoJSONObject geoJSONObject = new GeoJSONObject
             {
@@ -243,11 +236,20 @@ namespace Groundsman.Services
                 features = features
             };
             var json = JsonConvert.SerializeObject(geoJSONObject);
-            File.WriteAllText(AppConstants.FEATURES_FILE, json);
+            File.WriteAllText(FileName, json);
             return true;
         }
 
+        public async Task<bool> ExportFeatures(ObservableCollection<Feature> features)
+        {
+            SaveFeaturesToFile(features, AppConstants.FEATURES_EXPORT_FILE);
 
-
+            await Share.RequestAsync(new ShareFileRequest
+            {
+                Title = "Features Export",
+                File = new ShareFile(AppConstants.FEATURES_EXPORT_FILE, "text/plain")
+            });
+            return true;
+        }
     }
 }

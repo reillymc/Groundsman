@@ -58,7 +58,7 @@ namespace Groundsman.ViewModels
             if (_isBusy) return;
             _isBusy = true;
 
-            await navigationService.InvokeShareSheetAsync();
+            await featureStore.ExportFeatures(await featureStore.GetItemsAsync());
 
             _isBusy = false;
         }
