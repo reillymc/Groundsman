@@ -1,3 +1,4 @@
+using Groundsman.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -32,6 +33,11 @@ namespace Groundsman.ViewModels
             DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
 
             GetFeatures();
+
+            MessagingCenter.Subscribe<FeatureStore>(this, "Hi", (sender) =>
+            {
+                GetFeatures();
+            });
         }
 
         /// <summary>

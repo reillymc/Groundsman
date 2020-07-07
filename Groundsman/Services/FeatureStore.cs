@@ -8,6 +8,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace Groundsman.Services
 {
@@ -126,6 +127,7 @@ namespace Groundsman.Services
                         }
                     }
                 }
+                MessagingCenter.Send(this, "Hi");
                 if (notify)
                 {
                     if (failedImport == 0)
