@@ -18,11 +18,12 @@ namespace Groundsman
             if (type == "LineString")
             {
                 Title = $"New Line";
-            } else
+            }
+            else
             {
                 Title = $"New {type}";
             }
-            
+
 
             DetermineAddPointBtnVisability(type);
         }
@@ -58,7 +59,8 @@ namespace Groundsman
                 addPointBtn.ImageSource = "add_icon_color";
                 addPointBtn.IsVisible = true;
                 closePolyBtn.IsVisible = false;
-            } else
+            }
+            else
             {
                 addPointBtn.IsVisible = false;
                 closePolyBtn.IsVisible = false;

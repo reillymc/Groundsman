@@ -20,7 +20,7 @@ namespace Groundsman
         public HomePage()
         {
             InitializeComponent();
-            
+
         }
     }
 }

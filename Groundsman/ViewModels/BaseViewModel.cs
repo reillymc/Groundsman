@@ -1,11 +1,10 @@
 ﻿using Groundsman.Interfaces;
+using Groundsman.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Xamarin.Forms;
-using Groundsman.Services;
-using System.Collections.ObjectModel;
 
 namespace Groundsman.ViewModels
 {

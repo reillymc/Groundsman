@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -37,11 +35,11 @@ namespace Groundsman.Services
             if (DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Version < new Version(13, 0))
             {
                 await currentPage.Navigation.PushAsync(new AddFeatureView(false));
-            } else
+            }
+            else
             {
                 await currentPage.Navigation.PushModalAsync(new AddFeatureView(true));
             }
-            
         }
 
         public async Task NavigateBack(bool modal)

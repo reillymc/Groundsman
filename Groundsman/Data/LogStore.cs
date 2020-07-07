@@ -29,7 +29,7 @@ namespace Groundsman.Data
             {
                 List<Point> logPoints = new List<Point>();
                 string[] logList = File.ReadAllLines(AppConstants.LOG_FILE);
-                foreach(string pointString in logList)
+                foreach (string pointString in logList)
                 {
                     string[] stringArray = pointString.Split(",");
                     Point point = new Point(double.Parse(stringArray[1]), double.Parse(stringArray[2]), double.Parse(stringArray[3]));

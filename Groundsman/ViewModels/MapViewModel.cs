@@ -246,10 +246,10 @@ namespace Groundsman.ViewModels
 
             for (int i = 1; i < polyline.Length; i++)
             {
-                Lat1 = polyline[i-1].Latitude;
+                Lat1 = polyline[i - 1].Latitude;
                 Lat2 = polyline[i].Latitude;
 
-                Lon1 = polyline[i-1].Longitude;
+                Lon1 = polyline[i - 1].Longitude;
                 Lon2 = polyline[i].Longitude;
 
                 PointLat = LocationTapped.Latitude;

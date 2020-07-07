@@ -7,7 +7,6 @@ namespace Groundsman.ViewModels
 {
     public class ProfileSettingsViewModel : BaseViewModel
     {
-
         public Command DeleteAllFeatures { get; set; }
 
         private string _IDEntry;
@@ -39,7 +38,6 @@ namespace Groundsman.ViewModels
             ShowLogPathOnMap = Preferences.Get("ShowLogPathOnMap", false);
 
             DeleteAllFeatures = new Command(async () => await ExecuteDeleteAllFeaturesCommand());
-
         }
 
         private async Task ExecuteDeleteAllFeaturesCommand()

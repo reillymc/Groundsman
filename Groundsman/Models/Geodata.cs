@@ -21,6 +21,7 @@ namespace Groundsman
         public string metadataStringValue { get; set; }
         public int metadataIntegerValue { get; set; }
         public float metadataFloatValue { get; set; }
+        [JsonIgnore]
         public string id { get; set; }
         [JsonIgnore]
         public List<Point> xamarincoordinates { get; set; }
@@ -37,7 +38,7 @@ namespace Groundsman
     public class GeoJSONObject : BindableObject
     {
         public string type { get; set; }
-        public ObservableCollection<Feature> features { get; set;  }
+        public ObservableCollection<Feature> features { get; set; }
 
     }
 }

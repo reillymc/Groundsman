@@ -1,14 +1,13 @@
+using Groundsman.Models;
+using Groundsman.Services;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using System.Collections.ObjectModel;
-using Newtonsoft.Json.Linq;
-using System.Diagnostics;
-using Groundsman.Services;
-using Groundsman.Models;
 
 namespace Groundsman.ViewModels
 {
@@ -300,8 +299,9 @@ namespace Groundsman.ViewModels
             if (featureToSave.properties.id == AppConstants.NEW_ENTRY_ID)
             {
                 success = await featureStore.AddItemAsync(featureToSave);
-                
-            } else
+
+            }
+            else
             {
                 success = await featureStore.UpdateItemAsync(featureToSave);
             }
@@ -329,17 +329,20 @@ namespace Groundsman.ViewModels
             // A new entry will have an ID of NEW_ENTRY_ID as assigned from the constructor,
             // otherwise an ID will already be set for editing entries.
             feature.properties.id = thisEntryID;
-            feature.properties.author  = Preferences.Get("UserID", "Groundsman");
+            feature.properties.author = Preferences.Get("UserID", "Groundsman");
 
             // Feature type (Point, Line, Polygon).
-            feature.geometry = new Geometry();
-            feature.geometry.type = thisEntryType;
+            feature.geometry = new Geometry
+            {
+                type = thisEntryType
+            };
 
             // Name and date of the feature.
             if (string.IsNullOrEmpty(NameEntry))
             {
                 feature.properties.name = "Unnamed " + feature.geometry.type;
-            } else
+            }
+            else
             {
                 feature.properties.name = NameEntry;
             }
@@ -350,9 +353,10 @@ namespace Groundsman.ViewModels
             feature.properties.metadataIntegerValue = MetadataIntegerEntry;
             feature.properties.metadataFloatValue = Convert.ToSingle(MetadataFloatEntry);
 
-            feature.properties.xamarincoordinates = new ObservableCollection<Point>();
+            feature.properties.xamarincoordinates = new List<Point>();
 
-            foreach (DisplayPoint pointValue in GeolocationValues) {
+            foreach (DisplayPoint pointValue in GeolocationValues)
+            {
                 Point convertedPoint = new Point(Convert.ToDouble(pointValue.Latitude), Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Altitude));
                 feature.properties.xamarincoordinates.Add(convertedPoint);
             }
@@ -483,5 +487,5 @@ namespace Groundsman.ViewModels
 
     }
 
-    
+
 }

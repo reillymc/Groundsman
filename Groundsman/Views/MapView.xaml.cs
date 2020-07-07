@@ -15,7 +15,6 @@ namespace Groundsman
             BindingContext = viewModel = new MapViewModel();
         }
 
-
         protected override void OnAppearing()
         {
             base.OnAppearing();
