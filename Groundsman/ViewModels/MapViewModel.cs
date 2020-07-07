@@ -68,7 +68,7 @@ namespace Groundsman
                         Label = feature.properties.name,
                         Address = string.Format("{0}, {1}, {2}", points[0].Latitude, points[0].Longitude, points[0].Altitude),
                         Type = PinType.Place,
-                        Position = new Position(points[0].Latitude, points[0].Longitude),                        
+                        Position = new Position(points[0].Latitude, points[0].Longitude),
                     };
                     pin.MarkerClicked += async (sender, e) =>
                     {
@@ -237,15 +237,37 @@ namespace Groundsman
         }
 
         //currently only works on line vertices
-        public bool IsPointOnLine(Point p, Point[] polyline)
+        public bool IsPointOnLine(Point LocationTapped, Point[] polyline)
         {
-            for (int i = 0; i < polyline.Length; i++)
+            double Lat1;
+            double Lat2;
+            double Lon1;
+            double Lon2;
+            double PointLat;
+            double PointLon;
+            double AB;
+            double AP;
+            double PB;
+            double delta = 0.0001; // delta determines line tap accuracy
+
+            for (int i = 1; i < polyline.Length; i++)
             {
-                Point q = polyline[i];
-                if (Math.Abs(p.Latitude - q.Latitude) <= .0003 && Math.Abs(p.Longitude - q.Longitude) <= .0003)
-                {
+                Lat1 = polyline[i-1].Latitude;
+                Lat2 = polyline[i].Latitude;
+
+                Lon1 = polyline[i-1].Longitude;
+                Lon2 = polyline[i].Longitude;
+
+                PointLat = LocationTapped.Latitude;
+                PointLon = LocationTapped.Longitude;
+
+                AB = Math.Sqrt((Lat2 - Lat1) * (Lat2 - Lat1) + (Lon2 - Lon1) * (Lon2 - Lon1));
+                AP = Math.Sqrt((PointLat - Lat1) * (PointLat - Lat1) + (PointLon - Lon1) * (PointLon - Lon1));
+                PB = Math.Sqrt((Lat2 - PointLat) * (Lat2 - PointLat) + (Lon2 - PointLon) * (Lon2 - PointLon));
+
+                // Check if position is between two points of a line within distance of delta from the line
+                if (Math.Abs(AB - (AP + PB)) < delta)
                     return true;
-                }
             }
             return false;
         }
