@@ -1,29 +1,31 @@
 ﻿using Xamarin.Forms;
 using System.Threading;
-
+using Groundsman.ViewModels;
 
 namespace Groundsman
 {
     public partial class MapView : ContentPage
     {
         private CancellationTokenSource cts;
+        MapViewModel viewModel;
         public MapView()
         {
             NavigationPage.SetHasNavigationBar(this, false);
             InitializeComponent();
+            BindingContext = viewModel = new MapViewModel();
         }
 
 
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
-            ((MapViewModel)BindingContext).RefreshMap();
+            viewModel.RefreshMap();
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            ((MapViewModel)BindingContext).CleanupLog();
+            viewModel.CleanupLog();
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Groundsman.Data;
+using Groundsman.Interfaces;
+using Groundsman.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -6,24 +8,18 @@ namespace Groundsman
 {
     public partial class App : Application
     {
-        public static FeatureStore FeatureStore { get; private set; }
+        public IDataStore<Feature> FeatureStore => DependencyService.Get<IDataStore<Feature>>();
         public static LogStore LogStore { get; private set; }
+        public enum Theme { Light, Dark }
         public static Theme AppTheme { get; set; }
-        public enum Theme
-        {
-            Light,
-            Dark
-        }
 
         public App()
         {
             InitializeComponent();
-            FeatureStore = new FeatureStore();           
+            DependencyService.Register<FeatureStore>();
+            FeatureStore.GetItemsAsync(true);
             LogStore = new LogStore();
             MainPage = new NavigationPage(HomePage.Instance);
-
-            //Lead in features from file for the My Features and Map views.
-            _ = FeatureStore.FetchFeaturesFromFile();
 
             // If the user ID hasn't been set yet, prompt the user to create one upon app launch.
             if (Preferences.Get("UserID", "Groundsman") == "Groundsman")

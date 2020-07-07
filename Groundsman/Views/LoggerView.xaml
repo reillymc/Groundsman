@@ -10,9 +10,6 @@
                      Command="{Binding ShareButtonClickCommand}"
                      Icon="share_icon" />
     </ContentPage.ToolbarItems>
-    <ContentPage.BindingContext>
-        <local:LoggerViewModel x:Name="viewModel" />
-    </ContentPage.BindingContext>
     <ContentPage.Content>
         <Grid Margin="10,10">
             <Grid.RowDefinitions>

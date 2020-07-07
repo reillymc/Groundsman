@@ -5,9 +5,6 @@
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
              xmlns:local="clr-namespace:Groundsman"
              Title="Settings">
-    <ContentPage.BindingContext>
-        <local:ProfileSettingsViewModel x:Name="viewModel" />
-    </ContentPage.BindingContext>
     <ContentPage.Content>
         <TableView BackgroundColor="{DynamicResource bgPrimary}" Intent="Settings">
             <TableRoot>
@@ -79,11 +76,14 @@
                     <SwitchCell On="{Binding ShowPolygonsOnMap}"
                                 OnChanged="ShowPolygonsOnMapChanged"
                                 Text="Show Polygons on Map" />
-                    <ViewCell Tapped="OnViewCellTapped">
+                    <ViewCell>
                         <StackLayout Padding="15,0"
                                      HorizontalOptions="FillAndExpand"
                                      Orientation="Horizontal"
                                      VerticalOptions="CenterAndExpand">
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding DeleteAllFeatures}" />
+                            </StackLayout.GestureRecognizers>
                             <Label Text="Clear All Features" TextColor="{StaticResource greenPrimary}" />
                         </StackLayout>
                     </ViewCell>

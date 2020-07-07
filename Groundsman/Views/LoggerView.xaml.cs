@@ -1,13 +1,16 @@
-﻿using Xamarin.Forms;
+﻿using Groundsman.ViewModels;
+using Xamarin.Forms;
 
 namespace Groundsman
 {
     public partial class LoggerView : ContentPage
     {
+        LoggerViewModel viewModel;
         private bool appeared = false;
         public LoggerView()
         {
             InitializeComponent();
+            BindingContext = viewModel = new LoggerViewModel();
             appeared = true;
         }
 

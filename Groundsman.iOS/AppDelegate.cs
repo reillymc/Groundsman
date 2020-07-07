@@ -1,5 +1,6 @@
 ﻿using Foundation;
 using Groundsman.Services;
+using System.IO;
 using UIKit;
 
 namespace Groundsman.iOS
@@ -18,12 +19,15 @@ namespace Groundsman.iOS
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
 
+        App mainForms;
         NavigationService navigationService;
 
         public override bool FinishedLaunching(UIApplication uiApplication, NSDictionary launchOptions)
         {
             Xamarin.Forms.Forms.Init();
             Xamarin.FormsMaps.Init();
+
+            mainForms = new App();
 
             // Get possible shortcut item
             if (launchOptions != null)
@@ -34,7 +38,7 @@ namespace Groundsman.iOS
             UINavigationBar.Appearance.TintColor = tintColor;
             UINavigationBar.Appearance.Translucent = true;
 
-            LoadApplication(new App());
+            LoadApplication(mainForms);
 
             return base.FinishedLaunching(uiApplication, launchOptions);
         }
@@ -42,8 +46,11 @@ namespace Groundsman.iOS
         public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
         {
             {
-                url.StartAccessingSecurityScopedResource();
-                _ = App.FeatureStore.ImportFeaturesFromFileURL(url.StandardizedUrl.Path, url.LastPathComponent);
+                using (StreamReader reader = new StreamReader(url.Path))
+                {
+                    string filecontent = reader.ReadToEnd();
+                    mainForms.FeatureStore.ImportFeaturesAsync(filecontent, true);
+                }
             }
             return true;
         }

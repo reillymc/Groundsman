@@ -3,9 +3,9 @@ using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-namespace Groundsman
+namespace Groundsman.ViewModels
 {
-    public class WelcomeFormViewModel : ViewModelBase
+    public class WelcomeFormViewModel : BaseViewModel
     {
         public ICommand IDSubmitCommand { get; set; }
 

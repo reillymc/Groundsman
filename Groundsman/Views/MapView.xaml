@@ -6,9 +6,6 @@
              xmlns:local="clr-namespace:Groundsman"
              Title="Map"
              BackgroundColor="{DynamicResource bgPrimary}">
-    <ContentPage.BindingContext>
-        <local:MapViewModel x:Name="viewModel" />
-    </ContentPage.BindingContext>
     <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <ContentView AbsoluteLayout.LayoutBounds="0,0,1,1"
                      AbsoluteLayout.LayoutFlags="All"

@@ -1,10 +1,12 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.Content.PM;
-using Android.Views;
-using Android.OS;
-using Plugin.CurrentActivity;
 using Android.Content.Res;
+using Android.OS;
+using Android.Views;
 using Groundsman.Styles;
+using Plugin.CurrentActivity;
+using System.Text;
 
 namespace Groundsman.Droid
 {
@@ -15,6 +17,7 @@ namespace Groundsman.Droid
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
         LaunchMode = LaunchMode.SingleTask,
         ScreenOrientation = ScreenOrientation.Portrait)]
+    [IntentFilter(new[] { Intent.ActionSend }, Categories = new[] { Intent.CategoryDefault }, DataMimeType = @"application/json")]
     public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
 
@@ -39,8 +42,27 @@ namespace Groundsman.Droid
                 }
             };
 
-            LoadApplication(new App());
+            var mainForms = new App();
+            LoadApplication(mainForms);
+
             SetAppTheme();
+
+            if (Intent.Action == Intent.ActionSend)
+            {
+                // Get the info from ClipData 
+                var file = Intent.ClipData.GetItemAt(0);
+
+                // Open a stream from the URI 
+                var fileStream = ContentResolver.OpenInputStream(file.Uri);
+
+                // Save it over 
+                var memOfFile = new System.IO.MemoryStream();
+
+                fileStream.CopyTo(memOfFile);
+                string decoded = Encoding.UTF8.GetString(memOfFile.ToArray());
+
+                mainForms.FeatureStore.ImportFeaturesAsync(decoded, true);
+            }
         }
 
         protected override void OnResume()
@@ -55,7 +77,7 @@ namespace Groundsman.Droid
         /// <param name="requestCode"></param>
         /// <param name="permissions"></param>
         /// <param name="grantResults"></param>
-        
+
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
             // Check if the selected toolbar button's id equals the back button id.

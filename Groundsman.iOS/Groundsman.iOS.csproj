@@ -14,6 +14,7 @@
     <AssemblyName>Groundsman.iOS</AssemblyName>
     <MtouchEnableSGenConc>true</MtouchEnableSGenConc>
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
+    <ProvisioningType>manual</ProvisioningType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,6 +27,8 @@
     <MtouchArch>x86_64</MtouchArch>
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
+    <CodesignKey>Apple Development: Reilly Mackenzie-Cree (ZH63974M2B)</CodesignKey>
+    <CodesignProvision>VS: WildCard Development</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -48,7 +51,7 @@
     <CodesignKey>Apple Development: Reilly Mackenzie-Cree (ZH63974M2B)</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <CodesignProvision>Reilly QUTGEODEV wildcard profile</CodesignProvision>
+    <CodesignProvision>VS: WildCard Development</CodesignProvision>
     <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
@@ -98,15 +101,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Renderers\" />
-    <Folder Include="Misc\" />
     <Folder Include="Assets.xcassets\add_icon.imageset\" />
-    <Folder Include="Assets.xcassets\share_icon.imageset\" />
     <Folder Include="Assets.xcassets\delete_icon.imageset\" />
+    <Folder Include="Assets.xcassets\paste_icon.imageset\" />
     <Folder Include="Assets.xcassets\settings_icon.imageset\" />
     <Folder Include="Assets.xcassets\share_icon.imageset\" />
     <Folder Include="Assets.xcassets\trash_icon.imageset\" />
-    <Folder Include="Assets.xcassets\paste_icon.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="Resources\iTunesArtwork%402x" />

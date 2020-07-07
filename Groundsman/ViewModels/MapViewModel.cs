@@ -1,7 +1,7 @@
 ﻿using Groundsman.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -9,26 +9,19 @@ using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Maps;
 
-namespace Groundsman
+namespace Groundsman.ViewModels
 {
     /// <summary>
     /// ViewModel for maps page
     /// </summary>
-    public class MapViewModel : ViewModelBase
+    public class MapViewModel : BaseViewModel
     {
         private CancellationTokenSource cts;
-        private GeoJSONObject GeoJSONStore = new GeoJSONObject();
-        NavigationService navigationService;
         public MapViewModel()
         {
             Map = new CustomMap();
             CenterMapOnUser();
             Map.MapClicked += OnMapClicked;
-
-            // Set feature list to current list from feature store
-            GeoJSONStore.features = App.FeatureStore.GeoJSONStore.features;
-
-            navigationService = new NavigationService();
         }
 
         public CustomMap Map { get; private set; }
@@ -58,7 +51,7 @@ namespace Groundsman
         public void DrawFeatures()
         {
             // Using CurrentFeature to draw the geodata on the map
-            GeoJSONStore.features.ForEach((Feature feature) =>
+            FeatureList.ForEach((Feature feature) =>
             {
                 var points = feature.properties.xamarincoordinates;
                 if (feature.geometry.type.Equals("Point") && Preferences.Get("ShowPointsOnMap", true))
@@ -108,6 +101,7 @@ namespace Groundsman
 
         public async void RefreshMap()
         {
+            GetFeatures();
             CleanFeatures();
             DrawFeatures();
 
@@ -158,7 +152,7 @@ namespace Groundsman
 
         void OnMapClicked(object sender, MapClickedEventArgs e)
         {
-            GeoJSONStore.features.ForEach(async (Feature feature) =>
+            FeatureList.ForEach(async (Feature feature) =>
             {
                 bool ItemHit = false;
                 Point[] points = feature.properties.xamarincoordinates.ToArray();
@@ -188,15 +182,15 @@ namespace Groundsman
                     bool yesResponse = await navigationService.GetCurrentPage().DisplayAlert("Delete Feature", "Are you sure you want to delete this feature?", "Yes", "No");
                     if (yesResponse)
                     {
-                        App.FeatureStore.DeleteFeatureAsync(feature);
+                        await featureStore.DeleteItemAsync(feature);
                         RefreshMap();
                     }
                     break;
                 case "View":
-                    navigationService.NavigateToDetailPage(feature);
+                    await navigationService.NavigateToDetailPage(feature);
                     break;
                 case "Edit":
-                    navigationService.NavigateToEditPage(feature);
+                    await navigationService.NavigateToEditPage(feature);
                     break;
                 default:
                     break;
@@ -270,6 +264,12 @@ namespace Groundsman
                     return true;
             }
             return false;
+        }
+
+        private async void GetFeatures()
+        {
+            ObservableCollection<Feature> updates = await featureStore.GetItemsAsync();
+            FeatureList.ReplaceRange(updates);
         }
     }
 }

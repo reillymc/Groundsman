@@ -1,9 +1,15 @@
-﻿using Xamarin.Essentials;
+﻿using System;
+using System.Threading.Tasks;
+using Xamarin.Essentials;
+using Xamarin.Forms;
 
-namespace Groundsman
+namespace Groundsman.ViewModels
 {
-    public class ProfileSettingsViewModel : ViewModelBase
+    public class ProfileSettingsViewModel : BaseViewModel
     {
+
+        public Command DeleteAllFeatures { get; set; }
+
         private string _IDEntry;
         public string IDEntry
         {
@@ -31,6 +37,19 @@ namespace Groundsman
             ShowLinesOnMap = Preferences.Get("ShowLinesOnMap", true);
             ShowPolygonsOnMap = Preferences.Get("ShowPolygonsOnMap", true);
             ShowLogPathOnMap = Preferences.Get("ShowLogPathOnMap", false);
+
+            DeleteAllFeatures = new Command(async () => await ExecuteDeleteAllFeaturesCommand());
+
+        }
+
+        private async Task ExecuteDeleteAllFeaturesCommand()
+        {
+            bool yesResponse = await HomePage.Instance.DisplayAlert("Reset User Data", "This will permanently erase all saved features. Do you wish to continue?", "Yes", "No");
+            if (yesResponse)
+            {
+                await featureStore.DeleteItemsAsync();
+                await HomePage.Instance.DisplayAlert("Reset User Data", "Your user data has been erased.", "Ok");
+            }
         }
 
         private void HandleTextChanged()
