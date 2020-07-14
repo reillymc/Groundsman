@@ -7,6 +7,8 @@ namespace Groundsman.ViewModels
 {
     public class WelcomeFormViewModel : BaseViewModel
     {
+        private bool modal;
+
         public ICommand IDSubmitCommand { get; set; }
 
         private string _IDEntry;
@@ -20,8 +22,9 @@ namespace Groundsman.ViewModels
             }
         }
 
-        public WelcomeFormViewModel()
+        public WelcomeFormViewModel(bool modal)
         {
+            this.modal = modal;
             IDSubmitCommand = new Command(async () => await SubmitIDEntry());
         }
 
@@ -34,7 +37,7 @@ namespace Groundsman.ViewModels
             {
                 Preferences.Set("UserID", IDEntry);
                 await Application.Current.SavePropertiesAsync();
-                await HomePage.Instance.Navigation.PopModalAsync();
+                await navigationService.NavigateBack(modal);
             }
             else
             {

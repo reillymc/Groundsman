@@ -24,7 +24,7 @@ namespace Groundsman
             // If the user ID hasn't been set yet, prompt the user to create one upon app launch.
             if (Preferences.Get("UserID", "Groundsman") == "Groundsman")
             {
-                MainPage.Navigation.PushModalAsync(new WelcomeFormView());
+                HomePage.Instance.Navigation.PushModalAsync(new WelcomeFormView(true));
             }
         }
 

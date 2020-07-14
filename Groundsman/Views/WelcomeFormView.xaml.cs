@@ -1,17 +1,21 @@
-﻿using Xamarin.Forms;
+﻿using Groundsman.ViewModels;
+using Xamarin.Forms;
 
 namespace Groundsman
 {
     public partial class WelcomeFormView : ContentPage
     {
-        public WelcomeFormView()
+        WelcomeFormViewModel viewModel;
+
+        public WelcomeFormView(bool modal)
         {
             InitializeComponent();
-            NavigationPage.SetHasNavigationBar(this, false);
+            BindingContext = viewModel = new WelcomeFormViewModel(modal);
+
             NavigationPage.SetHasBackButton(this, false);
         }
 
-        // Stop the user from leaving the ID Entry page.
+        //Stop the user from leaving the ID Entry page.
         protected override bool OnBackButtonPressed()
         {
             return true;

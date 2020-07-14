@@ -10,11 +10,11 @@ namespace Groundsman
         AddFeatureViewModel viewModel;
         bool modal;
 
-        public AddFeatureView(bool isModal)
+        public AddFeatureView(bool modal)
         {
             InitializeComponent();
-            BindingContext = viewModel = new AddFeatureViewModel(isModal);
-            modal = isModal;
+            BindingContext = viewModel = new AddFeatureViewModel(modal);
+            this.modal = modal;
         }
 
         async void OnDismissButtonClicked(object sender, EventArgs args)
