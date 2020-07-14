@@ -381,9 +381,10 @@ namespace Groundsman.ViewModels
                 {
                     case "Point":
                         feature.geometry.coordinates = new List<object>() {
-                        GeolocationValues[0].Longitude,
-                        GeolocationValues[0].Latitude,
-                        GeolocationValues[0].Altitude };
+                        Convert.ToDouble(GeolocationValues[0].Longitude),
+                        Convert.ToDouble(GeolocationValues[0].Latitude),
+                        Convert.ToDouble(GeolocationValues[0].Altitude)
+                        };
                         break;
                     case "LineString":
                         feature.geometry.coordinates = new List<object>(GeolocationValues.Count);
