@@ -29,15 +29,8 @@ namespace Groundsman.ViewModels
 
         public ProfileSettingsViewModel()
         {
-            IDEntry = Preferences.Get("UserID", "Groundsman");
-            DecimalAccuracyEntry = Preferences.Get("DataDecimalAccuracy", 6);
-            GPSPrecisionEntry = Preferences.Get("GPSPrecision", 2);
-            ShowPointsOnMap = Preferences.Get("ShowPointsOnMap", true);
-            ShowLinesOnMap = Preferences.Get("ShowLinesOnMap", true);
-            ShowPolygonsOnMap = Preferences.Get("ShowPolygonsOnMap", true);
-            ShowLogPathOnMap = Preferences.Get("ShowLogPathOnMap", false);
-
             DeleteAllFeatures = new Command(async () => await ExecuteDeleteAllFeaturesCommand());
+            UpdatePreferences();
         }
 
         private async Task ExecuteDeleteAllFeaturesCommand()
@@ -60,6 +53,17 @@ namespace Groundsman.ViewModels
             {
                 Preferences.Set("UserID", "Groundsman");
             }
+        }
+
+        public void UpdatePreferences()
+        {
+            IDEntry = Preferences.Get("UserID", "Groundsman");
+            DecimalAccuracyEntry = Preferences.Get("DataDecimalAccuracy", 6);
+            GPSPrecisionEntry = Preferences.Get("GPSPrecision", 2);
+            ShowPointsOnMap = Preferences.Get("ShowPointsOnMap", true);
+            ShowLinesOnMap = Preferences.Get("ShowLinesOnMap", true);
+            ShowPolygonsOnMap = Preferences.Get("ShowPolygonsOnMap", true);
+            ShowLogPathOnMap = Preferences.Get("ShowLogPathOnMap", false);
         }
     }
 }

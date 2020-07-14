@@ -35,14 +35,10 @@ namespace Groundsman
             }
         }
 
-        protected override async void OnDisappearing()
+        protected override void OnAppearing()
         {
-            base.OnDisappearing();
-
-            if (Navigation.ModalStack.Count > 0)
-            {
-                await Navigation.PopModalAsync();
-            }
+            base.OnAppearing();
+            viewModel.UpdatePreferences();
         }
 
         private void ShowPointsOnMapChanged(object sender, ToggledEventArgs e)
