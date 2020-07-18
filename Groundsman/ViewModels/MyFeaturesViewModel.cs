@@ -17,6 +17,7 @@ namespace Groundsman.ViewModels
         public Command ShareButtonTappedCommand { set; get; }
         public Command ItemTappedCommand { set; get; }
         public Command EditEntryCommand { get; set; }
+        public Command ViewEntryCommand { get; set; }
         public Command DeleteEntryCommand { get; set; }
 
         private bool _isBusy;
@@ -30,6 +31,8 @@ namespace Groundsman.ViewModels
             ShareButtonTappedCommand = new Command(async () => await ShowShareSheet());
             ItemTappedCommand = new Command<Feature>(async (data) => await ShowFeatureDetailsPage(data));
             EditEntryCommand = new Command<Feature>(async (feature) => await ShowEditFeatureDetailsPage(feature));
+            ViewEntryCommand = new Command<Feature>(async (feature) => await ShowFeatureDetailsPage(feature));
+
             DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
 
             GetFeatures();

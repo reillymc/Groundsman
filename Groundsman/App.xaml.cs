@@ -15,6 +15,8 @@ namespace Groundsman
 
         public App()
         {
+            Device.SetFlags(new[] { "SwipeView_Experimental" });
+
             InitializeComponent();
             DependencyService.Register<FeatureStore>();
             FeatureStore.GetItemsAsync(true);

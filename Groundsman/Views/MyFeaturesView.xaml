@@ -2,8 +2,6 @@
 <ContentPage x:Class="Groundsman.MyFeaturesView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
-             xmlns:converters="clr-namespace:Groundsman.Converters"
              Title="My Features"
              BackgroundColor="{DynamicResource bgPrimary}">
     <ContentPage.ToolbarItems>
@@ -13,33 +11,25 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <ResourceDictionary>
-            <converters:ItemTappedEventArgsToItemTappedConverter x:Key="TappedItemConverter" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
-
-    <AbsoluteLayout x:Name="absLayout">
-        <ListView x:Name="listView"
-                  HasUnevenRows="True"
-                  HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}"
-                  ItemsSource="{Binding FeatureList}"
-                  SeparatorColor="{DynamicResource bgTertiary}">
-            <ListView.Behaviors>
-                <behaviors:ListViewItemTappedBehaviour Command="{Binding ItemTappedCommand}" Converter="{StaticResource TappedItemConverter}" />
-            </ListView.Behaviors>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <ViewCell.ContextActions>
-                            <MenuItem Command="{Binding Path=BindingContext.EditEntryCommand, Source={x:Reference listView}}"
-                                      CommandParameter="{Binding .}"
-                                      Text="Edit" />
-                            <MenuItem Command="{Binding Path=BindingContext.DeleteEntryCommand, Source={x:Reference listView}}"
-                                      CommandParameter="{Binding .}"
-                                      IsDestructive="True"
-                                      Text="Delete" />
-                        </ViewCell.ContextActions>
-                        <!--  Grid definition of 2x4 for each label entry  -->
-                        <StackLayout Padding="10,4,10,4" Orientation="Horizontal">
+            <DataTemplate x:Key="MessageTemplate">
+                <SwipeView>
+                    <SwipeView.RightItems>
+                        <SwipeItems Mode="Reveal">
+                            <SwipeItem BackgroundColor="Red"
+                                       Command="{Binding Source={x:Reference ItemsListView}, Path=BindingContext.DeleteEntryCommand}"
+                                       CommandParameter="{Binding .}"
+                                       Text="Delete" />
+                            <SwipeItem BackgroundColor="Gray"
+                                       Command="{Binding Source={x:Reference ItemsListView}, Path=BindingContext.EditEntryCommand}"
+                                       CommandParameter="{Binding .}"
+                                       Text="Edit" />
+                        </SwipeItems>
+                    </SwipeView.RightItems>
+                    <SwipeView.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Source={x:Reference ItemsListView}, Path=BindingContext.ViewEntryCommand}" CommandParameter="{Binding .}" />
+                    </SwipeView.GestureRecognizers>
+                    <SwipeView.Content>
+                        <StackLayout Orientation="Horizontal">
                             <!--  Each label is created using the grid layout, with an icon at the front and 2 vertically layered text strings.  -->
                             <Image HeightRequest="36"
                                    HorizontalOptions="Center"
@@ -60,18 +50,40 @@
                                            Text="{Binding properties.author, StringFormat='{0:N}'}"
                                            TextColor="{DynamicResource textTertiary}" />
                                 </StackLayout>
+                                <BoxView BackgroundColor="{DynamicResource textSecondary}"
+                                         HeightRequest="1"
+                                         VerticalOptions="FillAndExpand" />
                             </StackLayout>
                         </StackLayout>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            <ListView.Footer>
-                <Label Padding="10"
-                       FontSize="Small"
-                       Text="{Binding FeatureList.Count, StringFormat='{0} Features'}"
-                       TextColor="{DynamicResource textSecondary}" />
-            </ListView.Footer>
-        </ListView>
+                    </SwipeView.Content>
+                </SwipeView>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <AbsoluteLayout x:Name="absLayout">
+        <RefreshView Command="{Binding LoadItemsCommand}">
+            <CollectionView x:Name="ItemsListView"
+                            HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}"
+                            HorizontalOptions="FillAndExpand"
+                            ItemSizingStrategy="MeasureFirstItem"
+                            ItemTemplate="{StaticResource MessageTemplate}"
+                            ItemsSource="{Binding FeatureList}"
+                            SelectedItem="{Binding SelectedFeature}"
+                            SelectionMode="Single"
+                            VerticalOptions="FillAndExpand">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.Footer>
+                    <Label Padding="10"
+                           FontSize="Small"
+                           Text="{Binding FeatureList.Count, StringFormat='{0} Features'}"
+                           TextColor="{DynamicResource textSecondary}" />
+                </CollectionView.Footer>
+            </CollectionView>
+        </RefreshView>
+
         <Button Margin="10"
                 AbsoluteLayout.LayoutBounds="1.0,1.0,-1,-1"
                 AbsoluteLayout.LayoutFlags="PositionProportional"
