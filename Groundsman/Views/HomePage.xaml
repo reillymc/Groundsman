@@ -8,7 +8,7 @@
             ClassId="TabbedHomePage"
             NavigationPage.BackButtonTitle="My Features"
             NavigationPage.HasNavigationBar="false"
-            SelectedTabColor="{DynamicResource textPrimary}"
+            SelectedTabColor="{DynamicResource greenPrimary}"
             UnselectedTabColor="{DynamicResource textSecondary}">
     <TabbedPage.Children>
 

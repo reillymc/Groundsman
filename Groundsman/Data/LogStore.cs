@@ -48,7 +48,10 @@ namespace Groundsman.Data
             await Share.RequestAsync(new ShareFileRequest
             {
                 Title = "Groundsman Logfile",
-                File = new ShareFile(AppConstants.LOG_FILE, "text/csv")
+                File = new ShareFile(AppConstants.LOG_FILE, "text/csv"),
+                PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet
+                        ? new System.Drawing.Rectangle((int)(DeviceDisplay.MainDisplayInfo.Width * .474), 80, 0, 0)
+                        : System.Drawing.Rectangle.Empty
             });
         }
     }

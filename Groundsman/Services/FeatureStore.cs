@@ -251,8 +251,12 @@ namespace Groundsman.Services
             await Share.RequestAsync(new ShareFileRequest
             {
                 Title = "Features Export",
-                File = new ShareFile(AppConstants.FEATURES_EXPORT_FILE, "text/plain")
+                File = new ShareFile(AppConstants.FEATURES_EXPORT_FILE, "text/plain"),
+                PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet
+                        ? new System.Drawing.Rectangle((int)(DeviceDisplay.MainDisplayInfo.Width * .474 ), 80, 0, 0)
+                        : System.Drawing.Rectangle.Empty
             });
+
             return true;
         }
     }

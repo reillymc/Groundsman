@@ -23,17 +23,6 @@ namespace Groundsman.iOS.Renderers
             }
         }
 
-        public override void ViewDidDisappear(bool animated)
-        {
-            base.ViewDidDisappear(animated);
-
-            if (!(this.Element is ContentPage contentPage) || NavigationController == null)
-                return;
-
-            var navigationItem = this.NavigationController.TopViewController.NavigationItem;
-            navigationItem.LeftBarButtonItems = null;
-        }
-
         protected override void OnElementChanged(VisualElementChangedEventArgs e)
         {
             base.OnElementChanged(e);

@@ -33,9 +33,12 @@
                             Text="Cancel">
                         <Button.TextColor>
                             <OnPlatform x:TypeArguments="Color"
-                                        Android="White"
+                                        Android="{StaticResource textSecondary}"
                                         iOS="{StaticResource greenPrimary}" />
                         </Button.TextColor>
+                        <Button.BackgroundColor>
+                            <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
+                        </Button.BackgroundColor>
                     </Button>
                 </Grid>
                 <BoxView HeightRequest="0.3" Color="{DynamicResource bgTertiary}" />

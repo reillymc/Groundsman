@@ -76,9 +76,12 @@
                                 Text="{Binding ToggleButtonLabel}">
                             <Button.TextColor>
                                 <OnPlatform x:TypeArguments="Color"
-                                            Android="white"
+                                            Android="{StaticResource textSecondary}"
                                             iOS="{StaticResource greenPrimary}" />
                             </Button.TextColor>
+                            <Button.BackgroundColor>
+                                <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
+                            </Button.BackgroundColor>
                         </Button>
                         <Button Grid.Row="2"
                                 Padding="10,0"
@@ -87,9 +90,12 @@
                                 Text="Clear">
                             <Button.TextColor>
                                 <OnPlatform x:TypeArguments="Color"
-                                            Android="white"
+                                            Android="{StaticResource textSecondary}"
                                             iOS="{StaticResource greenPrimary}" />
                             </Button.TextColor>
+                            <Button.BackgroundColor>
+                                <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
+                            </Button.BackgroundColor>
                         </Button>
                     </StackLayout>
                 </Grid>

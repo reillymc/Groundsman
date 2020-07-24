@@ -4,7 +4,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
              xmlns:converters="clr-namespace:Groundsman.Converters"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              Title="My Features"
+             ios:Page.LargeTitleDisplay="Always"
              BackgroundColor="{DynamicResource bgPrimary}">
     <ContentPage.ToolbarItems>
         <ToolbarItem AutomationId="id_icon"
@@ -14,6 +16,40 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:ItemTappedEventArgsToItemTappedConverter x:Key="TappedItemConverter" />
+            <DataTemplate x:Key="ListTemplate">
+                <ViewCell>
+                    <ViewCell.ContextActions>
+                        <MenuItem Command="{Binding Path=BindingContext.EditEntryCommand, Source={x:Reference listView}}"
+                                  CommandParameter="{Binding .}"
+                                  Text="Edit" />
+                        <MenuItem Command="{Binding Path=BindingContext.DeleteEntryCommand, Source={x:Reference listView}}"
+                                  CommandParameter="{Binding .}"
+                                  IsDestructive="True"
+                                  Text="Delete" />
+                    </ViewCell.ContextActions>
+                    <StackLayout Padding="10,4,10,4" Orientation="Horizontal">
+                        <Image HeightRequest="36"
+                               HorizontalOptions="Center"
+                               Source="{Binding properties.typeIconPath}"
+                               VerticalOptions="Center"
+                               WidthRequest="36" />
+                        <StackLayout Orientation="Vertical">
+                            <Label Style="{StaticResource ListLabelStyle}" Text="{Binding properties.name}" />
+                            <Label FontSize="Small"
+                                   HorizontalTextAlignment="Start"
+                                   LineBreakMode="TailTruncation"
+                                   TextColor="{DynamicResource textSecondary}">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{} {0:d/M/yy} {1}">
+                                        <Binding Path="properties.date" />
+                                        <Binding Path="properties.author" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </StackLayout>
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -21,50 +57,12 @@
         <ListView x:Name="listView"
                   HasUnevenRows="True"
                   HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}"
+                  ItemTemplate="{StaticResource ListTemplate}"
                   ItemsSource="{Binding FeatureList}"
                   SeparatorColor="{DynamicResource bgTertiary}">
             <ListView.Behaviors>
                 <behaviors:ListViewItemTappedBehaviour Command="{Binding ItemTappedCommand}" Converter="{StaticResource TappedItemConverter}" />
             </ListView.Behaviors>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <ViewCell.ContextActions>
-                            <MenuItem Command="{Binding Path=BindingContext.EditEntryCommand, Source={x:Reference listView}}"
-                                      CommandParameter="{Binding .}"
-                                      Text="Edit" />
-                            <MenuItem Command="{Binding Path=BindingContext.DeleteEntryCommand, Source={x:Reference listView}}"
-                                      CommandParameter="{Binding .}"
-                                      IsDestructive="True"
-                                      Text="Delete" />
-                        </ViewCell.ContextActions>
-                        <!--  Grid definition of 2x4 for each label entry  -->
-                        <StackLayout Padding="10,4,10,4" Orientation="Horizontal">
-                            <!--  Each label is created using the grid layout, with an icon at the front and 2 vertically layered text strings.  -->
-                            <Image HeightRequest="36"
-                                   HorizontalOptions="Center"
-                                   Source="{Binding properties.typeIconPath}"
-                                   VerticalOptions="Center"
-                                   WidthRequest="36" />
-                            <StackLayout Orientation="Vertical">
-                                <Label Style="{StaticResource ListLabelStyle}" Text="{Binding properties.name}" />
-                                <StackLayout Orientation="Horizontal">
-                                    <Label FontSize="Small"
-                                           HorizontalTextAlignment="Start"
-                                           LineBreakMode="TailTruncation"
-                                           Text="{Binding properties.date, StringFormat='{0:d/M/yy}'}"
-                                           TextColor="{DynamicResource textSecondary}" />
-                                    <Label FontSize="Small"
-                                           HorizontalTextAlignment="Start"
-                                           LineBreakMode="TailTruncation"
-                                           Text="{Binding properties.author, StringFormat='{0:N}'}"
-                                           TextColor="{DynamicResource textTertiary}" />
-                                </StackLayout>
-                            </StackLayout>
-                        </StackLayout>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
             <ListView.Footer>
                 <Label Padding="10"
                        FontSize="Small"
