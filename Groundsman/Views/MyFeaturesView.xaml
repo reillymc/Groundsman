@@ -1,55 +1,84 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Groundsman.MyFeaturesView"
+             xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Groundsman"
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
-             x:Class="Groundsman.MyFeaturesView"
+             xmlns:converters="clr-namespace:Groundsman.Converters"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              Title="My Features"
+             ios:Page.LargeTitleDisplay="Always"
              BackgroundColor="{DynamicResource bgPrimary}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem AutomationId="id_icon" Icon="profile_icon" Command="{Binding IDClickedCommand}" />
+        <ToolbarItem AutomationId="id_icon"
+                     Command="{Binding ShareButtonTappedCommand}"
+                     Icon="share_icon" />
     </ContentPage.ToolbarItems>
-    <ContentPage.BindingContext>
-        <local:MyFeaturesViewModel x:Name="viewModel" />
-    </ContentPage.BindingContext>
     <ContentPage.Resources>
         <ResourceDictionary>
-            <local:ItemTappedEventArgsToItemTappedConverter x:Key="TappedItemConverter" />
+            <converters:ItemTappedEventArgsToItemTappedConverter x:Key="TappedItemConverter" />
+            <DataTemplate x:Key="ListTemplate">
+                <ViewCell>
+                    <ViewCell.ContextActions>
+                        <MenuItem Command="{Binding Path=BindingContext.EditEntryCommand, Source={x:Reference listView}}"
+                                  CommandParameter="{Binding .}"
+                                  Text="Edit" />
+                        <MenuItem Command="{Binding Path=BindingContext.DeleteEntryCommand, Source={x:Reference listView}}"
+                                  CommandParameter="{Binding .}"
+                                  IsDestructive="True"
+                                  Text="Delete" />
+                    </ViewCell.ContextActions>
+                    <StackLayout Padding="10,4,10,4" Orientation="Horizontal">
+                        <Image HeightRequest="36"
+                               HorizontalOptions="Center"
+                               Source="{Binding properties.typeIconPath}"
+                               VerticalOptions="Center"
+                               WidthRequest="36" />
+                        <StackLayout Orientation="Vertical">
+                            <Label Style="{StaticResource ListLabelStyle}" Text="{Binding properties.name}" />
+                            <Label FontSize="Small"
+                                   HorizontalTextAlignment="Start"
+                                   LineBreakMode="TailTruncation"
+                                   TextColor="{DynamicResource textSecondary}">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{} {0:d/M/yy} {1}">
+                                        <Binding Path="properties.date" />
+                                        <Binding Path="properties.author" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </StackLayout>
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <AbsoluteLayout x:Name="absLayout">
-        <ListView HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}" x:Name="listView" ItemsSource="{Binding EntryListSource, Source={x:Reference Name=viewModel}}" HasUnevenRows="True" SeparatorColor="{DynamicResource bgTertiary}">
+        <ListView x:Name="listView"
+                  HasUnevenRows="True"
+                  HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}"
+                  ItemTemplate="{StaticResource ListTemplate}"
+                  ItemsSource="{Binding FeatureList}"
+                  SeparatorColor="{DynamicResource bgTertiary}">
             <ListView.Behaviors>
                 <behaviors:ListViewItemTappedBehaviour Command="{Binding ItemTappedCommand}" Converter="{StaticResource TappedItemConverter}" />
             </ListView.Behaviors>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <ViewCell.ContextActions>
-                            <MenuItem Command="{Binding EditEntryCommand, Source={x:Reference Name=viewModel}}" CommandParameter="{Binding .}" Text="Edit" />
-                            <MenuItem Command="{Binding DeleteEntryCommand, Source={x:Reference Name=viewModel}}" CommandParameter="{Binding .}" Text="Delete" IsDestructive="True" />
-                        </ViewCell.ContextActions>
-                        <!-- Grid definition of 2x4 for each label entry -->
-                        <StackLayout Orientation="Horizontal" Padding="10,4,10,4">
-                            <!--Each label is created using the grid layout, with an icon at the front and 2 vertically layered text strings.-->
-                            <Image Source="{Binding Properties.TypeIconPath}" HeightRequest="36" WidthRequest="36" HorizontalOptions="Center" VerticalOptions="Center" />
-                            <StackLayout Orientation="Vertical">
-                                <Label Style="{StaticResource ListLabelStyle}" Text="{Binding Properties.Name}"/>
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="{Binding Properties.Date, StringFormat='{0:d/M/yy}'}" TextColor="{DynamicResource textSecondary}" HorizontalTextAlignment="Start" FontSize="Small" LineBreakMode="TailTruncation" />
-                                    <Label Text="{Binding Properties.AuthorId, StringFormat='{0:N}'}" TextColor="{DynamicResource textTertiary}" HorizontalTextAlignment="Start" FontSize="Small" LineBreakMode="TailTruncation" />
-                                </StackLayout>
-                            </StackLayout>
-                        </StackLayout>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
             <ListView.Footer>
-                    <Label Text="{Binding FeatureCount, StringFormat='{0} Features', Source={x:Reference Name=viewModel}}" TextColor="{DynamicResource textSecondary}"  Padding="10" FontSize="Small"/>
+                <Label Padding="10"
+                       FontSize="Small"
+                       Text="{Binding FeatureList.Count, StringFormat='{0} Features'}"
+                       TextColor="{DynamicResource textSecondary}" />
             </ListView.Footer>
         </ListView>
-        <Button AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1.0,1.0,-1,-1" Margin="10" WidthRequest="50" HeightRequest="50" BorderRadius="25" BackgroundColor="{StaticResource greenPrimary}" Image="add_icon" Command="{Binding ButtonClickedCommand}"/>
+        <Button Margin="10"
+                AbsoluteLayout.LayoutBounds="1.0,1.0,-1,-1"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                BackgroundColor="{StaticResource greenPrimary}"
+                BorderRadius="25"
+                Command="{Binding AddButtonTappedCommand}"
+                HeightRequest="50"
+                Image="add_icon"
+                WidthRequest="50" />
     </AbsoluteLayout>
 
 </ContentPage>

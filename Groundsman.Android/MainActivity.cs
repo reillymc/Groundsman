@@ -1,79 +1,119 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
+using Android.Content.Res;
 using Android.OS;
-using Xamarin.Essentials;
-using Plugin.Permissions;
+using Android.Views;
+using Groundsman.Styles;
 using Plugin.CurrentActivity;
+using System.Text;
 
 namespace Groundsman.Droid
 {
-	[Activity(Label = "Groundsman",
-		//Icon = "@mipmap/ic_launcher",
-		Theme = "@style/MainTheme",
-		MainLauncher = true,
-		ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
-		ScreenOrientation = ScreenOrientation.Portrait)]
-	public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
-	{
+    [Activity(Label = "Groundsman",
+        //Icon = "@mipmap/ic_launcher",
+        Theme = "@style/MainTheme",
+        MainLauncher = true,
+        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
+        LaunchMode = LaunchMode.SingleTask,
+        ScreenOrientation = ScreenOrientation.Portrait)]
+    [IntentFilter(new[] { Intent.ActionSend }, Categories = new[] { Intent.CategoryDefault }, DataMimeType = @"application/json")]
+    public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
+    {
 
-		protected override void OnCreate(Bundle savedInstanceState)
-		{
-			TabLayoutResource = Resource.Layout.Tabbar;
-			ToolbarResource = Resource.Layout.Toolbar;
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
+            TabLayoutResource = Resource.Layout.Tabbar;
+            ToolbarResource = Resource.Layout.Toolbar;
 
-			base.OnCreate(savedInstanceState);
-			Xamarin.Forms.Forms.Init(this, savedInstanceState);
-			Platform.Init(this, savedInstanceState); // initialise xamarin essentials
-			CrossCurrentActivity.Current.Init(this, savedInstanceState);
-			Xamarin.FormsMaps.Init(this, savedInstanceState);
-			Xamarin.Forms.Forms.ViewInitialized += (object sender, Xamarin.Forms.ViewInitializedEventArgs e) =>
-			{
-				if (!string.IsNullOrWhiteSpace(e.View.AutomationId))
-				{
-					e.NativeView.ContentDescription = e.View.AutomationId;
-				}
-			};
+            base.OnCreate(savedInstanceState);
 
-			LoadApplication(new App());
-		}
+            Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
 
-		protected override void OnResume()
-		{
-			base.OnResume();
+            CrossCurrentActivity.Current.Init(this, savedInstanceState);
+            Xamarin.FormsMaps.Init(this, savedInstanceState);
 
-			//Android.Support.V7.Widget.Toolbar toolbar = this.FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
-			//if (toolbar != null)
-			//    SetSupportActionBar(toolbar);
-		}
+            Xamarin.Forms.Forms.ViewInitialized += (object sender, Xamarin.Forms.ViewInitializedEventArgs e) =>
+            {
+                if (!string.IsNullOrWhiteSpace(e.View.AutomationId))
+                {
+                    e.NativeView.ContentDescription = e.View.AutomationId;
+                }
+            };
 
-		/// <summary>
-		/// Handle runtime permissions
-		/// https://docs.microsoft.com/en-us/xamarin/essentials/get-started?context=xamarin%2Fxamarin-forms&tabs=windows%2Candroid
-		/// </summary>
-		/// <param name="requestCode"></param>
-		/// <param name="permissions"></param>
-		/// <param name="grantResults"></param>
-		public override void OnRequestPermissionsResult(int requestCode,
-   string[] permissions, [GeneratedEnum] Permission[] grantResults)
-		{
-			PermissionsImplementation.Current.OnRequestPermissionsResult
-				  (requestCode, permissions, grantResults);
-			base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-		}
+            var mainForms = new App();
+            LoadApplication(mainForms);
 
-		public override bool OnOptionsItemSelected(IMenuItem item)
-		{
-			// Check if the selected toolbar button's id equals the back button id.
-			if (item.ItemId == Android.Resource.Id.Home)
-			{
-				// If so, override it so it always takes the user straight back to the main page.
-				HomePage.Instance.Navigation.PopToRootAsync();
-				return false;
-			}
-			return base.OnOptionsItemSelected(item);
-		}
-	}
+            SetAppTheme();
+
+            if (Intent.Action == Intent.ActionSend)
+            {
+                // Get the info from ClipData 
+                var file = Intent.ClipData.GetItemAt(0);
+
+                // Open a stream from the URI 
+                var fileStream = ContentResolver.OpenInputStream(file.Uri);
+
+                // Save it over 
+                var memOfFile = new System.IO.MemoryStream();
+
+                fileStream.CopyTo(memOfFile);
+                string decoded = Encoding.UTF8.GetString(memOfFile.ToArray());
+
+                mainForms.FeatureStore.ImportFeaturesAsync(decoded, true);
+            }
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+        }
+
+        /// <summary>
+        /// Handle runtime permissions
+        /// https://docs.microsoft.com/en-us/xamarin/essentials/get-started?context=xamarin%2Fxamarin-forms&tabs=windows%2Candroid
+        /// </summary>
+        /// <param name="requestCode"></param>
+        /// <param name="permissions"></param>
+        /// <param name="grantResults"></param>
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            // Check if the selected toolbar button's id equals the back button id.
+            if (item.ItemId == Android.Resource.Id.Home)
+            {
+                // If so, override it so it always takes the user straight back to the main page.
+                HomePage.Instance.Navigation.PopToRootAsync();
+                return false;
+            }
+            return base.OnOptionsItemSelected(item);
+        }
+
+        void SetAppTheme()
+        {
+            if (Resources.Configuration.UiMode.HasFlag(UiMode.NightYes))
+                SetTheme(App.Theme.Dark);
+            else
+                SetTheme(App.Theme.Light);
+        }
+
+        void SetTheme(App.Theme mode)
+        {
+            if (mode == App.Theme.Dark)
+            {
+                if (App.AppTheme == App.Theme.Dark)
+                    return;
+                App.Current.Resources = new DarkTheme();
+            }
+            else
+            {
+                if (App.AppTheme != App.Theme.Dark)
+                    return;
+                App.Current.Resources = new LightTheme();
+            }
+            App.AppTheme = mode;
+        }
+    }
 }
 

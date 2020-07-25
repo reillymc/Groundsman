@@ -1,46 +1,46 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<TabbedPage ClassId="TabbedHomePage" xmlns="http://xamarin.com/schemas/2014/forms"
+<?xml version="1.0" encoding="UTF-8" ?>
+<TabbedPage x:Class="Groundsman.HomePage"
+            xmlns="http://xamarin.com/schemas/2014/forms"
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
-            android:TabbedPage.ToolbarPlacement="Bottom"
-            android:TabbedPage.BarBackgroundColor="White"
-            android:TabbedPage.BarSelectedItemColor="Black"
-            android:TabbedPage.BarTextColor="Black"
             xmlns:local="clr-namespace:Groundsman;assembly=Groundsman"
+            android:TabbedPage.ToolbarPlacement="Bottom"
+            ClassId="TabbedHomePage"
+            NavigationPage.BackButtonTitle="My Features"
             NavigationPage.HasNavigationBar="false"
-            x:Class="Groundsman.HomePage"
-            SelectedTabColor="{DynamicResource textPrimary}"
-            BarBackgroundColor="{DynamicResource bgPrimary}"
-            BarTextColor="{DynamicResource textPrimary}">
+            SelectedTabColor="{DynamicResource greenPrimary}"
+            UnselectedTabColor="{DynamicResource textSecondary}">
     <TabbedPage.Children>
 
-        <NavigationPage Title="My Features" Icon="data_icon" BackgroundColor="{DynamicResource bgPrimary}">
+        <NavigationPage Title="My Features"
+                        BackgroundColor="{DynamicResource bgPrimary}"
+                        Icon="data_icon">
             <x:Arguments>
-                <local:MyFeaturesView/>
-            </x:Arguments>
-        </NavigationPage>    
-
-        <NavigationPage Title="Logger" Icon="log_icon" BackgroundColor="{DynamicResource bgPrimary}">
-            <x:Arguments>
-                <local:LoggerView/>
+                <local:MyFeaturesView />
             </x:Arguments>
         </NavigationPage>
 
-        <NavigationPage Title="Map" Icon="map_icon" BackgroundColor="{DynamicResource bgPrimary}">
+        <NavigationPage Title="Logger"
+                        BackgroundColor="{DynamicResource bgPrimary}"
+                        Icon="log_icon">
             <x:Arguments>
-                <local:MapView/>
+                <local:LoggerView />
             </x:Arguments>
         </NavigationPage>
 
-        <NavigationPage Title="Import" Icon="import_icon" BackgroundColor="{DynamicResource bgPrimary}">
+        <NavigationPage Title="Map"
+                        BackgroundColor="{DynamicResource bgPrimary}"
+                        Icon="map_icon">
             <x:Arguments>
-                <local:ImportView/>
+                <local:MapView />
             </x:Arguments>
         </NavigationPage>
 
-        <NavigationPage Title="Export" Icon="export_icon" BackgroundColor="{DynamicResource bgPrimary}">
+        <NavigationPage Title="Settings"
+                        BackgroundColor="{DynamicResource bgPrimary}"
+                        Icon="settings_icon">
             <x:Arguments>
-                <local:ExportView/>
+                <local:ProfileSettingsView />
             </x:Arguments>
         </NavigationPage>
 

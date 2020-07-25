@@ -1,10 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Groundsman.Styles.DefaultTheme">
+<ResourceDictionary x:Class="Groundsman.Styles.DefaultTheme"
+                    xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <Color x:Key="greenPrimary">#4CAF50</Color>
-
 
     <Style x:Key="DetailFormLabel" TargetType="Label">
         <Setter Property="FontSize" Value="Default" />
@@ -29,8 +28,8 @@
     <Style x:Key="ListViewStyle" TargetType="ListView">
         <Setter Property="BackgroundColor" Value="{DynamicResource bgSecondary}" />
     </Style>
-    
-    <!--Modular Styles-->
+
+    <!--  Modular Styles  -->
     <Style x:Key="FrameStyle" TargetType="Frame">
         <Setter Property="Margin" Value="0, 2" />
         <Setter Property="Padding" Value="12" />
@@ -76,7 +75,9 @@
     <Style x:Key="ButtonStyle" TargetType="Button">
         <Setter Property="TextColor">
             <Setter.Value>
-                <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="White" />
+                <OnPlatform x:TypeArguments="Color"
+                            Android="White"
+                            iOS="{StaticResource greenPrimary}" />
             </Setter.Value>
         </Setter>
     </Style>
@@ -87,14 +88,12 @@
         <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
         <Setter Property="BackgroundColor" Value="{DynamicResource bgSecondary}" />
     </Style>
-
     <Style x:Key="ListLabelStyle" TargetType="Label">
         <Setter Property="TextColor" Value="{DynamicResource textPrimary}" />
         <Setter Property="FontSize" Value="Medium" />
         <Setter Property="HorizontalTextAlignment" Value="Start" />
         <Setter Property="LineBreakMode" Value="TailTruncation" />
     </Style>
-
     <Style x:Key="ViewLabelStyle" TargetType="Label">
         <Setter Property="TextColor" Value="{DynamicResource textPrimary}" />
         <Setter Property="FontAttributes" Value="Bold" />

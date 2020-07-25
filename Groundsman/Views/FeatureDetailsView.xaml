@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Groundsman.FeatureDetailsView"
+             xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Name="FeatureDetailsViewPage"
-             x:Class="Groundsman.FeatureDetailsView"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             x:Name="FeatureDetailsViewPage"
              ios:Page.ModalPresentationStyle="FormSheet"
-             ios:Page.LargeTitleDisplay="Never"
-             Title=""
              BackgroundColor="{DynamicResource bgPrimary}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="trash_icon" Command="{Binding DeleteEntryCommand}" />
+        <ToolbarItem Command="{Binding ShareEntryCommand}" Icon="share_icon" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout Margin="10,10,10,30">
+        <StackLayout Margin="10,10,10,20">
             <Frame Style="{StaticResource FrameStyle}" VerticalOptions="Start">
                 <StackLayout>
                     <Grid ColumnSpacing="10">
@@ -24,21 +22,47 @@
                             <ColumnDefinition Width="0.6*" />
                             <ColumnDefinition Width="0.4*" />
                         </Grid.ColumnDefinitions>
-                        <Label Style="{StaticResource ViewLabelStyle}" Text="Name" Grid.Row="0" Grid.Column="0"/>
-                        <Label Margin="0,5,0,0" AutomationId="NameEntry" Text="{Binding NameEntry}" Grid.Row="1" Grid.Column="0" TextColor="Gray" FontSize="Small" />
-                        <Label Style="{StaticResource ViewLabelStyle}" Text="Date" Grid.Row="0" Grid.Column="1"/>
-                        <Label Margin="0,5,0,0" AutomationId="DateEntry" Text="{Binding DateEntry, StringFormat='{0: dd/MM/yyyy}'}" Grid.Row="1" Grid.Column="1" TextColor="Gray" FontSize="Small" />
+                        <Label Grid.Row="0"
+                               Grid.Column="0"
+                               Style="{StaticResource ViewLabelStyle}"
+                               Text="Name" />
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="0,5,0,0"
+                               AutomationId="NameEntry"
+                               FontSize="Small"
+                               Text="{Binding NameEntry}"
+                               TextColor="Gray" />
+                        <Label Grid.Row="0"
+                               Grid.Column="1"
+                               Style="{StaticResource ViewLabelStyle}"
+                               Text="Date" />
+                        <Label Grid.Row="1"
+                               Grid.Column="1"
+                               Margin="0,5,0,0"
+                               AutomationId="DateEntry"
+                               FontSize="Small"
+                               Text="{Binding DateEntry, StringFormat='{0: dd/MM/yyyy}'}"
+                               TextColor="Gray" />
                     </Grid>
                 </StackLayout>
             </Frame>
             <Frame Style="{StaticResource FrameStyle}" VerticalOptions="Start">
                 <StackLayout>
-                    <Label Style="{StaticResource ViewLabelStyle}" Text="Geolocation Data" Grid.Row="0" Grid.Column="0"/>
-                    <ListView Style="{StaticResource ListViewStyle}" x:Name="geolocationListView" ItemTapped="listView_ItemTapped" ItemsSource="{Binding GeolocationPoints}" HasUnevenRows="True" SeparatorColor="Gray">
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Style="{StaticResource ViewLabelStyle}"
+                           Text="Geolocation Data" />
+                    <ListView x:Name="geolocationListView"
+                              HasUnevenRows="True"
+                              ItemTapped="listView_ItemTapped"
+                              ItemsSource="{Binding GeolocationValues}"
+                              SeparatorColor="Gray"
+                              Style="{StaticResource ListViewStyle}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Grid Style="{StaticResource DetailFormPanelGrid}" Margin="10,0,0,0">
+                                    <Grid Margin="10,0,0,0" Style="{StaticResource DetailFormPanelGrid}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
@@ -49,42 +73,90 @@
                                             <ColumnDefinition />
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <Label Style="{StaticResource ViewLabelStyle}" AutomationId="LatLabel" Text="Latitude" Grid.Row="0" Grid.Column="0" Margin="0, 9" FontSize="Small" />
-                                        <Label AutomationId="LatLabelVal" Text="{Binding Latitude}" Grid.Row="1" Grid.Column="0" TextColor="Gray" FontSize="Small" />
-                                        <Label Style="{StaticResource ViewLabelStyle}" AutomationId="LongLabel" Text="Longitude" Grid.Row="0" Grid.Column="1" Margin="0, 9" FontSize="Small" />
-                                        <Label AutomationId="LongLabelVal" Text="{Binding Longitude}" Grid.Row="1" Grid.Column="1" TextColor="Gray" FontSize="Small" />
-                                        <Label Style="{StaticResource ViewLabelStyle}" AutomationId="AltLabel" Text="Altitude" Grid.Row="0" Grid.Column="2" Margin="0, 9" FontSize="Small" />
-                                        <Label AutomationId="AltLabelVal" Text="{Binding Altitude}" Grid.Row="1" Grid.Column="2" TextColor="Gray" Margin="0, 0, 0, 10" FontSize="Small" />
+                                        <Label Grid.Row="0"
+                                               Grid.Column="0"
+                                               Margin="0,9"
+                                               AutomationId="LatLabel"
+                                               FontSize="Small"
+                                               Style="{StaticResource ViewLabelStyle}"
+                                               Text="Latitude" />
+                                        <Label Grid.Row="1"
+                                               Grid.Column="0"
+                                               AutomationId="LatLabelVal"
+                                               FontSize="Small"
+                                               Text="{Binding Latitude}"
+                                               TextColor="Gray" />
+                                        <Label Grid.Row="0"
+                                               Grid.Column="1"
+                                               Margin="0,9"
+                                               AutomationId="LongLabel"
+                                               FontSize="Small"
+                                               Style="{StaticResource ViewLabelStyle}"
+                                               Text="Longitude" />
+                                        <Label Grid.Row="1"
+                                               Grid.Column="1"
+                                               AutomationId="LongLabelVal"
+                                               FontSize="Small"
+                                               Text="{Binding Longitude}"
+                                               TextColor="Gray" />
+                                        <Label Grid.Row="0"
+                                               Grid.Column="2"
+                                               Margin="0,9"
+                                               AutomationId="AltLabel"
+                                               FontSize="Small"
+                                               Style="{StaticResource ViewLabelStyle}"
+                                               Text="Altitude" />
+                                        <Label Grid.Row="1"
+                                               Grid.Column="2"
+                                               Margin="0,0,0,10"
+                                               AutomationId="AltLabelVal"
+                                               FontSize="Small"
+                                               Text="{Binding Altitude}"
+                                               TextColor="Gray" />
                                     </Grid>
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                         <ListView.Footer>
-                            <Label Text=""/>
+                            <Label Text="" />
                         </ListView.Footer>
                     </ListView>
                 </StackLayout>
             </Frame>
-            <Frame Style="{StaticResource FrameStyle}" VerticalOptions="Start" HeightRequest="140">
+            <Frame Style="{StaticResource FrameStyle}" VerticalOptions="Start">
                 <StackLayout>
                     <Label Style="{StaticResource ViewLabelStyle}" Text="Metadata" />
-                    <Grid ColumnSpacing="10" RowSpacing="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.27*" />
-                            <ColumnDefinition Width="0.72*" />
-                        </Grid.ColumnDefinitions>
-                        <Label Style="{StaticResource ViewLabelStyle}" Text="String: " Grid.Row="1" Grid.Column="0" FontSize="Small" HorizontalOptions="Start" VerticalTextAlignment="Center" Margin="10,0,0,0" />
-                        <Label Text="{Binding MetadataStringEntry}" Grid.Row="1" Grid.Column="1" FontSize="Small" TextColor="Gray" HorizontalOptions="Fill" VerticalTextAlignment="Center" />
-                        <Label Style="{StaticResource ViewLabelStyle}" Text="Integer: " Grid.Row="2" Grid.Column="0" FontSize="Small" HorizontalOptions="Start" VerticalTextAlignment="Center" Margin="10,0,0,0" />
-                        <Label Text="{Binding MetadataIntegerEntry}" Grid.Row="2" Grid.Column="1" FontSize="Small" TextColor="Gray" HorizontalOptions="Fill" VerticalTextAlignment="Center" />
-                        <Label Style="{StaticResource ViewLabelStyle}" Text="Float: " Grid.Row="3" Grid.Column="0" FontSize="Small" HorizontalOptions="Start" VerticalTextAlignment="Center" Margin="10,0,0,0" />
-                        <Label Text="{Binding MetadataFloatEntry}" Grid.Row="3" Grid.Column="1" FontSize="Small" TextColor="Gray" HorizontalOptions="Fill" VerticalTextAlignment="Center" />
-                    </Grid>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Margin="10,0,0,0"
+                               FontSize="Small"
+                               MinimumWidthRequest="120"
+                               Style="{StaticResource ViewLabelStyle}"
+                               Text="String:" />
+                        <Label FontSize="Small"
+                               HorizontalOptions="Fill"
+                               Text="{Binding MetadataStringEntry}"
+                               TextColor="Gray" />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Margin="10,0,0,0"
+                               FontSize="Small"
+                               Style="{StaticResource ViewLabelStyle}"
+                               Text="Integer:" />
+                        <Label FontSize="Small"
+                               HorizontalOptions="Fill"
+                               Text="{Binding MetadataIntegerEntry}"
+                               TextColor="Gray" />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Margin="10,0,0,0"
+                               FontSize="Small"
+                               Style="{StaticResource ViewLabelStyle}"
+                               Text="Float:" />
+                        <Label FontSize="Small"
+                               HorizontalOptions="Fill"
+                               Text="{Binding MetadataFloatEntry}"
+                               TextColor="Gray" />
+                    </StackLayout>
                 </StackLayout>
             </Frame>
         </StackLayout>

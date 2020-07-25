@@ -1,27 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Groundsman.WelcomeFormView"
-             xmlns:local="clr-namespace:Groundsman"
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Groundsman.WelcomeFormView"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
-             Title="Welcome to Groundsman"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-             ios:Page.ModalPresentationStyle="FormSheet"
-             BackgroundColor="{DynamicResource bgPrimary}">
-    <ContentPage.BindingContext>
-        <local:WelcomeFormViewModel x:Name="viewModel" />
-    </ContentPage.BindingContext>
+             ios:Page.ModalPresentationStyle="FormSheet">
     <ContentPage.Content>
         <FlexLayout Direction="Column">
-            <Image Source="welcome_screen.png" Aspect="AspectFill" />
+            <Image Aspect="AspectFill" Source="welcome_screen.png" />
             <StackLayout HeightRequest="350">
-                <Entry Style="{StaticResource EntryStyle}" Text="{Binding IDEntry}" AutomationId="IDText" Margin="20,20,20,0" Placeholder="User ID">
+                <Entry Margin="20,20,20,0"
+                       AutomationId="IDText"
+                       Placeholder="User ID"
+                       Style="{StaticResource EntryStyle}"
+                       Text="{Binding IDEntry}">
                     <Entry.Behaviors>
                         <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
                     </Entry.Behaviors>
                 </Entry>
-                <Button Text="Submit" AutomationId="IDSubmit" Margin="20,20,20,20" Command="{Binding IDSubmitCommand}">
+                <Button Margin="20,20,20,20"
+                        AutomationId="IDSubmit"
+                        Command="{Binding IDSubmitCommand}"
+                        Text="Submit">
                     <Button.TextColor>
-                        <OnPlatform x:TypeArguments="Color" iOS="{StaticResource greenPrimary}" Android="White" />
+                        <OnPlatform x:TypeArguments="Color"
+                                    Android="White"
+                                    iOS="{StaticResource greenPrimary}" />
                     </Button.TextColor>
                 </Button>
             </StackLayout>

@@ -29,9 +29,7 @@
 	<key>CFBundleName</key>
 	<string>Groundsman</string>
 	<key>CFBundleShortVersionString</key>
-	<string>6.5.0</string>
-	<key>CFBundleVersion</key>
-	<string>6.5.0</string>
+	<string>7.6.0</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -134,6 +132,8 @@
 	<false/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en_US</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -165,6 +165,12 @@
 				<string>application/json</string>
 			</dict>
 		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>7.6.0</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
 	</array>
 </dict>
 </plist>

@@ -1,9 +1,14 @@
-﻿using Xamarin.Essentials;
+﻿using System;
+using System.Threading.Tasks;
+using Xamarin.Essentials;
+using Xamarin.Forms;
 
-namespace Groundsman
+namespace Groundsman.ViewModels
 {
-    public class ProfileSettingsViewModel : ViewModelBase
+    public class ProfileSettingsViewModel : BaseViewModel
     {
+        public Command DeleteAllFeatures { get; set; }
+
         private string _IDEntry;
         public string IDEntry
         {
@@ -16,14 +21,26 @@ namespace Groundsman
         }
 
         public int DecimalAccuracyEntry { get; set; }
-
         public int GPSPrecisionEntry { get; set; }
+        public bool ShowPointsOnMap { get; set; }
+        public bool ShowLinesOnMap { get; set; }
+        public bool ShowPolygonsOnMap { get; set; }
+        public bool ShowLogPathOnMap { get; set; }
 
         public ProfileSettingsViewModel()
         {
-            IDEntry = Preferences.Get("UserID", "Groundsman");
-            DecimalAccuracyEntry = Preferences.Get("DataDecimalAccuracy", 8);
-            GPSPrecisionEntry = Preferences.Get("GPSPrecision", 2);
+            DeleteAllFeatures = new Command(async () => await ExecuteDeleteAllFeaturesCommand());
+            UpdatePreferences();
+        }
+
+        private async Task ExecuteDeleteAllFeaturesCommand()
+        {
+            bool yesResponse = await HomePage.Instance.DisplayAlert("Reset User Data", "This will permanently erase all saved features. Do you wish to continue?", "Yes", "No");
+            if (yesResponse)
+            {
+                await featureStore.DeleteItemsAsync();
+                await HomePage.Instance.DisplayAlert("Reset User Data", "Your user data has been erased.", "Ok");
+            }
         }
 
         private void HandleTextChanged()
@@ -36,6 +53,17 @@ namespace Groundsman
             {
                 Preferences.Set("UserID", "Groundsman");
             }
+        }
+
+        public void UpdatePreferences()
+        {
+            IDEntry = Preferences.Get("UserID", "Groundsman");
+            DecimalAccuracyEntry = Preferences.Get("DataDecimalAccuracy", 6);
+            GPSPrecisionEntry = Preferences.Get("GPSPrecision", 2);
+            ShowPointsOnMap = Preferences.Get("ShowPointsOnMap", true);
+            ShowLinesOnMap = Preferences.Get("ShowLinesOnMap", true);
+            ShowPolygonsOnMap = Preferences.Get("ShowPolygonsOnMap", true);
+            ShowLogPathOnMap = Preferences.Get("ShowLogPathOnMap", false);
         }
     }
 }

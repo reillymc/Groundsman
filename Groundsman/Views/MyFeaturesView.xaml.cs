@@ -1,30 +1,21 @@
 ﻿using Xamarin.Forms;
+using Groundsman.ViewModels;
 
 namespace Groundsman
 {
     public partial class MyFeaturesView : ContentPage
     {
-
+        MyFeaturesViewModel viewModel;
         public MyFeaturesView()
         {
             InitializeComponent();
+            BindingContext = viewModel = new MyFeaturesViewModel();
         }
 
-        protected override void OnAppearing() // make data refresh on android - maybe with willappear
+        protected override void OnAppearing()
         {
             base.OnAppearing();
-
-            if (((MyFeaturesViewModel)BindingContext).RefreshListCommand.CanExecute(null))
-            {
-                ((MyFeaturesViewModel)BindingContext).RefreshListCommand.Execute(null);
-            }
-        }
-
-        protected override void OnDisappearing()
-        {
-            //loadingList.IsRunning = false;
-            //loadingList.IsVisible = false;
-            base.OnDisappearing();
+            viewModel.GetFeatures();
         }
     }
 }

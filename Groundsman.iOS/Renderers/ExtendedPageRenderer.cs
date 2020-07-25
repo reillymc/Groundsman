@@ -15,23 +15,12 @@ namespace Groundsman.iOS.Renderers
             base.ViewWillAppear(animated);
             if (NavigationController != null)
             {
-                if (UIDevice.CurrentDevice.CheckSystemVersion(12, 0))
+                if (UIDevice.CurrentDevice.CheckSystemVersion(13, 0))
                 {
                     NavigationController.NavigationBar.PrefersLargeTitles = true;
                     NavigationItem.LargeTitleDisplayMode = UINavigationItemLargeTitleDisplayMode.Automatic;
                 }
             }
-        }
-
-        public override void ViewDidDisappear(bool animated)
-        {
-            base.ViewDidDisappear(animated);
-
-            if (!(this.Element is ContentPage contentPage) || NavigationController == null)
-                return;
-
-            var navigationItem = this.NavigationController.TopViewController.NavigationItem;
-            navigationItem.LeftBarButtonItems = null;
         }
 
         protected override void OnElementChanged(VisualElementChangedEventArgs e)
@@ -56,7 +45,7 @@ namespace Groundsman.iOS.Renderers
         public override void TraitCollectionDidChange(UITraitCollection previousTraitCollection)
         {
             base.TraitCollectionDidChange(previousTraitCollection);
-            if (UIDevice.CurrentDevice.CheckSystemVersion(12, 0))
+            if (UIDevice.CurrentDevice.CheckSystemVersion(13, 0))
             {
                 if (TraitCollection.UserInterfaceStyle != previousTraitCollection.UserInterfaceStyle)
                 {
@@ -69,19 +58,19 @@ namespace Groundsman.iOS.Renderers
         {
             if (TraitCollection.UserInterfaceStyle == UIUserInterfaceStyle.Dark)
             {
-                if (App.AppTheme == "dark")
+                if (App.AppTheme == App.Theme.Dark)
                     return;
 
                 Xamarin.Forms.Application.Current.Resources = new DarkTheme();
 
-                App.AppTheme = "dark";
+                App.AppTheme = App.Theme.Dark;
             }
             else
             {
-                if (App.AppTheme != "dark")
+                if (App.AppTheme != App.Theme.Dark)
                     return;
                 Xamarin.Forms.Application.Current.Resources = new LightTheme();
-                App.AppTheme = "light";
+                App.AppTheme = App.Theme.Light;
             }
         }
     }

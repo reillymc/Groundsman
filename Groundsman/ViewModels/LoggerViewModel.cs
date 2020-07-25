@@ -3,17 +3,16 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using System.Threading;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 using System.IO;
+using Groundsman.Services;
 
-namespace Groundsman
+namespace Groundsman.ViewModels
 {
-    public class LoggerViewModel : ViewModelBase
+    public class LoggerViewModel : BaseViewModel
     {
-        private const string LOG_FILENAME = "log.csv";
         public ICommand ToggleButtonClickCommand { set; get; }
         public ICommand ClearButtonClickCommand { set; get; }
-        public ICommand ExportButtonClickCommand { set; get; }
+        public ICommand ShareButtonClickCommand { set; get; }
         private CancellationTokenSource cts;
         public bool isLogging;
 
@@ -71,11 +70,13 @@ namespace Groundsman
             ClearButtonClickCommand = new Command(() =>
             {
                 TextEntry = "";
+                File.WriteAllText(AppConstants.LOG_FILE, TextEntry);
             });
 
-            ExportButtonClickCommand = new Command(() =>
+            ShareButtonClickCommand = new Command(async () =>
             {
-                ExportLog();
+                File.WriteAllText(AppConstants.LOG_FILE, TextEntry);
+                await App.LogStore.ExportLogFile();
             });
         }
 
@@ -100,28 +101,18 @@ namespace Groundsman
             while (true)
             {
                 await Task.Delay(interval, ct);
-                Point location = await Services.GetGeoLocation();
+                Point location = await HelperServices.GetGeoLocation();
                 if (location != null)
                 {
                     string newEntry = string.Format("{0}, {1}, {2}, {3}\n", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), location.Latitude, location.Longitude, location.Altitude);
                     TextEntry += newEntry;
+                    File.WriteAllText(AppConstants.LOG_FILE, TextEntry);
                 }
                 else
                 {
                     StopUpdate();
                 }
             }
-        }
-
-        private async void ExportLog()
-        {
-            File.WriteAllText(Path.Combine(FileSystem.AppDataDirectory, LOG_FILENAME), TextEntry);
-            ExperimentalFeatures.Enable("ShareFileRequest_Experimental");
-            await Share.RequestAsync(new ShareFileRequest
-            {
-                Title = "Groundsman Logfile",
-                File = new ShareFile(Path.Combine(FileSystem.AppDataDirectory, LOG_FILENAME), "text/csv")
-            });
         }
     }
 }

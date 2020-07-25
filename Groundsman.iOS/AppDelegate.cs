@@ -1,4 +1,6 @@
 ﻿using Foundation;
+using Groundsman.Services;
+using System.IO;
 using UIKit;
 
 namespace Groundsman.iOS
@@ -16,10 +18,16 @@ namespace Groundsman.iOS
         //
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
+
+        App mainForms;
+        NavigationService navigationService;
+
         public override bool FinishedLaunching(UIApplication uiApplication, NSDictionary launchOptions)
         {
             Xamarin.Forms.Forms.Init();
             Xamarin.FormsMaps.Init();
+
+            mainForms = new App();
 
             // Get possible shortcut item
             if (launchOptions != null)
@@ -30,7 +38,7 @@ namespace Groundsman.iOS
             UINavigationBar.Appearance.TintColor = tintColor;
             UINavigationBar.Appearance.Translucent = true;
 
-            LoadApplication(new App());
+            LoadApplication(mainForms);
 
             return base.FinishedLaunching(uiApplication, launchOptions);
         }
@@ -38,8 +46,11 @@ namespace Groundsman.iOS
         public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
         {
             {
-                url.StartAccessingSecurityScopedResource();
-                _ = App.FeatureStore.ImportFeaturesFromFile(url.StandardizedUrl.Path, url.LastPathComponent);
+                using (StreamReader reader = new StreamReader(url.Path))
+                {
+                    string filecontent = reader.ReadToEnd();
+                    mainForms.FeatureStore.ImportFeaturesAsync(filecontent, true);
+                }
             }
             return true;
         }
@@ -52,20 +63,20 @@ namespace Groundsman.iOS
 
             // Anything to process?
             if (shortcutItem == null) return false;
-
+            navigationService = new NavigationService();
             // Take action based on the shortcut type
             switch (shortcutItem.Type)
             {
                 case ShortcutIdentifier.First:
-                    HomePage.Instance.ShowNewDetailFormPage("Point");
+                    navigationService.NavigateToNewEditPage("Point");
                     handled = true;
                     break;
                 case ShortcutIdentifier.Second:
-                    HomePage.Instance.ShowNewDetailFormPage("Line");
+                    navigationService.NavigateToNewEditPage("LineString");
                     handled = true;
                     break;
                 case ShortcutIdentifier.Third:
-                    HomePage.Instance.ShowNewDetailFormPage("Polygon");
+                    navigationService.NavigateToNewEditPage("Polygon");
                     handled = true;
                     break;
             }

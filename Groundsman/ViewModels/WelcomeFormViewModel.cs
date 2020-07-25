@@ -1,13 +1,14 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-namespace Groundsman
+namespace Groundsman.ViewModels
 {
-    public class WelcomeFormViewModel : ViewModelBase
+    public class WelcomeFormViewModel : BaseViewModel
     {
+        private bool modal;
+
         public ICommand IDSubmitCommand { get; set; }
 
         private string _IDEntry;
@@ -21,8 +22,9 @@ namespace Groundsman
             }
         }
 
-        public WelcomeFormViewModel()
+        public WelcomeFormViewModel(bool modal)
         {
+            this.modal = modal;
             IDSubmitCommand = new Command(async () => await SubmitIDEntry());
         }
 
@@ -35,7 +37,7 @@ namespace Groundsman
             {
                 Preferences.Set("UserID", IDEntry);
                 await Application.Current.SavePropertiesAsync();
-                await HomePage.Instance.Navigation.PopModalAsync();
+                await navigationService.NavigateBack(modal);
             }
             else
             {

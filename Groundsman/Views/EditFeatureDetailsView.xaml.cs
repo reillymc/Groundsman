@@ -1,4 +1,5 @@
 using Xamarin.Forms;
+using Groundsman.ViewModels;
 
 namespace Groundsman
 {
@@ -11,9 +12,18 @@ namespace Groundsman
         public EditFeatureDetailsView(string type)
         {
             InitializeComponent();
-            this.BindingContext = new FeatureDetailsViewModel(type);
+            BindingContext = new FeatureDetailsViewModel(type);
 
-            Title = $"New {type}";
+            // Set title to just 'Line' instead of 'LineString'
+            if (type == "LineString")
+            {
+                Title = $"New Line";
+            }
+            else
+            {
+                Title = $"New {type}";
+            }
+
 
             DetermineAddPointBtnVisability(type);
         }
@@ -25,11 +35,11 @@ namespace Groundsman
         public EditFeatureDetailsView(Feature data)
         {
             InitializeComponent();
-            this.BindingContext = new FeatureDetailsViewModel(data);
+            BindingContext = new FeatureDetailsViewModel(data);
 
-            Title = data.Properties.Name;
+            Title = data.properties.name;
 
-            DetermineAddPointBtnVisability(data.Geometry.Type);
+            DetermineAddPointBtnVisability(data.geometry.type);
         }
 
         /// <summary>
@@ -44,11 +54,13 @@ namespace Groundsman
                 addPointBtn.IsVisible = true;
                 closePolyBtn.IsVisible = true;
             }
-            else if (type == "Line"){
+            else if (type == "LineString")
+            {
                 addPointBtn.ImageSource = "add_icon_color";
                 addPointBtn.IsVisible = true;
                 closePolyBtn.IsVisible = false;
-            } else
+            }
+            else
             {
                 addPointBtn.IsVisible = false;
                 closePolyBtn.IsVisible = false;

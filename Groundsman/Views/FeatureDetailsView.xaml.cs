@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Groundsman.ViewModels;
+using System;
 using Xamarin.Forms;
 
 namespace Groundsman
@@ -10,7 +11,7 @@ namespace Groundsman
             InitializeComponent();
             BindingContext = new FeatureDetailsViewModel(data);
 
-            Title = data.Properties.Name;
+            Title = data.properties.name;
         }
 
         private void listView_ItemTapped(object sender, ItemTappedEventArgs e)
@@ -26,18 +27,9 @@ namespace Groundsman
         // Android button spam fix: force all opened pages to go back to main page.
         protected override bool OnBackButtonPressed()
         {
+            base.OnBackButtonPressed();
             HomePage.Instance.Navigation.PopToRootAsync();
             return true;
-        }
-
-        protected override async void OnDisappearing()
-        {
-            base.OnDisappearing();
-
-            if (Navigation.ModalStack.Count > 0)
-            {
-                await Navigation.PopModalAsync();
-            }
         }
     }
 }
