@@ -9,10 +9,10 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Command="{Binding OnSaveUpdatedCommand}" Icon="save_icon" />
     </ContentPage.ToolbarItems>
-    <ContentPage.Content>
-        <StackLayout Margin="10,10,10,30">
-            <Frame Style="{StaticResource FrameStyle}" VerticalOptions="Start">
-                <StackLayout>
+    <ContentPage.Resources>
+        <DataTemplate x:Key="HeaderTemplate">
+            <StackLayout>
+                <StackLayout Margin="0,0,0,10">
                     <Grid ColumnSpacing="10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -48,141 +48,146 @@
                                TextColor="Gray" />
                     </Grid>
                 </StackLayout>
-            </Frame>
-            <Frame Style="{StaticResource FrameStyle}" VerticalOptions="Start">
-                <StackLayout>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0"
-                               Grid.Column="0"
-                               Style="{StaticResource ViewLabelStyle}"
-                               Text="Geolocation Data" />
-                        <Button x:Name="addPointBtn"
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                AutomationId="addGeoPoint"
-                                Command="{Binding AddPointCommand}"
-                                FontSize="Small"
-                                HeightRequest="28"
-                                HorizontalOptions="End"
-                                WidthRequest="32" />
-                    </Grid>
-                    <ListView x:Name="geolocationListView"
-                              AutomationId="geolocationListView"
-                              HasUnevenRows="True"
-                              ItemTapped="listView_ItemTapped"
-                              ItemsSource="{Binding GeolocationValues}"
-                              SeparatorColor="Gray"
-                              Style="{StaticResource ListViewStyle}"
-                              VerticalOptions="Start">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <Grid Margin="10,0,0,0"
-                                          IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                                          Style="{StaticResource DetailFormPanelGrid}">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition />
-                                            <ColumnDefinition />
-                                            <ColumnDefinition />
-                                            <ColumnDefinition Width="32" />
-                                        </Grid.ColumnDefinitions>
-                                        <Label Grid.Row="0"
-                                               Grid.Column="0"
-                                               Margin="0,9"
-                                               AutomationId="LatLabel"
-                                               FontSize="Small"
-                                               Style="{StaticResource ViewLabelStyle}"
-                                               Text="Latitude" />
-                                        <Entry Grid.Row="1"
-                                               Grid.Column="0"
-                                               Margin="0,0,0,10"
-                                               AutomationId="LatitudeEntry"
-                                               FontSize="Small"
-                                               Keyboard="Numeric"
-                                               Style="{StaticResource EntryStyle}"
-                                               Text="{Binding Latitude}" />
-                                        <Label Grid.Row="0"
-                                               Grid.Column="1"
-                                               Margin="0,9"
-                                               AutomationId="LongLabel"
-                                               FontSize="Small"
-                                               Style="{StaticResource ViewLabelStyle}"
-                                               Text="Longitude" />
-                                        <Entry Grid.Row="1"
-                                               Grid.Column="1"
-                                               Margin="0,0,0,10"
-                                               AutomationId="LongitudeEntry"
-                                               FontSize="Small"
-                                               Keyboard="Numeric"
-                                               Style="{StaticResource EntryStyle}"
-                                               Text="{Binding Longitude}" />
-                                        <Label Grid.Row="0"
-                                               Grid.Column="2"
-                                               Margin="0,9"
-                                               AutomationId="AltLabel"
-                                               FontSize="Small"
-                                               Style="{StaticResource ViewLabelStyle}"
-                                               Text="Altitude" />
-                                        <Entry Grid.Row="1"
-                                               Grid.Column="2"
-                                               Margin="0,0,0,10"
-                                               AutomationId="AltitudeEntry"
-                                               FontSize="Small"
-                                               Keyboard="Numeric"
-                                               Style="{StaticResource EntryStyle}"
-                                               Text="{Binding Altitude}" />
-                                        <Button Grid.Row="0"
-                                                Grid.Column="3"
-                                                Command="{Binding Path=BindingContext.DeletePointCommand, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                                                CommandParameter="{Binding .}"
-                                                FontSize="Small"
-                                                HeightRequest="20"
-                                                Image="delete_icon"
-                                                IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                                                IsVisible="{Binding Path=BindingContext.ShowPointDeleteBtn, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                                                WidthRequest="20" />
-                                        <ActivityIndicator Grid.Row="1"
-                                                           Grid.Column="3"
-                                                           IsRunning="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                                                           IsVisible="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                                                           Color="{StaticResource greenPrimary}" />
-                                        <Button Grid.Row="1"
-                                                Grid.Column="3"
-                                                Margin="0,0,0,10"
-                                                Command="{Binding Path=BindingContext.GetFeatureCommand, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                                                CommandParameter="{Binding .}"
-                                                HeightRequest="20"
-                                                Image="current_location"
-                                                IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                                                WidthRequest="20" />
-                                    </Grid>
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                        <ListView.Footer>
-                            <Button x:Name="closePolyBtn"
-                                    Command="{Binding ClosePolyCommand}"
-                                    Text="Close Polygon">
-                                <Button.TextColor>
-                                    <OnPlatform x:TypeArguments="Color"
-                                                Android="White"
-                                                iOS="{StaticResource greenPrimary}" />
-                                </Button.TextColor>
-                            </Button>
-                        </ListView.Footer>
-                    </ListView>
-                </StackLayout>
-            </Frame>
-            <Frame HeightRequest="200"
-                   Style="{StaticResource FrameStyle}"
-                   VerticalOptions="Start">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Style="{StaticResource ViewLabelStyle}"
+                           Text="Geolocation Data" />
+
+                </Grid>
+                <Grid ColumnDefinitions="*,5*,5*,3*,*" Style="{StaticResource DetailFormPanelGrid}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Margin="0,9"
+                           AutomationId="LatLabel"
+                           FontSize="Small"
+                           Style="{StaticResource ViewLabelStyle}"
+                           Text="#" />
+                    <Label Grid.Row="0"
+                           Grid.Column="1"
+                           Margin="6,9"
+                           AutomationId="LatLabel"
+                           FontSize="Small"
+                           Style="{StaticResource ViewLabelStyle}"
+                           Text="Latitude" />
+                    <Label Grid.Row="0"
+                           Grid.Column="2"
+                           Margin="6,9"
+                           AutomationId="LongLabel"
+                           FontSize="Small"
+                           Style="{StaticResource ViewLabelStyle}"
+                           Text="Longitude" />
+                    <Label Grid.Row="0"
+                           Grid.Column="3"
+                           Margin="6,9"
+                           AutomationId="AltLabel"
+                           FontSize="Small"
+                           Style="{StaticResource ViewLabelStyle}"
+                           Text="Altitude" />
+                </Grid>
+            </StackLayout>
+        </DataTemplate>
+        <DataTemplate x:Key="ItemTemplate">
+            <Grid Padding="0,3"
+                  ColumnDefinitions=".7*,5*,5*,3*,*"
+                  IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
+                  RowDefinitions="*"
+                  Style="{StaticResource DetailFormPanelGrid}">
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       FontSize="Small"
+                       Style="{StaticResource ViewLabelStyle}"
+                       Text="{Binding Index}"
+                       VerticalOptions="Center" />
+                <Frame Grid.Row="0"
+                       Grid.Column="1"
+                       Padding="0"
+                       BackgroundColor="{DynamicResource bgPrimary}"
+                       CornerRadius="5"
+                       HasShadow="False"
+                       HorizontalOptions="FillAndExpand">
+                    <Entry AutomationId="AltitudeEntry"
+                           FontSize="Small"
+                           Keyboard="Numeric"
+                           Style="{StaticResource EntryStyle}"
+                           Text="{Binding Longitude}" />
+                </Frame>
+                <Frame Grid.Row="0"
+                       Grid.Column="2"
+                       Padding="0"
+                       BackgroundColor="{DynamicResource bgPrimary}"
+                       CornerRadius="5"
+                       HasShadow="False"
+                       HorizontalOptions="FillAndExpand">
+                    <Entry AutomationId="AltitudeEntry"
+                           FontSize="Small"
+                           Keyboard="Numeric"
+                           Style="{StaticResource EntryStyle}"
+                           Text="{Binding Latitude}" />
+                </Frame>
+                <Frame Grid.Row="0"
+                       Grid.Column="3"
+                       Padding="0"
+                       BackgroundColor="{DynamicResource bgPrimary}"
+                       CornerRadius="5"
+                       HasShadow="False"
+                       HorizontalOptions="FillAndExpand"
+                       VerticalOptions="Center">
+                    <Entry AutomationId="AltitudeEntry"
+                           FontSize="Small"
+                           Keyboard="Numeric"
+                           Style="{StaticResource EntryStyle}"
+                           Text="{Binding Altitude}" />
+                </Frame>
+
+                <ActivityIndicator Grid.Row="0"
+                                   Grid.Column="4"
+                                   IsRunning="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
+                                   IsVisible="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
+                                   VerticalOptions="Center"
+                                   Color="{StaticResource greenPrimary}" />
+                <Button Grid.Row="0"
+                        Grid.Column="4"
+                        BackgroundColor="Transparent"
+                        Command="{Binding Path=BindingContext.GetFeatureCommand, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
+                        CommandParameter="{Binding .}"
+                        HeightRequest="20"
+                        Image="current_location"
+                        IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
+                        VerticalOptions="CenterAndExpand" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="FooterTemplate">
+            <StackLayout>
+                <Frame x:Name="importFrame"
+                       Margin="10"
+                       Padding="8"
+                       BackgroundColor="Transparent"
+                       CornerRadius="8"
+                       HasShadow="False"
+                       HeightRequest="20"
+                       HorizontalOptions="Center">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddPointCommand}" CommandParameter="File" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                        <Image HorizontalOptions="Center"
+                               Source="add_icon_color"
+                               VerticalOptions="Center" />
+                        <Label FontSize="Small"
+                               HorizontalOptions="Center"
+                               Text="Add Point"
+                               TextColor="Green"
+                               VerticalOptions="Center" />
+                    </StackLayout>
+                </Frame>
+
                 <StackLayout>
                     <Label Style="{StaticResource ViewLabelStyle}" Text="Metadata" />
                     <StackLayout Orientation="Horizontal">
@@ -221,7 +226,18 @@
                                Text="{Binding MetadataFloatEntry}" />
                     </StackLayout>
                 </StackLayout>
-            </Frame>
-        </StackLayout>
+            </StackLayout>
+
+        </DataTemplate>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Frame Style="{StaticResource FrameStyle}">
+            <CollectionView Footer="{Binding .}"
+                            FooterTemplate="{StaticResource FooterTemplate}"
+                            Header="{Binding .}"
+                            HeaderTemplate="{StaticResource HeaderTemplate}"
+                            ItemTemplate="{StaticResource ItemTemplate}"
+                            ItemsSource="{Binding GeolocationValues}" />
+        </Frame>
     </ContentPage.Content>
 </ContentPage>

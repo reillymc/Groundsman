@@ -195,9 +195,9 @@ namespace Groundsman.ViewModels
 
             GeolocationValues = new ObservableCollection<DisplayPoint>();
 
-            foreach (Point pointValue in data.properties.xamarincoordinates)
+            for (int i = 0; i < data.properties.xamarincoordinates.Count; i++)
             {
-                DisplayPoint convertedPoint = new DisplayPoint(pointValue.Latitude.ToString(), pointValue.Longitude.ToString(), pointValue.Altitude.ToString());
+                DisplayPoint convertedPoint = new DisplayPoint(i+1, data.properties.xamarincoordinates[i].Latitude.ToString(), data.properties.xamarincoordinates[i].Longitude.ToString(), data.properties.xamarincoordinates[i].Altitude.ToString());
                 GeolocationValues.Add(convertedPoint);
             }
 
@@ -240,7 +240,7 @@ namespace Groundsman.ViewModels
             GeolocationEntryEnabled = false;
             LoadingIconActive = true;
             Point location = await HelperServices.GetGeoLocation();
-            DisplayPoint convertedPoint = new DisplayPoint(location.Latitude.ToString(), location.Longitude.ToString(), location.Altitude.ToString());
+            DisplayPoint convertedPoint = new DisplayPoint(0, location.Latitude.ToString(), location.Longitude.ToString(), location.Altitude.ToString());
             if (location != null)
             {
                 point.Latitude = convertedPoint.Latitude;
@@ -260,7 +260,7 @@ namespace Groundsman.ViewModels
             if (_isBusy) return;
             _isBusy = true;
 
-            GeolocationValues.Add(new DisplayPoint("0", "0", "0"));
+            GeolocationValues.Add(new DisplayPoint(GeolocationValues.Count+1, "0", "0", "0"));
             NumPointFields++;
             _isBusy = false;
         }
@@ -480,7 +480,7 @@ namespace Groundsman.ViewModels
             if (_isBusy) return;
             _isBusy = true;
 
-            GeolocationValues.Add(new DisplayPoint(latFist, lonFist, altFist));
+            GeolocationValues.Add(new DisplayPoint(GeolocationValues.Count+1, latFist, lonFist, altFist));
             NumPointFields++;
 
             _isBusy = false;

@@ -9,9 +9,16 @@ namespace Groundsman.Models
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private int _index;
         private string _latitude;
         private string _longitude;
         private string _altitude;
+
+        public int Index
+        {
+            get { return _index; }
+            set { _index = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Index")); }
+        }
 
         public string Latitude
         {
@@ -31,11 +38,12 @@ namespace Groundsman.Models
             set { _altitude = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Altitude")); }
         }
 
-        public DisplayPoint(string lat, string lng, string alt)
+        public DisplayPoint(int index, string lat, string lng, string alt)
         {
             Latitude = lat;
             Longitude = lng;
             Altitude = alt;
+            Index = index;
         }
     }
 }

@@ -23,9 +23,6 @@ namespace Groundsman
             {
                 Title = $"New {type}";
             }
-
-
-            DetermineAddPointBtnVisability(type);
         }
 
         /// <summary>
@@ -39,38 +36,8 @@ namespace Groundsman
 
             Title = data.properties.name;
 
-            DetermineAddPointBtnVisability(data.geometry.type);
         }
 
-        /// <summary>
-        /// Determines whether or not the "add to {type}" button is visible.
-        /// </summary>
-        /// <param name="type">The type of the entry.</param>
-        private void DetermineAddPointBtnVisability(string type)
-        {
-            if (type == "Polygon")
-            {
-                addPointBtn.ImageSource = "add_icon_color";
-                addPointBtn.IsVisible = true;
-                closePolyBtn.IsVisible = true;
-            }
-            else if (type == "LineString")
-            {
-                addPointBtn.ImageSource = "add_icon_color";
-                addPointBtn.IsVisible = true;
-                closePolyBtn.IsVisible = false;
-            }
-            else
-            {
-                addPointBtn.IsVisible = false;
-                closePolyBtn.IsVisible = false;
-            }
-        }
-
-        private void listView_ItemTapped(object sender, ItemTappedEventArgs e)
-        {
-            geolocationListView.SelectedItem = null;
-        }
 
         // Android button spam fix: force all opened pages to go back to main page.
         protected override bool OnBackButtonPressed()
