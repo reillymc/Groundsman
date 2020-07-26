@@ -6,9 +6,6 @@
              x:Name="EditFeatureDetailsViewPage"
              ios:Page.ModalPresentationStyle="FormSheet"
              BackgroundColor="{DynamicResource bgPrimary}">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Command="{Binding OnSaveUpdatedCommand}" Icon="save_icon" />
-    </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <DataTemplate x:Key="HeaderTemplate">
             <StackLayout>
@@ -188,7 +185,7 @@
                     </StackLayout>
                 </Frame>
 
-                <StackLayout>
+                <StackLayout Margin="0,0,0,180">
                     <Label Style="{StaticResource ViewLabelStyle}" Text="Metadata" />
                     <StackLayout Orientation="Horizontal">
                         <Label FontSize="Small"
@@ -231,13 +228,66 @@
         </DataTemplate>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <Frame Style="{StaticResource FrameStyle}">
-            <CollectionView Footer="{Binding .}"
-                            FooterTemplate="{StaticResource FooterTemplate}"
-                            Header="{Binding .}"
-                            HeaderTemplate="{StaticResource HeaderTemplate}"
-                            ItemTemplate="{StaticResource ItemTemplate}"
-                            ItemsSource="{Binding GeolocationValues}" />
-        </Frame>
+        <StackLayout BackgroundColor="{DynamicResource bgSecondary}">
+            <StackLayout BackgroundColor="{DynamicResource bgPrimary}">
+                <Grid Margin="15,7,15,0" BackgroundColor="{DynamicResource bg}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="cancelButton"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Command="{Binding OnDismissCommand}"
+                            FontSize="16"
+                            HorizontalOptions="Start"
+                            Text="Cancel">
+                        <Button.TextColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        Android="{StaticResource textSecondary}"
+                                        iOS="{StaticResource greenPrimary}" />
+                        </Button.TextColor>
+                        <Button.BackgroundColor>
+                            <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
+                        </Button.BackgroundColor>
+                    </Button>
+                    <Label Grid.Row="0"
+                           Grid.Column="1"
+                           FontAttributes="Bold"
+                           FontSize="16"
+                           HorizontalOptions="Center"
+                           Text="Edit Feature"
+                           TextColor="{DynamicResource textPrimary}"
+                           VerticalOptions="Center" />
+                    <Button x:Name="saveButton"
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Command="{Binding OnSaveUpdatedCommand}"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            HorizontalOptions="End"
+                            Text="Done">
+                        <Button.TextColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                        Android="{StaticResource textSecondary}"
+                                        iOS="{StaticResource greenPrimary}" />
+                        </Button.TextColor>
+                        <Button.BackgroundColor>
+                            <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
+                        </Button.BackgroundColor>
+                    </Button>
+                </Grid>
+                <BoxView HeightRequest="0.3" Color="{DynamicResource bgTertiary}" />
+            </StackLayout>
+            <Frame Style="{StaticResource FrameStyle}">
+                <CollectionView Footer="{Binding .}"
+                                FooterTemplate="{StaticResource FooterTemplate}"
+                                Header="{Binding .}"
+                                HeaderTemplate="{StaticResource HeaderTemplate}"
+                                ItemTemplate="{StaticResource ItemTemplate}"
+                                ItemsSource="{Binding GeolocationValues}" />
+            </Frame>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -37,23 +37,5 @@ namespace Groundsman
             Title = data.properties.name;
 
         }
-
-
-        // Android button spam fix: force all opened pages to go back to main page.
-        protected override bool OnBackButtonPressed()
-        {
-            HomePage.Instance.Navigation.PopToRootAsync();
-            return true;
-        }
-
-        protected override async void OnDisappearing()
-        {
-            base.OnDisappearing();
-
-            if (Navigation.ModalStack.Count > 0)
-            {
-                await Navigation.PopModalAsync();
-            }
-        }
     }
 }

@@ -22,6 +22,7 @@ namespace Groundsman.ViewModels
         public ICommand AddMetadataFieldCommand { get; set; }
         public ICommand DeleteMetadataFieldCommand { get; set; }
         public ICommand OnSaveUpdatedCommand { get; set; }
+        public ICommand OnDismissCommand { get; set; }
         public ICommand ShareEntryCommand { get; set; }
         public ICommand ClosePolyCommand { get; set; }
 
@@ -228,7 +229,14 @@ namespace Groundsman.ViewModels
 
             OnSaveUpdatedCommand = new Command(async () => await OnSaveUpdateActivated());
 
+            OnDismissCommand = new Command(async () => await OnDismiss());
+
             ClosePolyCommand = new Command(() => ClosePoly());
+        }
+
+        private async Task OnDismiss()
+        {
+            await navigationService.NavigateBack(true);
         }
 
         /// <summary>
@@ -309,7 +317,7 @@ namespace Groundsman.ViewModels
             {
                 await HomePage.Instance.DisplayAlert("Save Error", "Feature not saved.", "OK");
             }
-            await HomePage.Instance.Navigation.PopToRootAsync();
+            navigationService.NavigateBack(true);
 
             _isBusy = false;
         }
