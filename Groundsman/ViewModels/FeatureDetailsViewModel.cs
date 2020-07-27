@@ -88,7 +88,7 @@ namespace Groundsman.ViewModels
         private int _numPointFields;
         public int NumPointFields
         {
-            get { return _numPointFields; }
+            get { return _numPointFields + 1; }
             set
             {
                 _numPointFields = value;
@@ -131,7 +131,8 @@ namespace Groundsman.ViewModels
         }
 
         private string _typeIconPath;
-
+        public bool EditingPolygon { get; set; }
+        public bool EditingPoint { get; set; }
         /// <summary>
         /// View-model constructor for adding new entries.
         /// </summary>
@@ -148,20 +149,20 @@ namespace Groundsman.ViewModels
                 {
                     case "Point":
                         minPoints = 1;
+                        EditingPoint = true;
                         break;
                     case "LineString":
                         minPoints = 2;
                         break;
                     case "Polygon":
                         minPoints = 4;
+                        EditingPolygon = true;
                         break;
                 }
 
                 GeolocationValues = new ObservableCollection<DisplayPoint>();
-                for (int i = 0; i < minPoints; i++)
-                {
-                    AddPoint();
-                }
+                AddPoint();
+
             }
 
             GeolocationEntryEnabled = true;
@@ -188,6 +189,7 @@ namespace Groundsman.ViewModels
                     break;
                 case "Polygon":
                     minPoints = 4;
+                    EditingPolygon = true;
                     break;
             }
 
@@ -198,7 +200,7 @@ namespace Groundsman.ViewModels
 
             for (int i = 0; i < data.properties.xamarincoordinates.Count; i++)
             {
-                DisplayPoint convertedPoint = new DisplayPoint(i+1, data.properties.xamarincoordinates[i].Latitude.ToString(), data.properties.xamarincoordinates[i].Longitude.ToString(), data.properties.xamarincoordinates[i].Altitude.ToString());
+                DisplayPoint convertedPoint = new DisplayPoint(i + 1, data.properties.xamarincoordinates[i].Latitude.ToString(), data.properties.xamarincoordinates[i].Longitude.ToString(), data.properties.xamarincoordinates[i].Altitude.ToString());
                 GeolocationValues.Add(convertedPoint);
             }
 
@@ -231,7 +233,6 @@ namespace Groundsman.ViewModels
 
             OnDismissCommand = new Command(async () => await OnDismiss());
 
-            ClosePolyCommand = new Command(() => ClosePoly());
         }
 
         private async Task OnDismiss()
@@ -268,7 +269,7 @@ namespace Groundsman.ViewModels
             if (_isBusy) return;
             _isBusy = true;
 
-            GeolocationValues.Add(new DisplayPoint(GeolocationValues.Count+1, "0", "0", "0"));
+            GeolocationValues.Add(new DisplayPoint(GeolocationValues.Count + 1, "0", "0", "0"));
             NumPointFields++;
             _isBusy = false;
         }
@@ -283,6 +284,10 @@ namespace Groundsman.ViewModels
             _isBusy = true;
 
             GeolocationValues.Remove(item);
+            for (int i = 0; i < GeolocationValues.Count; i++)
+            {
+                GeolocationValues[i].Index = i + 1;
+            }
             NumPointFields--;
             _isBusy = false;
         }
@@ -295,6 +300,10 @@ namespace Groundsman.ViewModels
             if (_isBusy) return;
             _isBusy = true;
 
+            if (EditingPolygon)
+            {
+                ClosePoly();
+            }
             // Do validation checks here.
             if (await FeatureEntryIsValid() == false)
             {
@@ -317,7 +326,7 @@ namespace Groundsman.ViewModels
             {
                 await HomePage.Instance.DisplayAlert("Save Error", "Feature not saved.", "OK");
             }
-            navigationService.NavigateBack(true);
+            await navigationService.NavigateBack(true);
 
             _isBusy = false;
         }
@@ -472,7 +481,6 @@ namespace Groundsman.ViewModels
                         await HomePage.Instance.DisplayAlert("Unsupported Entry", "A point must only contain 1 data point.", "OK");
                         return false;
                     }
-
                     break;
             }
 
@@ -484,14 +492,9 @@ namespace Groundsman.ViewModels
             string latFist = GeolocationValues[0].Latitude;
             string lonFist = GeolocationValues[0].Longitude;
             string altFist = GeolocationValues[0].Altitude;
-
-            if (_isBusy) return;
-            _isBusy = true;
-
-            GeolocationValues.Add(new DisplayPoint(GeolocationValues.Count+1, latFist, lonFist, altFist));
+            GeolocationValues.Add(new DisplayPoint(GeolocationValues.Count + 1, latFist, lonFist, altFist));
             NumPointFields++;
 
-            _isBusy = false;
         }
 
     }
