@@ -84,6 +84,9 @@
     <Style x:Key="EntryStyle" TargetType="Entry">
         <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
     </Style>
+    <Style x:Key="DateEntryStyle" TargetType="DatePicker">
+        <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
+    </Style>
     <Style x:Key="EditorStyle" TargetType="Editor">
         <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
         <Setter Property="BackgroundColor" Value="{DynamicResource bgSecondary}" />
