@@ -26,17 +26,17 @@ namespace Groundsman.ViewModels
             {
                 case "Point":
                     await navigationService.NavigateBack(modal);
-                    await navigationService.NavigateToNewEditPage("Point");
+                    await navigationService.NavigateToNewEditPage(FeatureType.Point);
                     break;
 
                 case "LineString":
                     await navigationService.NavigateBack(modal);
-                    await navigationService.NavigateToNewEditPage("LineString");
+                    await navigationService.NavigateToNewEditPage(FeatureType.LineString);
                     break;
 
                 case "Polygon":
                     await navigationService.NavigateBack(modal);
-                    await navigationService.NavigateToNewEditPage("Polygon");
+                    await navigationService.NavigateToNewEditPage(FeatureType.Polygon);
                     break;
 
                 case "Clipboard":

@@ -130,6 +130,7 @@
                                HorizontalOptions="FillAndExpand">
                             <Entry FontSize="Small"
                                    Keyboard="Numeric"
+                                   Placeholder="0"
                                    Style="{StaticResource EntryStyle}"
                                    Text="{Binding Latitude}" />
                         </Frame>
@@ -143,6 +144,7 @@
                             <Entry AutomationId="AltitudeEntry"
                                    FontSize="Small"
                                    Keyboard="Numeric"
+                                   Placeholder="0"
                                    Style="{StaticResource EntryStyle}"
                                    Text="{Binding Longitude}" />
                         </Frame>
@@ -157,6 +159,7 @@
                             <Entry AutomationId="AltitudeEntry"
                                    FontSize="Small"
                                    Keyboard="Numeric"
+                                   Placeholder="0"
                                    Style="{StaticResource EntryStyle}"
                                    Text="{Binding Altitude}" />
                         </Frame>
@@ -194,7 +197,7 @@
 
                         <Grid Padding="10,0,0,0"
                               ColumnDefinitions=".7*,5*,5*,3*,1.3*"
-                              IsVisible="{Binding EditingPolygon}"
+                              IsVisible="{Binding ShowCloseLine}"
                               RowDefinitions="*,*"
                               Style="{StaticResource DetailFormPanelGrid}">
                             <Label Grid.Row="0"
@@ -252,7 +255,7 @@
                                CornerRadius="8"
                                HasShadow="False"
                                HeightRequest="20"
-                               HorizontalOptions="CenterAndExpand">
+                               HorizontalOptions="CenterAndExpand" IsVisible="{Binding ShowAddButton}">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding AddPointCommand}" CommandParameter="File" />
                             </Frame.GestureRecognizers>
@@ -336,7 +339,7 @@
                            FontAttributes="Bold"
                            FontSize="16"
                            HorizontalOptions="Center"
-                           Text="Edit Feature"
+                           Text="{Binding Title}"
                            TextColor="{DynamicResource textPrimary}"
                            VerticalOptions="Center" />
                     <Button x:Name="saveButton"

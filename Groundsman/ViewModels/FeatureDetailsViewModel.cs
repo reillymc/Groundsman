@@ -35,7 +35,7 @@ namespace Groundsman.ViewModels
         private string thisEntryID;
 
         // A reference to this entry's type of structure.
-        private string thisEntryType;
+        private FeatureType thisEntryType;
 
         private bool _isBusy;
 
@@ -108,8 +108,8 @@ namespace Groundsman.ViewModels
             }
         }
 
-        private int _metadataIntegerEntry;
-        public int MetadataIntegerEntry
+        private string _metadataIntegerEntry;
+        public string MetadataIntegerEntry
         {
             get { return _metadataIntegerEntry; }
             set
@@ -131,39 +131,37 @@ namespace Groundsman.ViewModels
         }
 
         private string _typeIconPath;
-        public bool EditingPolygon { get; set; }
-        public bool EditingPoint { get; set; }
+        public bool ShowAddButton { get; set; }
+        public bool ShowCloseLine { get; set; }
         /// <summary>
         /// View-model constructor for adding new entries.
         /// </summary>
-        public FeatureDetailsViewModel(string entryType)
+        public FeatureDetailsViewModel(FeatureType featureType)
         {
-            thisEntryType = entryType;
-            thisEntryID = AppConstants.NEW_ENTRY_ID;
+            switch (featureType)
+            {
+                case FeatureType.Point:
+                    Title = "New Point";
+                    break;
+                case FeatureType.LineString:
+                    ShowAddButton = true;
+                    Title = "New Line";
+                    break;
+                case FeatureType.Polygon:
+                    Title = "New Polygon";
+                    ShowAddButton = true;
+                    ShowCloseLine = true;
+                    break;
+            }
 
+            thisEntryID = AppConstants.NEW_ENTRY_ID;
+            thisEntryType = featureType;
             DateEntry = DateTime.Now.ToShortDateString();
 
-            // Add the minimum number of points necessary for the chosen type.
-            {
-                switch (entryType)
-                {
-                    case "Point":
-                        minPoints = 1;
-                        EditingPoint = true;
-                        break;
-                    case "LineString":
-                        minPoints = 2;
-                        break;
-                    case "Polygon":
-                        minPoints = 4;
-                        EditingPolygon = true;
-                        break;
-                }
+            GeolocationValues = new ObservableCollection<DisplayPoint>();
+            AddPoint();
 
-                GeolocationValues = new ObservableCollection<DisplayPoint>();
-                AddPoint();
 
-            }
 
             GeolocationEntryEnabled = true;
             LoadingIconActive = false;
@@ -176,23 +174,21 @@ namespace Groundsman.ViewModels
         /// </summary>
         public FeatureDetailsViewModel(Feature data)
         {
-            thisFeature = data;
-            thisEntryType = data.geometry.type;
-            thisEntryID = data.properties.id;
-            switch (thisEntryType)
+            Title = data.properties.name;
+            switch (data.geometry.type)
             {
-                case "Point":
-                    minPoints = 1;
+                case FeatureType.LineString:
+                    ShowAddButton = true;
                     break;
-                case "LineString":
-                    minPoints = 2;
-                    break;
-                case "Polygon":
-                    minPoints = 4;
-                    EditingPolygon = true;
+                case FeatureType.Polygon:
+                    ShowAddButton = true;
+                    ShowCloseLine = true;
                     break;
             }
 
+            thisFeature = data;
+            thisEntryType = data.geometry.type;
+            thisEntryID = data.properties.id;
             NameEntry = data.properties.name;
             DateEntry = DateTime.Parse(data.properties.date).ToShortDateString();
 
@@ -207,7 +203,7 @@ namespace Groundsman.ViewModels
             GeolocationEntryEnabled = true;
 
             MetadataStringEntry = data.properties.metadataStringValue;
-            MetadataIntegerEntry = data.properties.metadataIntegerValue;
+            MetadataIntegerEntry = data.properties.metadataIntegerValue.ToString(); ;
             MetadataFloatEntry = data.properties.metadataFloatValue.ToString();
 
             _typeIconPath = data.properties.typeIconPath;
@@ -300,53 +296,26 @@ namespace Groundsman.ViewModels
             if (_isBusy) return;
             _isBusy = true;
 
-            if (EditingPolygon)
+            if (await TryParseSaveFeature())
             {
-                ClosePoly();
-            }
-            // Do validation checks here.
-            if (await FeatureEntryIsValid() == false)
-            {
+                await navigationService.NavigateBack(true);
                 _isBusy = false;
                 return;
             }
 
-            Feature featureToSave = CreateFeatureFromInput();
-            bool success;
-            if (featureToSave.properties.id == AppConstants.NEW_ENTRY_ID)
-            {
-                success = await featureStore.AddItemAsync(featureToSave);
-
-            }
-            else
-            {
-                success = await featureStore.UpdateItemAsync(featureToSave);
-            }
-            if (!success)
-            {
-                await HomePage.Instance.DisplayAlert("Save Error", "Feature not saved.", "OK");
-            }
-            await navigationService.NavigateBack(true);
-
             _isBusy = false;
         }
 
-        /// <summary>
-        /// Creates a feature object based on the view-model data of this feature entry.
-        /// </summary>
-        /// <returns>A feature object formed from input values</returns>
-        private Feature CreateFeatureFromInput()
+        private async Task<bool> TryParseSaveFeature()
         {
+
             Feature feature = new Feature
             {
                 type = "Feature",
                 properties = new Properties()
             };
 
-            // A new entry will have an ID of NEW_ENTRY_ID as assigned from the constructor,
-            // otherwise an ID will already be set for editing entries.
-            feature.properties.id = thisEntryID;
-            feature.properties.author = Preferences.Get("UserID", "Groundsman");
+
 
             // Feature type (Point, Line, Polygon).
             feature.geometry = new Geometry
@@ -354,6 +323,137 @@ namespace Groundsman.ViewModels
                 type = thisEntryType
             };
 
+            feature.properties.xamarincoordinates = new List<Point>();
+
+            // Specific requirements and coordinate parsing
+            try
+            {
+                switch (feature.geometry.type)
+                {
+                    case FeatureType.Point:
+                        if (GeolocationValues.Count != 1)
+                        {
+                            await HomePage.Instance.DisplayAlert("Unsupported Entry", "A point must only contain 1 data point.", "OK");
+                            return false;
+                        }
+
+                        feature.properties.typeIconPath = "point_icon.png";
+
+                        feature.geometry.coordinates = new List<object>() {
+                        Convert.ToDouble(GeolocationValues[0].Longitude),
+                        Convert.ToDouble(GeolocationValues[0].Latitude),
+                        Convert.ToDouble(GeolocationValues[0].Altitude)
+                        };
+
+                        feature.properties.xamarincoordinates.Add(new Point(Convert.ToDouble(GeolocationValues[0].Latitude), Convert.ToDouble(GeolocationValues[0].Longitude), Convert.ToDouble(GeolocationValues[0].Altitude)));
+                        break;
+                    case FeatureType.LineString:
+                        if (GeolocationValues.Count < 2)
+                        {
+                            await HomePage.Instance.DisplayAlert("Incomplete Entry", "A line must contain at least 2 data points.", "OK");
+                            return false;
+                        }
+
+                        feature.properties.typeIconPath = "line_icon.png";
+
+                        feature.geometry.coordinates = new List<object>(GeolocationValues.Count);
+                        foreach (DisplayPoint pointValue in GeolocationValues)
+                        {
+                            feature.geometry.coordinates.Add(new JArray(new double[3] {
+                            Convert.ToDouble(pointValue.Longitude),
+                            Convert.ToDouble(pointValue.Latitude),
+                            Convert.ToDouble(pointValue.Altitude)
+                            }));
+
+                            feature.properties.xamarincoordinates.Add(new Point(Convert.ToDouble(pointValue.Latitude), Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Altitude)));
+                        }
+                        break;
+                    case FeatureType.Polygon:
+                        if (GeolocationValues.Count < 3)
+                        {
+                            await HomePage.Instance.DisplayAlert("Incomplete Entry", "A polygon must contain at least 4 data points.", "OK");
+                            return false;
+                        }
+
+                        
+                        feature.properties.typeIconPath = "area_icon.png";
+
+                        // This specific method of structuring points means that users will not
+                        // be able to create multiple shapes in one polygon (whereas true GEOJSON allows that).
+                        // This doesn't matter since our app interface can't allow for it anyway.
+                        feature.geometry.coordinates = new List<object>(GeolocationValues.Count);
+                        List<object> innerPoints = new List<object>(GeolocationValues.Count);
+
+                        List<DisplayPoint> ClosedPoly = new List<DisplayPoint>(GeolocationValues);
+                        ClosedPoly.Add(new DisplayPoint(GeolocationValues.Count + 1, GeolocationValues[0].Latitude, GeolocationValues[0].Longitude, GeolocationValues[0].Altitude));
+
+
+                        foreach (DisplayPoint pointValue in ClosedPoly)
+                        {
+                            innerPoints.Add(new JArray(new double[3] {
+                            Convert.ToDouble(pointValue.Longitude),
+                            Convert.ToDouble(pointValue.Latitude),
+                            Convert.ToDouble(pointValue.Altitude)
+                            }));
+
+                            feature.properties.xamarincoordinates.Add(new Point(Convert.ToDouble(pointValue.Latitude), Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Altitude)));
+
+                        }
+                        feature.geometry.coordinates.Add(innerPoints);
+                        
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                await HomePage.Instance.DisplayAlert("Data Error", "Coordinate fields only support numeric values.", "Ok");
+
+                //undo close poly
+                if (feature.geometry.type == FeatureType.Polygon)
+                {
+                    GeolocationValues.RemoveAt(GeolocationValues.Count - 1);
+                }
+                return false;
+            }
+
+
+
+            //Metadata
+            feature.properties.metadataStringValue = MetadataStringEntry;
+            try
+            {
+                if (MetadataIntegerEntry != null)
+                {
+                    feature.properties.metadataIntegerValue = Convert.ToInt32(MetadataIntegerEntry);
+
+                }
+                else
+                {
+                    feature.properties.metadataIntegerValue = null;
+                }
+                if (MetadataFloatEntry != null)
+                {
+                    feature.properties.metadataFloatValue = Convert.ToSingle(MetadataFloatEntry);
+                }
+                else
+                {
+                    feature.properties.metadataFloatValue = null;
+                }
+            }
+            catch
+            {
+                await HomePage.Instance.DisplayAlert("Data Error", "Integer and float fields only support numeric values.", "Ok");
+                return false;
+            }
+
+
+
+
+
+            // A new entry will have an ID of NEW_ENTRY_ID as assigned from the constructor,
+            // otherwise an ID will already be set for editing entries.
+            feature.properties.id = thisEntryID;
+            feature.properties.author = Preferences.Get("UserID", "Groundsman");
             // Name and date of the feature.
             if (string.IsNullOrEmpty(NameEntry))
             {
@@ -365,136 +465,17 @@ namespace Groundsman.ViewModels
             }
             feature.properties.date = DateTime.Parse(DateEntry).ToShortDateString();
 
-            // Metadata fields.
-            feature.properties.metadataStringValue = MetadataStringEntry;
-            feature.properties.metadataIntegerValue = MetadataIntegerEntry;
-            feature.properties.metadataFloatValue = Convert.ToSingle(MetadataFloatEntry);
 
-            feature.properties.xamarincoordinates = new List<Point>();
-
-            foreach (DisplayPoint pointValue in GeolocationValues)
+            bool success = false;
+            if (feature.properties.id == AppConstants.NEW_ENTRY_ID)
             {
-                Point convertedPoint = new Point(Convert.ToDouble(pointValue.Latitude), Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Altitude));
-                feature.properties.xamarincoordinates.Add(convertedPoint);
+                success = await featureStore.AddItemAsync(feature);
             }
-
-            switch (feature.geometry.type)
+            else
             {
-                case "Point":
-                    feature.properties.typeIconPath = "point_icon.png";
-                    break;
-                case "LineString":
-                    feature.properties.typeIconPath = "line_icon.png";
-                    break;
-                case "Polygon":
-                    feature.properties.typeIconPath = "area_icon.png";
-                    break;
-                default:
-                    break;
+                success = await featureStore.UpdateItemAsync(feature);
             }
-            // Converts our xamarin coordinate data back into a valid geojson structure.
-            {
-                switch (thisEntryType)
-                {
-                    case "Point":
-                        feature.geometry.coordinates = new List<object>() {
-                        Convert.ToDouble(GeolocationValues[0].Longitude),
-                        Convert.ToDouble(GeolocationValues[0].Latitude),
-                        Convert.ToDouble(GeolocationValues[0].Altitude)
-                        };
-                        break;
-                    case "LineString":
-                        feature.geometry.coordinates = new List<object>(GeolocationValues.Count);
-                        for (int i = 0; i < GeolocationValues.Count; i++)
-                        {
-                            feature.geometry.coordinates.Add(new JArray(new double[3] {
-                            Convert.ToDouble(GeolocationValues[i].Longitude),
-                            Convert.ToDouble(GeolocationValues[i].Latitude),
-                            Convert.ToDouble(GeolocationValues[i].Altitude)
-                            }));
-                        }
-
-                        break;
-                    case "Polygon":
-                        // This specific method of structuring points means that users will not
-                        // be able to create multiple shapes in one polygon (whereas true GEOJSON allows that).
-                        // This doesn't matter since our app interface can't allow for it anyway.
-                        feature.geometry.coordinates = new List<object>(GeolocationValues.Count);
-                        List<object> innerPoints = new List<object>(GeolocationValues.Count);
-                        for (int i = 0; i < GeolocationValues.Count; i++)
-                        {
-                            innerPoints.Add(new JArray(new double[3] {
-                            Convert.ToDouble(GeolocationValues[i].Longitude),
-                            Convert.ToDouble(GeolocationValues[i].Latitude),
-                            Convert.ToDouble(GeolocationValues[i].Altitude)
-                            }));
-                        }
-                        feature.geometry.coordinates.Add(innerPoints);
-                        break;
-                }
-            }
-            return feature;
-        }
-
-        /// <summary>
-        /// Performs validation checks on the data in the form.
-        /// </summary>
-        /// <returns>True if the form contains valid data.</returns>
-        private async Task<bool> FeatureEntryIsValid()
-        {
-            /// Begin validation checks.
-            switch (thisEntryType)
-            {
-                case "Polygon":
-                    if (GeolocationValues.Count < 4)
-                    {
-                        await HomePage.Instance.DisplayAlert("Incomplete Entry", "A polygon must contain at least 4 data points.", "OK");
-                        return false;
-                    }
-
-                    // Check if first and last points of the polygon have the same lat/long values.
-                    {
-                        string firstLatitude = GeolocationValues[0].Latitude;
-                        string lastLatitude = GeolocationValues[GeolocationValues.Count - 1].Latitude;
-                        string firstLongitude = GeolocationValues[0].Longitude;
-                        string lastLongitude = GeolocationValues[GeolocationValues.Count - 1].Longitude;
-
-                        if (firstLatitude != lastLatitude || firstLongitude != lastLongitude)
-                        {
-                            await HomePage.Instance.DisplayAlert("Incomplete Entry", "The first and last points of a polygon must match.", "OK");
-                            return false;
-                        }
-                    }
-
-                    break;
-                case "LineString":
-                    if (GeolocationValues.Count < 2)
-                    {
-                        await HomePage.Instance.DisplayAlert("Incomplete Entry", "A line must contain at least 2 data points.", "OK");
-                        return false;
-                    }
-
-                    break;
-                case "Point":
-                    if (GeolocationValues.Count != 1)
-                    {
-                        await HomePage.Instance.DisplayAlert("Unsupported Entry", "A point must only contain 1 data point.", "OK");
-                        return false;
-                    }
-                    break;
-            }
-
-            return true;
-        }
-
-        private void ClosePoly()
-        {
-            string latFist = GeolocationValues[0].Latitude;
-            string lonFist = GeolocationValues[0].Longitude;
-            string altFist = GeolocationValues[0].Altitude;
-            GeolocationValues.Add(new DisplayPoint(GeolocationValues.Count + 1, latFist, lonFist, altFist));
-            NumPointFields++;
-
+            return success;
         }
 
     }

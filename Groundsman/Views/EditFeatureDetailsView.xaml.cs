@@ -9,20 +9,10 @@ namespace Groundsman
         /// Detail form constructor for when a new entry is being added.
         /// </summary>
         /// <param name="type">The geoJSON geometry type being added.</param>
-        public EditFeatureDetailsView(string type)
+        public EditFeatureDetailsView(FeatureType type)
         {
             InitializeComponent();
             BindingContext = new FeatureDetailsViewModel(type);
-
-            // Set title to just 'Line' instead of 'LineString'
-            if (type == "LineString")
-            {
-                Title = $"New Line";
-            }
-            else
-            {
-                Title = $"New {type}";
-            }
         }
 
         /// <summary>
@@ -33,9 +23,6 @@ namespace Groundsman
         {
             InitializeComponent();
             BindingContext = new FeatureDetailsViewModel(data);
-
-            Title = data.properties.name;
-
         }
     }
 }
