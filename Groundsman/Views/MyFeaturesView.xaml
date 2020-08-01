@@ -30,9 +30,26 @@
                     <StackLayout Padding="10,4,10,4" Orientation="Horizontal">
                         <Image HeightRequest="36"
                                HorizontalOptions="Center"
-                               Source="{Binding properties.typeIconPath}"
                                VerticalOptions="Center"
-                               WidthRequest="36" />
+                               WidthRequest="36">
+                            <Image.Triggers>
+                                <DataTrigger Binding="{Binding geometry.type}"
+                                             TargetType="Image"
+                                             Value="Point">
+                                    <Setter Property="Source" Value="point_icon.png" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding geometry.type}"
+                                             TargetType="Image"
+                                             Value="LineString">
+                                    <Setter Property="Source" Value="line_icon.png" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding geometry.type}"
+                                             TargetType="Image"
+                                             Value="Polygon">
+                                    <Setter Property="Source" Value="area_icon.png" />
+                                </DataTrigger>
+                            </Image.Triggers>
+                        </Image>
                         <StackLayout Orientation="Vertical">
                             <Label Style="{StaticResource ListLabelStyle}" Text="{Binding properties.name}" />
                             <Label FontSize="Small"

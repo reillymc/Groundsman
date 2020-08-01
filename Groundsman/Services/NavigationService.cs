@@ -19,14 +19,14 @@ namespace Groundsman.Services
         {
             var currentPage = GetCurrentPage();
 
-            await currentPage.Navigation.PushAsync(new EditFeatureDetailsView(feature));
+            await currentPage.Navigation.PushModalAsync(new EditFeatureDetailsView(feature));
         }
 
-        public async Task NavigateToNewEditPage(string type)
+        public async Task NavigateToNewEditPage(FeatureType type)
         {
             var currentPage = GetCurrentPage();
 
-            await currentPage.Navigation.PushAsync(new EditFeatureDetailsView(type));
+            await currentPage.Navigation.PushModalAsync(new EditFeatureDetailsView(type));
         }
 
         public async Task PushAddFeaturePage()

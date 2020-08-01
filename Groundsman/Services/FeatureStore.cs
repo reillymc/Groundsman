@@ -164,13 +164,11 @@ namespace Groundsman.Services
                 // Determine if feature is supported and if so convert its points and add appropriate icon
                 switch (feature.geometry.type)
                 {
-                    case "Point":
-                        feature.properties.typeIconPath = "point_icon.png";
+                    case FeatureType.Point:
                         trueCoords = feature.geometry.coordinates.ToArray();
                         feature.properties.xamarincoordinates.Add(JsonCoordToXamarinPoint(trueCoords));
                         break;
-                    case "LineString":
-                        feature.properties.typeIconPath = "line_icon.png";
+                    case FeatureType.LineString:
                         // Iterates the root coordinates (List<object>),
                         // then casts each element in the list to a Jarray which contain the actual coordinates.
                         for (int i = 0; i < feature.geometry.coordinates.Count; i++)
@@ -179,8 +177,7 @@ namespace Groundsman.Services
                             feature.properties.xamarincoordinates.Add(JsonCoordToXamarinPoint(trueCoords));
                         }
                         break;
-                    case "Polygon":
-                        feature.properties.typeIconPath = "area_icon.png";
+                    case FeatureType.Polygon:
                         // Iterates the root coordinates (List<object>), and casts each element in the list to a Jarray, 
                         // then casts each Jarray's element to another Jarray which contain the actual coordinates.
                         for (int i = 0; i < feature.geometry.coordinates.Count; i++)

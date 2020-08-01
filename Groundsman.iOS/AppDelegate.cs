@@ -68,15 +68,15 @@ namespace Groundsman.iOS
             switch (shortcutItem.Type)
             {
                 case ShortcutIdentifier.First:
-                    navigationService.NavigateToNewEditPage("Point");
+                    navigationService.NavigateToNewEditPage(FeatureType.Point);
                     handled = true;
                     break;
                 case ShortcutIdentifier.Second:
-                    navigationService.NavigateToNewEditPage("LineString");
+                    navigationService.NavigateToNewEditPage(FeatureType.LineString);
                     handled = true;
                     break;
                 case ShortcutIdentifier.Third:
-                    navigationService.NavigateToNewEditPage("Polygon");
+                    navigationService.NavigateToNewEditPage(FeatureType.Polygon);
                     handled = true;
                     break;
             }
