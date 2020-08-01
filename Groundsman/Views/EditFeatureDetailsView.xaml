@@ -197,7 +197,7 @@
 
                         <Grid Padding="10,0,0,0"
                               ColumnDefinitions=".7*,5*,5*,3*,1.3*"
-                              IsVisible="{Binding ShowCloseLine}"
+                              IsVisible="{Binding ShowClosePolygon}"
                               RowDefinitions="*,*"
                               Style="{StaticResource DetailFormPanelGrid}">
                             <Label Grid.Row="0"
@@ -255,7 +255,8 @@
                                CornerRadius="8"
                                HasShadow="False"
                                HeightRequest="20"
-                               HorizontalOptions="CenterAndExpand" IsVisible="{Binding ShowAddButton}">
+                               HorizontalOptions="CenterAndExpand"
+                               IsVisible="{Binding ShowAddButton}">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding AddPointCommand}" CommandParameter="File" />
                             </Frame.GestureRecognizers>

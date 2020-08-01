@@ -19,197 +19,115 @@ namespace Groundsman.ViewModels
         public ICommand GetFeatureCommand { get; set; }
         public ICommand AddPointCommand { get; set; }
         public ICommand DeletePointCommand { get; set; }
-        public ICommand AddMetadataFieldCommand { get; set; }
-        public ICommand DeleteMetadataFieldCommand { get; set; }
         public ICommand OnSaveUpdatedCommand { get; set; }
         public ICommand OnDismissCommand { get; set; }
         public ICommand ShareEntryCommand { get; set; }
-        public ICommand ClosePolyCommand { get; set; }
 
-        // Property binding to determine if the delete button for metadata fields is visible, which is based on the type of this entry.
-        public bool ShowPointDeleteBtn { get { return _numPointFields > minPoints; } }
-        private int minPoints;
-
-        private Feature thisFeature = new Feature();
-        // A reference to this entry's ID.
-        private string thisEntryID;
-
-        // A reference to this entry's type of structure.
-        private FeatureType thisEntryType;
-
-        private bool _isBusy;
-
+        private Feature feature = new Feature { };
         public ObservableCollection<DisplayPoint> GeolocationValues { get; set; }
 
-        private string _dateEntry;
-        public string DateEntry
-        {
-            get { return _dateEntry; }
-            set
-            {
-                _dateEntry = value;
-                OnPropertyChanged();
-            }
-        }
+        public string DateEntry { get; set; }
+        public string NameEntry { get; set; }
+        public string MetadataStringEntry { get; set; }
+        public string MetadataIntegerEntry { get; set; }
+        public string MetadataFloatEntry { get; set; }
 
-        private string _nameEntry;
-        public string NameEntry
-        {
-            get { return _nameEntry; }
-            set
-            {
-                _nameEntry = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool _loadingIconActive;
-        public bool LoadingIconActive
-        {
-            get { return _loadingIconActive; }
-            set
-            {
-                _loadingIconActive = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool _geolocationEntryEnabled;
-        public bool GeolocationEntryEnabled
-        {
-            get { return _geolocationEntryEnabled; }
-            set
-            {
-                _geolocationEntryEnabled = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private int _numPointFields;
+        public bool LoadingIconActive { get; set; }
+        public bool GeolocationEntryEnabled { get; set; }
+        public bool ShowAddButton { get; set; }
+        public bool ShowClosePolygon { get; set; }
+        private int _NumPointFields;
         public int NumPointFields
         {
-            get { return _numPointFields + 1; }
+            get { return _NumPointFields; }
             set
             {
-                _numPointFields = value;
-                OnPropertyChanged();
-                OnPropertyChanged("ShowPointDeleteBtn");
-            }
-        }
-
-        private string _metadataStringEntry;
-        public string MetadataStringEntry
-        {
-            get { return _metadataStringEntry; }
-            set
-            {
-                _metadataStringEntry = value;
+                _NumPointFields = value;
                 OnPropertyChanged();
             }
         }
 
-        private string _metadataIntegerEntry;
-        public string MetadataIntegerEntry
-        {
-            get { return _metadataIntegerEntry; }
-            set
-            {
-                _metadataIntegerEntry = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _metadataFloatEntry;
-        public string MetadataFloatEntry
-        {
-            get { return _metadataFloatEntry; }
-            set
-            {
-                _metadataFloatEntry = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _typeIconPath;
-        public bool ShowAddButton { get; set; }
-        public bool ShowCloseLine { get; set; }
         /// <summary>
         /// View-model constructor for adding new entries.
         /// </summary>
         public FeatureDetailsViewModel(FeatureType featureType)
         {
-            switch (featureType)
+            feature.type = "Feature";
+            feature.properties = new Properties
             {
-                case FeatureType.Point:
-                    Title = "New Point";
-                    break;
-                case FeatureType.LineString:
-                    ShowAddButton = true;
-                    Title = "New Line";
-                    break;
-                case FeatureType.Polygon:
-                    Title = "New Polygon";
-                    ShowAddButton = true;
-                    ShowCloseLine = true;
-                    break;
-            }
+                xamarincoordinates = new List<Point>(),
+                id = AppConstants.NEW_ENTRY_ID
+            };
+            feature.geometry = new Geometry
+            {
+                type = featureType
+            };
 
-            thisEntryID = AppConstants.NEW_ENTRY_ID;
-            thisEntryType = featureType;
             DateEntry = DateTime.Now.ToShortDateString();
-
             GeolocationValues = new ObservableCollection<DisplayPoint>();
-            AddPoint();
-
-
-
             GeolocationEntryEnabled = true;
             LoadingIconActive = false;
 
             InitCommandBindings();
+
+            switch (featureType)
+            {
+                case FeatureType.Point:
+                    Title = "New Point";
+                    AddPoint(1);
+                    break;
+                case FeatureType.LineString:
+                    Title = "New Line";
+                    ShowAddButton = true;
+                    AddPoint(2);
+                    break;
+                case FeatureType.Polygon:
+                    Title = "New Polygon";
+                    ShowAddButton = true;
+                    ShowClosePolygon = true;
+                    AddPoint(3);
+                    break;
+            }
+            NumPointFields = GeolocationValues.Count + 1;
         }
 
         /// <summary>
         /// View-model constructor for viewing/editing existing entries.
         /// </summary>
-        public FeatureDetailsViewModel(Feature data)
+        public FeatureDetailsViewModel(Feature feature)
         {
-            Title = data.properties.name;
-            switch (data.geometry.type)
+            this.feature = feature;
+            Title = feature.properties.name;
+            switch (feature.geometry.type)
             {
                 case FeatureType.LineString:
                     ShowAddButton = true;
                     break;
                 case FeatureType.Polygon:
                     ShowAddButton = true;
-                    ShowCloseLine = true;
+                    ShowClosePolygon = true;
                     break;
             }
 
-            thisFeature = data;
-            thisEntryType = data.geometry.type;
-            thisEntryID = data.properties.id;
-            NameEntry = data.properties.name;
-            DateEntry = DateTime.Parse(data.properties.date).ToShortDateString();
+            NameEntry = feature.properties.name;
+            DateEntry = DateTime.Parse(feature.properties.date).ToShortDateString();
 
             GeolocationValues = new ObservableCollection<DisplayPoint>();
 
-            for (int i = 0; i < data.properties.xamarincoordinates.Count; i++)
+            for (int i = 0; i < feature.properties.xamarincoordinates.Count; i++)
             {
-                DisplayPoint convertedPoint = new DisplayPoint(i + 1, data.properties.xamarincoordinates[i].Latitude.ToString(), data.properties.xamarincoordinates[i].Longitude.ToString(), data.properties.xamarincoordinates[i].Altitude.ToString());
+                DisplayPoint convertedPoint = new DisplayPoint(i + 1, feature.properties.xamarincoordinates[i].Latitude.ToString(), feature.properties.xamarincoordinates[i].Longitude.ToString(), feature.properties.xamarincoordinates[i].Altitude.ToString());
                 GeolocationValues.Add(convertedPoint);
             }
 
             GeolocationEntryEnabled = true;
 
-            MetadataStringEntry = data.properties.metadataStringValue;
-            MetadataIntegerEntry = data.properties.metadataIntegerValue.ToString(); ;
-            MetadataFloatEntry = data.properties.metadataFloatValue.ToString();
-
-            _typeIconPath = data.properties.typeIconPath;
+            MetadataStringEntry = feature.properties.metadataStringValue;
+            MetadataIntegerEntry = feature.properties.metadataIntegerValue.ToString(); ;
+            MetadataFloatEntry = feature.properties.metadataFloatValue.ToString();
 
             LoadingIconActive = false;
-            NumPointFields = data.properties.xamarincoordinates.Count;
+            NumPointFields = GeolocationValues.Count + 1;
             InitCommandBindings();
         }
 
@@ -219,21 +137,11 @@ namespace Groundsman.ViewModels
         private void InitCommandBindings()
         {
             GetFeatureCommand = new Command<DisplayPoint>(async (point) => { await GetDataPoint(point); });
-
-            AddPointCommand = new Command(() => AddPoint());
+            AddPointCommand = new Command(() => AddPoint(1));
             DeletePointCommand = new Command<DisplayPoint>((item) => DeletePoint(item));
-
-            ShareEntryCommand = new Command(async () => await featureStore.ExportFeatures(new ObservableCollection<Feature> { thisFeature }));
-
+            ShareEntryCommand = new Command(async () => await featureStore.ExportFeatures(new ObservableCollection<Feature> { feature }));
             OnSaveUpdatedCommand = new Command(async () => await OnSaveUpdateActivated());
-
-            OnDismissCommand = new Command(async () => await OnDismiss());
-
-        }
-
-        private async Task OnDismiss()
-        {
-            await navigationService.NavigateBack(true);
+            OnDismissCommand = new Command(async () => await OnDismiss(true));
         }
 
         /// <summary>
@@ -260,14 +168,16 @@ namespace Groundsman.ViewModels
         /// Adds a new geolocation point to the list for line or polygon data types.
         /// </summary>
         /// <returns></returns>
-        private void AddPoint()
+        private void AddPoint(int count)
         {
-            if (_isBusy) return;
-            _isBusy = true;
-
+            if (IsBusy) return;
+            IsBusy = true;
+            for (int i = 0; i < count; i++)
+            {
             GeolocationValues.Add(new DisplayPoint(GeolocationValues.Count + 1, "0", "0", "0"));
             NumPointFields++;
-            _isBusy = false;
+            }
+            IsBusy = false;
         }
 
         /// <summary>
@@ -276,16 +186,20 @@ namespace Groundsman.ViewModels
         /// <param name="item">Item to delete</param>
         private void DeletePoint(DisplayPoint item)
         {
-            if (_isBusy) return;
-            _isBusy = true;
-
+            if (IsBusy) return;
+            IsBusy = true;
+            if (ShowAddButton == false)
+            {
+                HomePage.Instance.DisplayAlert("Cannot remove point", "A point feature must have one data point", "Ok");
+                return;
+            }
             GeolocationValues.Remove(item);
             for (int i = 0; i < GeolocationValues.Count; i++)
             {
                 GeolocationValues[i].Index = i + 1;
             }
             NumPointFields--;
-            _isBusy = false;
+            IsBusy = false;
         }
 
         /// <summary>
@@ -293,38 +207,19 @@ namespace Groundsman.ViewModels
         /// </summary>
         async Task OnSaveUpdateActivated()
         {
-            if (_isBusy) return;
-            _isBusy = true;
-
+            if (IsBusy) return;
+            IsBusy = true;
             if (await TryParseSaveFeature())
             {
                 await navigationService.NavigateBack(true);
-                _isBusy = false;
+                IsBusy = false;
                 return;
             }
-
-            _isBusy = false;
+            IsBusy = false;
         }
 
         private async Task<bool> TryParseSaveFeature()
         {
-
-            Feature feature = new Feature
-            {
-                type = "Feature",
-                properties = new Properties()
-            };
-
-
-
-            // Feature type (Point, Line, Polygon).
-            feature.geometry = new Geometry
-            {
-                type = thisEntryType
-            };
-
-            feature.properties.xamarincoordinates = new List<Point>();
-
             // Specific requirements and coordinate parsing
             try
             {
@@ -336,15 +231,12 @@ namespace Groundsman.ViewModels
                             await HomePage.Instance.DisplayAlert("Unsupported Entry", "A point must only contain 1 data point.", "OK");
                             return false;
                         }
-
-                        feature.properties.typeIconPath = "point_icon.png";
-
+                        feature.properties.xamarincoordinates.Clear();
                         feature.geometry.coordinates = new List<object>() {
                         Convert.ToDouble(GeolocationValues[0].Longitude),
                         Convert.ToDouble(GeolocationValues[0].Latitude),
                         Convert.ToDouble(GeolocationValues[0].Altitude)
                         };
-
                         feature.properties.xamarincoordinates.Add(new Point(Convert.ToDouble(GeolocationValues[0].Latitude), Convert.ToDouble(GeolocationValues[0].Longitude), Convert.ToDouble(GeolocationValues[0].Altitude)));
                         break;
                     case FeatureType.LineString:
@@ -353,9 +245,7 @@ namespace Groundsman.ViewModels
                             await HomePage.Instance.DisplayAlert("Incomplete Entry", "A line must contain at least 2 data points.", "OK");
                             return false;
                         }
-
-                        feature.properties.typeIconPath = "line_icon.png";
-
+                        feature.properties.xamarincoordinates.Clear();
                         feature.geometry.coordinates = new List<object>(GeolocationValues.Count);
                         foreach (DisplayPoint pointValue in GeolocationValues)
                         {
@@ -374,20 +264,18 @@ namespace Groundsman.ViewModels
                             await HomePage.Instance.DisplayAlert("Incomplete Entry", "A polygon must contain at least 4 data points.", "OK");
                             return false;
                         }
-
                         
-                        feature.properties.typeIconPath = "area_icon.png";
-
-                        // This specific method of structuring points means that users will not
-                        // be able to create multiple shapes in one polygon (whereas true GEOJSON allows that).
+                        // This specific method of structuring points means that users will not be able to create multiple shapes in one polygon (whereas true GEOJSON allows that).
                         // This doesn't matter since our app interface can't allow for it anyway.
                         feature.geometry.coordinates = new List<object>(GeolocationValues.Count);
                         List<object> innerPoints = new List<object>(GeolocationValues.Count);
 
-                        List<DisplayPoint> ClosedPoly = new List<DisplayPoint>(GeolocationValues);
-                        ClosedPoly.Add(new DisplayPoint(GeolocationValues.Count + 1, GeolocationValues[0].Latitude, GeolocationValues[0].Longitude, GeolocationValues[0].Altitude));
+                        List<DisplayPoint> ClosedPoly = new List<DisplayPoint>(GeolocationValues)
+                        {
+                            new DisplayPoint(GeolocationValues.Count + 1, GeolocationValues[0].Latitude, GeolocationValues[0].Longitude, GeolocationValues[0].Altitude)
+                        };
 
-
+                        feature.properties.xamarincoordinates.Clear();
                         foreach (DisplayPoint pointValue in ClosedPoly)
                         {
                             innerPoints.Add(new JArray(new double[3] {
@@ -400,11 +288,10 @@ namespace Groundsman.ViewModels
 
                         }
                         feature.geometry.coordinates.Add(innerPoints);
-                        
                         break;
                 }
             }
-            catch (Exception e)
+            catch
             {
                 await HomePage.Instance.DisplayAlert("Data Error", "Coordinate fields only support numeric values.", "Ok");
 
@@ -416,8 +303,6 @@ namespace Groundsman.ViewModels
                 return false;
             }
 
-
-
             //Metadata
             feature.properties.metadataStringValue = MetadataStringEntry;
             try
@@ -425,7 +310,6 @@ namespace Groundsman.ViewModels
                 if (MetadataIntegerEntry != null)
                 {
                     feature.properties.metadataIntegerValue = Convert.ToInt32(MetadataIntegerEntry);
-
                 }
                 else
                 {
@@ -446,15 +330,7 @@ namespace Groundsman.ViewModels
                 return false;
             }
 
-
-
-
-
-            // A new entry will have an ID of NEW_ENTRY_ID as assigned from the constructor,
-            // otherwise an ID will already be set for editing entries.
-            feature.properties.id = thisEntryID;
             feature.properties.author = Preferences.Get("UserID", "Groundsman");
-            // Name and date of the feature.
             if (string.IsNullOrEmpty(NameEntry))
             {
                 feature.properties.name = "Unnamed " + feature.geometry.type;
@@ -466,7 +342,7 @@ namespace Groundsman.ViewModels
             feature.properties.date = DateTime.Parse(DateEntry).ToShortDateString();
 
 
-            bool success = false;
+            bool success;
             if (feature.properties.id == AppConstants.NEW_ENTRY_ID)
             {
                 success = await featureStore.AddItemAsync(feature);
@@ -477,8 +353,5 @@ namespace Groundsman.ViewModels
             }
             return success;
         }
-
     }
-
-
 }

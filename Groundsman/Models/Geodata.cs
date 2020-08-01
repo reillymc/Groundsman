@@ -13,11 +13,26 @@ namespace Groundsman
         LineString,
         Polygon
     }
+
+    public class GeoJSONObject
+    {
+        public string type { get; set; }
+        public ObservableCollection<Feature> features { get; set; }
+
+    }
+
     public class Feature
     {
         public string type { get; set; }
         public Geometry geometry { get; set; }
         public Properties properties { get; set; }
+    }
+
+    public class Geometry
+    {
+        [JsonConverter(typeof(StringEnumConverter))]
+        public FeatureType type { get; set; }
+        public List<object> coordinates { get; set; }
     }
 
     public class Properties
@@ -35,21 +50,5 @@ namespace Groundsman
         public string id { get; set; }
         [JsonIgnore]
         public List<Point> xamarincoordinates { get; set; }
-        [JsonIgnore]
-        public string typeIconPath { get; set; }
-    }
-
-    public class Geometry
-    {
-        [JsonConverter(typeof(StringEnumConverter))]
-        public FeatureType type { get; set; }
-        public List<object> coordinates { get; set; }
-    }
-
-    public class GeoJSONObject : BindableObject
-    {
-        public string type { get; set; }
-        public ObservableCollection<Feature> features { get; set; }
-
     }
 }

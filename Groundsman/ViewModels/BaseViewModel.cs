@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Groundsman.ViewModels
@@ -53,6 +54,11 @@ namespace Groundsman.ViewModels
             onChanged?.Invoke();
             OnPropertyChanged(propertyName);
             return true;
+        }
+
+        public async Task OnDismiss(bool modal)
+        {
+            await navigationService.NavigateBack(modal);
         }
 
         #region INotifyPropertyChanged
