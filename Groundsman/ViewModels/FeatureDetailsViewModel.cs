@@ -32,10 +32,23 @@ namespace Groundsman.ViewModels
         public string MetadataIntegerEntry { get; set; }
         public string MetadataFloatEntry { get; set; }
 
-        public bool LoadingIconActive { get; set; }
-        public bool GeolocationEntryEnabled { get; set; }
         public bool ShowAddButton { get; set; }
         public bool ShowClosePolygon { get; set; }
+
+        private bool loadingIconActive;
+        public bool LoadingIconActive
+        { 
+            get { return loadingIconActive; } 
+            set { SetProperty(ref loadingIconActive, value); }
+        }
+
+        private bool geolocationEntryEnabled;
+        public bool GeolocationEntryEnabled
+        {
+            get { return geolocationEntryEnabled; }
+            set { SetProperty(ref geolocationEntryEnabled, value); }
+        }
+
         private int _NumPointFields;
         public int NumPointFields
         {
@@ -98,16 +111,7 @@ namespace Groundsman.ViewModels
         {
             this.feature = feature;
             Title = feature.properties.name;
-            switch (feature.geometry.type)
-            {
-                case FeatureType.LineString:
-                    ShowAddButton = true;
-                    break;
-                case FeatureType.Polygon:
-                    ShowAddButton = true;
-                    ShowClosePolygon = true;
-                    break;
-            }
+
 
             NameEntry = feature.properties.name;
             DateEntry = DateTime.Parse(feature.properties.date).ToShortDateString();
@@ -127,8 +131,26 @@ namespace Groundsman.ViewModels
             MetadataFloatEntry = feature.properties.metadataFloatValue.ToString();
 
             LoadingIconActive = false;
-            NumPointFields = GeolocationValues.Count + 1;
+
+
             InitCommandBindings();
+
+
+            switch (feature.geometry.type)
+            {
+                case FeatureType.LineString:
+                    ShowAddButton = true;
+                    break;
+                case FeatureType.Polygon:
+                    ShowAddButton = true;
+                    ShowClosePolygon = true;
+                    if (GeolocationValues[0].Latitude == GeolocationValues[GeolocationValues.Count - 1].Latitude && GeolocationValues[0].Longitude == GeolocationValues[GeolocationValues.Count - 1].Longitude && GeolocationValues[0].Altitude == GeolocationValues[GeolocationValues.Count - 1].Altitude)
+                    {
+                        GeolocationValues.RemoveAt(GeolocationValues.Count - 1);
+                    }
+                    break;
+            }
+            NumPointFields = GeolocationValues.Count + 1;
         }
 
         /// <summary>
@@ -152,6 +174,7 @@ namespace Groundsman.ViewModels
         {
             GeolocationEntryEnabled = false;
             LoadingIconActive = true;
+
             Point location = await HelperServices.GetGeoLocation();
             DisplayPoint convertedPoint = new DisplayPoint(0, location.Latitude.ToString(), location.Longitude.ToString(), location.Altitude.ToString());
             if (location != null)
@@ -174,8 +197,8 @@ namespace Groundsman.ViewModels
             IsBusy = true;
             for (int i = 0; i < count; i++)
             {
-            GeolocationValues.Add(new DisplayPoint(GeolocationValues.Count + 1, "0", "0", "0"));
-            NumPointFields++;
+                GeolocationValues.Add(new DisplayPoint(GeolocationValues.Count + 1, "0", "0", "0"));
+                NumPointFields++;
             }
             IsBusy = false;
         }
@@ -187,12 +210,12 @@ namespace Groundsman.ViewModels
         private void DeletePoint(DisplayPoint item)
         {
             if (IsBusy) return;
-            IsBusy = true;
-            if (ShowAddButton == false)
+            if (GeolocationValues[0] == item)
             {
-                HomePage.Instance.DisplayAlert("Cannot remove point", "A point feature must have one data point", "Ok");
+                HomePage.Instance.DisplayAlert("Cannot Remove Position", "All features must have at least one position", "Ok");
                 return;
             }
+            IsBusy = true;
             GeolocationValues.Remove(item);
             for (int i = 0; i < GeolocationValues.Count; i++)
             {
@@ -264,7 +287,7 @@ namespace Groundsman.ViewModels
                             await HomePage.Instance.DisplayAlert("Incomplete Entry", "A polygon must contain at least 4 data points.", "OK");
                             return false;
                         }
-                        
+
                         // This specific method of structuring points means that users will not be able to create multiple shapes in one polygon (whereas true GEOJSON allows that).
                         // This doesn't matter since our app interface can't allow for it anyway.
                         feature.geometry.coordinates = new List<object>(GeolocationValues.Count);
@@ -307,7 +330,7 @@ namespace Groundsman.ViewModels
             feature.properties.metadataStringValue = MetadataStringEntry;
             try
             {
-                if (MetadataIntegerEntry != null)
+                if (!string.IsNullOrEmpty(MetadataIntegerEntry))
                 {
                     feature.properties.metadataIntegerValue = Convert.ToInt32(MetadataIntegerEntry);
                 }
@@ -315,7 +338,7 @@ namespace Groundsman.ViewModels
                 {
                     feature.properties.metadataIntegerValue = null;
                 }
-                if (MetadataFloatEntry != null)
+                if (!string.IsNullOrEmpty(MetadataFloatEntry))
                 {
                     feature.properties.metadataFloatValue = Convert.ToSingle(MetadataFloatEntry);
                 }

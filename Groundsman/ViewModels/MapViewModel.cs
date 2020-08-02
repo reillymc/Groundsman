@@ -54,7 +54,7 @@ namespace Groundsman.ViewModels
             FeatureList.ForEach((Feature feature) =>
             {
                 var points = feature.properties.xamarincoordinates;
-                if (feature.geometry.type.Equals("Point") && Preferences.Get("ShowPointsOnMap", true))
+                if (feature.geometry.type == FeatureType.Point && Preferences.Get("ShowPointsOnMap", true))
                 {
                     Pin pin = new Pin
                     {
@@ -69,7 +69,7 @@ namespace Groundsman.ViewModels
                     };
                     Map.Pins.Add(pin);
                 }
-                else if (feature.geometry.type.Equals("LineString") && Preferences.Get("ShowLinesOnMap", true))
+                else if (feature.geometry.type == FeatureType.LineString && Preferences.Get("ShowLinesOnMap", true))
                 {
                     Polyline polyline = new Polyline
                     {
@@ -82,7 +82,7 @@ namespace Groundsman.ViewModels
                     });
                     Map.MapElements.Add(polyline);
                 }
-                else if (feature.geometry.type.Equals("Polygon") && Preferences.Get("ShowPolygonsOnMap", true))
+                else if (feature.geometry.type == FeatureType.Polygon && Preferences.Get("ShowPolygonsOnMap", true))
                 {
                     Polygon polygon = new Polygon
                     {
@@ -156,11 +156,11 @@ namespace Groundsman.ViewModels
             {
                 bool ItemHit = false;
                 Point[] points = feature.properties.xamarincoordinates.ToArray();
-                if (feature.geometry.type.Equals("Polygon"))
+                if (feature.geometry.type == FeatureType.Polygon)
                 {
                     ItemHit |= IsPointInPolygon(new Point(e.Position.Latitude, e.Position.Longitude, 0), points);
                 }
-                else if (feature.geometry.type.Equals("LineString"))
+                else if (feature.geometry.type == FeatureType.LineString)
                 {
                     ItemHit |= IsPointOnLine(new Point(e.Position.Latitude, e.Position.Longitude, 0), points);
                 }
