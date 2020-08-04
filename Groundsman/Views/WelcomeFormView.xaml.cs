@@ -1,16 +1,16 @@
 ﻿using Groundsman.ViewModels;
 using Xamarin.Forms;
 
-namespace Groundsman
+namespace Groundsman.Views
 {
     public partial class WelcomeFormView : ContentPage
     {
         WelcomeFormViewModel viewModel;
 
-        public WelcomeFormView(bool modal)
+        public WelcomeFormView()
         {
             InitializeComponent();
-            BindingContext = viewModel = new WelcomeFormViewModel(modal);
+            BindingContext = viewModel = new WelcomeFormViewModel();
 
             NavigationPage.SetHasBackButton(this, false);
         }

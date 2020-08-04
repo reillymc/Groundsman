@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Groundsman {
+namespace Groundsman.Models {
     /// <summary>
     /// Defines the model used by listviews to present geolocational data.
     /// </summary>

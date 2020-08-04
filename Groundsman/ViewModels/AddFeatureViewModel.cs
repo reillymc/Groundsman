@@ -1,4 +1,5 @@
-﻿using Groundsman.Services;
+﻿using Groundsman.Models;
+using Groundsman.Services;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using System;
@@ -12,48 +13,33 @@ namespace Groundsman.ViewModels
     {
         public Command AddFeatureCommand { set; get; }
 
-        private bool modal;
-
-        public AddFeatureViewModel(bool modal)
+        public AddFeatureViewModel()
         {
-            this.modal = modal;
             AddFeatureCommand = new Command<string>(async (id) => await AddFeatureAsync(id));
         }
 
         private async Task AddFeatureAsync(string id)
         {
+            await navigationService.NavigateBack(true);
             switch (id)
             {
                 case "Point":
-                    await navigationService.NavigateBack(modal);
                     await navigationService.NavigateToNewEditPage(FeatureType.Point);
                     break;
-
                 case "LineString":
-                    await navigationService.NavigateBack(modal);
                     await navigationService.NavigateToNewEditPage(FeatureType.LineString);
                     break;
-
                 case "Polygon":
-                    await navigationService.NavigateBack(modal);
                     await navigationService.NavigateToNewEditPage(FeatureType.Polygon);
                     break;
-
                 case "Clipboard":
                     string contents = await Clipboard.GetTextAsync();
                     await featureStore.ImportFeaturesAsync(contents, true);
-                    await navigationService.NavigateBack(modal);
                     break;
-
                 case "File":
                     await ImportFeaturesFromFile();
-                    await navigationService.NavigateBack(modal);
-                    break;
-                default:
-                    await navigationService.NavigateBack(modal);
                     break;
             }
-
         }
 
         public async Task ImportFeaturesFromFile()

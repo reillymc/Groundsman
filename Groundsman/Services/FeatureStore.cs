@@ -1,4 +1,5 @@
 ﻿using Groundsman.Interfaces;
+using Groundsman.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -9,6 +10,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using Point = Groundsman.Models.Point;
 
 namespace Groundsman.Services
 {
@@ -132,17 +134,17 @@ namespace Groundsman.Services
                 {
                     if (failedImport == 0)
                     {
-                        await HomePage.Instance.DisplayAlert("Import Complete", $"Groundsman imported {successfulImport} new features.", "Ok");
+                        await Application.Current.MainPage.DisplayAlert("Import Complete", $"Groundsman imported {successfulImport} new features.", "Ok");
                     }
                     else
                     {
-                        await HomePage.Instance.DisplayAlert("Import Complete", $"Groundsman imported {successfulImport} new features. {failedImport} features failed to import", "Ok");
+                        await Application.Current.MainPage.DisplayAlert("Import Complete", $"Groundsman imported {successfulImport} new features. {failedImport} features failed to import", "Ok");
                     }
                 }
             }
             catch (Exception ex)
             {
-                await HomePage.Instance.DisplayAlert("Import Error", $"Groundsman can only import valid GeoJSON. Error: {ex.Message}", "Ok");
+                await Application.Current.MainPage.DisplayAlert("Import Error", $"Groundsman can only import valid GeoJSON. Error: {ex.Message}", "Ok");
             }
             return successfulImport;
         }

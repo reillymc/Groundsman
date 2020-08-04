@@ -1,8 +1,9 @@
-﻿using Groundsman.ViewModels;
+﻿using Groundsman.Models;
+using Groundsman.ViewModels;
 using System;
 using Xamarin.Forms;
 
-namespace Groundsman
+namespace Groundsman.Views
 {
     public partial class FeatureDetailsView : ContentPage
     {

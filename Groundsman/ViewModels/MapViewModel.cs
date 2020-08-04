@@ -1,4 +1,5 @@
-﻿using Groundsman.Services;
+﻿using Groundsman.Models;
+using Groundsman.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +9,7 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Maps;
+using Point = Groundsman.Models.Point;
 
 namespace Groundsman.ViewModels
 {

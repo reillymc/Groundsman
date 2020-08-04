@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="Groundsman.ProfileSettingsView"
+<ContentPage x:Class="Groundsman.Views.ProfileSettingsView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
-             xmlns:local="clr-namespace:Groundsman"
              Title="Settings">
     <ContentPage.Content>
         <TableView BackgroundColor="{DynamicResource bgPrimary}" Intent="Settings">

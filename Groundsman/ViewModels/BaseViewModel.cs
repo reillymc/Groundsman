@@ -1,4 +1,5 @@
 ﻿using Groundsman.Interfaces;
+using Groundsman.Models;
 using Groundsman.Services;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,8 @@ namespace Groundsman.ViewModels
     public class BaseViewModel : INotifyPropertyChanged
     {
         public IDataStore<Feature> featureStore => DependencyService.Get<IDataStore<Feature>>();
-
-
+//Implement INavService as dependency
         public NavigationService navigationService = new NavigationService();
-        public DialogService dialogService = new DialogService();
-
         private ObservableRangeCollection<Feature> featureList = new ObservableRangeCollection<Feature>();
         public ObservableRangeCollection<Feature> FeatureList
         {

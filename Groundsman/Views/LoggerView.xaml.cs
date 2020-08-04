@@ -1,7 +1,7 @@
 ﻿using Groundsman.ViewModels;
 using Xamarin.Forms;
 
-namespace Groundsman
+namespace Groundsman.Views
 {
     public partial class LoggerView : ContentPage
     {

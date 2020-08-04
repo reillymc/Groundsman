@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Groundsman.Models;
+using Groundsman.Views;
 using System.Linq;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Groundsman.Services
@@ -32,13 +32,13 @@ namespace Groundsman.Services
         public async Task PushAddFeaturePage()
         {
             var currentPage = GetCurrentPage();
-            await currentPage.Navigation.PushModalAsync(new AddFeatureView(true));
+            await currentPage.Navigation.PushModalAsync(new AddFeatureView());
         }
 
         public async Task PushWelcomePage()
         {
             var currentPage = GetCurrentPage();
-            await currentPage.Navigation.PushModalAsync(new WelcomeFormView(true));
+            await currentPage.Navigation.PushModalAsync(new WelcomeFormView());
         }
 
         public async Task NavigateBack(bool modal)

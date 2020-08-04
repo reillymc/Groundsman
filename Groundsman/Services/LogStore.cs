@@ -1,27 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using Groundsman.Models;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
-namespace Groundsman.Data
+namespace Groundsman.Services
 {
     public class LogStore
     {
-
-        public string GetLogFile()
-        {
-            // Attempt to open the embedded file on the device. 
-            // If it exists return it, else create a new embedded file from a json source file.
-            if (File.Exists(AppConstants.LOG_FILE))
-            {
-                return File.ReadAllText(AppConstants.LOG_FILE);
-            }
-            else
-            {
-                return "";
-            }
-        }
-
         public List<Point> GetLogFileObject()
         {
             // Casts to doubles without error handeling currently

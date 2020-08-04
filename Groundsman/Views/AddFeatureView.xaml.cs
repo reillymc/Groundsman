@@ -6,18 +6,16 @@ using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration;
 using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 
-namespace Groundsman
+namespace Groundsman.Views
 {
     public partial class AddFeatureView : ContentPage
     {
         AddFeatureViewModel viewModel;
-        bool modal;
 
-        public AddFeatureView(bool modal)
+        public AddFeatureView()
         {
             InitializeComponent();
-            BindingContext = viewModel = new AddFeatureViewModel(modal);
-            this.modal = modal;
+            BindingContext = viewModel = new AddFeatureViewModel();
         }
 
         protected override void OnAppearing()
@@ -36,7 +34,7 @@ namespace Groundsman
         async void OnDismissButtonClicked(object sender, EventArgs args)
         {
             NavigationService navigationService = new NavigationService();
-            await navigationService.NavigateBack(modal);
+            await navigationService.NavigateBack(true);
         }
     }
 }

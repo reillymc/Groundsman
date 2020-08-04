@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<TabbedPage x:Class="Groundsman.HomePage"
+<TabbedPage x:Class="Groundsman.Views.HomePage"
             xmlns="http://xamarin.com/schemas/2014/forms"
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
-            xmlns:local="clr-namespace:Groundsman;assembly=Groundsman"
+            xmlns:views="clr-namespace:Groundsman.Views;assembly=Groundsman"
             android:TabbedPage.ToolbarPlacement="Bottom"
             ClassId="TabbedHomePage"
             NavigationPage.BackButtonTitle="My Features"
@@ -16,7 +16,7 @@
                         BackgroundColor="{DynamicResource bgPrimary}"
                         Icon="data_icon">
             <x:Arguments>
-                <local:MyFeaturesView />
+                <views:MyFeaturesView />
             </x:Arguments>
         </NavigationPage>
 
@@ -24,7 +24,7 @@
                         BackgroundColor="{DynamicResource bgPrimary}"
                         Icon="log_icon">
             <x:Arguments>
-                <local:LoggerView />
+                <views:LoggerView />
             </x:Arguments>
         </NavigationPage>
 
@@ -32,7 +32,7 @@
                         BackgroundColor="{DynamicResource bgPrimary}"
                         Icon="map_icon">
             <x:Arguments>
-                <local:MapView />
+                <views:MapView />
             </x:Arguments>
         </NavigationPage>
 
@@ -40,7 +40,7 @@
                         BackgroundColor="{DynamicResource bgPrimary}"
                         Icon="settings_icon">
             <x:Arguments>
-                <local:ProfileSettingsView />
+                <views:ProfileSettingsView />
             </x:Arguments>
         </NavigationPage>
 

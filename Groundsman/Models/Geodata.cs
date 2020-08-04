@@ -2,10 +2,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Xamarin.Forms;
 
-//Geodata.cs defines the models for geoJSON data to serialize into and from.
-namespace Groundsman
+namespace Groundsman.Models
 {
     public enum FeatureType
     {

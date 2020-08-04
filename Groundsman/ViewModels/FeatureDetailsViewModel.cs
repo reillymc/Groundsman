@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using Point = Groundsman.Models.Point;
 
 namespace Groundsman.ViewModels
 {

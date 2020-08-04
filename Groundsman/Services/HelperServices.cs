@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
+using Xamarin.Forms;
+using Point = Groundsman.Models.Point;
 
 namespace Groundsman.Services
 {
@@ -37,14 +39,15 @@ namespace Groundsman.Services
                         point = new Point(Math.Round(location.Latitude, decimalAccuracy), Math.Round(location.Longitude, decimalAccuracy), Math.Round(location.Altitude ?? 0.0, decimalAccuracy));
                         return point;
                     }
-                } else
+                }
+                else
                 {
                     throw new PermissionException("Permission not granted.");
                 }
             }
             catch (Exception)
             {
-                await HomePage.Instance.DisplayAlert("Geolocation Error", "Location permissions for Groundsman must be enabled to fetch location", "Ok");
+                await Application.Current.MainPage.DisplayAlert("Geolocation Error", "Location permissions for Groundsman must be enabled to fetch location", "Ok");
                 throw new Exception();
             }
             return null;

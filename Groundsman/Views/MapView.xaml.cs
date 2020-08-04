@@ -1,12 +1,10 @@
-﻿using Xamarin.Forms;
-using System.Threading;
-using Groundsman.ViewModels;
+﻿using Groundsman.ViewModels;
+using Xamarin.Forms;
 
-namespace Groundsman
+namespace Groundsman.Views
 {
     public partial class MapView : ContentPage
     {
-        private CancellationTokenSource cts;
         MapViewModel viewModel;
         public MapView()
         {

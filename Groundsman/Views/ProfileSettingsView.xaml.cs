@@ -3,7 +3,7 @@ using System;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-namespace Groundsman
+namespace Groundsman.Views
 {
     public partial class ProfileSettingsView : ContentPage
     {

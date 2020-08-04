@@ -1,7 +1,8 @@
 using Xamarin.Forms;
 using Groundsman.ViewModels;
+using Groundsman.Models;
 
-namespace Groundsman
+namespace Groundsman.Views
 {
     public partial class EditFeatureDetailsView : ContentPage
     {

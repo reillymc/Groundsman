@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using Groundsman.Services;
+using Point = Groundsman.Models.Point;
 
 namespace Groundsman.ViewModels
 {
