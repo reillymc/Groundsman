@@ -76,6 +76,7 @@ namespace Groundsman.Services
                     return true;
                 }
             }
+            var save = SaveFeaturesToFile(features, AppConstants.FEATURES_FILE);
             //notify cant find feature (or insert as new feature)
             return false;
         }

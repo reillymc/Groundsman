@@ -2,6 +2,7 @@
 <ContentPage x:Class="Groundsman.EditFeatureDetailsView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              x:Name="EditFeatureDetailsViewPage"
              ios:Page.ModalPresentationStyle="FormSheet">
@@ -20,7 +21,11 @@
                                FontSize="Small"
                                Placeholder="Name"
                                Style="{StaticResource EntryStyle}"
-                               Text="{Binding NameEntry}" />
+                               Text="{Binding NameEntry}">
+                            <Entry.Behaviors>
+                                <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
+                            </Entry.Behaviors>
+                        </Entry>
                         <BoxView BackgroundColor="WhiteSmoke"
                                  HeightRequest="1"
                                  VerticalOptions="End" />
@@ -138,7 +143,7 @@
                               RowSpacing="0">
                             <Label Grid.Row="1"
                                    Grid.Column="0"
-                                   FontSize="Micro"
+                                   FontSize="Small"
                                    HorizontalOptions="Center"
                                    Style="{StaticResource ViewLabelStyle}"
                                    Text="{Binding Index}"
@@ -149,11 +154,15 @@
                                    CornerRadius="5"
                                    HasShadow="False"
                                    HorizontalOptions="FillAndExpand">
-                                <Entry FontSize="Micro"
+                                <Entry FontSize="Small"
                                        Keyboard="Numeric"
                                        Placeholder="0"
                                        Style="{StaticResource EntryStyle}"
-                                       Text="{Binding Latitude}" />
+                                       Text="{Binding Latitude}">
+                                    <Entry.Behaviors>
+                                        <behaviors:EntryLengthValidatorBehavior MaxLength="12" />
+                                    </Entry.Behaviors>
+                                </Entry>
                             </Frame>
                             <Frame Grid.Row="1"
                                    Grid.Column="2"
@@ -162,11 +171,15 @@
                                    HasShadow="False"
                                    HorizontalOptions="FillAndExpand">
                                 <Entry AutomationId="AltitudeEntry"
-                                       FontSize="Micro"
+                                       FontSize="Small"
                                        Keyboard="Numeric"
                                        Placeholder="0"
                                        Style="{StaticResource EntryStyle}"
-                                       Text="{Binding Longitude}" />
+                                       Text="{Binding Longitude}">
+                                    <Entry.Behaviors>
+                                        <behaviors:EntryLengthValidatorBehavior MaxLength="12" />
+                                    </Entry.Behaviors>
+                                </Entry>
                             </Frame>
                             <Frame Grid.Row="1"
                                    Grid.Column="3"
@@ -175,11 +188,15 @@
                                    HasShadow="False"
                                    HorizontalOptions="FillAndExpand">
                                 <Entry AutomationId="AltitudeEntry"
-                                       FontSize="Micro"
+                                       FontSize="Small"
                                        Keyboard="Numeric"
                                        Placeholder="0"
                                        Style="{StaticResource EntryStyle}"
-                                       Text="{Binding Altitude}" />
+                                       Text="{Binding Altitude}">
+                                    <Entry.Behaviors>
+                                        <behaviors:EntryLengthValidatorBehavior MaxLength="12" />
+                                    </Entry.Behaviors>
+                                </Entry>
                             </Frame>
                             <ActivityIndicator Grid.Row="1"
                                                Grid.Column="4"
@@ -237,7 +254,7 @@
                                   RowSpacing="0">
                                 <Label Grid.Row="0"
                                        Grid.Column="0"
-                                       FontSize="Micro"
+                                       FontSize="Small"
                                        Style="{StaticResource ViewLabelStyle}"
                                        Text="{Binding NumPointFields}"
                                        VerticalOptions="Center" />
@@ -249,7 +266,7 @@
                                        HasShadow="False"
                                        HorizontalOptions="FillAndExpand">
                                     <Entry AutomationId="AltitudeEntry"
-                                           FontSize="Micro"
+                                           FontSize="Small"
                                            IsEnabled="False"
                                            Style="{StaticResource EntryStyle}"
                                            Text="{Binding GeolocationValues[0].Latitude}" />
@@ -262,7 +279,7 @@
                                        HasShadow="False"
                                        HorizontalOptions="FillAndExpand">
                                     <Entry AutomationId="AltitudeEntry"
-                                           FontSize="Micro"
+                                           FontSize="Small"
                                            IsEnabled="False"
                                            Style="{StaticResource EntryStyle}"
                                            Text="{Binding GeolocationValues[0].Longitude}" />
@@ -276,7 +293,7 @@
                                        HorizontalOptions="FillAndExpand"
                                        VerticalOptions="Center">
                                     <Entry AutomationId="AltitudeEntry"
-                                           FontSize="Micro"
+                                           FontSize="Small"
                                            IsEnabled="False"
                                            Style="{StaticResource EntryStyle}"
                                            Text="{Binding GeolocationValues[0].Altitude}" />
@@ -319,7 +336,11 @@
                                    FontSize="Small"
                                    Placeholder="String"
                                    Style="{StaticResource EntryStyle}"
-                                   Text="{Binding MetadataStringEntry}" />
+                                   Text="{Binding MetadataStringEntry}">
+                                <Entry.Behaviors>
+                                    <behaviors:EntryLengthValidatorBehavior MaxLength="100" />
+                                </Entry.Behaviors>
+                            </Entry>
                             <BoxView BackgroundColor="WhiteSmoke"
                                      HeightRequest="1"
                                      VerticalOptions="End" />
@@ -327,7 +348,11 @@
                                    FontSize="Small"
                                    Placeholder="Integer"
                                    Style="{StaticResource EntryStyle}"
-                                   Text="{Binding MetadataIntegerEntry}" />
+                                   Text="{Binding MetadataIntegerEntry}">
+                                <Entry.Behaviors>
+                                    <behaviors:EntryLengthValidatorBehavior MaxLength="8" />
+                                </Entry.Behaviors>
+                            </Entry>
                             <BoxView BackgroundColor="WhiteSmoke"
                                      HeightRequest="1"
                                      VerticalOptions="End" />
@@ -335,7 +360,11 @@
                                    FontSize="Small"
                                    Placeholder="Float"
                                    Style="{StaticResource EntryStyle}"
-                                   Text="{Binding MetadataFloatEntry}" />
+                                   Text="{Binding MetadataFloatEntry}">
+                                <Entry.Behaviors>
+                                    <behaviors:EntryLengthValidatorBehavior MaxLength="12" />
+                                </Entry.Behaviors>
+                            </Entry>
                         </StackLayout>
 
                     </StackLayout>
@@ -350,7 +379,7 @@
                 <Grid Margin="15,7,15,0" BackgroundColor="{DynamicResource bg}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="4*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Button x:Name="cancelButton"
@@ -359,7 +388,8 @@
                             Command="{Binding OnDismissCommand}"
                             FontSize="16"
                             HorizontalOptions="Start"
-                            Text="Cancel">
+                            Text="Cancel"
+                            VerticalOptions="Center">
                         <Button.TextColor>
                             <OnPlatform x:TypeArguments="Color"
                                         Android="{StaticResource textSecondary}"
@@ -374,6 +404,8 @@
                            FontAttributes="Bold"
                            FontSize="16"
                            HorizontalOptions="Center"
+                           LineBreakMode="TailTruncation"
+                           MaxLines="1"
                            Text="{Binding Title}"
                            TextColor="{DynamicResource textPrimary}"
                            VerticalOptions="Center" />
@@ -384,7 +416,8 @@
                             FontAttributes="Bold"
                             FontSize="16"
                             HorizontalOptions="End"
-                            Text="Done">
+                            Text="Done"
+                            VerticalOptions="Center">
                         <Button.TextColor>
                             <OnPlatform x:TypeArguments="Color"
                                         Android="{StaticResource textSecondary}"
