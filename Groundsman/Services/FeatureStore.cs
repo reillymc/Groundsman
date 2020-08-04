@@ -151,18 +151,21 @@ namespace Groundsman.Services
         private static bool TryParseFeature(Feature feature)
         {
             //if feature is freshly created, no need to parse
-            if (feature.properties.id == "-1")
+            if (feature.properties.id == AppConstants.NEW_ENTRY_ID)
             {
                 feature.properties.id = Guid.NewGuid().ToString();
                 return true;
             }
+
+            //Importing a feature validation
+
             // Ensure the feature has valid GeoJSON fields supplied.
-            if (feature != null && feature.type != null && feature.geometry != null && feature.geometry.type != null && feature.geometry.coordinates != null)
+            if (feature != null && feature.type != null && feature.geometry != null && feature.geometry.coordinates != null)
             {
                 feature.properties.xamarincoordinates = new List<Point>();
                 object[] trueCoords;
 
-                // Determine if feature is supported and if so convert its points and add appropriate icon
+                // Determine if feature is supported and if so convert its points
                 switch (feature.geometry.type)
                 {
                     case FeatureType.Point:
@@ -193,21 +196,31 @@ namespace Groundsman.Services
                     default:
                         return false;
                 }
-                if (string.IsNullOrWhiteSpace(feature.properties.id))
-                {
-                    feature.properties.id = Guid.NewGuid().ToString();
-                }
+
+                // Generate new import id
+                feature.properties.id = Guid.NewGuid().ToString();
 
                 // If author ID hasn't been set on the feature, default it to the user's ID.
                 if (string.IsNullOrWhiteSpace(feature.properties.author))
                 {
                     feature.properties.author = Preferences.Get("UserID", "Groundsman");
+                } else
+                {
+                    feature.properties.author = feature.properties.author.Substring(0, 30);
                 }
 
                 // Add default name if empty
                 if (string.IsNullOrWhiteSpace(feature.properties.name))
                 {
                     feature.properties.name = "Unnamed " + feature.geometry.type;
+                } else
+                {
+                    feature.properties.name = feature.properties.name.Substring(0, 30);
+                }
+
+                if (!string.IsNullOrWhiteSpace(feature.properties.metadataStringValue))
+                {
+                    feature.properties.name = feature.properties.name.Substring(0, 100);
                 }
 
                 // If the date field is missing or invalid, convert it into DateTime.Now.
@@ -251,7 +264,7 @@ namespace Groundsman.Services
                 Title = "Features Export",
                 File = new ShareFile(AppConstants.FEATURES_EXPORT_FILE, "text/plain"),
                 PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet
-                        ? new System.Drawing.Rectangle((int)(DeviceDisplay.MainDisplayInfo.Width * .474 ), 80, 0, 0)
+                        ? new System.Drawing.Rectangle((int)(DeviceDisplay.MainDisplayInfo.Width * .474), 80, 0, 0)
                         : System.Drawing.Rectangle.Empty
             });
 
