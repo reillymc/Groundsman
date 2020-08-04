@@ -77,12 +77,12 @@ namespace Groundsman.ViewModels
                 }
                 else
                 {
-                    await HomePage.Instance.DisplayAlert("Permissions Error", "Storage permissions for Groundsman must be enabled to utilise this feature.", "OK");
+                    await navigationService.ShowAlert("Permissions Error", "Storage permissions for Groundsman must be enabled to utilise this feature.", false);
                 }
             }
             catch (Exception ex)
             {
-                await HomePage.Instance.DisplayAlert("Import Error", $"File must contain valid GeoJSON and be accessible to Groundsman. {ex}", "OK");
+                await navigationService.ShowAlert("Import Error", $"File must contain valid GeoJSON and be accessible to Groundsman. {ex}", false);
             }
         }
     }

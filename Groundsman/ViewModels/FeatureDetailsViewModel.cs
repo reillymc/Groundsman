@@ -212,7 +212,7 @@ namespace Groundsman.ViewModels
             if (IsBusy) return;
             if (GeolocationValues[0] == item)
             {
-                HomePage.Instance.DisplayAlert("Cannot Remove Position", "All features must have at least one position", "Ok");
+                navigationService.ShowAlert("Cannot Remove Position", "All features must have at least one position", false);
                 return;
             }
             IsBusy = true;
@@ -251,7 +251,7 @@ namespace Groundsman.ViewModels
                     case FeatureType.Point:
                         if (GeolocationValues.Count != 1)
                         {
-                            await HomePage.Instance.DisplayAlert("Unsupported Entry", "A point must only contain 1 data point.", "OK");
+                            await navigationService.ShowAlert("Unsupported Entry", "A point must only contain 1 data point.", false);
                             return false;
                         }
                         feature.properties.xamarincoordinates.Clear();
@@ -265,7 +265,7 @@ namespace Groundsman.ViewModels
                     case FeatureType.LineString:
                         if (GeolocationValues.Count < 2)
                         {
-                            await HomePage.Instance.DisplayAlert("Incomplete Entry", "A line must contain at least 2 data points.", "OK");
+                            await navigationService.ShowAlert("Incomplete Entry", "A line must contain at least 2 data points.", false);
                             return false;
                         }
                         feature.properties.xamarincoordinates.Clear();
@@ -284,7 +284,7 @@ namespace Groundsman.ViewModels
                     case FeatureType.Polygon:
                         if (GeolocationValues.Count < 3)
                         {
-                            await HomePage.Instance.DisplayAlert("Incomplete Entry", "A polygon must contain at least 4 data points.", "OK");
+                            await navigationService.ShowAlert("Incomplete Entry", "A polygon must contain at least 4 data points.", false);
                             return false;
                         }
 
@@ -316,7 +316,7 @@ namespace Groundsman.ViewModels
             }
             catch
             {
-                await HomePage.Instance.DisplayAlert("Data Error", "Coordinate fields only support numeric values.", "Ok");
+                await navigationService.ShowAlert("Data Error", "Coordinate fields only support numeric values.", false);
 
                 //undo close poly
                 if (feature.geometry.type == FeatureType.Polygon)
@@ -349,7 +349,7 @@ namespace Groundsman.ViewModels
             }
             catch
             {
-                await HomePage.Instance.DisplayAlert("Data Error", "Integer and float fields only support numeric values.", "Ok");
+                await navigationService.ShowAlert("Data Error", "Integer and float fields only support numeric values.", false);
                 return false;
             }
 

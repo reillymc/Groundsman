@@ -109,7 +109,7 @@ namespace Groundsman.ViewModels
             if (_isBusy) return;
             _isBusy = true;
 
-            bool yesResponse = await HomePage.Instance.DisplayAlert("Delete Feature", "Are you sure you want to delete this feature?", "Yes", "No");
+            bool yesResponse = await navigationService.ShowAlert("Delete Feature", "Are you sure you want to delete this feature?", true);
             if (yesResponse)
             {
                 await featureStore.DeleteItemAsync(feature);

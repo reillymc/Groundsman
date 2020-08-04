@@ -32,7 +32,6 @@ namespace Groundsman.Services
                 features.Add(item);
                 var save = SaveFeaturesToFile(features, AppConstants.FEATURES_FILE);
             }
-
             return parseResult;
         }
 

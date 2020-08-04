@@ -41,7 +41,7 @@ namespace Groundsman.ViewModels
             }
             else
             {
-                await HomePage.Instance.DisplayAlert("Invalid ID", "Your user ID cannot be empty.", "OK");
+                await navigationService.ShowAlert("Invalid ID", "Your user ID cannot be empty.", false);
             }
         }
     }

@@ -37,11 +37,9 @@ namespace Groundsman.Services
                         point = new Point(Math.Round(location.Latitude, decimalAccuracy), Math.Round(location.Longitude, decimalAccuracy), Math.Round(location.Altitude ?? 0.0, decimalAccuracy));
                         return point;
                     }
-                }
-                else
+                } else
                 {
-                    await HomePage.Instance.DisplayAlert("Permissions Error", "Location permissions for Groundsman must be enabled to fetch location.", "Ok");
-                    return null;
+                    throw new PermissionException("Permission not granted.");
                 }
             }
             catch (Exception)

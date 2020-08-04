@@ -61,5 +61,21 @@ namespace Groundsman.Services
 
             return currentPage;
         }
+
+        public async Task<bool> ShowAlert(string title, string body, bool question)
+        {
+            var currentPage = GetCurrentPage();
+            bool response = false;
+
+            if (question)
+            {
+                response = await currentPage.DisplayAlert(title, body, "Yes", "No");
+            }
+            else
+            {
+                await currentPage.DisplayAlert(title, body, "Ok");
+            }
+            return response;
+        }
     }
 }
