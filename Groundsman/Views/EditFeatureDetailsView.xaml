@@ -376,15 +376,10 @@
     <ContentPage.Content>
         <StackLayout BackgroundColor="{DynamicResource bgSecondary}">
             <StackLayout x:Name="PageNavBar" BackgroundColor="{DynamicResource bgPrimary}">
-                <Grid Margin="15,7,15,0" BackgroundColor="{DynamicResource bg}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="4*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                <StackLayout Margin="15,7,15,0"
+                             BackgroundColor="{DynamicResource bg}"
+                             Orientation="Horizontal">
                     <Button x:Name="cancelButton"
-                            Grid.Row="0"
-                            Grid.Column="0"
                             Command="{Binding OnDismissCommand}"
                             FontSize="16"
                             HorizontalOptions="Start"
@@ -399,20 +394,15 @@
                             <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
                         </Button.BackgroundColor>
                     </Button>
-                    <Label Grid.Row="0"
-                           Grid.Column="1"
-                           FontAttributes="Bold"
+                    <Label FontAttributes="Bold"
                            FontSize="16"
-                           HorizontalOptions="Center"
+                           HorizontalOptions="CenterAndExpand"
                            LineBreakMode="TailTruncation"
                            MaxLines="1"
                            Text="{Binding Title}"
                            TextColor="{DynamicResource textPrimary}"
                            VerticalOptions="Center" />
-                    <Button x:Name="saveButton"
-                            Grid.Row="0"
-                            Grid.Column="2"
-                            Command="{Binding OnSaveUpdatedCommand}"
+                    <Button Command="{Binding OnSaveUpdatedCommand}"
                             FontAttributes="Bold"
                             FontSize="16"
                             HorizontalOptions="End"
@@ -427,7 +417,7 @@
                             <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
                         </Button.BackgroundColor>
                     </Button>
-                </Grid>
+                </StackLayout>
                 <BoxView HeightRequest="0.3" Color="{DynamicResource bgTertiary}" />
             </StackLayout>
             <CollectionView x:Name="GeodataList"

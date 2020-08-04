@@ -23,7 +23,7 @@ namespace Groundsman.Behaviors
             var entry = (Entry)sender;
 
             // if Entry text is longer then valid length
-            if (entry.Text.Length > this.MaxLength)
+            if (entry.Text != null && entry.Text.Length > this.MaxLength)
             {
                 string entryText = entry.Text;
 

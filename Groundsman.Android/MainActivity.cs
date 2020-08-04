@@ -78,17 +78,6 @@ namespace Groundsman.Droid
         /// <param name="permissions"></param>
         /// <param name="grantResults"></param>
 
-        public override bool OnOptionsItemSelected(IMenuItem item)
-        {
-            // Check if the selected toolbar button's id equals the back button id.
-            if (item.ItemId == Android.Resource.Id.Home)
-            {
-                // If so, override it so it always takes the user straight back to the main page.
-                HomePage.Instance.Navigation.PopToRootAsync();
-                return false;
-            }
-            return base.OnOptionsItemSelected(item);
-        }
 
         void SetAppTheme()
         {

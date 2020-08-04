@@ -35,6 +35,12 @@ namespace Groundsman.Services
             await currentPage.Navigation.PushModalAsync(new AddFeatureView(true));
         }
 
+        public async Task PushWelcomePage()
+        {
+            var currentPage = GetCurrentPage();
+            await currentPage.Navigation.PushModalAsync(new WelcomeFormView(true));
+        }
+
         public async Task NavigateBack(bool modal)
         {
             var currentPage = GetCurrentPage();

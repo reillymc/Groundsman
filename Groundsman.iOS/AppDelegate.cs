@@ -20,8 +20,6 @@ namespace Groundsman.iOS
         //
 
         App mainForms;
-        NavigationService navigationService;
-
         public override bool FinishedLaunching(UIApplication uiApplication, NSDictionary launchOptions)
         {
             Xamarin.Forms.Forms.Init();
@@ -63,24 +61,22 @@ namespace Groundsman.iOS
 
             // Anything to process?
             if (shortcutItem == null) return false;
-            navigationService = new NavigationService();
             // Take action based on the shortcut type
             switch (shortcutItem.Type)
             {
                 case ShortcutIdentifier.First:
-                    navigationService.NavigateToNewEditPage(FeatureType.Point);
+                    _ = mainForms.navigationService.NavigateToNewEditPage(FeatureType.Point);
                     handled = true;
                     break;
                 case ShortcutIdentifier.Second:
-                    navigationService.NavigateToNewEditPage(FeatureType.LineString);
+                    _ = mainForms.navigationService.NavigateToNewEditPage(FeatureType.LineString);
                     handled = true;
                     break;
                 case ShortcutIdentifier.Third:
-                    navigationService.NavigateToNewEditPage(FeatureType.Polygon);
+                    _ = mainForms.navigationService.NavigateToNewEditPage(FeatureType.Polygon);
                     handled = true;
                     break;
             }
-
             // Return results
             return handled;
         }

@@ -204,7 +204,7 @@ namespace Groundsman.Services
                 if (string.IsNullOrWhiteSpace(feature.properties.author))
                 {
                     feature.properties.author = Preferences.Get("UserID", "Groundsman");
-                } else
+                } else if (feature.properties.author.Length > 30)
                 {
                     feature.properties.author = feature.properties.author.Substring(0, 30);
                 }
@@ -213,12 +213,12 @@ namespace Groundsman.Services
                 if (string.IsNullOrWhiteSpace(feature.properties.name))
                 {
                     feature.properties.name = "Unnamed " + feature.geometry.type;
-                } else
+                } else if (feature.properties.name.Length > 30)
                 {
                     feature.properties.name = feature.properties.name.Substring(0, 30);
                 }
 
-                if (!string.IsNullOrWhiteSpace(feature.properties.metadataStringValue))
+                if (!string.IsNullOrWhiteSpace(feature.properties.metadataStringValue) && feature.properties.metadataStringValue.Length > 100)
                 {
                     feature.properties.name = feature.properties.name.Substring(0, 100);
                 }

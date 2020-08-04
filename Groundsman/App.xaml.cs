@@ -13,6 +13,7 @@ namespace Groundsman
         public enum Theme { Light, Dark }
         public static Theme AppTheme { get; set; }
 
+        public NavigationService navigationService = new NavigationService();
         public App()
         {
             Device.SetFlags(new[] { "SwipeView_Experimental" });
@@ -25,7 +26,7 @@ namespace Groundsman
             // If the user ID hasn't been set yet, prompt the user to create one upon app launch.
             if (Preferences.Get("UserID", "Groundsman") == "Groundsman")
             {
-                HomePage.Instance.Navigation.PushModalAsync(new WelcomeFormView(true));
+                _ = navigationService.PushWelcomePage();
             }
         }
 
