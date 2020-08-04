@@ -375,51 +375,7 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout BackgroundColor="{DynamicResource bgSecondary}">
-            <StackLayout x:Name="PageNavBar" BackgroundColor="{DynamicResource bgPrimary}">
-                <StackLayout Margin="15,7,15,0"
-                             BackgroundColor="{DynamicResource bg}"
-                             Orientation="Horizontal">
-                    <Button x:Name="cancelButton"
-                            Command="{Binding OnDismissCommand}"
-                            FontSize="16"
-                            HorizontalOptions="Start"
-                            Text="Cancel"
-                            VerticalOptions="Center">
-                        <Button.TextColor>
-                            <OnPlatform x:TypeArguments="Color"
-                                        Android="{StaticResource textSecondary}"
-                                        iOS="{StaticResource greenPrimary}" />
-                        </Button.TextColor>
-                        <Button.BackgroundColor>
-                            <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
-                        </Button.BackgroundColor>
-                    </Button>
-                    <Label FontAttributes="Bold"
-                           FontSize="16"
-                           HorizontalOptions="CenterAndExpand"
-                           LineBreakMode="TailTruncation"
-                           MaxLines="1"
-                           Text="{Binding Title}"
-                           TextColor="{DynamicResource textPrimary}"
-                           VerticalOptions="Center" />
-                    <Button Command="{Binding OnSaveUpdatedCommand}"
-                            FontAttributes="Bold"
-                            FontSize="16"
-                            HorizontalOptions="End"
-                            Text="Done"
-                            VerticalOptions="Center">
-                        <Button.TextColor>
-                            <OnPlatform x:TypeArguments="Color"
-                                        Android="{StaticResource textSecondary}"
-                                        iOS="{StaticResource greenPrimary}" />
-                        </Button.TextColor>
-                        <Button.BackgroundColor>
-                            <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
-                        </Button.BackgroundColor>
-                    </Button>
-                </StackLayout>
-                <BoxView HeightRequest="0.3" Color="{DynamicResource bgTertiary}" />
-            </StackLayout>
+            <TemplatedView ControlTemplate="{StaticResource ModalPageNavigationBarDone}" />
             <CollectionView x:Name="GeodataList"
                             Footer="{Binding .}"
                             FooterTemplate="{StaticResource FooterTemplate}"

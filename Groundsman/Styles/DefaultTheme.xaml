@@ -102,4 +102,87 @@
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
+
+    <!--  Control Templates  -->
+    <ControlTemplate x:Key="ModalPageNavigationBarDone">
+        <StackLayout BackgroundColor="{DynamicResource bgPrimary}" BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
+            <StackLayout Margin="15,7,15,0"
+                         BackgroundColor="{DynamicResource bg}"
+                         Orientation="Horizontal">
+                <Button x:Name="cancelButton"
+                        Command="{TemplateBinding BindingContext.OnCancelTappedCommand}"
+                        FontSize="16"
+                        HorizontalOptions="Start"
+                        Text="Cancel"
+                        VerticalOptions="Center">
+                    <Button.TextColor>
+                        <OnPlatform x:TypeArguments="Color"
+                                    Android="{StaticResource textSecondary}"
+                                    iOS="{StaticResource greenPrimary}" />
+                    </Button.TextColor>
+                    <Button.BackgroundColor>
+                        <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
+                    </Button.BackgroundColor>
+                </Button>
+                <Label FontAttributes="Bold"
+                       FontSize="16"
+                       HorizontalOptions="CenterAndExpand"
+                       LineBreakMode="TailTruncation"
+                       MaxLines="1"
+                       Text="{TemplateBinding BindingContext.Title}"
+                       TextColor="{DynamicResource textPrimary}"
+                       VerticalOptions="Center" />
+                <Button Command="{TemplateBinding BindingContext.OnDoneTappedCommand}"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        HorizontalOptions="End"
+                        Text="Done"
+                        VerticalOptions="Center">
+                    <Button.TextColor>
+                        <OnPlatform x:TypeArguments="Color"
+                                    Android="{StaticResource textSecondary}"
+                                    iOS="{StaticResource greenPrimary}" />
+                    </Button.TextColor>
+                    <Button.BackgroundColor>
+                        <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
+                    </Button.BackgroundColor>
+                </Button>
+            </StackLayout>
+            <BoxView HeightRequest="0.3" Color="{DynamicResource bgTertiary}" />
+        </StackLayout>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="ModalPageNavigationBar">
+        <StackLayout BackgroundColor="{DynamicResource bgPrimary}" BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
+            <StackLayout Margin="15,7,15,0"
+                         BackgroundColor="{DynamicResource bg}"
+                         Orientation="Horizontal">
+                <Button x:Name="cancelButton"
+                        Command="{TemplateBinding BindingContext.OnCancelTappedCommand}"
+                        FontSize="16"
+                        HorizontalOptions="Start"
+                        Text="Cancel"
+                        VerticalOptions="Center">
+                    <Button.TextColor>
+                        <OnPlatform x:TypeArguments="Color"
+                                    Android="{StaticResource textSecondary}"
+                                    iOS="{StaticResource greenPrimary}" />
+                    </Button.TextColor>
+                    <Button.BackgroundColor>
+                        <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
+                    </Button.BackgroundColor>
+                </Button>
+                <Label FontAttributes="Bold"
+                       FontSize="16"
+                       HorizontalOptions="CenterAndExpand"
+                       LineBreakMode="TailTruncation"
+                       MaxLines="1"
+                       Text="{TemplateBinding BindingContext.Title}"
+                       TextColor="{DynamicResource textPrimary}"
+                       VerticalOptions="Center" />
+            </StackLayout>
+            <BoxView HeightRequest="0.3" Color="{DynamicResource bgTertiary}" />
+        </StackLayout>
+    </ControlTemplate>
+
 </ResourceDictionary>

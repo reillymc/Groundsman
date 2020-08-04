@@ -12,12 +12,12 @@ namespace Groundsman.ViewModels
     public class AddFeatureViewModel : BaseViewModel
     {
         public Command AddFeatureCommand { set; get; }
-        public Command OnDismissCommand { get; set; }
+        public Command OnCancelTappedCommand { get; set; }
 
         public AddFeatureViewModel()
         {
             AddFeatureCommand = new Command<string>(async (id) => await AddFeatureAsync(id));
-            OnDismissCommand = new Command(async () => await OnDismiss(true));
+            OnCancelTappedCommand = new Command(async () => await OnDismiss(true));
         }
 
         private async Task AddFeatureAsync(string id)

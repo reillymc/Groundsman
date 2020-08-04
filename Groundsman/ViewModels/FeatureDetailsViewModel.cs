@@ -20,8 +20,8 @@ namespace Groundsman.ViewModels
         public ICommand GetFeatureCommand { get; set; }
         public ICommand AddPointCommand { get; set; }
         public ICommand DeletePointCommand { get; set; }
-        public ICommand OnSaveUpdatedCommand { get; set; }
-        public ICommand OnDismissCommand { get; set; }
+        public ICommand OnDoneTappedCommand { get; set; }
+        public ICommand OnCancelTappedCommand { get; set; }
         public ICommand ShareEntryCommand { get; set; }
 
         private Feature feature = new Feature { };
@@ -163,8 +163,8 @@ namespace Groundsman.ViewModels
             AddPointCommand = new Command(() => AddPoint(1));
             DeletePointCommand = new Command<DisplayPoint>((item) => DeletePoint(item));
             ShareEntryCommand = new Command(async () => await FeatureStore.ExportFeatures(new ObservableCollection<Feature> { feature }));
-            OnSaveUpdatedCommand = new Command(async () => await OnSaveUpdateActivated());
-            OnDismissCommand = new Command(async () => await OnDismiss(true));
+            OnDoneTappedCommand = new Command(async () => await OnSaveUpdateActivated());
+            OnCancelTappedCommand = new Command(async () => await OnDismiss(true));
         }
 
         /// <summary>

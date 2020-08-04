@@ -1,6 +1,10 @@
-using Xamarin.Forms;
-using Groundsman.ViewModels;
 using Groundsman.Models;
+using Groundsman.ViewModels;
+using System;
+using Xamarin.Essentials;
+using Xamarin.Forms;
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 
 namespace Groundsman.Views
 {
@@ -24,6 +28,19 @@ namespace Groundsman.Views
         {
             InitializeComponent();
             BindingContext = new FeatureDetailsViewModel(data);
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            if (DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Version < new Version(13, 0))
+            {
+                var safeInsets = On<iOS>().SafeAreaInsets();
+                safeInsets.Bottom = 0;
+                Padding = safeInsets;
+            }
+
         }
     }
 }

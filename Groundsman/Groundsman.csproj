@@ -28,7 +28,6 @@
     <EmbeddedResource Include="locations.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Styles\" />
     <Folder Include="Views\" />
     <Folder Include="ViewModels\" />
     <Folder Include="Models\" />
