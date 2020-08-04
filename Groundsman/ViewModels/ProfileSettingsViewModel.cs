@@ -34,11 +34,11 @@ namespace Groundsman.ViewModels
 
         private async Task ExecuteDeleteAllFeaturesCommand()
         {
-            bool yesResponse = await navigationService.ShowAlert("Reset User Data", "This will permanently erase all saved features. Do you wish to continue?", true);
+            bool yesResponse = await NavigationService.ShowAlert("Reset User Data", "This will permanently erase all saved features. Do you wish to continue?", true);
             if (yesResponse)
             {
-                await featureStore.DeleteItemsAsync();
-                await navigationService.ShowAlert("Reset User Data", "Your user data has been erased.", false);
+                await FeatureStore.DeleteItemsAsync();
+                await NavigationService.ShowAlert("Reset User Data", "Your user data has been erased.", false);
             }
         }
 

@@ -12,29 +12,31 @@ namespace Groundsman.ViewModels
     public class AddFeatureViewModel : BaseViewModel
     {
         public Command AddFeatureCommand { set; get; }
+        public Command OnDismissCommand { get; set; }
 
         public AddFeatureViewModel()
         {
             AddFeatureCommand = new Command<string>(async (id) => await AddFeatureAsync(id));
+            OnDismissCommand = new Command(async () => await OnDismiss(true));
         }
 
         private async Task AddFeatureAsync(string id)
         {
-            await navigationService.NavigateBack(true);
+            await NavigationService.NavigateBack(true);
             switch (id)
             {
                 case "Point":
-                    await navigationService.NavigateToNewEditPage(FeatureType.Point);
+                    await NavigationService.NavigateToNewEditPage(FeatureType.Point);
                     break;
                 case "LineString":
-                    await navigationService.NavigateToNewEditPage(FeatureType.LineString);
+                    await NavigationService.NavigateToNewEditPage(FeatureType.LineString);
                     break;
                 case "Polygon":
-                    await navigationService.NavigateToNewEditPage(FeatureType.Polygon);
+                    await NavigationService.NavigateToNewEditPage(FeatureType.Polygon);
                     break;
                 case "Clipboard":
                     string contents = await Clipboard.GetTextAsync();
-                    await featureStore.ImportFeaturesAsync(contents, true);
+                    await FeatureStore.ImportFeaturesAsync(contents, true);
                     break;
                 case "File":
                     await ImportFeaturesFromFile();
@@ -58,17 +60,17 @@ namespace Groundsman.ViewModels
                     if (fileData != null)
                     {
                         string contents = System.Text.Encoding.UTF8.GetString(fileData.DataArray);
-                        await featureStore.ImportFeaturesAsync(contents, true);
+                        await FeatureStore.ImportFeaturesAsync(contents, true);
                     }
                 }
                 else
                 {
-                    await navigationService.ShowAlert("Permissions Error", "Storage permissions for Groundsman must be enabled to utilise this feature.", false);
+                    await NavigationService.ShowAlert("Permissions Error", "Storage permissions for Groundsman must be enabled to utilise this feature.", false);
                 }
             }
             catch (Exception ex)
             {
-                await navigationService.ShowAlert("Import Error", $"File must contain valid GeoJSON and be accessible to Groundsman. {ex}", false);
+                await NavigationService.ShowAlert("Import Error", $"File must contain valid GeoJSON and be accessible to Groundsman. {ex}", false);
             }
         }
     }

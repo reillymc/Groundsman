@@ -162,7 +162,7 @@ namespace Groundsman.ViewModels
             GetFeatureCommand = new Command<DisplayPoint>(async (point) => { await GetDataPoint(point); });
             AddPointCommand = new Command(() => AddPoint(1));
             DeletePointCommand = new Command<DisplayPoint>((item) => DeletePoint(item));
-            ShareEntryCommand = new Command(async () => await featureStore.ExportFeatures(new ObservableCollection<Feature> { feature }));
+            ShareEntryCommand = new Command(async () => await FeatureStore.ExportFeatures(new ObservableCollection<Feature> { feature }));
             OnSaveUpdatedCommand = new Command(async () => await OnSaveUpdateActivated());
             OnDismissCommand = new Command(async () => await OnDismiss(true));
         }
@@ -213,7 +213,7 @@ namespace Groundsman.ViewModels
             if (IsBusy) return;
             if (GeolocationValues[0] == item)
             {
-                navigationService.ShowAlert("Cannot Remove Position", "All features must have at least one position", false);
+                NavigationService.ShowAlert("Cannot Remove Position", "All features must have at least one position", false);
                 return;
             }
             IsBusy = true;
@@ -235,7 +235,7 @@ namespace Groundsman.ViewModels
             IsBusy = true;
             if (await TryParseSaveFeature())
             {
-                await navigationService.NavigateBack(true);
+                await NavigationService.NavigateBack(true);
                 IsBusy = false;
                 return;
             }
@@ -252,7 +252,7 @@ namespace Groundsman.ViewModels
                     case FeatureType.Point:
                         if (GeolocationValues.Count != 1)
                         {
-                            await navigationService.ShowAlert("Unsupported Entry", "A point must only contain 1 data point.", false);
+                            await NavigationService.ShowAlert("Unsupported Entry", "A point must only contain 1 data point.", false);
                             return false;
                         }
                         feature.properties.xamarincoordinates.Clear();
@@ -266,7 +266,7 @@ namespace Groundsman.ViewModels
                     case FeatureType.LineString:
                         if (GeolocationValues.Count < 2)
                         {
-                            await navigationService.ShowAlert("Incomplete Entry", "A line must contain at least 2 data points.", false);
+                            await NavigationService.ShowAlert("Incomplete Entry", "A line must contain at least 2 data points.", false);
                             return false;
                         }
                         feature.properties.xamarincoordinates.Clear();
@@ -285,7 +285,7 @@ namespace Groundsman.ViewModels
                     case FeatureType.Polygon:
                         if (GeolocationValues.Count < 3)
                         {
-                            await navigationService.ShowAlert("Incomplete Entry", "A polygon must contain at least 4 data points.", false);
+                            await NavigationService.ShowAlert("Incomplete Entry", "A polygon must contain at least 4 data points.", false);
                             return false;
                         }
 
@@ -317,7 +317,7 @@ namespace Groundsman.ViewModels
             }
             catch
             {
-                await navigationService.ShowAlert("Data Error", "Coordinate fields only support numeric values.", false);
+                await NavigationService.ShowAlert("Data Error", "Coordinate fields only support numeric values.", false);
 
                 //undo close poly
                 if (feature.geometry.type == FeatureType.Polygon)
@@ -350,7 +350,7 @@ namespace Groundsman.ViewModels
             }
             catch
             {
-                await navigationService.ShowAlert("Data Error", "Integer and float fields only support numeric values.", false);
+                await NavigationService.ShowAlert("Data Error", "Integer and float fields only support numeric values.", false);
                 return false;
             }
 
@@ -369,11 +369,11 @@ namespace Groundsman.ViewModels
             bool success;
             if (feature.properties.id == AppConstants.NEW_ENTRY_ID)
             {
-                success = await featureStore.AddItemAsync(feature);
+                success = await FeatureStore.AddItemAsync(feature);
             }
             else
             {
-                success = await featureStore.UpdateItemAsync(feature);
+                success = await FeatureStore.UpdateItemAsync(feature);
             }
             return success;
         }

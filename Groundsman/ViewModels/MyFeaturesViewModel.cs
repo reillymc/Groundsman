@@ -49,7 +49,7 @@ namespace Groundsman.ViewModels
             if (_isBusy) return;
             _isBusy = true;
 
-            await navigationService.NavigateToDetailPage(data);
+            await NavigationService.NavigateToDetailPage(data);
 
             _isBusy = false;
         }
@@ -63,7 +63,7 @@ namespace Groundsman.ViewModels
             if (_isBusy) return;
             _isBusy = true;
 
-            await featureStore.ExportFeatures(await featureStore.GetItemsAsync());
+            await FeatureStore.ExportFeatures(await FeatureStore.GetItemsAsync());
 
             _isBusy = false;
         }
@@ -77,7 +77,7 @@ namespace Groundsman.ViewModels
             if (_isBusy) return;
             _isBusy = true;
 
-            await navigationService.PushAddFeaturePage();
+            await NavigationService.PushAddFeaturePage();
 
             _isBusy = false;
         }
@@ -92,7 +92,7 @@ namespace Groundsman.ViewModels
             if (_isBusy) return;
             _isBusy = true;
 
-            await navigationService.NavigateToEditPage(feature);
+            await NavigationService.NavigateToEditPage(feature);
 
             _isBusy = false;
         }
@@ -108,10 +108,10 @@ namespace Groundsman.ViewModels
             if (_isBusy) return;
             _isBusy = true;
 
-            bool yesResponse = await navigationService.ShowAlert("Delete Feature", "Are you sure you want to delete this feature?", true);
+            bool yesResponse = await NavigationService.ShowAlert("Delete Feature", "Are you sure you want to delete this feature?", true);
             if (yesResponse)
             {
-                await featureStore.DeleteItemAsync(feature);
+                await FeatureStore.DeleteItemAsync(feature);
                 GetFeatures();
             }
 
@@ -123,7 +123,7 @@ namespace Groundsman.ViewModels
         /// </summary>
         public async void GetFeatures()
         {
-            ObservableCollection<Feature> updates = await featureStore.GetItemsAsync();
+            ObservableCollection<Feature> updates = await FeatureStore.GetItemsAsync();
             FeatureList.ReplaceRange(updates);
         }
     }

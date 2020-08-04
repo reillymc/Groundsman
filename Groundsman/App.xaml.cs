@@ -10,16 +10,17 @@ namespace Groundsman
     public partial class App : Application
     {
         public IDataStore<Feature> FeatureStore => DependencyService.Get<IDataStore<Feature>>();
+        public INavigationService<Feature> NavigationService => DependencyService.Get<INavigationService<Feature>>();
         public static LogStore LogStore { get; private set; }
         public enum Theme { Light, Dark }
         public static Theme AppTheme { get; set; }
 
-        public NavigationService navigationService = new NavigationService();
         public App()
         {
             Device.SetFlags(new[] { "SwipeView_Experimental" });
             InitializeComponent();
             DependencyService.Register<FeatureStore>();
+            DependencyService.Register<NavigationService>();
             FeatureStore.GetItemsAsync(true);
             LogStore = new LogStore();
             MainPage = new NavigationPage(HomePage.Instance);
@@ -27,7 +28,7 @@ namespace Groundsman
             // If the user ID hasn't been set yet, prompt the user to create one upon app launch.
             if (Preferences.Get("UserID", "Groundsman") == "Groundsman")
             {
-                _ = navigationService.PushWelcomePage();
+                _ = NavigationService.PushWelcomePage();
             }
         }
 

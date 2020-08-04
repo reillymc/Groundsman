@@ -35,11 +35,11 @@ namespace Groundsman.ViewModels
             {
                 Preferences.Set("UserID", IDEntry);
                 await Application.Current.SavePropertiesAsync();
-                await navigationService.NavigateBack(true);
+                await NavigationService.NavigateBack(true);
             }
             else
             {
-                await navigationService.ShowAlert("Invalid ID", "Your user ID cannot be empty.", false);
+                await NavigationService.ShowAlert("Invalid ID", "Your user ID cannot be empty.", false);
             }
         }
     }

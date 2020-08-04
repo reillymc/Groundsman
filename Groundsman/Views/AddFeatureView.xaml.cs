@@ -1,5 +1,4 @@
-﻿using Groundsman.Services;
-using Groundsman.ViewModels;
+﻿using Groundsman.ViewModels;
 using System;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -29,12 +28,6 @@ namespace Groundsman.Views
                 Padding = safeInsets;
             }
 
-        }
-
-        async void OnDismissButtonClicked(object sender, EventArgs args)
-        {
-            NavigationService navigationService = new NavigationService();
-            await navigationService.NavigateBack(true);
         }
     }
 }

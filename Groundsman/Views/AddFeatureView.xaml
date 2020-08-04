@@ -26,7 +26,7 @@
                     <Button x:Name="dismissButton"
                             Grid.Row="0"
                             Grid.Column="2"
-                            Clicked="OnDismissButtonClicked"
+                            Command="{Binding OnDismissCommand}"
                             FontAttributes="Bold"
                             FontSize="16"
                             HorizontalOptions="End"

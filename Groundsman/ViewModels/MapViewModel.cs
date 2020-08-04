@@ -176,23 +176,23 @@ namespace Groundsman.ViewModels
 
         async Task DisplayFeatureActionMenuAsync(Feature feature)
         {
-            string result = await navigationService.GetCurrentPage().DisplayActionSheet(feature.properties.name, "Dismiss", "Delete", "View", "Edit");
+            string result = await NavigationService.GetCurrentPage().DisplayActionSheet(feature.properties.name, "Dismiss", "Delete", "View", "Edit");
 
             switch (result)
             {
                 case "Delete":
-                    bool yesResponse = await navigationService.GetCurrentPage().DisplayAlert("Delete Feature", "Are you sure you want to delete this feature?", "Yes", "No");
+                    bool yesResponse = await NavigationService.GetCurrentPage().DisplayAlert("Delete Feature", "Are you sure you want to delete this feature?", "Yes", "No");
                     if (yesResponse)
                     {
-                        await featureStore.DeleteItemAsync(feature);
+                        await FeatureStore.DeleteItemAsync(feature);
                         RefreshMap();
                     }
                     break;
                 case "View":
-                    await navigationService.NavigateToDetailPage(feature);
+                    await NavigationService.NavigateToDetailPage(feature);
                     break;
                 case "Edit":
-                    await navigationService.NavigateToEditPage(feature);
+                    await NavigationService.NavigateToEditPage(feature);
                     break;
                 default:
                     break;
@@ -270,7 +270,7 @@ namespace Groundsman.ViewModels
 
         private async void GetFeatures()
         {
-            ObservableCollection<Feature> updates = await featureStore.GetItemsAsync();
+            ObservableCollection<Feature> updates = await FeatureStore.GetItemsAsync();
             FeatureList.ReplaceRange(updates);
         }
     }

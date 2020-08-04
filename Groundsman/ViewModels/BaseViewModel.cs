@@ -1,6 +1,5 @@
 ﻿using Groundsman.Interfaces;
 using Groundsman.Models;
-using Groundsman.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,9 +11,9 @@ namespace Groundsman.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Feature> featureStore => DependencyService.Get<IDataStore<Feature>>();
-//Implement INavService as dependency
-        public NavigationService navigationService = new NavigationService();
+        public IDataStore<Feature> FeatureStore => DependencyService.Get<IDataStore<Feature>>();
+        public INavigationService<Feature> NavigationService => DependencyService.Get<INavigationService<Feature>>();
+
         private ObservableRangeCollection<Feature> featureList = new ObservableRangeCollection<Feature>();
         public ObservableRangeCollection<Feature> FeatureList
         {
@@ -56,7 +55,7 @@ namespace Groundsman.ViewModels
 
         public async Task OnDismiss(bool modal)
         {
-            await navigationService.NavigateBack(modal);
+            await NavigationService.NavigateBack(modal);
         }
 
         #region INotifyPropertyChanged

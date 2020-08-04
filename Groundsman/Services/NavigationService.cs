@@ -1,4 +1,5 @@
-﻿using Groundsman.Models;
+﻿using Groundsman.Interfaces;
+using Groundsman.Models;
 using Groundsman.Views;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,7 +7,7 @@ using Xamarin.Forms;
 
 namespace Groundsman.Services
 {
-    public class NavigationService
+    public class NavigationService : INavigationService<Feature>
     {
         public async Task NavigateToDetailPage(Feature feature)
         {
