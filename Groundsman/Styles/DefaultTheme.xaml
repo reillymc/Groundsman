@@ -105,10 +105,8 @@
 
     <!--  Control Templates  -->
     <ControlTemplate x:Key="ModalPageNavigationBarDone">
-        <StackLayout BackgroundColor="{DynamicResource bgPrimary}" BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
-            <StackLayout Margin="15,7,15,0"
-                         BackgroundColor="{DynamicResource bg}"
-                         Orientation="Horizontal">
+        <StackLayout BackgroundColor="{DynamicResource Foreground}" BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
+            <StackLayout Margin="15,7,15,0" Orientation="Horizontal">
                 <Button x:Name="cancelButton"
                         Command="{TemplateBinding BindingContext.OnCancelTappedCommand}"
                         FontSize="16"
@@ -148,12 +146,12 @@
                     </Button.BackgroundColor>
                 </Button>
             </StackLayout>
-            <BoxView HeightRequest="0.3" Color="{DynamicResource bgTertiary}" />
+            <BoxView HeightRequest="0.3" Color="{DynamicResource Seperator}" />
         </StackLayout>
     </ControlTemplate>
 
     <ControlTemplate x:Key="ModalPageNavigationBar">
-        <StackLayout BackgroundColor="{DynamicResource bgPrimary}" BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
+        <StackLayout BackgroundColor="{DynamicResource Foreground}" BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
             <StackLayout Margin="15,7,15,0"
                          BackgroundColor="{DynamicResource bg}"
                          Orientation="Horizontal">
@@ -181,8 +179,21 @@
                        TextColor="{DynamicResource textPrimary}"
                        VerticalOptions="Center" />
             </StackLayout>
-            <BoxView HeightRequest="0.3" Color="{DynamicResource bgTertiary}" />
+            <BoxView HeightRequest="0.3" Color="{DynamicResource Seperator}" />
         </StackLayout>
     </ControlTemplate>
 
+    <ControlTemplate x:Key="Seperator">
+        <BoxView Margin="0"
+                 BackgroundColor="{DynamicResource Seperator}"
+                 HeightRequest="1"
+                 VerticalOptions="End" />
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="SeperatorPadded">
+        <BoxView Margin="8,0,0,0"
+                 BackgroundColor="{DynamicResource Seperator}"
+                 HeightRequest="1"
+                 VerticalOptions="End" />
+    </ControlTemplate>
 </ResourceDictionary>

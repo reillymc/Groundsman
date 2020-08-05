@@ -9,16 +9,14 @@
     <ContentPage.Resources>
         <DataTemplate x:Key="HeaderTemplate">
             <StackLayout>
-                <Frame x:Name="Properties Section"
-                       Margin="10"
+                <Frame Margin="10"
                        Padding="10,10,0,10"
                        BackgroundColor="{DynamicResource Foreground}"
                        CornerRadius="10"
                        HasShadow="False">
                     <StackLayout>
                         <Label Style="{StaticResource ViewLabelStyle}" Text="Properties" />
-                        <Entry x:Name="nameEntry"
-                               FontSize="Small"
+                        <Entry FontSize="Small"
                                Placeholder="Name"
                                Style="{StaticResource EntryStyle}"
                                Text="{Binding NameEntry}">
@@ -26,16 +24,13 @@
                                 <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
                             </Entry.Behaviors>
                         </Entry>
-                        <BoxView BackgroundColor="{DynamicResource Seperator}"
-                                 HeightRequest="1"
-                                 VerticalOptions="End" />
-                        <DatePicker x:Name="dateEntry"
-                                    Date="{Binding DateEntry, StringFormat='{0:dd/MM/yyyy}'}"
+                        <TemplatedView ControlTemplate="{StaticResource SeperatorPadded}" />
+                        <DatePicker Date="{Binding DateEntry, StringFormat='{0:dd/MM/yyyy}'}"
                                     FontSize="Small"
                                     Style="{StaticResource DateEntryStyle}" />
                     </StackLayout>
                 </Frame>
-                <Grid x:Name="Coordinates Header Section" Margin="10,0">
+                <Grid Margin="10,0">
                     <!--  Hacky implementation of only top rounded corners  -->
                     <Frame Margin="0,0,0,20"
                            BackgroundColor="{DynamicResource Foreground}"
@@ -49,7 +44,7 @@
                            HasShadow="False"
                            HorizontalOptions="Fill"
                            VerticalOptions="Fill" />
-                    <ContentView x:Name="MainContainer" Margin="10">
+                    <ContentView Margin="10">
                         <StackLayout>
                             <Grid ColumnDefinitions="*,*" RowDefinitions="*">
                                 <Label Grid.Column="0"
@@ -85,7 +80,6 @@
                                 <Label Grid.Row="0"
                                        Grid.Column="0"
                                        Margin="0,9"
-                                       AutomationId="LatLabel"
                                        FontSize="Small"
                                        HorizontalOptions="Center"
                                        Style="{StaticResource ViewLabelStyle}"
@@ -93,21 +87,18 @@
                                 <Label Grid.Row="0"
                                        Grid.Column="1"
                                        Margin="6,9"
-                                       AutomationId="LatLabel"
                                        FontSize="Small"
                                        Style="{StaticResource ViewLabelStyle}"
                                        Text="Latitude" />
                                 <Label Grid.Row="0"
                                        Grid.Column="2"
                                        Margin="6,9"
-                                       AutomationId="LongLabel"
                                        FontSize="Small"
                                        Style="{StaticResource ViewLabelStyle}"
                                        Text="Longitude" />
                                 <Label Grid.Row="0"
                                        Grid.Column="3"
                                        Margin="6,9"
-                                       AutomationId="AltLabel"
                                        FontSize="Small"
                                        Style="{StaticResource ViewLabelStyle}"
                                        Text="Altitude" />
@@ -121,10 +112,11 @@
         <DataTemplate x:Key="ItemTemplate">
             <Frame Margin="0,5"
                    Padding="11,0,9,0"
+                   BackgroundColor="Transparent"
                    CornerRadius="0"
                    HasShadow="False"
                    IsClippedToBounds="True">
-                <SwipeView x:Name="ItemsSwipeList">
+                <SwipeView>
                     <SwipeView.RightItems>
                         <SwipeItems Mode="Reveal">
                             <SwipeItem BackgroundColor="Red"
@@ -161,7 +153,6 @@
                             </Entry>
                             <Entry Grid.Row="1"
                                    Grid.Column="2"
-                                   AutomationId="AltitudeEntry"
                                    FontSize="Small"
                                    Keyboard="Numeric"
                                    Placeholder="0"
@@ -173,7 +164,6 @@
                             </Entry>
                             <Entry Grid.Row="1"
                                    Grid.Column="3"
-                                   AutomationId="AltitudeEntry"
                                    FontSize="Small"
                                    Keyboard="Numeric"
                                    Placeholder="0"
@@ -202,12 +192,10 @@
                                     Image="current_location"
                                     IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
                                     VerticalOptions="CenterAndExpand" />
-                            <BoxView Grid.Row="0"
-                                     Grid.Column="1"
-                                     Grid.ColumnSpan="4"
-                                     BackgroundColor="{DynamicResource Seperator}"
-                                     HeightRequest="1"
-                                     VerticalOptions="End" />
+                            <TemplatedView Grid.Row="0"
+                                           Grid.Column="1"
+                                           Grid.ColumnSpan="4"
+                                           ControlTemplate="{StaticResource SeperatorPadded}" />
                         </Grid>
                     </SwipeView.Content>
                 </SwipeView>
@@ -215,7 +203,7 @@
         </DataTemplate>
         <DataTemplate x:Key="FooterTemplate">
             <StackLayout>
-                <Grid x:Name="Coordinates Footer Section" Margin="10,0">
+                <Grid Margin="10,0">
                     <!--  Hacky implementation of only top rounded corners  -->
                     <Frame Margin="0,10,0,0"
                            BackgroundColor="{DynamicResource Foreground}"
@@ -229,7 +217,7 @@
                            HasShadow="False"
                            HorizontalOptions="Fill"
                            VerticalOptions="Fill" />
-                    <ContentView x:Name="MainContainer" Padding="10,0,0,0">
+                    <ContentView Padding="10,0,0,0">
                         <StackLayout>
                             <Grid Padding="5,0,0,0"
                                   ColumnDefinitions=".8*,5*,5*,3*,1.3*"
@@ -245,7 +233,6 @@
                                        VerticalOptions="Center" />
                                 <Entry Grid.Row="0"
                                        Grid.Column="1"
-                                       AutomationId="AltitudeEntry"
                                        FontSize="Small"
                                        IsEnabled="False"
                                        Style="{StaticResource EntryStyle}"
@@ -253,14 +240,12 @@
 
                                 <Entry Grid.Row="0"
                                        Grid.Column="2"
-                                       AutomationId="AltitudeEntry"
                                        FontSize="Small"
                                        IsEnabled="False"
                                        Style="{StaticResource EntryStyle}"
                                        Text="{Binding GeolocationValues[0].Longitude}" />
                                 <Entry Grid.Row="0"
                                        Grid.Column="3"
-                                       AutomationId="AltitudeEntry"
                                        FontSize="Small"
                                        IsEnabled="False"
                                        Style="{StaticResource EntryStyle}"
@@ -287,12 +272,9 @@
                                 </StackLayout>
                             </Frame>
                         </StackLayout>
-
-
                     </ContentView>
                 </Grid>
-                <Frame x:Name="Metadata Section"
-                       Margin="10,10,10,180"
+                <Frame Margin="10,10,10,180"
                        Padding="10,10,0,10"
                        BackgroundColor="{DynamicResource Foreground}"
                        CornerRadius="10"
@@ -300,8 +282,7 @@
                     <StackLayout>
                         <Label Style="{StaticResource ViewLabelStyle}" Text="Metadata" />
                         <StackLayout Orientation="Vertical">
-                            <Entry x:Name="nameEntry"
-                                   FontSize="Small"
+                            <Entry FontSize="Small"
                                    Placeholder="String"
                                    Style="{StaticResource EntryStyle}"
                                    Text="{Binding MetadataStringEntry}">
@@ -309,11 +290,8 @@
                                     <behaviors:EntryLengthValidatorBehavior MaxLength="100" />
                                 </Entry.Behaviors>
                             </Entry>
-                            <BoxView BackgroundColor="{DynamicResource Seperator}"
-                                     HeightRequest="1"
-                                     VerticalOptions="End" />
-                            <Entry x:Name="integerEntry"
-                                   FontSize="Small"
+                            <TemplatedView ControlTemplate="{StaticResource SeperatorPadded}" />
+                            <Entry FontSize="Small"
                                    Placeholder="Integer"
                                    Style="{StaticResource EntryStyle}"
                                    Text="{Binding MetadataIntegerEntry}">
@@ -321,9 +299,7 @@
                                     <behaviors:EntryLengthValidatorBehavior MaxLength="8" />
                                 </Entry.Behaviors>
                             </Entry>
-                            <BoxView BackgroundColor="{DynamicResource Seperator}"
-                                     HeightRequest="1"
-                                     VerticalOptions="End" />
+                            <TemplatedView ControlTemplate="{StaticResource SeperatorPadded}" />
                             <Entry FontSize="Small"
                                    Placeholder="Float"
                                    Style="{StaticResource EntryStyle}"
@@ -333,9 +309,7 @@
                                 </Entry.Behaviors>
                             </Entry>
                         </StackLayout>
-
                     </StackLayout>
-
                 </Frame>
             </StackLayout>
         </DataTemplate>

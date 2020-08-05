@@ -74,12 +74,11 @@ namespace Groundsman.Services
                 if (features[i].properties.id == item.properties.id)
                 {
                     features[i] = item;
-                    return true;
                 }
             }
             var save = SaveFeaturesToFile(features, AppConstants.FEATURES_FILE);
             //notify cant find feature (or insert as new feature)
-            return false;
+            return save;
         }
 
         private string GetFeaturesFile()
