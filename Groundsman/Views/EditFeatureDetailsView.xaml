@@ -12,7 +12,7 @@
                 <Frame x:Name="Properties Section"
                        Margin="10"
                        Padding="10,10,0,10"
-                       BackgroundColor="{DynamicResource bgPrimary}"
+                       BackgroundColor="{DynamicResource Foreground}"
                        CornerRadius="10"
                        HasShadow="False">
                     <StackLayout>
@@ -26,7 +26,7 @@
                                 <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
                             </Entry.Behaviors>
                         </Entry>
-                        <BoxView BackgroundColor="WhiteSmoke"
+                        <BoxView BackgroundColor="{DynamicResource Seperator}"
                                  HeightRequest="1"
                                  VerticalOptions="End" />
                         <DatePicker x:Name="dateEntry"
@@ -38,13 +38,13 @@
                 <Grid x:Name="Coordinates Header Section" Margin="10,0">
                     <!--  Hacky implementation of only top rounded corners  -->
                     <Frame Margin="0,0,0,20"
-                           BackgroundColor="White"
+                           BackgroundColor="{DynamicResource Foreground}"
                            CornerRadius="10"
                            HasShadow="False"
                            HorizontalOptions="Fill"
                            VerticalOptions="Fill" />
                     <Frame Margin="0,20,0,0"
-                           BackgroundColor="White"
+                           BackgroundColor="{DynamicResource Foreground}"
                            CornerRadius="0"
                            HasShadow="False"
                            HorizontalOptions="Fill"
@@ -119,23 +119,23 @@
 
         </DataTemplate>
         <DataTemplate x:Key="ItemTemplate">
-            <SwipeView x:Name="ItemsSwipeList">
-                <SwipeView.RightItems>
-                    <SwipeItems Mode="Reveal">
-                        <SwipeItem BackgroundColor="Red"
-                                   Command="{Binding Source={x:Reference GeodataList}, Path=BindingContext.DeletePointCommand}"
-                                   CommandParameter="{Binding .}"
-                                   Text="Delete" />
-                    </SwipeItems>
-                </SwipeView.RightItems>
-                <SwipeView.Content>
-                    <Frame Margin="0,5"
-                           Padding="11,0,9,0"
-                           BackgroundColor="{DynamicResource bgSecondary}"
-                           CornerRadius="0"
-                           HasShadow="False">
+            <Frame Margin="0,5"
+                   Padding="11,0,9,0"
+                   CornerRadius="0"
+                   HasShadow="False"
+                   IsClippedToBounds="True">
+                <SwipeView x:Name="ItemsSwipeList">
+                    <SwipeView.RightItems>
+                        <SwipeItems Mode="Reveal">
+                            <SwipeItem BackgroundColor="Red"
+                                       Command="{Binding Source={x:Reference GeodataList}, Path=BindingContext.DeletePointCommand}"
+                                       CommandParameter="{Binding .}"
+                                       Text="Delete" />
+                        </SwipeItems>
+                    </SwipeView.RightItems>
+                    <SwipeView.Content>
                         <Grid Padding="10,0,0,0"
-                              BackgroundColor="{DynamicResource bgPrimary}"
+                              BackgroundColor="{DynamicResource Foreground}"
                               ColumnDefinitions=".8*,5*,5*,3*,1.3*"
                               ColumnSpacing="10"
                               IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
@@ -148,56 +148,41 @@
                                    Style="{StaticResource ViewLabelStyle}"
                                    Text="{Binding Index}"
                                    VerticalOptions="Center" />
-                            <Frame Grid.Row="1"
+                            <Entry Grid.Row="1"
                                    Grid.Column="1"
-                                   Padding="0"
-                                   CornerRadius="5"
-                                   HasShadow="False"
-                                   HorizontalOptions="FillAndExpand">
-                                <Entry FontSize="Small"
-                                       Keyboard="Numeric"
-                                       Placeholder="0"
-                                       Style="{StaticResource EntryStyle}"
-                                       Text="{Binding Latitude}">
-                                    <Entry.Behaviors>
-                                        <behaviors:EntryLengthValidatorBehavior MaxLength="12" />
-                                    </Entry.Behaviors>
-                                </Entry>
-                            </Frame>
-                            <Frame Grid.Row="1"
+                                   FontSize="Small"
+                                   Keyboard="Numeric"
+                                   Placeholder="0"
+                                   Style="{StaticResource EntryStyle}"
+                                   Text="{Binding Latitude}">
+                                <Entry.Behaviors>
+                                    <behaviors:EntryLengthValidatorBehavior MaxLength="12" />
+                                </Entry.Behaviors>
+                            </Entry>
+                            <Entry Grid.Row="1"
                                    Grid.Column="2"
-                                   Padding="0"
-                                   CornerRadius="5"
-                                   HasShadow="False"
-                                   HorizontalOptions="FillAndExpand">
-                                <Entry AutomationId="AltitudeEntry"
-                                       FontSize="Small"
-                                       Keyboard="Numeric"
-                                       Placeholder="0"
-                                       Style="{StaticResource EntryStyle}"
-                                       Text="{Binding Longitude}">
-                                    <Entry.Behaviors>
-                                        <behaviors:EntryLengthValidatorBehavior MaxLength="12" />
-                                    </Entry.Behaviors>
-                                </Entry>
-                            </Frame>
-                            <Frame Grid.Row="1"
+                                   AutomationId="AltitudeEntry"
+                                   FontSize="Small"
+                                   Keyboard="Numeric"
+                                   Placeholder="0"
+                                   Style="{StaticResource EntryStyle}"
+                                   Text="{Binding Longitude}">
+                                <Entry.Behaviors>
+                                    <behaviors:EntryLengthValidatorBehavior MaxLength="12" />
+                                </Entry.Behaviors>
+                            </Entry>
+                            <Entry Grid.Row="1"
                                    Grid.Column="3"
-                                   Padding="0"
-                                   CornerRadius="5"
-                                   HasShadow="False"
-                                   HorizontalOptions="FillAndExpand">
-                                <Entry AutomationId="AltitudeEntry"
-                                       FontSize="Small"
-                                       Keyboard="Numeric"
-                                       Placeholder="0"
-                                       Style="{StaticResource EntryStyle}"
-                                       Text="{Binding Altitude}">
-                                    <Entry.Behaviors>
-                                        <behaviors:EntryLengthValidatorBehavior MaxLength="12" />
-                                    </Entry.Behaviors>
-                                </Entry>
-                            </Frame>
+                                   AutomationId="AltitudeEntry"
+                                   FontSize="Small"
+                                   Keyboard="Numeric"
+                                   Placeholder="0"
+                                   Style="{StaticResource EntryStyle}"
+                                   Text="{Binding Altitude}">
+                                <Entry.Behaviors>
+                                    <behaviors:EntryLengthValidatorBehavior MaxLength="12" />
+                                </Entry.Behaviors>
+                            </Entry>
                             <ActivityIndicator Grid.Row="1"
                                                Grid.Column="4"
                                                Margin="0,0,8,0"
@@ -220,26 +205,26 @@
                             <BoxView Grid.Row="0"
                                      Grid.Column="1"
                                      Grid.ColumnSpan="4"
-                                     BackgroundColor="WhiteSmoke"
+                                     BackgroundColor="{DynamicResource Seperator}"
                                      HeightRequest="1"
                                      VerticalOptions="End" />
                         </Grid>
-                    </Frame>
-                </SwipeView.Content>
-            </SwipeView>
+                    </SwipeView.Content>
+                </SwipeView>
+            </Frame>
         </DataTemplate>
         <DataTemplate x:Key="FooterTemplate">
             <StackLayout>
                 <Grid x:Name="Coordinates Footer Section" Margin="10,0">
                     <!--  Hacky implementation of only top rounded corners  -->
-                    <Frame Margin="0,20,0,0"
-                           BackgroundColor="White"
+                    <Frame Margin="0,10,0,0"
+                           BackgroundColor="{DynamicResource Foreground}"
                            CornerRadius="10"
                            HasShadow="False"
                            HorizontalOptions="Fill"
                            VerticalOptions="Fill" />
-                    <Frame Margin="0,0,0,20"
-                           BackgroundColor="White"
+                    <Frame Margin="0,0,0,10"
+                           BackgroundColor="{DynamicResource Foreground}"
                            CornerRadius="0"
                            HasShadow="False"
                            HorizontalOptions="Fill"
@@ -258,48 +243,31 @@
                                        Style="{StaticResource ViewLabelStyle}"
                                        Text="{Binding NumPointFields}"
                                        VerticalOptions="Center" />
-                                <Frame Grid.Row="0"
+                                <Entry Grid.Row="0"
                                        Grid.Column="1"
-                                       Padding="0"
-                                       BackgroundColor="{DynamicResource bgPrimary}"
-                                       CornerRadius="5"
-                                       HasShadow="False"
-                                       HorizontalOptions="FillAndExpand">
-                                    <Entry AutomationId="AltitudeEntry"
-                                           FontSize="Small"
-                                           IsEnabled="False"
-                                           Style="{StaticResource EntryStyle}"
-                                           Text="{Binding GeolocationValues[0].Latitude}" />
-                                </Frame>
-                                <Frame Grid.Row="0"
+                                       AutomationId="AltitudeEntry"
+                                       FontSize="Small"
+                                       IsEnabled="False"
+                                       Style="{StaticResource EntryStyle}"
+                                       Text="{Binding GeolocationValues[0].Latitude}" />
+
+                                <Entry Grid.Row="0"
                                        Grid.Column="2"
-                                       Padding="0"
-                                       BackgroundColor="{DynamicResource bgPrimary}"
-                                       CornerRadius="5"
-                                       HasShadow="False"
-                                       HorizontalOptions="FillAndExpand">
-                                    <Entry AutomationId="AltitudeEntry"
-                                           FontSize="Small"
-                                           IsEnabled="False"
-                                           Style="{StaticResource EntryStyle}"
-                                           Text="{Binding GeolocationValues[0].Longitude}" />
-                                </Frame>
-                                <Frame Grid.Row="0"
+                                       AutomationId="AltitudeEntry"
+                                       FontSize="Small"
+                                       IsEnabled="False"
+                                       Style="{StaticResource EntryStyle}"
+                                       Text="{Binding GeolocationValues[0].Longitude}" />
+                                <Entry Grid.Row="0"
                                        Grid.Column="3"
-                                       Padding="0"
-                                       BackgroundColor="{DynamicResource bgPrimary}"
-                                       CornerRadius="5"
-                                       HasShadow="False"
-                                       HorizontalOptions="FillAndExpand"
-                                       VerticalOptions="Center">
-                                    <Entry AutomationId="AltitudeEntry"
-                                           FontSize="Small"
-                                           IsEnabled="False"
-                                           Style="{StaticResource EntryStyle}"
-                                           Text="{Binding GeolocationValues[0].Altitude}" />
-                                </Frame>
+                                       AutomationId="AltitudeEntry"
+                                       FontSize="Small"
+                                       IsEnabled="False"
+                                       Style="{StaticResource EntryStyle}"
+                                       Text="{Binding GeolocationValues[0].Altitude}" />
                             </Grid>
                             <Frame Padding="8"
+                                   BackgroundColor="Transparent"
                                    HasShadow="False"
                                    HeightRequest="20"
                                    HorizontalOptions="CenterAndExpand"
@@ -326,7 +294,7 @@
                 <Frame x:Name="Metadata Section"
                        Margin="10,10,10,180"
                        Padding="10,10,0,10"
-                       BackgroundColor="{DynamicResource bgPrimary}"
+                       BackgroundColor="{DynamicResource Foreground}"
                        CornerRadius="10"
                        HasShadow="False">
                     <StackLayout>
@@ -341,7 +309,7 @@
                                     <behaviors:EntryLengthValidatorBehavior MaxLength="100" />
                                 </Entry.Behaviors>
                             </Entry>
-                            <BoxView BackgroundColor="WhiteSmoke"
+                            <BoxView BackgroundColor="{DynamicResource Seperator}"
                                      HeightRequest="1"
                                      VerticalOptions="End" />
                             <Entry x:Name="integerEntry"
@@ -353,11 +321,10 @@
                                     <behaviors:EntryLengthValidatorBehavior MaxLength="8" />
                                 </Entry.Behaviors>
                             </Entry>
-                            <BoxView BackgroundColor="WhiteSmoke"
+                            <BoxView BackgroundColor="{DynamicResource Seperator}"
                                      HeightRequest="1"
                                      VerticalOptions="End" />
-                            <Entry x:Name="floatEntry"
-                                   FontSize="Small"
+                            <Entry FontSize="Small"
                                    Placeholder="Float"
                                    Style="{StaticResource EntryStyle}"
                                    Text="{Binding MetadataFloatEntry}">
@@ -374,7 +341,7 @@
         </DataTemplate>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout BackgroundColor="{DynamicResource bgSecondary}">
+        <StackLayout BackgroundColor="{DynamicResource Background}">
             <TemplatedView ControlTemplate="{StaticResource ModalPageNavigationBarDone}" />
             <CollectionView x:Name="GeodataList"
                             Footer="{Binding .}"
