@@ -28,6 +28,7 @@ namespace Groundsman.ViewModels
 
         public ProfileSettingsViewModel()
         {
+            Title = "Settings";
             DeleteAllFeatures = new Command(async () => await ExecuteDeleteAllFeaturesCommand());
             UpdatePreferences();
         }

@@ -6,14 +6,13 @@
              ios:Page.ModalPresentationStyle="FormSheet"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
-        <StackLayout BackgroundColor="{DynamicResource bgSecondary}">
+        <StackLayout BackgroundColor="{DynamicResource Background}">
             <TemplatedView ControlTemplate="{StaticResource ModalPageNavigationBar}" />
             <Grid Padding="20">
-                <Frame x:Name="pointFrame"
-                       Grid.Row="0"
+                <Frame Grid.Row="0"
                        Grid.Column="0"
                        Padding="10"
-                       BackgroundColor="{DynamicResource bgPrimary}"
+                       BackgroundColor="{DynamicResource Foreground}"
                        HasShadow="False">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Point" />
@@ -29,11 +28,10 @@
                                VerticalOptions="End" />
                     </StackLayout>
                 </Frame>
-                <Frame x:Name="lineFrame"
-                       Grid.Row="0"
+                <Frame Grid.Row="0"
                        Grid.Column="1"
                        Padding="10"
-                       BackgroundColor="{DynamicResource bgPrimary}"
+                       BackgroundColor="{DynamicResource Foreground}"
                        HasShadow="False">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="LineString" />
@@ -49,11 +47,10 @@
                                VerticalOptions="End" />
                     </StackLayout>
                 </Frame>
-                <Frame x:Name="polygonFrame"
-                       Grid.Row="0"
+                <Frame Grid.Row="0"
                        Grid.Column="2"
                        Padding="10"
-                       BackgroundColor="{DynamicResource bgPrimary}"
+                       BackgroundColor="{DynamicResource Foreground}"
                        HasShadow="False">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Polygon" />
@@ -71,12 +68,11 @@
                 </Frame>
             </Grid>
             <Grid Padding="20,0">
-                <Frame x:Name="importFrame"
-                       Grid.Row="0"
+                <Frame Grid.Row="0"
                        Grid.Column="0"
-                       BackgroundColor="{DynamicResource bgPrimary}"
+                       BackgroundColor="{DynamicResource Foreground}"
                        HasShadow="False"
-                       HeightRequest="16">
+                       HeightRequest="18">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="File" />
                     </Frame.GestureRecognizers>
@@ -90,12 +86,11 @@
                                VerticalOptions="EndAndExpand" />
                     </StackLayout>
                 </Frame>
-                <Frame x:Name="pasteFrame"
-                       Grid.Row="1"
+                <Frame Grid.Row="1"
                        Grid.Column="0"
-                       BackgroundColor="{DynamicResource bgPrimary}"
+                       BackgroundColor="{DynamicResource Foreground}"
                        HasShadow="False"
-                       HeightRequest="16">
+                       HeightRequest="18">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Clipboard" />
                     </Frame.GestureRecognizers>
@@ -110,7 +105,6 @@
                     </StackLayout>
                 </Frame>
             </Grid>
-
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

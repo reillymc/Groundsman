@@ -5,7 +5,6 @@
             xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
             xmlns:views="clr-namespace:Groundsman.Views;assembly=Groundsman"
             android:TabbedPage.ToolbarPlacement="Bottom"
-            ClassId="TabbedHomePage"
             NavigationPage.BackButtonTitle="My Features"
             NavigationPage.HasNavigationBar="false"
             SelectedTabColor="{DynamicResource greenPrimary}"

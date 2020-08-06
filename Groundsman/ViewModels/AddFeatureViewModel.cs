@@ -18,6 +18,7 @@ namespace Groundsman.ViewModels
         {
             AddFeatureCommand = new Command<string>(async (id) => await AddFeatureAsync(id));
             OnCancelTappedCommand = new Command(async () => await OnDismiss(true));
+            Title = "Add Features";
         }
 
         private async Task AddFeatureAsync(string id)

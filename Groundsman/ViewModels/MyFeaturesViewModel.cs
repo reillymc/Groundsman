@@ -31,6 +31,8 @@ namespace Groundsman.ViewModels
             EditEntryCommand = new Command<Feature>(async (feature) => await ShowEditFeatureDetailsPage(feature));
             DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
 
+            Title = "My Features";
+
             GetFeatures();
 
             MessagingCenter.Subscribe<FeatureStore>(this, "Hi", (sender) =>

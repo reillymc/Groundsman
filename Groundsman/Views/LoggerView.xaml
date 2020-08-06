@@ -2,8 +2,7 @@
 <ContentPage x:Class="Groundsman.Views.LoggerView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Groundsman"
-             Title="Logger"
+             Title="{Binding Title}"
              BackgroundColor="{DynamicResource bgPrimary}">
     <ContentPage.ToolbarItems>
         <ToolbarItem AutomationId="id_icon"
@@ -38,7 +37,6 @@
                            HorizontalOptions="Start"
                            Style="{StaticResource InputLabelStyle}"
                            Text="seconds" />
-
                 </FlexLayout>
             </Frame>
             <Frame Grid.Row="1" Style="{StaticResource FrameStyle}">
@@ -64,14 +62,12 @@
                                    Style="{StaticResource EditorStyle}"
                                    Text="{Binding TextEntry}" />
                         </ScrollView>
-
                     </Frame>
                     <StackLayout Grid.Row="2"
                                  HorizontalOptions="CenterAndExpand"
                                  Orientation="Horizontal">
                         <Button Grid.Row="2"
                                 Padding="10,0"
-                                AutomationId="ToggleButton"
                                 Command="{Binding ToggleButtonClickCommand}"
                                 Text="{Binding ToggleButtonLabel}">
                             <Button.TextColor>
@@ -85,7 +81,6 @@
                         </Button>
                         <Button Grid.Row="2"
                                 Padding="10,0"
-                                AutomationId="ClearButton"
                                 Command="{Binding ClearButtonClickCommand}"
                                 Text="Clear">
                             <Button.TextColor>

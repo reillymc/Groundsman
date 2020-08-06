@@ -5,7 +5,7 @@
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
              xmlns:converters="clr-namespace:Groundsman.Converters"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-             Title="My Features"
+             Title="{Binding Title}"
              ios:Page.LargeTitleDisplay="Always"
              BackgroundColor="{DynamicResource bgPrimary}">
     <ContentPage.ToolbarItems>

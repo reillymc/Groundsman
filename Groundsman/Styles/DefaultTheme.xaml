@@ -146,21 +146,24 @@
                     </Button.BackgroundColor>
                 </Button>
             </StackLayout>
-            <BoxView HeightRequest="0.3" Color="{DynamicResource Seperator}" />
+            <TemplatedView ControlTemplate="{StaticResource HeaderSeperator}" />
         </StackLayout>
     </ControlTemplate>
 
     <ControlTemplate x:Key="ModalPageNavigationBar">
         <StackLayout BackgroundColor="{DynamicResource Foreground}" BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
-            <StackLayout Margin="15,7,15,0"
-                         BackgroundColor="{DynamicResource bg}"
-                         Orientation="Horizontal">
-                <Button x:Name="cancelButton"
+            <Grid Margin="15,7,15,0" BackgroundColor="{DynamicResource bg}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Row="0"
+                        Grid.Column="0"
                         Command="{TemplateBinding BindingContext.OnCancelTappedCommand}"
                         FontSize="16"
                         HorizontalOptions="Start"
-                        Text="Cancel"
-                        VerticalOptions="Center">
+                        Text="Cancel">
                     <Button.TextColor>
                         <OnPlatform x:TypeArguments="Color"
                                     Android="{StaticResource textSecondary}"
@@ -170,30 +173,36 @@
                         <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
                     </Button.BackgroundColor>
                 </Button>
-                <Label FontAttributes="Bold"
+                <Label Grid.Row="0"
+                       Grid.Column="1"
+                       FontAttributes="Bold"
                        FontSize="16"
-                       HorizontalOptions="CenterAndExpand"
-                       LineBreakMode="TailTruncation"
-                       MaxLines="1"
-                       Text="{TemplateBinding BindingContext.Title}"
+                       HorizontalOptions="Center"
+                       Text="Add New Feature"
                        TextColor="{DynamicResource textPrimary}"
                        VerticalOptions="Center" />
-            </StackLayout>
-            <BoxView HeightRequest="0.3" Color="{DynamicResource Seperator}" />
+            </Grid>
+            <TemplatedView ControlTemplate="{StaticResource HeaderSeperator}" />
         </StackLayout>
     </ControlTemplate>
 
-    <ControlTemplate x:Key="Seperator">
+    <ControlTemplate x:Key="HeaderSeperator">
         <BoxView Margin="0"
                  BackgroundColor="{DynamicResource Seperator}"
                  HeightRequest="1"
                  VerticalOptions="End" />
     </ControlTemplate>
 
-    <ControlTemplate x:Key="SeperatorPadded">
+    <ControlTemplate x:Key="BodySeperator">
         <BoxView Margin="8,0,0,0"
                  BackgroundColor="{DynamicResource Seperator}"
                  HeightRequest="1"
-                 VerticalOptions="End" />
+                 VerticalOptions="End">
+            <BoxView.IsVisible>
+                <OnPlatform x:TypeArguments="x:Boolean"
+                            Android="False"
+                            iOS="True" />
+            </BoxView.IsVisible>
+        </BoxView>
     </ControlTemplate>
 </ResourceDictionary>

@@ -24,7 +24,7 @@
                                 <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
                             </Entry.Behaviors>
                         </Entry>
-                        <TemplatedView ControlTemplate="{StaticResource SeperatorPadded}" />
+                        <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
                         <DatePicker Date="{Binding DateEntry, StringFormat='{0:dd/MM/yyyy}'}"
                                     FontSize="Small"
                                     Style="{StaticResource DateEntryStyle}" />
@@ -195,7 +195,7 @@
                             <TemplatedView Grid.Row="0"
                                            Grid.Column="1"
                                            Grid.ColumnSpan="4"
-                                           ControlTemplate="{StaticResource SeperatorPadded}" />
+                                           ControlTemplate="{StaticResource BodySeperator}" />
                         </Grid>
                     </SwipeView.Content>
                 </SwipeView>
@@ -290,7 +290,7 @@
                                     <behaviors:EntryLengthValidatorBehavior MaxLength="100" />
                                 </Entry.Behaviors>
                             </Entry>
-                            <TemplatedView ControlTemplate="{StaticResource SeperatorPadded}" />
+                            <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
                             <Entry FontSize="Small"
                                    Placeholder="Integer"
                                    Style="{StaticResource EntryStyle}"
@@ -299,7 +299,7 @@
                                     <behaviors:EntryLengthValidatorBehavior MaxLength="8" />
                                 </Entry.Behaviors>
                             </Entry>
-                            <TemplatedView ControlTemplate="{StaticResource SeperatorPadded}" />
+                            <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
                             <Entry FontSize="Small"
                                    Placeholder="Float"
                                    Style="{StaticResource EntryStyle}"

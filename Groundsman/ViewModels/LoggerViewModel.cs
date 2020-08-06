@@ -52,6 +52,8 @@ namespace Groundsman.ViewModels
 
         public LoggerViewModel()
         {
+            Title = "Logger";
+
             ToggleButtonClickCommand = new Command(() =>
             {
                 if (isLogging)
