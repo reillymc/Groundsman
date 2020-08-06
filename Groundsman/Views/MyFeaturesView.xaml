@@ -12,51 +12,57 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <DataTemplate x:Key="MessageTemplate">
-                <SwipeView>
-                    <SwipeView.RightItems>
-                        <SwipeItems Mode="Reveal">
-                            <SwipeItem BackgroundColor="Red"
-                                       Command="{Binding Source={x:Reference ItemsListView}, Path=BindingContext.DeleteEntryCommand}"
-                                       CommandParameter="{Binding .}"
-                                       Text="Delete" />
-                            <SwipeItem BackgroundColor="Gray"
-                                       Command="{Binding Source={x:Reference ItemsListView}, Path=BindingContext.EditEntryCommand}"
-                                       CommandParameter="{Binding .}"
-                                       Text="Edit" />
-                        </SwipeItems>
-                    </SwipeView.RightItems>
-                    <SwipeView.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding Source={x:Reference ItemsListView}, Path=BindingContext.ViewEntryCommand}" CommandParameter="{Binding .}" />
-                    </SwipeView.GestureRecognizers>
-                    <SwipeView.Content>
-                        <StackLayout Orientation="Horizontal">
-                            <!--  Each label is created using the grid layout, with an icon at the front and 2 vertically layered text strings.  -->
-                            <Image HeightRequest="36"
-                                   HorizontalOptions="Center"
-                                   Source="{Binding properties.typeIconPath}"
-                                   VerticalOptions="Center"
-                                   WidthRequest="36" />
-                            <StackLayout Orientation="Vertical">
-                                <Label Style="{StaticResource ListLabelStyle}" Text="{Binding properties.name}" />
-                                <StackLayout Orientation="Horizontal">
-                                    <Label FontSize="Small"
-                                           HorizontalTextAlignment="Start"
-                                           LineBreakMode="TailTruncation"
-                                           Text="{Binding properties.date, StringFormat='{0:d/M/yy}'}"
-                                           TextColor="{DynamicResource textSecondary}" />
-                                    <Label FontSize="Small"
-                                           HorizontalTextAlignment="Start"
-                                           LineBreakMode="TailTruncation"
-                                           Text="{Binding properties.author, StringFormat='{0:N}'}"
-                                           TextColor="{DynamicResource textTertiary}" />
+                <StackLayout Margin="0"
+                             Padding="0"
+                             Spacing="0">
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems Mode="Reveal">
+                                <SwipeItem BackgroundColor="Red"
+                                           Command="{Binding Source={x:Reference ItemsListView}, Path=BindingContext.DeleteEntryCommand}"
+                                           CommandParameter="{Binding .}"
+                                           Text="Delete" />
+                                <SwipeItem BackgroundColor="Gray"
+                                           Command="{Binding Source={x:Reference ItemsListView}, Path=BindingContext.EditEntryCommand}"
+                                           CommandParameter="{Binding .}"
+                                           Text="Edit" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <SwipeView.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference ItemsListView}, Path=BindingContext.ViewEntryCommand}" CommandParameter="{Binding .}" />
+                        </SwipeView.GestureRecognizers>
+                        <SwipeView.Content>
+                            <StackLayout Orientation="Horizontal">
+                                <Image Margin="8"
+                                       HeightRequest="40"
+                                       HorizontalOptions="Start"
+                                       Source="{Binding properties.typeIconPath}"
+                                       VerticalOptions="Center"
+                                       WidthRequest="40" />
+                                <StackLayout Orientation="Vertical" VerticalOptions="Center">
+                                    <Label Style="{StaticResource ListLabelStyle}"
+                                           Text="{Binding properties.name}"
+                                           VerticalOptions="End" />
+                                    <StackLayout Orientation="Horizontal" VerticalOptions="Start">
+                                        <Label FontSize="Small"
+                                               HorizontalTextAlignment="Start"
+                                               LineBreakMode="TailTruncation"
+                                               Text="{Binding properties.date, StringFormat='{0:d/M/yy}'}"
+                                               TextColor="{DynamicResource textSecondary}" />
+                                        <Label FontSize="Small"
+                                               HorizontalTextAlignment="Start"
+                                               LineBreakMode="TailTruncation"
+                                               Text="{Binding properties.author, StringFormat='{0:N}'}"
+                                               TextColor="{DynamicResource textTertiary}" />
+                                    </StackLayout>
                                 </StackLayout>
-                                <BoxView BackgroundColor="{DynamicResource textSecondary}"
-                                         HeightRequest="1"
-                                         VerticalOptions="FillAndExpand" />
                             </StackLayout>
-                        </StackLayout>
-                    </SwipeView.Content>
-                </SwipeView>
+                        </SwipeView.Content>
+                    </SwipeView>
+                    <BoxView Margin="58,0,0,0"
+                             BackgroundColor="LightGray"
+                             HeightRequest="1" />
+                </StackLayout>
             </DataTemplate>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -72,9 +78,6 @@
                             SelectedItem="{Binding SelectedFeature}"
                             SelectionMode="Single"
                             VerticalOptions="FillAndExpand">
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout ItemSpacing="10" Orientation="Vertical" />
-                </CollectionView.ItemsLayout>
                 <CollectionView.Footer>
                     <Label Padding="10"
                            FontSize="Small"
