@@ -75,8 +75,6 @@
                             ItemSizingStrategy="MeasureFirstItem"
                             ItemTemplate="{StaticResource MessageTemplate}"
                             ItemsSource="{Binding FeatureList}"
-                            SelectedItem="{Binding SelectedFeature}"
-                            SelectionMode="Single"
                             VerticalOptions="FillAndExpand">
                 <CollectionView.Footer>
                     <Label Padding="10"
