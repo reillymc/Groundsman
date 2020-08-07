@@ -9,8 +9,9 @@
     <Color x:Key="bgSecondary">#111111</Color>
     <Color x:Key="bgTertiary">#303030</Color>
 
-    <Color x:Key="Background">#1c1d1c</Color>
-    <Color x:Key="Foreground">#222322</Color>
+    <Color x:Key="BaseColor">#000000</Color>
+    <Color x:Key="Background">#000000</Color>
+    <Color x:Key="Foreground">#111111</Color>
     <Color x:Key="Seperator">#323432</Color>
 
     <Color x:Key="textPrimary">#FFFFFF</Color>

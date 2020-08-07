@@ -6,8 +6,7 @@
              xmlns:converters="clr-namespace:Groundsman.Converters"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              Title="{Binding Title}"
-             ios:Page.LargeTitleDisplay="Always"
-             BackgroundColor="{DynamicResource bgPrimary}">
+             ios:Page.LargeTitleDisplay="Always">
     <ContentPage.ToolbarItems>
         <ToolbarItem AutomationId="id_icon"
                      Command="{Binding ShareButtonTappedCommand}"
@@ -27,11 +26,11 @@
                                   IsDestructive="True"
                                   Text="Delete" />
                     </ViewCell.ContextActions>
-                    <StackLayout Padding="10,4,10,4" Orientation="Horizontal">
-                        <Image HeightRequest="36"
+                    <StackLayout Padding="10,6" Orientation="Horizontal">
+                        <Image HeightRequest="40"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"
-                               WidthRequest="36">
+                               WidthRequest="40">
                             <Image.Triggers>
                                 <DataTrigger Binding="{Binding geometry.type}"
                                              TargetType="Image"
@@ -50,14 +49,17 @@
                                 </DataTrigger>
                             </Image.Triggers>
                         </Image>
-                        <StackLayout Orientation="Vertical">
-                            <Label Style="{StaticResource ListLabelStyle}" Text="{Binding properties.name}" />
+                        <StackLayout Padding="5,0" Orientation="Vertical">
+                            <Label Style="{StaticResource ListLabelStyle}"
+                                   Text="{Binding properties.name}"
+                                   VerticalOptions="End" />
                             <Label FontSize="Small"
                                    HorizontalTextAlignment="Start"
                                    LineBreakMode="TailTruncation"
-                                   TextColor="{DynamicResource textSecondary}">
+                                   TextColor="{DynamicResource textSecondary}"
+                                   VerticalOptions="Start">
                                 <Label.Text>
-                                    <MultiBinding StringFormat="{} {0:d/M/yy} {1}">
+                                    <MultiBinding StringFormat="{}{0:d/M/yy}  {1}">
                                         <Binding Path="properties.date" />
                                         <Binding Path="properties.author" />
                                     </MultiBinding>
@@ -76,7 +78,7 @@
                   HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}"
                   ItemTemplate="{StaticResource ListTemplate}"
                   ItemsSource="{Binding FeatureList}"
-                  SeparatorColor="{DynamicResource bgTertiary}">
+                  SeparatorColor="{DynamicResource Seperator}">
             <ListView.Behaviors>
                 <behaviors:ListViewItemTappedBehaviour Command="{Binding ItemTappedCommand}" Converter="{StaticResource TappedItemConverter}" />
             </ListView.Behaviors>

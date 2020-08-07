@@ -4,14 +4,13 @@ using System.Drawing;
 using UIKit;
 using Groundsman.iOS.Renderers;
 using CoreGraphics;
-using System.ComponentModel;
 
 [assembly: ExportRenderer(typeof(Entry), typeof(CustomEntryRenderer))]
 namespace Groundsman.iOS.Renderers
-
 {
     public class CustomEntryRenderer : EntryRenderer
     {
+        readonly UIColor GroundsmanGreen = new UIColor(red: 0.30f, green: 0.69f, blue: 0.31f, alpha: 1.00f);
         protected override void OnElementChanged(ElementChangedEventArgs<Entry> e)
         {
             base.OnElementChanged(e);
@@ -23,12 +22,12 @@ namespace Groundsman.iOS.Renderers
             }
 
             //remove border
-            this.Control.LeftView = new UIView(new CGRect(0, 0, 8, this.Control.Frame.Height));
-            this.Control.RightView = new UIView(new CGRect(0, 0, 8, this.Control.Frame.Height));
-            this.Control.LeftViewMode = UITextFieldViewMode.Always;
-            this.Control.RightViewMode = UITextFieldViewMode.Always;
-            this.Control.BorderStyle = UITextBorderStyle.None;
-            this.Element.HeightRequest = 30;
+            Control.LeftView = new UIView(new CGRect(0, 0, 8, Control.Frame.Height));
+            Control.RightView = new UIView(new CGRect(0, 0, 8, Control.Frame.Height));
+            Control.LeftViewMode = UITextFieldViewMode.Always;
+            Control.RightViewMode = UITextFieldViewMode.Always;
+            Control.BorderStyle = UITextBorderStyle.None;
+            Element.HeightRequest = 30;
 
             // Check for only Numeric keyboard
             if (this.Element.Keyboard == Keyboard.Numeric)
@@ -38,41 +37,23 @@ namespace Groundsman.iOS.Renderers
         }
 
         /// <summary>
-        /// Add toolbar with Done button
+        /// Add toolbar with Done and Negative button
         /// </summary>
-
-        protected void AddDoneButton()
-        {
-            UIToolbar toolbar = new UIToolbar(new RectangleF(0.0f, 0.0f, 50.0f, 44.0f));
-            toolbar.Translucent = true;
-
-            var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done, delegate
-            {
-                this.Control.ResignFirstResponder();
-            });
-
-            toolbar.Items = new UIBarButtonItem[] {
-                new UIBarButtonItem (UIBarButtonSystemItem.FlexibleSpace),
-                doneButton
-
-                };
-            this.Control.InputAccessoryView = toolbar;
-        }
-
         protected void AddNegDoneButton()
         {
-            UIToolbar toolbar = new UIToolbar(new RectangleF(0.0f, 0.0f, 50.0f, 44.0f));
-            toolbar.Translucent = true;
-
+            UIToolbar toolbar = new UIToolbar(new RectangleF(0.0f, 0.0f, 50.0f, 44.0f))
+            {
+                Translucent = true,
+                TintColor = GroundsmanGreen
+            };
             var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done, delegate
             {
-                this.Control.ResignFirstResponder();
+                Control.ResignFirstResponder();
             });
             var negButton = new UIBarButtonItem("-", UIBarButtonItemStyle.Plain, delegate
             {
-                this.Control.InsertText("-");
+                Control.InsertText("-");
             });
-
             toolbar.Items = new UIBarButtonItem[] {
                 new UIBarButtonItem (UIBarButtonSystemItem.FixedSpace),
                 negButton,
@@ -80,9 +61,8 @@ namespace Groundsman.iOS.Renderers
                 new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace),
                 new UIBarButtonItem (UIBarButtonSystemItem.FlexibleSpace),
                 doneButton
-
                 };
-            this.Control.InputAccessoryView = toolbar;
+            Control.InputAccessoryView = toolbar;
         }
     }
 }

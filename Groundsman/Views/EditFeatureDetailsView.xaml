@@ -315,7 +315,7 @@
         </DataTemplate>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout BackgroundColor="{DynamicResource Background}">
+        <StackLayout BackgroundColor="{DynamicResource Background}" Spacing="0">
             <TemplatedView ControlTemplate="{StaticResource ModalPageNavigationBarDone}" />
             <CollectionView x:Name="GeodataList"
                             Footer="{Binding .}"
