@@ -11,8 +11,6 @@ namespace Groundsman.Views
         {
             InitializeComponent();
             BindingContext = new FeatureDetailsViewModel(data);
-
-            Title = data.properties.name;
         }
 
         private void listView_ItemTapped(object sender, ItemTappedEventArgs e)

@@ -120,9 +120,6 @@
     <ImageAsset Include="Assets.xcassets\import_icon.imageset\.DS_Store">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\save_icon.imageset\.DS_Store">
-      <Visible>false</Visible>
-    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\add_icon_color.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
@@ -216,9 +213,6 @@
     <ImageAsset Include="Assets.xcassets\point_icon.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\save_icon.imageset\Contents.json">
-      <Visible>false</Visible>
-    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\welcome_screen.imageset\welcome_screen.jpg">
       <Visible>false</Visible>
     </ImageAsset>
@@ -226,12 +220,6 @@
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\add_icon.imageset\Contents.json">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\delete_icon.imageset\.DS_Store">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\delete_icon.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\settings_icon.imageset\.DS_Store">
@@ -259,18 +247,6 @@
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\add_icon_color.imageset\add_icon_color-1.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\save_icon.imageset\save_icon.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\save_icon.imageset\save_icon-1.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\delete_icon.imageset\delete_icon.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\delete_icon.imageset\delete_icon-1.png">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\current_location.imageset\current_location.png">
