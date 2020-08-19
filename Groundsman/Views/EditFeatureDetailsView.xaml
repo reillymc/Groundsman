@@ -255,6 +255,7 @@
                                    BackgroundColor="Transparent"
                                    HasShadow="False"
                                    HeightRequest="20"
+                                   Margin="5"
                                    HorizontalOptions="CenterAndExpand"
                                    IsVisible="{Binding ShowAddButton}">
                                 <Frame.GestureRecognizers>

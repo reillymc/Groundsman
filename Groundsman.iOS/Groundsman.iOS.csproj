@@ -105,6 +105,7 @@
     <Folder Include="Assets.xcassets\settings_icon.imageset\" />
     <Folder Include="Assets.xcassets\share_icon.imageset\" />
     <Folder Include="Assets.xcassets\trash_icon.imageset\" />
+    <Folder Include="Assets.xcassets\info_icon.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="Resources\iTunesArtwork%402x" />
@@ -183,9 +184,6 @@
     <ImageAsset Include="Assets.xcassets\data_icon.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\import_icon.imageset\import_icon.png">
-      <Visible>false</Visible>
-    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\import_icon.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
@@ -243,63 +241,37 @@
     <ImageAsset Include="Assets.xcassets\add_icon.imageset\add_icon-1.png">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\add_icon_color.imageset\add_icon_color.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\add_icon_color.imageset\add_icon_color-1.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\current_location.imageset\current_location.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\current_location.imageset\current_location-1.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\data_icon.imageset\baseline_location_on_black_36pt_1x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\data_icon.imageset\baseline_location_on_black_36pt_2x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\data_icon.imageset\baseline_location_on_black_36pt_3x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\paste_icon.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\map_icon.imageset\round_map_black_36pt_1x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\map_icon.imageset\round_map_black_36pt_2x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\map_icon.imageset\round_map_black_36pt_3x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\log_icon.imageset\round_linear_scale_black_36pt_1x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\log_icon.imageset\round_linear_scale_black_36pt_2x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\log_icon.imageset\round_linear_scale_black_36pt_3x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\paste_icon.imageset\paste_icon1.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\paste_icon.imageset\paste_icon2.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\paste_icon.imageset\paste_icon3.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\settings_icon.imageset\round_settings_black_36pt_1x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\settings_icon.imageset\round_settings_black_36pt_2x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\settings_icon.imageset\icons8-settings-90.png" />
+    <ImageAsset Include="Assets.xcassets\settings_icon.imageset\icons8-settings-90%402x.png" />
+    <ImageAsset Include="Assets.xcassets\settings_icon.imageset\icons8-settings-90%403x.png" />
+    <ImageAsset Include="Assets.xcassets\info_icon.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\data_icon.imageset\icons8-bulleted-list-90.png" />
+    <ImageAsset Include="Assets.xcassets\data_icon.imageset\icons8-bulleted-list-90%402x.png" />
+    <ImageAsset Include="Assets.xcassets\data_icon.imageset\icons8-bulleted-list-90%403x.png" />
+    <ImageAsset Include="Assets.xcassets\log_icon.imageset\icons8-journey-100-3.png" />
+    <ImageAsset Include="Assets.xcassets\log_icon.imageset\icons8-journey-100-3%402x.png" />
+    <ImageAsset Include="Assets.xcassets\log_icon.imageset\icons8-journey-100-3%403x.png" />
+    <ImageAsset Include="Assets.xcassets\map_icon.imageset\icons8-compass-90.png" />
+    <ImageAsset Include="Assets.xcassets\map_icon.imageset\icons8-compass-90%402x.png" />
+    <ImageAsset Include="Assets.xcassets\map_icon.imageset\icons8-compass-90%403x.png" />
+    <ImageAsset Include="Assets.xcassets\info_icon.imageset\icons8-info-100-3.png" />
+    <ImageAsset Include="Assets.xcassets\info_icon.imageset\icons8-info-100-3%402x.png" />
+    <ImageAsset Include="Assets.xcassets\info_icon.imageset\icons8-info-100-3%403x.png" />
+    <ImageAsset Include="Assets.xcassets\paste_icon.imageset\icons8-clipboard-90-2.png" />
+    <ImageAsset Include="Assets.xcassets\paste_icon.imageset\icons8-clipboard-90-2%402x.png" />
+    <ImageAsset Include="Assets.xcassets\paste_icon.imageset\icons8-clipboard-90-2%403x.png" />
+    <ImageAsset Include="Assets.xcassets\add_icon_color.imageset\icons8-plus-90.png" />
+    <ImageAsset Include="Assets.xcassets\add_icon_color.imageset\icons8-plus-90%402x.png" />
+    <ImageAsset Include="Assets.xcassets\add_icon_color.imageset\icons8-plus-90%403x.png" />
+    <ImageAsset Include="Assets.xcassets\import_icon.imageset\icons8-insert-90-2.png" />
+    <ImageAsset Include="Assets.xcassets\import_icon.imageset\icons8-insert-90-2%402x.png" />
+    <ImageAsset Include="Assets.xcassets\import_icon.imageset\icons8-insert-90-2%403x.png" />
+    <ImageAsset Include="Assets.xcassets\current_location.imageset\icons8-target-90.png" />
+    <ImageAsset Include="Assets.xcassets\current_location.imageset\icons8-target-90%402x.png" />
+    <ImageAsset Include="Assets.xcassets\current_location.imageset\icons8-target-90%403x.png" />
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>

@@ -7,6 +7,7 @@ namespace Groundsman.ViewModels
     public class ProfileSettingsViewModel : BaseViewModel
     {
         public Command DeleteAllFeatures { get; set; }
+        public Command InfoButtonTappedCommand { get; set; }
 
         private string _IDEntry;
         public string IDEntry
@@ -30,6 +31,7 @@ namespace Groundsman.ViewModels
         {
             Title = "Settings";
             DeleteAllFeatures = new Command(async () => await ExecuteDeleteAllFeaturesCommand());
+            InfoButtonTappedCommand = new Command(async () => await NavigationService.ShowAlert("Credits", "Development:\nReilly MacKenzie-Cree\nGeorge Delosa\nAri Luangamath\n\nIcons by Icons8\nhttps://icons8.com", false));
             UpdatePreferences();
         }
 

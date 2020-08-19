@@ -94,7 +94,7 @@
                 BorderRadius="25"
                 Command="{Binding AddButtonTappedCommand}"
                 HeightRequest="50"
-                Image="add_icon"
+                ImageSource="add_icon"
                 WidthRequest="50" />
     </AbsoluteLayout>
 
