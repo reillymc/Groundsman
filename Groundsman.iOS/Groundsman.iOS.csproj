@@ -73,8 +73,8 @@
     <Compile Include="Renderers\CustomDatePickerRenderer.cs" />
     <Compile Include="Renderers\ExtendedPageRenderer.cs" />
     <Compile Include="Renderers\CustomEntryRenderer.cs" />
-    <Compile Include="Misc\ShortcutIdentifier.cs" />
     <Compile Include="Renderers\CustomMapRenderer.cs" />
+    <Compile Include="Renderers\ModalPresentationRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />

@@ -1,18 +1,21 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using CoreGraphics;
 using Groundsman;
+using Groundsman.Interfaces;
 using Groundsman.iOS.Renderers;
+using Groundsman.Models;
+using Groundsman.Services;
 using MapKit;
 using UIKit;
-using Xamarin.Forms.Platform.iOS;
+using Xamarin.Forms;
 using Xamarin.Forms.Maps.iOS;
-using CoreGraphics;
+using Xamarin.Forms.Platform.iOS;
 
 [assembly: ExportRenderer(typeof(CustomMap), typeof(CustomMapRenderer))]
 namespace Groundsman.iOS.Renderers
 {
     public class CustomMapRenderer : MapRenderer
     {
-        readonly UIColor GroundsmanGreen = new UIColor(red: 0.30f, green: 0.69f, blue: 0.31f, alpha: 1.00f);
         protected override void OnElementChanged(ElementChangedEventArgs<View> e)
         {
             base.OnElementChanged(e);
@@ -21,18 +24,17 @@ namespace Groundsman.iOS.Renderers
             {
                 MKMapView nativeMap = Control as MKMapView;
                 nativeMap.ShowsCompass = false;
-                nativeMap.TintColor = GroundsmanGreen;
 
                 if (UIDevice.CurrentDevice.CheckSystemVersion(13, 0))
                 {
                     AddToolbar(nativeMap);
+                    AddCompassButton(nativeMap, 152);
                 }
                 else
                 {
                     AddTrackingButton(nativeMap);
+                    AddCompassButton(nativeMap, 108);
                 }
-
-                AddCompassButton(nativeMap);
             }
         }
 
@@ -54,7 +56,7 @@ namespace Groundsman.iOS.Renderers
             button.RightAnchor.ConstraintEqualTo(nativeMap.RightAnchor, -12).Active = true;
         }
 
-        private void AddCompassButton(MKMapView nativeMap)
+        private void AddCompassButton(MKMapView nativeMap, int topAnchor)
         {
             MKCompassButton compass = MKCompassButton.FromMapView(nativeMap);
             compass.CompassVisibility = MKFeatureVisibility.Visible;
@@ -63,34 +65,50 @@ namespace Groundsman.iOS.Renderers
 
             nativeMap.AddSubview(compass);
 
-            compass.TopAnchor.ConstraintEqualTo(nativeMap.TopAnchor, 108).Active = true;
+            compass.TopAnchor.ConstraintEqualTo(nativeMap.TopAnchor, topAnchor).Active = true;
             compass.RightAnchor.ConstraintEqualTo(nativeMap.RightAnchor, -14).Active = true;
         }
 
         private void AddToolbar(MKMapView nativeMap)
         {
-            // Tracking button
+            // Map Tracking button
             MKUserTrackingBarButtonItem trackingButton = new MKUserTrackingBarButtonItem(nativeMap);
-            trackingButton.CustomView.TintColor = GroundsmanGreen;
             trackingButton.CustomView.Frame = new CGRect(x: trackingButton.CustomView.Frame.X, y: trackingButton.CustomView.Frame.Y, width: 44, height: 44);
+            trackingButton.CustomView.Transform = CGAffineTransform.MakeRotation((nfloat)(-270.0 / 180 * Math.PI));
+
+            // Add Feature Button
+            UIButton addFeatureButton = new UIButton(UIButtonType.ContactAdd)
+            {
+                Frame = new CGRect(x: trackingButton.CustomView.Frame.X, y: trackingButton.CustomView.Frame.Y, width: 44, height: 44),
+                Transform = CGAffineTransform.MakeRotation((nfloat)(-270.0 / 180 * Math.PI))
+            };
+            addFeatureButton.TouchUpInside += (sender, e) =>
+            {
+                NavigationService navigationService = (NavigationService)DependencyService.Get<INavigationService<Feature>>();
+                _ = navigationService.PushAddFeaturePage();
+            };
+            UIBarButtonItem addFeatureButtonItem = new UIBarButtonItem(addFeatureButton);
+
+            // Flexible Seperator
+            UIBarButtonItem flex = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace, target: this, action: null);
+
+            // Toolbar Items Aray
+            UIBarButtonItem[] ButtonsArray = new UIBarButtonItem[] { flex, trackingButton, flex, addFeatureButtonItem, flex };
 
             // Toolbar and frame
-            var toolBarFrame = new CGRect(location: new CGPoint(x: 0, y: 0), size: new CGSize(width: 44, height: 44));
+            var toolBarFrame = new CGRect(location: new CGPoint(x: 0, y: 0), size: new CGSize(width: 88, height: 44));
             var toolbar = new UIToolbar(frame: toolBarFrame)
             {
                 BarTintColor = UIColor.SystemBackgroundColor,
                 Translucent = true
             };
+            toolbar.SetItems(ButtonsArray, true);
 
-            UIBarButtonItem flex = new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace, target: this, action: null);
-
-            // Set toolbar items - can be expanded later
-            toolbar.SetItems(new UIBarButtonItem[] { flex, trackingButton, flex }, true);
             // Set toolbar position
-            var origin = new CGPoint(x: UIScreen.MainScreen.Bounds.Width - 53, y: 52);
+            var origin = new CGPoint(x: UIScreen.MainScreen.Bounds.Width - 75, y: 75);
 
             // Create base view for button
-            UIView baseView = new UIView(frame: new CGRect(location: origin, size: new CGSize(width: 44, height: 44)))
+            UIView baseView = new UIView(frame: new CGRect(location: origin, size: new CGSize(width: 88, height: 44)))
             {
                 BackgroundColor = UIColor.Clear
             };
@@ -101,10 +119,6 @@ namespace Groundsman.iOS.Renderers
             baseView.Layer.ShadowOffset = new CGSize(width: 0, height: 0);
             baseView.Layer.ShadowRadius = 4.0f;
 
-            // Improves performance but causes flickering and artefacts
-            //baseView.Layer.ShouldRasterize = true;
-            //baseView.Layer.RasterizationScale = UIScreen.MainScreen.Scale;
-
             // Rounded border view for button
             UIView borderview = new UIView
             {
@@ -112,10 +126,11 @@ namespace Groundsman.iOS.Renderers
             };
             borderview.Layer.CornerRadius = 10;
             borderview.Layer.MasksToBounds = true;
+            baseView.Transform = CGAffineTransform.MakeRotation((nfloat)(270.0 / 180 * Math.PI));
 
             // Stack subviews
-            baseView.AddSubview(borderview);
             borderview.AddSubview(toolbar);
+            baseView.AddSubview(borderview);
             nativeMap.AddSubview(baseView);
         }
     }

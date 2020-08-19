@@ -18,7 +18,6 @@ namespace Groundsman.iOS
         //
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
-
         App mainForms;
         public override bool FinishedLaunching(UIApplication uiApplication, NSDictionary launchOptions)
         {
@@ -32,8 +31,10 @@ namespace Groundsman.iOS
             {
                 LaunchedShortcutItem = launchOptions[UIApplication.LaunchOptionsShortcutItemKey] as UIApplicationShortcutItem;
             }
-            UIColor tintColor = UIColor.FromRGB(76, 175, 80);
-            UINavigationBar.Appearance.TintColor = tintColor;
+
+            // Set app-wide tint colour and visual effects
+            UIColor GroundsmanGreen = new UIColor(red: 0.30f, green: 0.75f, blue: 0.30f, alpha: 1.00f);
+            UIView.Appearance.TintColor = GroundsmanGreen;
             UINavigationBar.Appearance.Translucent = true;
 
             LoadApplication(mainForms);
@@ -64,16 +65,8 @@ namespace Groundsman.iOS
             // Take action based on the shortcut type
             switch (shortcutItem.Type)
             {
-                case ShortcutIdentifier.First:
-                    _ = mainForms.NavigationService.NavigateToNewEditPage(FeatureType.Point);
-                    handled = true;
-                    break;
-                case ShortcutIdentifier.Second:
-                    _ = mainForms.NavigationService.NavigateToNewEditPage(FeatureType.LineString);
-                    handled = true;
-                    break;
-                case ShortcutIdentifier.Third:
-                    _ = mainForms.NavigationService.NavigateToNewEditPage(FeatureType.Polygon);
+                case "com.geoapplads.Groundsman.000":
+                    _ = mainForms.NavigationService.PushAddFeaturePage();
                     handled = true;
                     break;
             }

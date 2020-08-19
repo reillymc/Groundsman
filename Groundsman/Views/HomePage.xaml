@@ -12,7 +12,6 @@
     <TabbedPage.Children>
 
         <NavigationPage Title="My Features"
-                        BackgroundColor="{DynamicResource BaseColor}"
                         Icon="data_icon">
             <x:Arguments>
                 <views:MyFeaturesView />
@@ -20,7 +19,6 @@
         </NavigationPage>
 
         <NavigationPage Title="Logger"
-                        BackgroundColor="{DynamicResource BaseColor}"
                         Icon="log_icon">
             <x:Arguments>
                 <views:LoggerView />
@@ -28,7 +26,6 @@
         </NavigationPage>
 
         <NavigationPage Title="Map"
-                        BackgroundColor="{DynamicResource BaseColor}"
                         Icon="map_icon">
             <x:Arguments>
                 <views:MapView />
@@ -36,7 +33,6 @@
         </NavigationPage>
 
         <NavigationPage Title="Settings"
-                        BackgroundColor="{DynamicResource BaseColor}"
                         Icon="settings_icon">
             <x:Arguments>
                 <views:ProfileSettingsView />

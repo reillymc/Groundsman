@@ -68,12 +68,15 @@
                 <TableSection Title="Feature List">
                     <SwitchCell On="{Binding ShowPointsOnMap}"
                                 OnChanged="ShowPointsOnMapChanged"
-                                Text="Show Points on Map" />
+                                Text="Show Points on Map"
+                                OnColor="{DynamicResource greenPrimary}" />
                     <SwitchCell On="{Binding ShowLinesOnMap}"
                                 OnChanged="ShowLinesOnMapChanged"
-                                Text="Show Lines on Map" />
+                                Text="Show Lines on Map"
+                                OnColor="{DynamicResource greenPrimary}"/>
                     <SwitchCell On="{Binding ShowPolygonsOnMap}"
                                 OnChanged="ShowPolygonsOnMapChanged"
+                                OnColor="{DynamicResource greenPrimary}"
                                 Text="Show Polygons on Map" />
                     <ViewCell>
                         <StackLayout Padding="15,0"
@@ -83,14 +86,15 @@
                             <StackLayout.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding DeleteAllFeatures}" />
                             </StackLayout.GestureRecognizers>
-                            <Label Text="Clear All Features" TextColor="{StaticResource greenPrimary}" />
+                            <Label Text="Clear All Features" FontAttributes="Bold" TextColor="{StaticResource greenPrimary}" />
                         </StackLayout>
                     </ViewCell>
                 </TableSection>
                 <TableSection Title="Logger">
                     <SwitchCell On="{Binding ShowLogPathOnMap}"
                                 OnChanged="ShowLogPathOnMapChanged"
-                                Text="Show Log Path on Map" />
+                                Text="Show Log Path on Map"
+                                OnColor="{DynamicResource greenPrimary}"/>
                 </TableSection>
             </TableRoot>
         </TableView>
