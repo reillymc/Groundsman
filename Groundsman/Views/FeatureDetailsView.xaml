@@ -56,7 +56,6 @@
                            Text="Geolocation Data" />
                     <ListView x:Name="geolocationListView"
                               HasUnevenRows="True"
-                              ItemTapped="listView_ItemTapped"
                               ItemsSource="{Binding GeolocationValues}"
                               SeparatorColor="Gray"
                               Style="{StaticResource ListViewStyle}">

@@ -21,12 +21,12 @@ namespace Groundsman.iOS.Renderers
             }
 
             //remove border
-            this.Control.LeftView = new UIView(new CGRect(0, 0, 8, this.Control.Frame.Height));
-            this.Control.RightView = new UIView(new CGRect(0, 0, 8, this.Control.Frame.Height));
-            this.Control.LeftViewMode = UITextFieldViewMode.Always;
-            this.Control.RightViewMode = UITextFieldViewMode.Always;
-            this.Control.BorderStyle = UITextBorderStyle.None;
-            this.Element.HeightRequest = 30;
+            Control.LeftView = new UIView(new CGRect(0, 0, 0, Control.Frame.Height));
+            Control.RightView = new UIView(new CGRect(0, 0, 0, Control.Frame.Height));
+            Control.LeftViewMode = UITextFieldViewMode.Always;
+            Control.RightViewMode = UITextFieldViewMode.Always;
+            Control.BorderStyle = UITextBorderStyle.None;
+            Element.HeightRequest = 30;
         }
     }
 }

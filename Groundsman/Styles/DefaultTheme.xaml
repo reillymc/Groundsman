@@ -1,9 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ResourceDictionary x:Class="Groundsman.Styles.DefaultTheme"
                     xmlns="http://xamarin.com/schemas/2014/forms"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman">
 
     <Color x:Key="greenPrimary">#4CBF4C</Color>
+    <Color x:Key="Delete">#ff3b2f</Color>
+
 
     <Style x:Key="DetailFormLabel" TargetType="Label">
         <Setter Property="FontSize" Value="Default" />
@@ -28,6 +31,9 @@
     <Style x:Key="ListViewStyle" TargetType="ListView">
         <Setter Property="BackgroundColor" Value="{DynamicResource bgSecondary}" />
     </Style>
+
+
+
 
     <!--  Modular Styles  -->
     <Style x:Key="FrameStyle" TargetType="Frame">
@@ -83,6 +89,7 @@
     </Style>
     <Style x:Key="EntryStyle" TargetType="Entry">
         <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
+        <Setter Property="FontSize" Value="Small" />
     </Style>
     <Style x:Key="DateEntryStyle" TargetType="DatePicker">
         <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
@@ -103,9 +110,49 @@
     </Style>
 
 
+    <!--  New Styles  -->
+    <Style x:Key="Frame" TargetType="Frame">
+        <Setter Property="HasShadow" Value="false" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource Foreground}" />
+    </Style>
+
+    <Style x:Key="FrameM"
+           BasedOn="{StaticResource Frame}"
+           TargetType="Frame">
+        <Setter Property="Margin" Value="10" />
+    </Style>
+
+    <Style x:Key="LabelHeader" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource textPrimary}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="Small" />
+    </Style>
+
+    <Style x:Key="DetailCoordinateGrid" TargetType="Grid">
+        <Setter Property="BackgroundColor" Value="{DynamicResource Foreground}" />
+        <Setter Property="ColumnDefinitions" Value=".8*,5*,5*,3*,1.3*" />
+        <Setter Property="ColumnSpacing" Value="12" />
+        <Setter Property="Padding" Value="10,0,0,0" />
+        <Setter Property="RowDefinitions" Value="1,*" />
+        <Setter Property="RowSpacing" Value="0" />
+    </Style>
+
+    <Style x:Key="DetailCoordinateEntry" TargetType="Entry">
+        <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
+        <Setter Property="FontSize" Value="Small" />
+        <Setter Property="Keyboard" Value="Numeric" />
+        <Setter Property="behaviors:EntryNumLengthValidatorBehavior.AttachBehavior" Value="true" />
+    </Style>
+
     <!--  Control Templates  -->
     <ControlTemplate x:Key="ModalPageNavigationBarDone">
-        <StackLayout BackgroundColor="{DynamicResource Foreground}" BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
+        <StackLayout BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
+            <StackLayout.BackgroundColor>
+                <OnPlatform x:TypeArguments="Color"
+                            Android="{StaticResource greenPrimary}"
+                            iOS="{StaticResource Foreground}" />
+            </StackLayout.BackgroundColor>
             <StackLayout Margin="15,7,15,0" Orientation="Horizontal">
                 <Button x:Name="cancelButton"
                         Command="{TemplateBinding BindingContext.OnCancelTappedCommand}"
@@ -146,12 +193,17 @@
                     </Button.BackgroundColor>
                 </Button>
             </StackLayout>
-            <TemplatedView ControlTemplate="{StaticResource HeaderSeperator}" />
+            <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
         </StackLayout>
     </ControlTemplate>
 
     <ControlTemplate x:Key="ModalPageNavigationBar">
-        <StackLayout BackgroundColor="{DynamicResource Foreground}" BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
+        <StackLayout BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
+            <StackLayout.BackgroundColor>
+                <OnPlatform x:TypeArguments="Color"
+                            Android="{StaticResource greenPrimary}"
+                            iOS="{StaticResource Foreground}" />
+            </StackLayout.BackgroundColor>
             <Grid Margin="15,7,15,0" BackgroundColor="{DynamicResource bg}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -182,19 +234,12 @@
                        TextColor="{DynamicResource textPrimary}"
                        VerticalOptions="Center" />
             </Grid>
-            <TemplatedView ControlTemplate="{StaticResource HeaderSeperator}" />
+            <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
         </StackLayout>
     </ControlTemplate>
 
-    <ControlTemplate x:Key="HeaderSeperator">
-        <BoxView Margin="0"
-                 BackgroundColor="{DynamicResource Seperator}"
-                 HeightRequest="1"
-                 VerticalOptions="End" />
-    </ControlTemplate>
-
     <ControlTemplate x:Key="BodySeperator">
-        <BoxView Margin="8,0,0,0"
+        <BoxView Margin="0"
                  BackgroundColor="{DynamicResource Seperator}"
                  HeightRequest="1"
                  VerticalOptions="End">
@@ -205,4 +250,125 @@
             </BoxView.IsVisible>
         </BoxView>
     </ControlTemplate>
+
+
+    <ControlTemplate x:Key="DetailCoordinatesHeader">
+        <!--  Hacky implementation of only top rounded corners  -->
+        <Grid Margin="10,0">
+            <Frame Margin="0,0,0,20"
+                   BackgroundColor="{DynamicResource Foreground}"
+                   CornerRadius="10"
+                   HasShadow="False"
+                   HorizontalOptions="Fill"
+                   VerticalOptions="Fill" />
+            <Frame Margin="0,20,0,0"
+                   BackgroundColor="{DynamicResource Foreground}"
+                   CornerRadius="0"
+                   HasShadow="False"
+                   HorizontalOptions="Fill"
+                   VerticalOptions="Fill" />
+            <ContentView>
+                <StackLayout>
+                    <Label Margin="10,10,0,0"
+                           Style="{StaticResource ViewLabelStyle}"
+                           Text="Coordinates" />
+                    <Grid Style="{DynamicResource DetailCoordinateGrid}">
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="0,9"
+                               HorizontalOptions="Center"
+                               Style="{StaticResource LabelHeader}"
+                               Text="#" />
+                        <Label Grid.Row="1"
+                               Grid.Column="1"
+                               Margin="0,9"
+                               Style="{StaticResource LabelHeader}"
+                               Text="Latitude" />
+                        <Label Grid.Row="1"
+                               Grid.Column="2"
+                               Margin="0,9"
+                               Style="{StaticResource LabelHeader}"
+                               Text="Longitude" />
+                        <Label Grid.Row="1"
+                               Grid.Column="3"
+                               Margin="0,9"
+                               Style="{StaticResource LabelHeader}"
+                               Text="Altitude" />
+                    </Grid>
+                </StackLayout>
+            </ContentView>
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="DetailCoordinatesFooter">
+        <Grid Margin="10,0">
+            <!--  Hacky implementation of only top rounded corners  -->
+            <Frame Margin="0,10,0,0"
+                   BackgroundColor="{DynamicResource Foreground}"
+                   CornerRadius="10"
+                   HasShadow="False"
+                   HorizontalOptions="Fill"
+                   VerticalOptions="Fill" />
+            <Frame Margin="0,0,0,10"
+                   BackgroundColor="{DynamicResource Foreground}"
+                   CornerRadius="0"
+                   HasShadow="False"
+                   HorizontalOptions="Fill"
+                   VerticalOptions="Fill" />
+            <ContentView>
+                <StackLayout>
+                    <Grid IsVisible="{TemplateBinding BindingContext.ShowClosePolygon}" Style="{DynamicResource DetailCoordinateGrid}">
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               FontSize="Small"
+                               HorizontalOptions="Center"
+                               Style="{StaticResource ViewLabelStyle}"
+                               Text="{TemplateBinding BindingContext.NumPointFields}"
+                               VerticalOptions="Center" />
+                        <Entry Grid.Row="1"
+                               Grid.Column="1"
+                               FontSize="Small"
+                               IsEnabled="False"
+                               Style="{StaticResource EntryStyle}"
+                               Text="{TemplateBinding BindingContext.GeolocationValues[0].Latitude}" />
+
+                        <Entry Grid.Row="1"
+                               Grid.Column="2"
+                               FontSize="Small"
+                               IsEnabled="False"
+                               Style="{StaticResource EntryStyle}"
+                               Text="{TemplateBinding BindingContext.GeolocationValues[0].Longitude}" />
+                        <Entry Grid.Row="1"
+                               Grid.Column="3"
+                               FontSize="Small"
+                               IsEnabled="False"
+                               Style="{StaticResource EntryStyle}"
+                               Text="{TemplateBinding BindingContext.GeolocationValues[0].Altitude}" />
+                    </Grid>
+                    <Frame Margin="5"
+                           Padding="8"
+                           BackgroundColor="Transparent"
+                           HasShadow="False"
+                           HeightRequest="20"
+                           HorizontalOptions="CenterAndExpand"
+                           IsVisible="{TemplateBinding BindingContext.ShowAddButton}">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{TemplateBinding BindingContext.AddPointCommand}" />
+                        </Frame.GestureRecognizers>
+                        <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                            <Image HorizontalOptions="Center"
+                                   Source="add_icon_color"
+                                   VerticalOptions="Center" />
+                            <Label FontSize="Small"
+                                   HorizontalOptions="Center"
+                                   Text="Add Point"
+                                   TextColor="Green"
+                                   VerticalOptions="Center" />
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+            </ContentView>
+        </Grid>
+    </ControlTemplate>
+
 </ResourceDictionary>

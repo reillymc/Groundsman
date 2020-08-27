@@ -51,7 +51,8 @@
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <CodesignProvision>iOS Team Provisioning Profile: *</CodesignProvision>
-    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchLink>None</MtouchLink>
+    <MtouchInterpreter>-all</MtouchInterpreter>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -101,11 +102,8 @@
   <ItemGroup>
     <Folder Include="Assets.xcassets\add_icon.imageset\" />
     <Folder Include="Assets.xcassets\delete_icon.imageset\" />
-    <Folder Include="Assets.xcassets\paste_icon.imageset\" />
-    <Folder Include="Assets.xcassets\settings_icon.imageset\" />
     <Folder Include="Assets.xcassets\share_icon.imageset\" />
     <Folder Include="Assets.xcassets\trash_icon.imageset\" />
-    <Folder Include="Assets.xcassets\info_icon.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="Resources\iTunesArtwork%402x" />
@@ -244,34 +242,90 @@
     <ImageAsset Include="Assets.xcassets\paste_icon.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\settings_icon.imageset\icons8-settings-90.png" />
-    <ImageAsset Include="Assets.xcassets\settings_icon.imageset\icons8-settings-90%402x.png" />
-    <ImageAsset Include="Assets.xcassets\settings_icon.imageset\icons8-settings-90%403x.png" />
-    <ImageAsset Include="Assets.xcassets\info_icon.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\data_icon.imageset\icons8-bulleted-list-90.png" />
-    <ImageAsset Include="Assets.xcassets\data_icon.imageset\icons8-bulleted-list-90%402x.png" />
-    <ImageAsset Include="Assets.xcassets\data_icon.imageset\icons8-bulleted-list-90%403x.png" />
-    <ImageAsset Include="Assets.xcassets\log_icon.imageset\icons8-journey-100-3.png" />
-    <ImageAsset Include="Assets.xcassets\log_icon.imageset\icons8-journey-100-3%402x.png" />
-    <ImageAsset Include="Assets.xcassets\log_icon.imageset\icons8-journey-100-3%403x.png" />
-    <ImageAsset Include="Assets.xcassets\map_icon.imageset\icons8-compass-90.png" />
-    <ImageAsset Include="Assets.xcassets\map_icon.imageset\icons8-compass-90%402x.png" />
-    <ImageAsset Include="Assets.xcassets\map_icon.imageset\icons8-compass-90%403x.png" />
-    <ImageAsset Include="Assets.xcassets\info_icon.imageset\icons8-info-100-3.png" />
-    <ImageAsset Include="Assets.xcassets\info_icon.imageset\icons8-info-100-3%402x.png" />
-    <ImageAsset Include="Assets.xcassets\info_icon.imageset\icons8-info-100-3%403x.png" />
-    <ImageAsset Include="Assets.xcassets\paste_icon.imageset\icons8-clipboard-90-2.png" />
-    <ImageAsset Include="Assets.xcassets\paste_icon.imageset\icons8-clipboard-90-2%402x.png" />
-    <ImageAsset Include="Assets.xcassets\paste_icon.imageset\icons8-clipboard-90-2%403x.png" />
-    <ImageAsset Include="Assets.xcassets\add_icon_color.imageset\icons8-plus-90.png" />
-    <ImageAsset Include="Assets.xcassets\add_icon_color.imageset\icons8-plus-90%402x.png" />
-    <ImageAsset Include="Assets.xcassets\add_icon_color.imageset\icons8-plus-90%403x.png" />
-    <ImageAsset Include="Assets.xcassets\import_icon.imageset\icons8-insert-90-2.png" />
-    <ImageAsset Include="Assets.xcassets\import_icon.imageset\icons8-insert-90-2%402x.png" />
-    <ImageAsset Include="Assets.xcassets\import_icon.imageset\icons8-insert-90-2%403x.png" />
-    <ImageAsset Include="Assets.xcassets\current_location.imageset\icons8-target-90.png" />
-    <ImageAsset Include="Assets.xcassets\current_location.imageset\icons8-target-90%402x.png" />
-    <ImageAsset Include="Assets.xcassets\current_location.imageset\icons8-target-90%403x.png" />
+    <ImageAsset Include="Assets.xcassets\settings_icon.imageset\icons8-settings-90.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\settings_icon.imageset\icons8-settings-90%402x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\settings_icon.imageset\icons8-settings-90%403x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\info_icon.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\data_icon.imageset\icons8-bulleted-list-90.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\data_icon.imageset\icons8-bulleted-list-90%402x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\data_icon.imageset\icons8-bulleted-list-90%403x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\log_icon.imageset\icons8-journey-100-3.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\log_icon.imageset\icons8-journey-100-3%402x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\log_icon.imageset\icons8-journey-100-3%403x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\map_icon.imageset\icons8-compass-90.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\map_icon.imageset\icons8-compass-90%402x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\map_icon.imageset\icons8-compass-90%403x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\info_icon.imageset\icons8-info-100-3.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\info_icon.imageset\icons8-info-100-3%402x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\info_icon.imageset\icons8-info-100-3%403x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\paste_icon.imageset\icons8-clipboard-90-2.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\paste_icon.imageset\icons8-clipboard-90-2%402x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\paste_icon.imageset\icons8-clipboard-90-2%403x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\add_icon_color.imageset\icons8-plus-90.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\add_icon_color.imageset\icons8-plus-90%402x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\add_icon_color.imageset\icons8-plus-90%403x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\import_icon.imageset\icons8-insert-90-2.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\import_icon.imageset\icons8-insert-90-2%402x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\import_icon.imageset\icons8-insert-90-2%403x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\current_location.imageset\icons8-target-90.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\current_location.imageset\icons8-target-90%402x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\current_location.imageset\icons8-target-90%403x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>

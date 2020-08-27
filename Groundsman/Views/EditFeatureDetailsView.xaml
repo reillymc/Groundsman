@@ -9,106 +9,29 @@
     <ContentPage.Resources>
         <DataTemplate x:Key="HeaderTemplate">
             <StackLayout>
-                <Frame Margin="10"
-                       Padding="10,10,0,10"
-                       BackgroundColor="{DynamicResource Foreground}"
-                       CornerRadius="10"
-                       HasShadow="False">
+                <Frame Padding="10,10,0,10" Style="{DynamicResource FrameM}">
                     <StackLayout>
                         <Label Style="{StaticResource ViewLabelStyle}" Text="Properties" />
-                        <Entry FontSize="Small"
-                               Placeholder="Name"
-                               Style="{StaticResource EntryStyle}"
-                               Text="{Binding NameEntry}">
-                            <Entry.Behaviors>
-                                <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
-                            </Entry.Behaviors>
-                        </Entry>
-                        <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
-                        <DatePicker Date="{Binding DateEntry, StringFormat='{0:dd/MM/yyyy}'}"
-                                    FontSize="Small"
-                                    Style="{StaticResource DateEntryStyle}" />
+                        <StackLayout Margin="8,0,0,0">
+                            <Entry FontSize="Small"
+                                   Placeholder="Name"
+                                   Style="{StaticResource EntryStyle}"
+                                   Text="{Binding NameEntry}">
+                                <Entry.Behaviors>
+                                    <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
+                                </Entry.Behaviors>
+                            </Entry>
+                            <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
+                            <DatePicker Date="{Binding DateEntry, StringFormat='{0:dd/MM/yyyy}'}"
+                                        FontSize="Small"
+                                        Style="{StaticResource DateEntryStyle}" />
+                        </StackLayout>
                     </StackLayout>
                 </Frame>
-                <Grid Margin="10,0">
-                    <!--  Hacky implementation of only top rounded corners  -->
-                    <Frame Margin="0,0,0,20"
-                           BackgroundColor="{DynamicResource Foreground}"
-                           CornerRadius="10"
-                           HasShadow="False"
-                           HorizontalOptions="Fill"
-                           VerticalOptions="Fill" />
-                    <Frame Margin="0,20,0,0"
-                           BackgroundColor="{DynamicResource Foreground}"
-                           CornerRadius="0"
-                           HasShadow="False"
-                           HorizontalOptions="Fill"
-                           VerticalOptions="Fill" />
-                    <ContentView Margin="10">
-                        <StackLayout>
-                            <Grid ColumnDefinitions="*,*" RowDefinitions="*">
-                                <Label Grid.Column="0"
-                                       Style="{StaticResource ViewLabelStyle}"
-                                       Text="Coordinates" />
-                                <Button Grid.Column="1"
-                                        Margin="0,0,10,0"
-                                        FontSize="16"
-                                        HeightRequest="10"
-                                        HorizontalOptions="End"
-                                        Text="Edit"
-                                        VerticalOptions="Center">
-                                    <Button.TextColor>
-                                        <OnPlatform x:TypeArguments="Color"
-                                                    Android="{StaticResource textSecondary}"
-                                                    iOS="{StaticResource greenPrimary}" />
-                                    </Button.TextColor>
-                                    <Button.BackgroundColor>
-                                        <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
-                                    </Button.BackgroundColor>
-                                    <Button.IsVisible>
-                                        <OnPlatform x:TypeArguments="x:Boolean"
-                                                    Android="True"
-                                                    iOS="False" />
-                                    </Button.IsVisible>
-                                </Button>
-                            </Grid>
-
-                            <Grid ColumnDefinitions=".8*,5*,5*,4.3*">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Label Grid.Row="0"
-                                       Grid.Column="0"
-                                       Margin="0,9"
-                                       FontSize="Small"
-                                       HorizontalOptions="Center"
-                                       Style="{StaticResource ViewLabelStyle}"
-                                       Text="#" />
-                                <Label Grid.Row="0"
-                                       Grid.Column="1"
-                                       Margin="6,9"
-                                       FontSize="Small"
-                                       Style="{StaticResource ViewLabelStyle}"
-                                       Text="Latitude" />
-                                <Label Grid.Row="0"
-                                       Grid.Column="2"
-                                       Margin="6,9"
-                                       FontSize="Small"
-                                       Style="{StaticResource ViewLabelStyle}"
-                                       Text="Longitude" />
-                                <Label Grid.Row="0"
-                                       Grid.Column="3"
-                                       Margin="6,9"
-                                       FontSize="Small"
-                                       Style="{StaticResource ViewLabelStyle}"
-                                       Text="Altitude" />
-                            </Grid>
-                        </StackLayout>
-                    </ContentView>
-                </Grid>
+                <TemplatedView ControlTemplate="{StaticResource DetailCoordinatesHeader}" />
             </StackLayout>
-
         </DataTemplate>
+
         <DataTemplate x:Key="ItemTemplate">
             <Frame Margin="0,5"
                    Padding="11,0,9,0"
@@ -119,79 +42,47 @@
                 <SwipeView>
                     <SwipeView.RightItems>
                         <SwipeItems Mode="Reveal">
-                            <SwipeItem BackgroundColor="Red"
+                            <SwipeItem BackgroundColor="{StaticResource Delete}"
                                        Command="{Binding Source={x:Reference GeodataList}, Path=BindingContext.DeletePointCommand}"
                                        CommandParameter="{Binding .}"
                                        Text="Delete" />
                         </SwipeItems>
                     </SwipeView.RightItems>
                     <SwipeView.Content>
-                        <Grid Padding="10,0,0,0"
-                              BackgroundColor="{DynamicResource Foreground}"
-                              ColumnDefinitions=".8*,5*,5*,3*,1.3*"
-                              ColumnSpacing="10"
-                              IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                              RowDefinitions="1,*"
-                              RowSpacing="0">
+                        <Grid IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}" Style="{DynamicResource DetailCoordinateGrid}">
                             <Label Grid.Row="1"
                                    Grid.Column="0"
-                                   FontSize="Small"
                                    HorizontalOptions="Center"
-                                   Style="{StaticResource ViewLabelStyle}"
+                                   Style="{StaticResource LabelHeader}"
                                    Text="{Binding Index}"
                                    VerticalOptions="Center" />
                             <Entry Grid.Row="1"
                                    Grid.Column="1"
-                                   FontSize="Small"
-                                   Keyboard="Numeric"
-                                   Placeholder="0"
-                                   Style="{StaticResource EntryStyle}"
-                                   Text="{Binding Latitude}">
-                                <Entry.Behaviors>
-                                    <behaviors:EntryLengthValidatorBehavior MaxLength="12" />
-                                </Entry.Behaviors>
-                            </Entry>
+                                   Style="{StaticResource DetailCoordinateEntry}"
+                                   Text="{Binding Latitude}" />
                             <Entry Grid.Row="1"
                                    Grid.Column="2"
-                                   FontSize="Small"
-                                   Keyboard="Numeric"
-                                   Placeholder="0"
-                                   Style="{StaticResource EntryStyle}"
-                                   Text="{Binding Longitude}">
-                                <Entry.Behaviors>
-                                    <behaviors:EntryLengthValidatorBehavior MaxLength="12" />
-                                </Entry.Behaviors>
-                            </Entry>
+                                   Style="{StaticResource DetailCoordinateEntry}"
+                                   Text="{Binding Longitude}" />
                             <Entry Grid.Row="1"
                                    Grid.Column="3"
-                                   FontSize="Small"
-                                   Keyboard="Numeric"
-                                   Placeholder="0"
-                                   Style="{StaticResource EntryStyle}"
-                                   Text="{Binding Altitude}">
-                                <Entry.Behaviors>
-                                    <behaviors:EntryLengthValidatorBehavior MaxLength="12" />
-                                </Entry.Behaviors>
-                            </Entry>
-                            <ActivityIndicator Grid.Row="1"
-                                               Grid.Column="4"
-                                               Margin="0,0,8,0"
-                                               HorizontalOptions="Start"
-                                               IsRunning="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                                               IsVisible="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                                               VerticalOptions="Center"
-                                               Color="{StaticResource greenPrimary}" />
-                            <Button Grid.Row="1"
-                                    Grid.Column="4"
-                                    Margin="0,0,8,0"
-                                    BackgroundColor="Transparent"
-                                    Command="{Binding Path=BindingContext.GetFeatureCommand, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                                    CommandParameter="{Binding .}"
-                                    HeightRequest="20"
-                                    HorizontalOptions="Start"
-                                    Image="current_location"
-                                    IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                                    VerticalOptions="CenterAndExpand" />
+                                   Style="{StaticResource DetailCoordinateEntry}"
+                                   Text="{Binding Altitude}" />
+                            <Grid Grid.Row="1"
+                                  Grid.Column="4"
+                                  Margin="0,0,8,0"
+                                  HeightRequest="20"
+                                  HorizontalOptions="Start"
+                                  VerticalOptions="CenterAndExpand">
+                                <ActivityIndicator IsRunning="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
+                                                   IsVisible="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
+                                                   Color="{StaticResource greenPrimary}" />
+                                <Button BackgroundColor="Transparent"
+                                        Command="{Binding Path=BindingContext.GetFeatureCommand, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
+                                        CommandParameter="{Binding .}"
+                                        Image="current_location"
+                                        IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}" />
+                            </Grid>
                             <TemplatedView Grid.Row="0"
                                            Grid.Column="1"
                                            Grid.ColumnSpan="4"
@@ -201,90 +92,17 @@
                 </SwipeView>
             </Frame>
         </DataTemplate>
+
         <DataTemplate x:Key="FooterTemplate">
             <StackLayout>
-                <Grid Margin="10,0">
-                    <!--  Hacky implementation of only top rounded corners  -->
-                    <Frame Margin="0,10,0,0"
-                           BackgroundColor="{DynamicResource Foreground}"
-                           CornerRadius="10"
-                           HasShadow="False"
-                           HorizontalOptions="Fill"
-                           VerticalOptions="Fill" />
-                    <Frame Margin="0,0,0,10"
-                           BackgroundColor="{DynamicResource Foreground}"
-                           CornerRadius="0"
-                           HasShadow="False"
-                           HorizontalOptions="Fill"
-                           VerticalOptions="Fill" />
-                    <ContentView Padding="10,0,0,0">
-                        <StackLayout>
-                            <Grid Padding="5,0,0,0"
-                                  ColumnDefinitions=".8*,5*,5*,3*,1.3*"
-                                  ColumnSpacing="10"
-                                  IsVisible="{Binding ShowClosePolygon}"
-                                  RowDefinitions="*"
-                                  RowSpacing="0">
-                                <Label Grid.Row="0"
-                                       Grid.Column="0"
-                                       FontSize="Small"
-                                       Style="{StaticResource ViewLabelStyle}"
-                                       Text="{Binding NumPointFields}"
-                                       VerticalOptions="Center" />
-                                <Entry Grid.Row="0"
-                                       Grid.Column="1"
-                                       FontSize="Small"
-                                       IsEnabled="False"
-                                       Style="{StaticResource EntryStyle}"
-                                       Text="{Binding GeolocationValues[0].Latitude}" />
-
-                                <Entry Grid.Row="0"
-                                       Grid.Column="2"
-                                       FontSize="Small"
-                                       IsEnabled="False"
-                                       Style="{StaticResource EntryStyle}"
-                                       Text="{Binding GeolocationValues[0].Longitude}" />
-                                <Entry Grid.Row="0"
-                                       Grid.Column="3"
-                                       FontSize="Small"
-                                       IsEnabled="False"
-                                       Style="{StaticResource EntryStyle}"
-                                       Text="{Binding GeolocationValues[0].Altitude}" />
-                            </Grid>
-                            <Frame Padding="8"
-                                   BackgroundColor="Transparent"
-                                   HasShadow="False"
-                                   HeightRequest="20"
-                                   Margin="5"
-                                   HorizontalOptions="CenterAndExpand"
-                                   IsVisible="{Binding ShowAddButton}">
-                                <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding AddPointCommand}" />
-                                </Frame.GestureRecognizers>
-                                <StackLayout Orientation="Horizontal" VerticalOptions="Center">
-                                    <Image HorizontalOptions="Center"
-                                           Source="add_icon_color"
-                                           VerticalOptions="Center" />
-                                    <Label FontSize="Small"
-                                           HorizontalOptions="Center"
-                                           Text="Add Point"
-                                           TextColor="Green"
-                                           VerticalOptions="Center" />
-                                </StackLayout>
-                            </Frame>
-                        </StackLayout>
-                    </ContentView>
-                </Grid>
+                <TemplatedView ControlTemplate="{StaticResource DetailCoordinatesFooter}" />
                 <Frame Margin="10,10,10,180"
-                       Padding="10,10,0,10"
-                       BackgroundColor="{DynamicResource Foreground}"
-                       CornerRadius="10"
-                       HasShadow="False">
+                       Padding="10,10,0,0"
+                       Style="{StaticResource Frame}">
                     <StackLayout>
                         <Label Style="{StaticResource ViewLabelStyle}" Text="Metadata" />
-                        <StackLayout Orientation="Vertical">
-                            <Entry FontSize="Small"
-                                   Placeholder="String"
+                        <StackLayout Margin="8,0,0,0" Orientation="Vertical">
+                            <Entry Placeholder="String"
                                    Style="{StaticResource EntryStyle}"
                                    Text="{Binding MetadataStringEntry}">
                                 <Entry.Behaviors>
@@ -292,8 +110,7 @@
                                 </Entry.Behaviors>
                             </Entry>
                             <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
-                            <Entry FontSize="Small"
-                                   Placeholder="Integer"
+                            <Entry Placeholder="Integer"
                                    Style="{StaticResource EntryStyle}"
                                    Text="{Binding MetadataIntegerEntry}">
                                 <Entry.Behaviors>
@@ -301,20 +118,16 @@
                                 </Entry.Behaviors>
                             </Entry>
                             <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
-                            <Entry FontSize="Small"
-                                   Placeholder="Float"
-                                   Style="{StaticResource EntryStyle}"
-                                   Text="{Binding MetadataFloatEntry}">
-                                <Entry.Behaviors>
-                                    <behaviors:EntryLengthValidatorBehavior MaxLength="12" />
-                                </Entry.Behaviors>
-                            </Entry>
+                            <Entry Placeholder="Float"
+                                   Style="{StaticResource DetailCoordinateEntry}"
+                                   Text="{Binding MetadataFloatEntry}" />
                         </StackLayout>
                     </StackLayout>
                 </Frame>
             </StackLayout>
         </DataTemplate>
     </ContentPage.Resources>
+
     <ContentPage.Content>
         <StackLayout BackgroundColor="{DynamicResource Background}" Spacing="0">
             <TemplatedView ControlTemplate="{StaticResource ModalPageNavigationBarDone}" />
@@ -324,7 +137,8 @@
                             Header="{Binding .}"
                             HeaderTemplate="{StaticResource HeaderTemplate}"
                             ItemTemplate="{StaticResource ItemTemplate}"
-                            ItemsSource="{Binding GeolocationValues}" />
+                            ItemsSource="{Binding GeolocationValues}"
+                            VerticalOptions="FillAndExpand" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

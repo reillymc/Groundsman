@@ -21,8 +21,8 @@ namespace Groundsman.iOS.Renderers
             }
 
             //remove border
-            Control.LeftView = new UIView(new CGRect(0, 0, 8, Control.Frame.Height));
-            Control.RightView = new UIView(new CGRect(0, 0, 8, Control.Frame.Height));
+            Control.LeftView = new UIView(new CGRect(0, 0, 0, Control.Frame.Height));
+            Control.RightView = new UIView(new CGRect(0, 0, 0, Control.Frame.Height));
             Control.LeftViewMode = UITextFieldViewMode.Always;
             Control.RightViewMode = UITextFieldViewMode.Always;
             Control.BorderStyle = UITextBorderStyle.None;
