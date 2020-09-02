@@ -111,6 +111,16 @@
 
 
     <!--  New Styles  -->
+
+    <Style x:Key="PageStyle" TargetType="ContentPage">
+        <Setter Property="BackgroundColor" Value="{DynamicResource bgPrimary}" />
+        <Setter Property="Title" Value="{Binding Title}" />
+    </Style>
+    <Style x:Key="PageTintedStyle" TargetType="ContentPage">
+        <Setter Property="BackgroundColor" Value="{DynamicResource Background}" />
+        <Setter Property="Title" Value="{Binding Title}" />
+    </Style>
+
     <Style x:Key="Frame" TargetType="Frame">
         <Setter Property="HasShadow" Value="false" />
         <Setter Property="CornerRadius" Value="10" />
@@ -123,10 +133,36 @@
         <Setter Property="Margin" Value="10" />
     </Style>
 
+    <Style x:Key="CoordinateItemFrame" TargetType="Frame">
+        <Setter Property="Margin" Value="0,6" />
+        <Setter Property="Padding">
+            <OnPlatform x:TypeArguments="Thickness"
+                        Android="10,0"
+                        iOS="11,0,9,0" />
+        </Setter>
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="HasShadow" Value="False" />
+        <Setter Property="IsClippedToBounds" Value="True" />
+    </Style>
+
+    <Style x:Key="LabelTitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource textPrimary}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="Default" />
+    </Style>
+
     <Style x:Key="LabelHeader" TargetType="Label">
         <Setter Property="TextColor" Value="{DynamicResource textPrimary}" />
         <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="FontSize" Value="Small" />
+    </Style>
+
+    <Style x:Key="LabelBody" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
+        <Setter Property="FontSize" Value="Small" />
+        <Setter Property="Padding" Value="0,2" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
     </Style>
 
     <Style x:Key="DetailCoordinateGrid" TargetType="Grid">
@@ -270,7 +306,7 @@
             <ContentView>
                 <StackLayout>
                     <Label Margin="10,10,0,0"
-                           Style="{StaticResource ViewLabelStyle}"
+                           Style="{StaticResource LabelTitle}"
                            Text="Coordinates" />
                     <Grid Style="{DynamicResource DetailCoordinateGrid}">
                         <Label Grid.Row="1"
@@ -300,7 +336,7 @@
         </Grid>
     </ControlTemplate>
 
-    <ControlTemplate x:Key="DetailCoordinatesFooter">
+    <ControlTemplate x:Key="DetailCoordinatesEditFooter">
         <Grid Margin="10,0">
             <!--  Hacky implementation of only top rounded corners  -->
             <Frame Margin="0,10,0,0"
@@ -366,6 +402,53 @@
                                    VerticalOptions="Center" />
                         </StackLayout>
                     </Frame>
+                </StackLayout>
+            </ContentView>
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="DetailCoordinatesFooter">
+        <Grid Margin="10,0">
+            <!--  Hacky implementation of only top rounded corners  -->
+            <Frame Margin="0,10,0,0"
+                   BackgroundColor="{DynamicResource Foreground}"
+                   CornerRadius="10"
+                   HasShadow="False"
+                   HorizontalOptions="Fill"
+                   VerticalOptions="Fill" />
+            <Frame Margin="0,0,0,10"
+                   BackgroundColor="{DynamicResource Foreground}"
+                   CornerRadius="0"
+                   HasShadow="False"
+                   HorizontalOptions="Fill"
+                   VerticalOptions="Fill" />
+            <ContentView>
+                <StackLayout>
+                    <Grid Margin="0,5,0,0"
+                          IsVisible="{TemplateBinding BindingContext.ShowClosePolygon}"
+                          Style="{DynamicResource DetailCoordinateGrid}">
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               HorizontalOptions="Center"
+                               Style="{StaticResource LabelHeader}"
+                               Text="{TemplateBinding BindingContext.NumPointFields}"
+                               VerticalOptions="Center" />
+                        <Label Grid.Row="1"
+                               Grid.Column="1"
+                               LineBreakMode="TailTruncation"
+                               Style="{StaticResource LabelBody}"
+                               Text="{TemplateBinding BindingContext.GeolocationValues[0].Latitude}" />
+                        <Label Grid.Row="1"
+                               Grid.Column="2"
+                               LineBreakMode="TailTruncation"
+                               Style="{StaticResource LabelBody}"
+                               Text="{TemplateBinding BindingContext.GeolocationValues[0].Longitude}" />
+                        <Label Grid.Row="1"
+                               Grid.Column="3"
+                               LineBreakMode="TailTruncation"
+                               Style="{StaticResource LabelBody}"
+                               Text="{TemplateBinding BindingContext.GeolocationValues[0].Altitude}" />
+                    </Grid>
                 </StackLayout>
             </ContentView>
         </Grid>

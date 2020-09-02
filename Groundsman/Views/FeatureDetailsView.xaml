@@ -5,160 +5,79 @@
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              x:Name="FeatureDetailsViewPage"
              ios:Page.ModalPresentationStyle="FormSheet"
-             BackgroundColor="{DynamicResource bgPrimary}"
-             Title="{Binding Title}">
+             Style="{StaticResource PageTintedStyle}">
     <ContentPage.ToolbarItems>
         <ToolbarItem Command="{Binding ShareEntryCommand}" Icon="share_icon" />
     </ContentPage.ToolbarItems>
-    <ContentPage.Content>
-        <StackLayout Margin="10,10,10,20">
-            <Frame Style="{StaticResource FrameStyle}" VerticalOptions="Start">
-                <StackLayout>
-                    <Grid ColumnSpacing="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.6*" />
-                            <ColumnDefinition Width="0.4*" />
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Row="0"
-                               Grid.Column="0"
-                               Style="{StaticResource ViewLabelStyle}"
-                               Text="Name" />
-                        <Label Grid.Row="1"
-                               Grid.Column="0"
-                               Margin="0,5,0,0"
-                               AutomationId="NameEntry"
-                               FontSize="Small"
-                               Text="{Binding NameEntry}"
-                               TextColor="Gray" />
-                        <Label Grid.Row="0"
-                               Grid.Column="1"
-                               Style="{StaticResource ViewLabelStyle}"
-                               Text="Date" />
-                        <Label Grid.Row="1"
-                               Grid.Column="1"
-                               Margin="0,5,0,0"
-                               AutomationId="DateEntry"
-                               FontSize="Small"
-                               Text="{Binding DateEntry, StringFormat='{0: dd/MM/yyyy}'}"
-                               TextColor="Gray" />
-                    </Grid>
-                </StackLayout>
-            </Frame>
-            <Frame Style="{StaticResource FrameStyle}" VerticalOptions="Start">
-                <StackLayout>
-                    <Label Grid.Row="0"
+
+    <ContentPage.Resources>
+        <DataTemplate x:Key="HeaderTemplate">
+            <TemplatedView Padding="0,10,0,0" ControlTemplate="{StaticResource DetailCoordinatesHeader}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="ItemTemplate">
+            <Frame Style="{StaticResource CoordinateItemFrame}">
+
+                <Grid IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=FeatureDetailsViewPage}}" Style="{DynamicResource DetailCoordinateGrid}">
+                    <Label Grid.Row="1"
                            Grid.Column="0"
-                           Style="{StaticResource ViewLabelStyle}"
-                           Text="Geolocation Data" />
-                    <ListView x:Name="geolocationListView"
-                              HasUnevenRows="True"
-                              ItemsSource="{Binding GeolocationValues}"
-                              SeparatorColor="Gray"
-                              Style="{StaticResource ListViewStyle}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <Grid Margin="10,0,0,0" Style="{StaticResource DetailFormPanelGrid}">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition />
-                                            <ColumnDefinition />
-                                            <ColumnDefinition />
-                                        </Grid.ColumnDefinitions>
-                                        <Label Grid.Row="0"
-                                               Grid.Column="0"
-                                               Margin="0,9"
-                                               AutomationId="LatLabel"
-                                               FontSize="Small"
-                                               Style="{StaticResource ViewLabelStyle}"
-                                               Text="Latitude" />
-                                        <Label Grid.Row="1"
-                                               Grid.Column="0"
-                                               AutomationId="LatLabelVal"
-                                               FontSize="Small"
-                                               Text="{Binding Latitude}"
-                                               TextColor="Gray" />
-                                        <Label Grid.Row="0"
-                                               Grid.Column="1"
-                                               Margin="0,9"
-                                               AutomationId="LongLabel"
-                                               FontSize="Small"
-                                               Style="{StaticResource ViewLabelStyle}"
-                                               Text="Longitude" />
-                                        <Label Grid.Row="1"
-                                               Grid.Column="1"
-                                               AutomationId="LongLabelVal"
-                                               FontSize="Small"
-                                               Text="{Binding Longitude}"
-                                               TextColor="Gray" />
-                                        <Label Grid.Row="0"
-                                               Grid.Column="2"
-                                               Margin="0,9"
-                                               AutomationId="AltLabel"
-                                               FontSize="Small"
-                                               Style="{StaticResource ViewLabelStyle}"
-                                               Text="Altitude" />
-                                        <Label Grid.Row="1"
-                                               Grid.Column="2"
-                                               Margin="0,0,0,10"
-                                               AutomationId="AltLabelVal"
-                                               FontSize="Small"
-                                               Text="{Binding Altitude}"
-                                               TextColor="Gray" />
-                                    </Grid>
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                        <ListView.Footer>
-                            <Label Text="" />
-                        </ListView.Footer>
-                    </ListView>
-                </StackLayout>
+                           HorizontalOptions="Center"
+                           Style="{StaticResource LabelHeader}"
+                           Text="{Binding Index}"
+                           VerticalOptions="Center" />
+                    <Label Grid.Row="1"
+                           Grid.Column="1"
+                           LineBreakMode="TailTruncation"
+                           Style="{StaticResource LabelBody}"
+                           Text="{Binding Latitude}" />
+                    <Label Grid.Row="1"
+                           Grid.Column="2"
+                           LineBreakMode="TailTruncation"
+                           Style="{StaticResource LabelBody}"
+                           Text="{Binding Longitude}" />
+                    <Label Grid.Row="1"
+                           Grid.Column="3"
+                           LineBreakMode="TailTruncation"
+                           Style="{StaticResource LabelBody}"
+                           Text="{Binding Altitude}" />
+                    <TemplatedView Grid.Row="0"
+                                   Grid.Column="1"
+                                   Grid.ColumnSpan="4"
+                                   ControlTemplate="{StaticResource BodySeperator}" />
+                </Grid>
             </Frame>
-            <Frame Style="{StaticResource FrameStyle}" VerticalOptions="Start">
-                <StackLayout>
-                    <Label Style="{StaticResource ViewLabelStyle}" Text="Metadata" />
-                    <StackLayout Orientation="Horizontal">
-                        <Label Margin="10,0,0,0"
-                               FontSize="Small"
-                               MinimumWidthRequest="120"
-                               Style="{StaticResource ViewLabelStyle}"
-                               Text="String:" />
-                        <Label FontSize="Small"
-                               HorizontalOptions="Fill"
-                               Text="{Binding MetadataStringEntry}"
-                               TextColor="Gray" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="FooterTemplate">
+            <StackLayout>
+                <TemplatedView ControlTemplate="{StaticResource DetailCoordinatesFooter}" />
+                <Frame Padding="10,10,0,10" Style="{StaticResource FrameM}">
+                    <StackLayout>
+                        <Label Style="{StaticResource LabelTitle}" Text="Metadata" />
+                        <StackLayout Margin="8,0,0,0" Orientation="Vertical">
+                            <Label Style="{StaticResource LabelHeader}" Text="String" />
+                            <Label Style="{StaticResource LabelBody}" Text="{Binding MetadataStringEntry}" />
+                            <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
+                            <Label Style="{StaticResource LabelHeader}" Text="Integer" />
+                            <Label Style="{StaticResource LabelBody}" Text="{Binding MetadataIntegerEntry}" />
+                            <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
+                            <Label Style="{StaticResource LabelHeader}" Text="Float" />
+                            <Label Style="{StaticResource LabelBody}" Text="{Binding MetadataFloatEntry}" />
+                        </StackLayout>
                     </StackLayout>
-                    <StackLayout Orientation="Horizontal">
-                        <Label Margin="10,0,0,0"
-                               FontSize="Small"
-                               Style="{StaticResource ViewLabelStyle}"
-                               Text="Integer:" />
-                        <Label FontSize="Small"
-                               HorizontalOptions="Fill"
-                               Text="{Binding MetadataIntegerEntry}"
-                               TextColor="Gray" />
-                    </StackLayout>
-                    <StackLayout Orientation="Horizontal">
-                        <Label Margin="10,0,0,0"
-                               FontSize="Small"
-                               Style="{StaticResource ViewLabelStyle}"
-                               Text="Float:" />
-                        <Label FontSize="Small"
-                               HorizontalOptions="Fill"
-                               Text="{Binding MetadataFloatEntry}"
-                               TextColor="Gray" />
-                    </StackLayout>
-                </StackLayout>
-            </Frame>
-        </StackLayout>
+                </Frame>
+            </StackLayout>
+        </DataTemplate>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <CollectionView x:Name="GeodataList"
+                        Footer="{Binding .}"
+                        FooterTemplate="{StaticResource FooterTemplate}"
+                        Header="{Binding .}"
+                        HeaderTemplate="{StaticResource HeaderTemplate}"
+                        ItemTemplate="{StaticResource ItemTemplate}"
+                        ItemsSource="{Binding GeolocationValues}"
+                        VerticalOptions="FillAndExpand" />
     </ContentPage.Content>
 </ContentPage>

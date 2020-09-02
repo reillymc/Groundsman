@@ -4,9 +4,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              ios:Page.ModalPresentationStyle="FormSheet"
-             NavigationPage.HasNavigationBar="False">
+             NavigationPage.HasNavigationBar="False"
+             Style="{StaticResource PageTintedStyle}">
     <ContentPage.Content>
-        <StackLayout BackgroundColor="{DynamicResource Background}">
+        <StackLayout>
             <TemplatedView ControlTemplate="{StaticResource ModalPageNavigationBar}" />
             <Grid Padding="20">
                 <Frame Grid.Row="0"
