@@ -12,59 +12,35 @@
             <Grid Padding="20">
                 <Frame Grid.Row="0"
                        Grid.Column="0"
-                       Padding="10"
-                       BackgroundColor="{DynamicResource Foreground}"
-                       HasShadow="False">
+                       Style="{StaticResource FrameButton}">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Point" />
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical">
-                        <Image HorizontalOptions="Center"
-                               Source="point_icon"
-                               VerticalOptions="CenterAndExpand"
-                               WidthRequest="30" />
-                        <Label HorizontalOptions="Center"
-                               Text="Point"
-                               TextColor="Green"
-                               VerticalOptions="End" />
+                        <Image Source="point_icon" Style="{StaticResource FrameButtonImage}" />
+                        <Label Style="{StaticResource FrameButtonLabel}" Text="Point" />
                     </StackLayout>
                 </Frame>
                 <Frame Grid.Row="0"
                        Grid.Column="1"
-                       Padding="10"
-                       BackgroundColor="{DynamicResource Foreground}"
-                       HasShadow="False">
+                       Style="{StaticResource FrameButton}">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="LineString" />
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical">
-                        <Image HorizontalOptions="Center"
-                               Source="line_icon"
-                               VerticalOptions="CenterAndExpand"
-                               WidthRequest="30" />
-                        <Label HorizontalOptions="Center"
-                               Text="Line"
-                               TextColor="Green"
-                               VerticalOptions="End" />
+                        <Image Source="line_icon" Style="{StaticResource FrameButtonImage}" />
+                        <Label Style="{StaticResource FrameButtonLabel}" Text="Line" />
                     </StackLayout>
                 </Frame>
                 <Frame Grid.Row="0"
                        Grid.Column="2"
-                       Padding="10"
-                       BackgroundColor="{DynamicResource Foreground}"
-                       HasShadow="False">
+                       Style="{StaticResource FrameButton}">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Polygon" />
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical">
-                        <Image HorizontalOptions="Center"
-                               Source="area_icon"
-                               VerticalOptions="CenterAndExpand"
-                               WidthRequest="30" />
-                        <Label HorizontalOptions="Center"
-                               Text="Polygon"
-                               TextColor="Green"
-                               VerticalOptions="End" />
+                        <Image Source="area_icon" Style="{StaticResource FrameButtonImage}" />
+                        <Label Style="{StaticResource FrameButtonLabel}" Text="Polygon" />
                     </StackLayout>
                 </Frame>
             </Grid>
@@ -79,9 +55,8 @@
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                         <Label HorizontalOptions="StartAndExpand"
-                               Text="Import from File"
-                               TextColor="Green"
-                               VerticalOptions="End" />
+                               Style="{StaticResource FrameButtonLabel}"
+                               Text="Import from File" />
                         <Image HorizontalOptions="Center"
                                Source="import_icon"
                                VerticalOptions="EndAndExpand" />
@@ -97,9 +72,8 @@
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                         <Label HorizontalOptions="StartAndExpand"
-                               Text="Paste from Clipboard"
-                               TextColor="Green"
-                               VerticalOptions="End" />
+                               Style="{StaticResource FrameButtonLabel}"
+                               Text="Paste from Clipboard" />
                         <Image HorizontalOptions="Center"
                                Source="paste_icon"
                                VerticalOptions="EndAndExpand" />

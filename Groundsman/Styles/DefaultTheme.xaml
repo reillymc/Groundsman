@@ -7,43 +7,8 @@
     <Color x:Key="greenPrimary">#4CBF4C</Color>
     <Color x:Key="Delete">#ff3b2f</Color>
 
-
-    <Style x:Key="DetailFormLabel" TargetType="Label">
-        <Setter Property="FontSize" Value="Default" />
-        <Setter Property="LineBreakMode" Value="TailTruncation" />
-        <Setter Property="TextColor" Value="Black" />
-        <Setter Property="HorizontalOptions" Value="Start" />
-    </Style>
-    <Style x:Key="DetailFormEntry" TargetType="Entry">
-        <Setter Property="TextColor" Value="Gray" />
-        <Setter Property="FontSize" Value="Default" />
-        <Setter Property="WidthRequest" Value="200" />
-        <Setter Property="PlaceholderColor" Value="LightGray" />
-        <Setter Property="HorizontalOptions" Value="StartAndExpand" />
-    </Style>
-    <Style x:Key="DetailFormPanelGrid" TargetType="Grid">
-        <Setter Property="ColumnSpacing" Value="10" />
-        <Setter Property="RowSpacing" Value="0" />
-    </Style>
-    <Style x:Key="DetailFormPanelLayout" TargetType="StackLayout">
-        <Setter Property="BackgroundColor" Value="{DynamicResource bgSecondary}" />
-    </Style>
-    <Style x:Key="ListViewStyle" TargetType="ListView">
-        <Setter Property="BackgroundColor" Value="{DynamicResource bgSecondary}" />
-    </Style>
-
-
-
-
     <!--  Modular Styles  -->
     <Style x:Key="FrameStyle" TargetType="Frame">
-        <Setter Property="Margin" Value="0, 2" />
-        <Setter Property="Padding" Value="12" />
-        <Setter Property="HasShadow" Value="false" />
-        <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="BackgroundColor" Value="{DynamicResource bgSecondary}" />
-    </Style>
-    <Style x:Key="EditorFrameStyle" TargetType="Frame">
         <Setter Property="Margin" Value="0, 2" />
         <Setter Property="Padding" Value="12" />
         <Setter Property="HasShadow" Value="false" />
@@ -61,16 +26,6 @@
         <Setter Property="Direction" Value="Row" />
         <Setter Property="HorizontalOptions" Value="Start" />
     </Style>
-    <Style x:Key="HeaderStyle" TargetType="Label">
-        <Setter Property="TextColor" Value="{DynamicResource textPrimary}" />
-        <Setter Property="FontSize" Value="Large" />
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
-    </Style>
-    <Style x:Key="SubheaderStyle" TargetType="Label">
-        <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
-        <Setter Property="FontSize" Value="Small" />
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
-    </Style>
     <Style x:Key="InputLabelStyle" TargetType="Label">
         <Setter Property="TextColor" Value="{DynamicResource textPrimary}" />
         <Setter Property="FontSize" Value="Small" />
@@ -78,37 +33,10 @@
         <Setter Property="VerticalTextAlignment" Value="Center" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
-    <Style x:Key="ButtonStyle" TargetType="Button">
-        <Setter Property="TextColor">
-            <Setter.Value>
-                <OnPlatform x:TypeArguments="Color"
-                            Android="White"
-                            iOS="{StaticResource greenPrimary}" />
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <Style x:Key="EntryStyle" TargetType="Entry">
-        <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
-        <Setter Property="FontSize" Value="Small" />
-    </Style>
-    <Style x:Key="DateEntryStyle" TargetType="DatePicker">
-        <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
-    </Style>
     <Style x:Key="EditorStyle" TargetType="Editor">
         <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
         <Setter Property="BackgroundColor" Value="{DynamicResource bgSecondary}" />
     </Style>
-    <Style x:Key="ListLabelStyle" TargetType="Label">
-        <Setter Property="TextColor" Value="{DynamicResource textPrimary}" />
-        <Setter Property="FontSize" Value="Medium" />
-        <Setter Property="HorizontalTextAlignment" Value="Start" />
-        <Setter Property="LineBreakMode" Value="TailTruncation" />
-    </Style>
-    <Style x:Key="ViewLabelStyle" TargetType="Label">
-        <Setter Property="TextColor" Value="{DynamicResource textPrimary}" />
-        <Setter Property="FontAttributes" Value="Bold" />
-    </Style>
-
 
     <!--  New Styles  -->
 
@@ -116,6 +44,7 @@
         <Setter Property="BackgroundColor" Value="{DynamicResource bgPrimary}" />
         <Setter Property="Title" Value="{Binding Title}" />
     </Style>
+
     <Style x:Key="PageTintedStyle" TargetType="ContentPage">
         <Setter Property="BackgroundColor" Value="{DynamicResource Background}" />
         <Setter Property="Title" Value="{Binding Title}" />
@@ -146,6 +75,13 @@
         <Setter Property="IsClippedToBounds" Value="True" />
     </Style>
 
+    <Style x:Key="ListLabelStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource textPrimary}" />
+        <Setter Property="FontSize" Value="Medium" />
+        <Setter Property="HorizontalTextAlignment" Value="Start" />
+        <Setter Property="LineBreakMode" Value="TailTruncation" />
+    </Style>
+
     <Style x:Key="LabelTitle" TargetType="Label">
         <Setter Property="TextColor" Value="{DynamicResource textPrimary}" />
         <Setter Property="FontAttributes" Value="Bold" />
@@ -165,6 +101,15 @@
         <Setter Property="VerticalTextAlignment" Value="Center" />
     </Style>
 
+    <Style x:Key="EntryStyle" TargetType="Entry">
+        <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
+        <Setter Property="FontSize" Value="Small" />
+    </Style>
+
+    <Style x:Key="DateEntryStyle" TargetType="DatePicker">
+        <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
+    </Style>
+
     <Style x:Key="DetailCoordinateGrid" TargetType="Grid">
         <Setter Property="BackgroundColor" Value="{DynamicResource Foreground}" />
         <Setter Property="ColumnDefinitions" Value=".8*,5*,5*,3*,1.3*" />
@@ -179,6 +124,25 @@
         <Setter Property="FontSize" Value="Small" />
         <Setter Property="Keyboard" Value="Numeric" />
         <Setter Property="behaviors:EntryNumLengthValidatorBehavior.AttachBehavior" Value="true" />
+    </Style>
+
+
+    <Style x:Key="FrameButton"
+           BasedOn="{StaticResource Frame}"
+           TargetType="Frame">
+        <Setter Property="Padding" Value="10" />
+    </Style>
+
+    <Style x:Key="FrameButtonLabel" TargetType="Label">
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="TextColor" Value="{StaticResource greenPrimary}" />
+        <Setter Property="VerticalOptions" Value="End" />
+    </Style>
+
+    <Style x:Key="FrameButtonImage" TargetType="Image">
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="WidthRequest" Value="30" />
+        <Setter Property="VerticalOptions" Value="CenterAndExpand" />
     </Style>
 
     <!--  Control Templates  -->
@@ -286,7 +250,6 @@
             </BoxView.IsVisible>
         </BoxView>
     </ControlTemplate>
-
 
     <ControlTemplate x:Key="DetailCoordinatesHeader">
         <!--  Hacky implementation of only top rounded corners  -->

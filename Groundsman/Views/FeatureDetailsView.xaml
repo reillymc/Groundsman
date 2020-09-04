@@ -55,14 +55,26 @@
                     <StackLayout>
                         <Label Style="{StaticResource LabelTitle}" Text="Metadata" />
                         <StackLayout Margin="8,0,0,0" Orientation="Vertical">
-                            <Label Style="{StaticResource LabelHeader}" Text="String" />
-                            <Label Style="{StaticResource LabelBody}" Text="{Binding MetadataStringEntry}" />
+                            <Label Margin="0,10,0,0"
+                                   Style="{StaticResource LabelHeader}"
+                                   Text="String" />
+                            <Label Margin="0,0,0,10"
+                                   Style="{StaticResource LabelBody}"
+                                   Text="{Binding MetadataStringEntry}" />
                             <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
-                            <Label Style="{StaticResource LabelHeader}" Text="Integer" />
-                            <Label Style="{StaticResource LabelBody}" Text="{Binding MetadataIntegerEntry}" />
+                            <Label Margin="0,10,0,0"
+                                   Style="{StaticResource LabelHeader}"
+                                   Text="Integer" />
+                            <Label Margin="0,0,0,10"
+                                   Style="{StaticResource LabelBody}"
+                                   Text="{Binding MetadataIntegerEntry}" />
                             <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
-                            <Label Style="{StaticResource LabelHeader}" Text="Float" />
-                            <Label Style="{StaticResource LabelBody}" Text="{Binding MetadataFloatEntry}" />
+                            <Label Margin="0,10,0,0"
+                                   Style="{StaticResource LabelHeader}"
+                                   Text="Float" />
+                            <Label Margin="0,0,0,10"
+                                   Style="{StaticResource LabelBody}"
+                                   Text="{Binding MetadataFloatEntry}" />
                         </StackLayout>
                     </StackLayout>
                 </Frame>

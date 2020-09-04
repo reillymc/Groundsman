@@ -12,7 +12,7 @@
             <TableRoot>
                 <TableSection Title="Profile">
                     <ViewCell>
-                        <Entry Margin="7,0"
+                        <Entry Margin="15,0"
                                Placeholder="User ID"
                                Text="{Binding IDEntry}"
                                TextColor="{DynamicResource textPrimary}">
