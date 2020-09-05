@@ -13,7 +13,7 @@
         <Setter Property="Padding" Value="12" />
         <Setter Property="HasShadow" Value="false" />
         <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="BackgroundColor" Value="{DynamicResource bgSecondary}" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource Background}" />
     </Style>
     <Style x:Key="ContainerStyle" TargetType="FlexLayout">
         <Setter Property="FlexLayout.Grow" Value="1" />
@@ -27,21 +27,21 @@
         <Setter Property="HorizontalOptions" Value="Start" />
     </Style>
     <Style x:Key="InputLabelStyle" TargetType="Label">
-        <Setter Property="TextColor" Value="{DynamicResource textPrimary}" />
+        <Setter Property="TextColor" Value="{DynamicResource Text}" />
         <Setter Property="FontSize" Value="Small" />
         <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="VerticalTextAlignment" Value="Center" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
     <Style x:Key="EditorStyle" TargetType="Editor">
-        <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
-        <Setter Property="BackgroundColor" Value="{DynamicResource bgSecondary}" />
+        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource Background}" />
     </Style>
 
     <!--  New Styles  -->
 
     <Style x:Key="PageStyle" TargetType="ContentPage">
-        <Setter Property="BackgroundColor" Value="{DynamicResource bgPrimary}" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource Foreground}" />
         <Setter Property="Title" Value="{Binding Title}" />
     </Style>
 
@@ -76,38 +76,38 @@
     </Style>
 
     <Style x:Key="ListLabelStyle" TargetType="Label">
-        <Setter Property="TextColor" Value="{DynamicResource textPrimary}" />
+        <Setter Property="TextColor" Value="{DynamicResource Text}" />
         <Setter Property="FontSize" Value="Medium" />
         <Setter Property="HorizontalTextAlignment" Value="Start" />
         <Setter Property="LineBreakMode" Value="TailTruncation" />
     </Style>
 
     <Style x:Key="LabelTitle" TargetType="Label">
-        <Setter Property="TextColor" Value="{DynamicResource textPrimary}" />
+        <Setter Property="TextColor" Value="{DynamicResource Text}" />
         <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="FontSize" Value="Default" />
     </Style>
 
     <Style x:Key="LabelHeader" TargetType="Label">
-        <Setter Property="TextColor" Value="{DynamicResource textPrimary}" />
+        <Setter Property="TextColor" Value="{DynamicResource Text}" />
         <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="FontSize" Value="Small" />
     </Style>
 
     <Style x:Key="LabelBody" TargetType="Label">
-        <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
+        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
         <Setter Property="FontSize" Value="Small" />
         <Setter Property="Padding" Value="0,2" />
         <Setter Property="VerticalTextAlignment" Value="Center" />
     </Style>
 
     <Style x:Key="EntryStyle" TargetType="Entry">
-        <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
+        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
         <Setter Property="FontSize" Value="Small" />
     </Style>
 
     <Style x:Key="DateEntryStyle" TargetType="DatePicker">
-        <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
+        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
     </Style>
 
     <Style x:Key="DetailCoordinateGrid" TargetType="Grid">
@@ -120,7 +120,7 @@
     </Style>
 
     <Style x:Key="DetailCoordinateEntry" TargetType="Entry">
-        <Setter Property="TextColor" Value="{DynamicResource textSecondary}" />
+        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
         <Setter Property="FontSize" Value="Small" />
         <Setter Property="Keyboard" Value="Numeric" />
         <Setter Property="behaviors:EntryNumLengthValidatorBehavior.AttachBehavior" Value="true" />
@@ -145,6 +145,28 @@
         <Setter Property="VerticalOptions" Value="CenterAndExpand" />
     </Style>
 
+
+
+
+
+
+    <Style x:Key="ModalButton" TargetType="Button">
+        <Setter Property="FontSize" Value="Default" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="BackgroundColor">
+            <OnPlatform x:TypeArguments="Color"
+                        Android="{StaticResource greenPrimary}"
+                        iOS="Transparent" />
+        </Setter>
+        <Setter Property="TextColor">
+            <OnPlatform x:TypeArguments="Color"
+                        Android="White"
+                        iOS="{StaticResource greenPrimary}" />
+        </Setter>
+    </Style>
+
+
     <!--  Control Templates  -->
     <ControlTemplate x:Key="ModalPageNavigationBarDone">
         <StackLayout BindingContext="{Binding Source={RelativeSource TemplatedParent}}">
@@ -154,44 +176,26 @@
                             iOS="{StaticResource Foreground}" />
             </StackLayout.BackgroundColor>
             <StackLayout Margin="15,7,15,0" Orientation="Horizontal">
-                <Button x:Name="cancelButton"
-                        Command="{TemplateBinding BindingContext.OnCancelTappedCommand}"
-                        FontSize="16"
-                        HorizontalOptions="Start"
-                        Text="Cancel"
-                        VerticalOptions="Center">
-                    <Button.TextColor>
-                        <OnPlatform x:TypeArguments="Color"
-                                    Android="{StaticResource textSecondary}"
-                                    iOS="{StaticResource greenPrimary}" />
-                    </Button.TextColor>
-                    <Button.BackgroundColor>
-                        <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
-                    </Button.BackgroundColor>
-                </Button>
+                <Button Command="{TemplateBinding BindingContext.OnCancelTappedCommand}"
+                        Style="{StaticResource ModalButton}"
+                        Text="Cancel" />
                 <Label FontAttributes="Bold"
                        FontSize="16"
                        HorizontalOptions="CenterAndExpand"
                        LineBreakMode="TailTruncation"
                        MaxLines="1"
                        Text="{TemplateBinding BindingContext.Title}"
-                       TextColor="{DynamicResource textPrimary}"
-                       VerticalOptions="Center" />
+                       VerticalOptions="Center">
+                    <Label.TextColor>
+                        <OnPlatform x:TypeArguments="Color"
+                                    Android="{StaticResource Foreground}"
+                                    iOS="{StaticResource Text}" />
+                    </Label.TextColor>
+                </Label>
                 <Button Command="{TemplateBinding BindingContext.OnDoneTappedCommand}"
                         FontAttributes="Bold"
-                        FontSize="16"
-                        HorizontalOptions="End"
-                        Text="Done"
-                        VerticalOptions="Center">
-                    <Button.TextColor>
-                        <OnPlatform x:TypeArguments="Color"
-                                    Android="{StaticResource textSecondary}"
-                                    iOS="{StaticResource greenPrimary}" />
-                    </Button.TextColor>
-                    <Button.BackgroundColor>
-                        <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
-                    </Button.BackgroundColor>
-                </Button>
+                        Style="{StaticResource ModalButton}"
+                        Text="Done" />
             </StackLayout>
             <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
         </StackLayout>
@@ -213,26 +217,21 @@
                 <Button Grid.Row="0"
                         Grid.Column="0"
                         Command="{TemplateBinding BindingContext.OnCancelTappedCommand}"
-                        FontSize="16"
-                        HorizontalOptions="Start"
-                        Text="Cancel">
-                    <Button.TextColor>
-                        <OnPlatform x:TypeArguments="Color"
-                                    Android="{StaticResource textSecondary}"
-                                    iOS="{StaticResource greenPrimary}" />
-                    </Button.TextColor>
-                    <Button.BackgroundColor>
-                        <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
-                    </Button.BackgroundColor>
-                </Button>
+                        Style="{StaticResource ModalButton}"
+                        Text="Cancel" />
                 <Label Grid.Row="0"
                        Grid.Column="1"
                        FontAttributes="Bold"
                        FontSize="16"
                        HorizontalOptions="Center"
                        Text="Add New Feature"
-                       TextColor="{DynamicResource textPrimary}"
-                       VerticalOptions="Center" />
+                       VerticalOptions="Center">
+                    <Label.TextColor>
+                        <OnPlatform x:TypeArguments="Color"
+                                    Android="{StaticResource Foreground}"
+                                    iOS="{StaticResource Text}" />
+                    </Label.TextColor>
+                </Label>
             </Grid>
             <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
         </StackLayout>
@@ -321,7 +320,7 @@
                                Grid.Column="0"
                                FontSize="Small"
                                HorizontalOptions="Center"
-                               Style="{StaticResource ViewLabelStyle}"
+                               Style="{StaticResource LabelBody}"
                                Text="{TemplateBinding BindingContext.NumPointFields}"
                                VerticalOptions="Center" />
                         <Entry Grid.Row="1"

@@ -8,14 +8,14 @@
         <ToolbarItem Command="{Binding InfoButtonTappedCommand}" Icon="info_icon" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <TableView BackgroundColor="{DynamicResource bgPrimary}" Intent="Settings">
+        <TableView BackgroundColor="{DynamicResource Foreground}" Intent="Settings">
             <TableRoot>
                 <TableSection Title="Profile">
                     <ViewCell>
                         <Entry Margin="15,0"
                                Placeholder="User ID"
                                Text="{Binding IDEntry}"
-                               TextColor="{DynamicResource textPrimary}">
+                               TextColor="{DynamicResource Text}">
                             <Entry.Behaviors>
                                 <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
                             </Entry.Behaviors>
@@ -29,7 +29,7 @@
                                      Orientation="Horizontal"
                                      VerticalOptions="CenterAndExpand">
                             <Label Text="GPS Accuracy"
-                                   TextColor="{DynamicResource textPrimary}"
+                                   TextColor="{DynamicResource Text}"
                                    VerticalOptions="Center" />
                             <Picker x:Name="picker"
                                     HorizontalOptions="EndAndExpand"
@@ -54,10 +54,10 @@
                                      Orientation="Horizontal"
                                      VerticalOptions="CenterAndExpand">
                             <Label Text="{Binding Source={x:Reference stepperDecimal}, Path=Value}"
-                                   TextColor="{DynamicResource textPrimary}"
+                                   TextColor="{DynamicResource Text}"
                                    VerticalOptions="Center" />
                             <Label Text="Decimal Places"
-                                   TextColor="{DynamicResource textPrimary}"
+                                   TextColor="{DynamicResource Text}"
                                    VerticalOptions="Center" />
                             <Stepper x:Name="stepperDecimal"
                                      HorizontalOptions="EndAndExpand"
@@ -71,15 +71,12 @@
                 <TableSection Title="Feature List">
                     <SwitchCell On="{Binding ShowPointsOnMap}"
                                 OnChanged="ShowPointsOnMapChanged"
-                                OnColor="{DynamicResource greenPrimary}"
                                 Text="Show Points on Map" />
                     <SwitchCell On="{Binding ShowLinesOnMap}"
                                 OnChanged="ShowLinesOnMapChanged"
-                                OnColor="{DynamicResource greenPrimary}"
                                 Text="Show Lines on Map" />
                     <SwitchCell On="{Binding ShowPolygonsOnMap}"
                                 OnChanged="ShowPolygonsOnMapChanged"
-                                OnColor="{DynamicResource greenPrimary}"
                                 Text="Show Polygons on Map" />
                     <ViewCell>
                         <StackLayout Padding="15,0"
@@ -98,7 +95,6 @@
                 <TableSection Title="Logger">
                     <SwitchCell On="{Binding ShowLogPathOnMap}"
                                 OnChanged="ShowLogPathOnMapChanged"
-                                OnColor="{DynamicResource greenPrimary}"
                                 Text="Show Log Path on Map" />
                 </TableSection>
             </TableRoot>

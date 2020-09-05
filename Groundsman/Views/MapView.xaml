@@ -8,7 +8,7 @@
         <ContentView AbsoluteLayout.LayoutBounds="0,0,1,1"
                      AbsoluteLayout.LayoutFlags="All"
                      Content="{Binding Map}" />
-        <BoxView ios:VisualElement.BlurEffect="{DynamicResource blurEffect}"
+        <BoxView ios:VisualElement.BlurEffect="{DynamicResource BlurEffect}"
                  AbsoluteLayout.LayoutBounds="{OnIdiom Phone='0,0,1,0.055',
                                                        Tablet='0,0,1,0.022'}"
                  AbsoluteLayout.LayoutFlags="All" />

@@ -28,7 +28,7 @@
                            HorizontalTextAlignment="End"
                            Keyboard="Numeric"
                            Text="{Binding IntervalEntry}"
-                           TextColor="{StaticResource textSecondary}"
+                           TextColor="{StaticResource TextSecondary}"
                            WidthRequest="44" />
                     <Label Grid.Row="0"
                            Grid.Column="0"
@@ -71,11 +71,11 @@
                                 Text="{Binding ToggleButtonLabel}">
                             <Button.TextColor>
                                 <OnPlatform x:TypeArguments="Color"
-                                            Android="{StaticResource textSecondary}"
+                                            Android="{StaticResource TextSecondary}"
                                             iOS="{StaticResource greenPrimary}" />
                             </Button.TextColor>
                             <Button.BackgroundColor>
-                                <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
+                                <OnPlatform x:TypeArguments="Color" Android="{StaticResource Background}" />
                             </Button.BackgroundColor>
                         </Button>
                         <Button Grid.Row="2"
@@ -84,11 +84,11 @@
                                 Text="Clear">
                             <Button.TextColor>
                                 <OnPlatform x:TypeArguments="Color"
-                                            Android="{StaticResource textSecondary}"
+                                            Android="{StaticResource TextSecondary}"
                                             iOS="{StaticResource greenPrimary}" />
                             </Button.TextColor>
                             <Button.BackgroundColor>
-                                <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
+                                <OnPlatform x:TypeArguments="Color" Android="{StaticResource Background}" />
                             </Button.BackgroundColor>
                         </Button>
                     </StackLayout>

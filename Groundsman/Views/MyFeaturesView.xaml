@@ -54,7 +54,7 @@
                             <Label FontSize="Small"
                                    HorizontalTextAlignment="Start"
                                    LineBreakMode="TailTruncation"
-                                   TextColor="{DynamicResource textSecondary}"
+                                   TextColor="{DynamicResource TextSecondary}"
                                    VerticalOptions="Start">
                                 <Label.Text>
                                     <MultiBinding StringFormat="{}{0:d/M/yy}  {1}">
@@ -84,7 +84,7 @@
                 <Label Padding="10"
                        FontSize="Small"
                        Text="{Binding FeatureList.Count, StringFormat='{0} Features'}"
-                       TextColor="{DynamicResource textSecondary}" />
+                       TextColor="{DynamicResource TextSecondary}" />
             </ListView.Footer>
         </ListView>
         <Button Margin="10"

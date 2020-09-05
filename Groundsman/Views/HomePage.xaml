@@ -8,32 +8,28 @@
             NavigationPage.BackButtonTitle="My Features"
             NavigationPage.HasNavigationBar="false"
             SelectedTabColor="{DynamicResource greenPrimary}"
-            UnselectedTabColor="{DynamicResource textSecondary}">
+            UnselectedTabColor="{DynamicResource TextSecondary}">
     <TabbedPage.Children>
 
-        <NavigationPage Title="My Features"
-                        Icon="data_icon">
+        <NavigationPage Title="My Features" Icon="data_icon">
             <x:Arguments>
                 <views:MyFeaturesView />
             </x:Arguments>
         </NavigationPage>
 
-        <NavigationPage Title="Logger"
-                        Icon="log_icon">
+        <NavigationPage Title="Logger" Icon="log_icon">
             <x:Arguments>
                 <views:LoggerView />
             </x:Arguments>
         </NavigationPage>
 
-        <NavigationPage Title="Map"
-                        Icon="map_icon">
+        <NavigationPage Title="Map" Icon="map_icon">
             <x:Arguments>
                 <views:MapView />
             </x:Arguments>
         </NavigationPage>
 
-        <NavigationPage Title="Settings"
-                        Icon="settings_icon">
+        <NavigationPage Title="Settings" Icon="settings_icon">
             <x:Arguments>
                 <views:ProfileSettingsView />
             </x:Arguments>
