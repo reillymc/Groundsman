@@ -7,37 +7,6 @@
     <Color x:Key="greenPrimary">#4CBF4C</Color>
     <Color x:Key="Delete">#ff3b2f</Color>
 
-    <!--  Modular Styles  -->
-    <Style x:Key="FrameStyle" TargetType="Frame">
-        <Setter Property="Margin" Value="0, 2" />
-        <Setter Property="Padding" Value="12" />
-        <Setter Property="HasShadow" Value="false" />
-        <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="BackgroundColor" Value="{DynamicResource Background}" />
-    </Style>
-    <Style x:Key="ContainerStyle" TargetType="FlexLayout">
-        <Setter Property="FlexLayout.Grow" Value="1" />
-        <Setter Property="Direction" Value="Column" />
-        <Setter Property="JustifyContent" Value="SpaceEvenly" />
-        <Setter Property="HorizontalOptions" Value="Center" />
-    </Style>
-    <Style x:Key="ContainerStyleRow" TargetType="FlexLayout">
-        <Setter Property="FlexLayout.Grow" Value="1" />
-        <Setter Property="Direction" Value="Row" />
-        <Setter Property="HorizontalOptions" Value="Start" />
-    </Style>
-    <Style x:Key="InputLabelStyle" TargetType="Label">
-        <Setter Property="TextColor" Value="{DynamicResource Text}" />
-        <Setter Property="FontSize" Value="Small" />
-        <Setter Property="FontAttributes" Value="Bold" />
-        <Setter Property="VerticalTextAlignment" Value="Center" />
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
-    </Style>
-    <Style x:Key="EditorStyle" TargetType="Editor">
-        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
-        <Setter Property="BackgroundColor" Value="{DynamicResource Background}" />
-    </Style>
-
     <!--  New Styles  -->
 
     <Style x:Key="PageStyle" TargetType="ContentPage">
@@ -126,7 +95,6 @@
         <Setter Property="behaviors:EntryNumLengthValidatorBehavior.AttachBehavior" Value="true" />
     </Style>
 
-
     <Style x:Key="FrameButton"
            BasedOn="{StaticResource Frame}"
            TargetType="Frame">
@@ -145,13 +113,7 @@
         <Setter Property="VerticalOptions" Value="CenterAndExpand" />
     </Style>
 
-
-
-
-
-
     <Style x:Key="ModalButton" TargetType="Button">
-        <Setter Property="FontSize" Value="Default" />
         <Setter Property="HorizontalOptions" Value="Start" />
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="BackgroundColor">
