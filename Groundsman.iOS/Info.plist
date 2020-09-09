@@ -29,7 +29,7 @@
 	<key>CFBundleName</key>
 	<string>Groundsman</string>
 	<key>CFBundleShortVersionString</key>
-	<string>8.0.0</string>
+	<string>8.2.0</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -151,7 +151,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>7.6.1</string>
+	<string>8.2.0</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

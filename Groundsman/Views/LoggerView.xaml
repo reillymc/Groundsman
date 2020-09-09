@@ -31,7 +31,7 @@
                     <StackLayout Padding="5,0" Orientation="Horizontal">
                         <Label FontSize="Small"
                                Text="Interval:"
-                               TextColor="{StaticResource Text}"
+                               TextColor="{DynamicResource Text}"
                                VerticalOptions="Center" />
                         <Entry FontSize="Small"
                                HorizontalTextAlignment="End"
