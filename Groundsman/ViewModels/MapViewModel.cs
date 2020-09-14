@@ -137,17 +137,17 @@ namespace Groundsman.ViewModels
             }
         }
 
-        void OnMapClicked(object sender, MapClickedEventArgs e)
+        async void OnMapClicked(object sender, MapClickedEventArgs e)
         {
             FeatureList.ForEach(async (Feature feature) =>
             {
                 bool ItemHit = false;
                 Point[] points = feature.properties.xamarincoordinates.ToArray();
-                if (feature.geometry.type == FeatureType.Polygon)
+                if (feature.geometry.type == FeatureType.Polygon && Preferences.Get("ShowPolygonsOnMap", true))
                 {
                     ItemHit |= IsPointInPolygon(new Point(e.Position.Latitude, e.Position.Longitude, 0), points);
                 }
-                else if (feature.geometry.type == FeatureType.LineString)
+                else if (feature.geometry.type == FeatureType.LineString && Preferences.Get("ShowLinesOnMap", true))
                 {
                     ItemHit |= IsPointOnLine(new Point(e.Position.Latitude, e.Position.Longitude, 0), points);
                 }
@@ -157,6 +157,13 @@ namespace Groundsman.ViewModels
                     await DisplayFeatureActionMenuAsync(feature);
                 }
             });
+            if (Preferences.Get("ShowLogPathOnMap", true))
+            {
+                if (IsPointOnLine(new Point(e.Position.Latitude, e.Position.Longitude, 0), LogStore.LogPoints.ToArray()))
+                {
+                    await DisplayLogActionMenuAsync();
+                }
+            }
         }
 
         async Task DisplayFeatureActionMenuAsync(Feature feature)
@@ -181,6 +188,17 @@ namespace Groundsman.ViewModels
                     break;
                 default:
                     break;
+            }
+        }
+
+        async Task DisplayLogActionMenuAsync()
+        {
+            string result = await NavigationService.GetCurrentPage().DisplayActionSheet("Logger Path", "Dismiss", "Clear");
+
+            if (result == "Clear")
+            {
+                LogStore.ClearLog();
+                RefreshMap();
             }
         }
 
@@ -228,7 +246,7 @@ namespace Groundsman.ViewModels
             double AB;
             double AP;
             double PB;
-            double delta = 0.0001; // delta determines line tap accuracy
+            double delta = 0.000075; // delta determines line tap accuracy
 
             for (int i = 1; i < polyline.Length; i++)
             {
