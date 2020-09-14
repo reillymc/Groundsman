@@ -151,7 +151,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>8.2.0</string>
+	<string>8.2.1</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

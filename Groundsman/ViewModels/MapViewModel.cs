@@ -129,7 +129,6 @@ namespace Groundsman.ViewModels
         {
             while (true)
             {
-                await Task.Delay(interval, ct);
                 List<Point> logFile = App.LogStore.GetLogFileObject();
                 Polyline logPolyline = new Polyline
                 {
@@ -141,6 +140,7 @@ namespace Groundsman.ViewModels
                     logPolyline.Geopath.Add(new Position(point.Latitude, point.Longitude));
                 });
                 Map.MapElements.Add(logPolyline);
+                await Task.Delay(interval, ct);
             }
         }
 

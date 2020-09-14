@@ -88,7 +88,7 @@ namespace Groundsman.ViewModels
         public LoggerViewModel()
         {
             Title = "Logger";
-            TextEntry = CSVHeader;
+            TextEntry = File.ReadAllText(AppConstants.LOG_FILE);
             ToggleButtonClickCommand = new Command(() =>
             {
                 if (isLogging)

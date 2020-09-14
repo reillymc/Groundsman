@@ -1,5 +1,7 @@
 ﻿using Groundsman.Models;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -18,8 +20,15 @@ namespace Groundsman.Services
                 foreach (string pointString in logList)
                 {
                     string[] stringArray = pointString.Split(",");
-                    Point point = new Point(double.Parse(stringArray[1]), double.Parse(stringArray[2]), double.Parse(stringArray[3]));
-                    logPoints.Add(point);
+                    try {
+                        Point point = new Point(Convert.ToDouble(stringArray[1]), Convert.ToDouble(stringArray[2]), Convert.ToDouble(stringArray[3]));
+                        logPoints.Add(point);
+                    } catch
+                    {
+                        Debug.WriteLine("Yeess");
+                    }
+
+                    
                 }
                 return logPoints;
             }
