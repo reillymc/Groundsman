@@ -3,7 +3,6 @@ using Groundsman.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -18,7 +17,6 @@ namespace Groundsman.ViewModels
     /// </summary>
     public class MapViewModel : BaseViewModel
     {
-        private CancellationTokenSource cts;
         public MapViewModel()
         {
             Map = new CustomMap();
@@ -107,6 +105,7 @@ namespace Groundsman.ViewModels
             GetFeatures();
             CleanFeatures();
             DrawFeatures();
+            DrawLogPath();
 
             //SetShowingUser
             var status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
@@ -124,7 +123,7 @@ namespace Groundsman.ViewModels
         {
             if (Preferences.Get("ShowLogPathOnMap", true))
             {
-                List<Point> logFile = LogStore.GetLogFileObject();
+                List<Point> logFile = LogStore.LogPoints;
                 Polyline logPolyline = new Polyline
                 {
                     StrokeColor = Color.DarkOrange,
@@ -137,7 +136,6 @@ namespace Groundsman.ViewModels
                 Map.MapElements.Add(logPolyline);
             }
         }
-
 
         void OnMapClicked(object sender, MapClickedEventArgs e)
         {
@@ -219,7 +217,6 @@ namespace Groundsman.ViewModels
             return inside;
         }
 
-        //currently only works on line vertices
         public bool IsPointOnLine(Point LocationTapped, Point[] polyline)
         {
             double Lat1;
