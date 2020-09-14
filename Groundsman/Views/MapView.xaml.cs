@@ -18,11 +18,5 @@ namespace Groundsman.Views
             base.OnAppearing();
             viewModel.RefreshMap();
         }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-            viewModel.CleanupLog();
-        }
     }
 }

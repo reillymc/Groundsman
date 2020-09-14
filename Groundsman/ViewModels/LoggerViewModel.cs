@@ -1,11 +1,6 @@
-﻿using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Xamarin.Forms;
-using System.Threading;
-using System.Threading.Tasks;
-using System.IO;
 using Groundsman.Services;
-using Point = Groundsman.Models.Point;
 using System.Collections.Generic;
 
 namespace Groundsman.ViewModels
@@ -15,10 +10,8 @@ namespace Groundsman.ViewModels
         public ICommand ToggleButtonClickCommand { set; get; }
         public ICommand ClearButtonClickCommand { set; get; }
         public ICommand ShareButtonClickCommand { set; get; }
-        private CancellationTokenSource cts;
         public bool isLogging;
 
-        private readonly string CSVHeader = "Time, Latitude, Longitude, Altitude\n";
         private string _textEntry;
         public string TextEntry
         {
@@ -63,8 +56,6 @@ namespace Groundsman.ViewModels
             }
         }
 
-        private int logInterval = 1;
-
         private int _intervalEntry = 1;
         public int IntervalEntry
         {
@@ -75,7 +66,8 @@ namespace Groundsman.ViewModels
                 if (value == 1)
                 {
                     UnitItems = new List<string> { "Second", "Minute", "Hour" };
-                } else
+                }
+                else
                 {
                     UnitItems = new List<string> { "Seconds", "Minutes", "Hours" };
                 }
@@ -88,15 +80,17 @@ namespace Groundsman.ViewModels
         public LoggerViewModel()
         {
             Title = "Logger";
-            TextEntry = File.ReadAllText(AppConstants.LOG_FILE);
+            TextEntry = LogStore.LogString;
             ToggleButtonClickCommand = new Command(() =>
             {
                 if (isLogging)
                 {
-                    StopUpdate();
+                    ToggleButtonLabel = "Start";
+                    LogStore.StopLogging();
                 }
                 else
                 {
+                    ToggleButtonLabel = "Stop";
                     if (IntervalEntry < 1)
                     {
                         IntervalEntry = 1;
@@ -104,65 +98,24 @@ namespace Groundsman.ViewModels
                     switch (UnitEntry)
                     {
                         case 0:
-                            logInterval = IntervalEntry;
+                            LogStore.StartLogging(IntervalEntry);
                             break;
                         case 1:
-                            logInterval = IntervalEntry * 60;
+                            LogStore.StartLogging(IntervalEntry * 60);
                             break;
                         case 2:
-                            logInterval = IntervalEntry * 3600;
+                            LogStore.StartLogging(IntervalEntry * 3600);
                             break;
                     }
-                    StartUpdate();
                 }
+                isLogging = !isLogging;
             });
 
-            ClearButtonClickCommand = new Command(() =>
-            {
-                TextEntry = CSVHeader;
-                File.WriteAllText(AppConstants.LOG_FILE, TextEntry);
-            });
+            ClearButtonClickCommand = new Command(() => { LogStore.ClearLog(); });
 
-            ShareButtonClickCommand = new Command(async () =>
-            {
-                File.WriteAllText(AppConstants.LOG_FILE, TextEntry);
-                await App.LogStore.ExportLogFile();
-            });
-        }
+            ShareButtonClickCommand = new Command(async () => { await LogStore.ExportLogFile(); });
 
-        private void StartUpdate()
-        {
-            cts = new CancellationTokenSource();
-            _ = UpdaterAsync(new TimeSpan(0, 0, logInterval), cts.Token);
-            isLogging = true;
-            ToggleButtonLabel = "Stop";
-        }
-
-        private void StopUpdate()
-        {
-            cts.Cancel();
-            cts.Dispose();
-            isLogging = false;
-            ToggleButtonLabel = "Start";
-        }
-
-        private async Task UpdaterAsync(TimeSpan interval, CancellationToken ct)
-        {
-            while (true)
-            {
-                await Task.Delay(interval, ct);
-                Point location = await HelperServices.GetGeoLocation();
-                if (location != null)
-                {
-                    string newEntry = string.Format("{0}, {1}, {2}, {3}\n", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), location.Latitude, location.Longitude, location.Altitude);
-                    TextEntry += newEntry;
-                    File.WriteAllText(AppConstants.LOG_FILE, TextEntry);
-                }
-                else
-                {
-                    StopUpdate();
-                }
-            }
+            MessagingCenter.Subscribe<LogStore>(this, "LogUpdated", (sender) => { TextEntry = LogStore.LogString; });
         }
     }
 }

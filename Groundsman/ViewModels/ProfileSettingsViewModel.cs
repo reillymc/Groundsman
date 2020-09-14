@@ -65,7 +65,7 @@ namespace Groundsman.ViewModels
             ShowPointsOnMap = Preferences.Get("ShowPointsOnMap", true);
             ShowLinesOnMap = Preferences.Get("ShowLinesOnMap", true);
             ShowPolygonsOnMap = Preferences.Get("ShowPolygonsOnMap", true);
-            ShowLogPathOnMap = Preferences.Get("ShowLogPathOnMap", false);
+            ShowLogPathOnMap = Preferences.Get("ShowLogPathOnMap", true);
         }
     }
 }

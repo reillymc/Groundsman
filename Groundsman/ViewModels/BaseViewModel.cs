@@ -1,5 +1,6 @@
 ﻿using Groundsman.Interfaces;
 using Groundsman.Models;
+using Groundsman.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +14,7 @@ namespace Groundsman.ViewModels
     {
         public IDataStore<Feature> FeatureStore => DependencyService.Get<IDataStore<Feature>>();
         public INavigationService<Feature> NavigationService => DependencyService.Get<INavigationService<Feature>>();
+        public static LogStore LogStore = new LogStore();
 
         private ObservableRangeCollection<Feature> featureList = new ObservableRangeCollection<Feature>();
         public ObservableRangeCollection<Feature> FeatureList

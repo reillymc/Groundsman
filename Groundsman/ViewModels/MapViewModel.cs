@@ -24,6 +24,7 @@ namespace Groundsman.ViewModels
             Map = new CustomMap();
             CenterMapOnUser();
             Map.MapClicked += OnMapClicked;
+            MessagingCenter.Subscribe<LogStore>(this, "LogUpdated", (sender) => { DrawLogPath(); });
         }
 
         public CustomMap Map { get; private set; }
@@ -107,12 +108,6 @@ namespace Groundsman.ViewModels
             CleanFeatures();
             DrawFeatures();
 
-            if (Preferences.Get("ShowLogPathOnMap", true))
-            {
-                //Setup log
-                cts = new CancellationTokenSource();
-                _ = MapLogUpdaterAsync(new TimeSpan(0, 0, 1), cts.Token);
-            }
             //SetShowingUser
             var status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
             if (status == PermissionStatus.Granted)
@@ -125,11 +120,11 @@ namespace Groundsman.ViewModels
             }
         }
 
-        private async Task MapLogUpdaterAsync(TimeSpan interval, CancellationToken ct)
+        private void DrawLogPath()
         {
-            while (true)
+            if (Preferences.Get("ShowLogPathOnMap", true))
             {
-                List<Point> logFile = App.LogStore.GetLogFileObject();
+                List<Point> logFile = LogStore.GetLogFileObject();
                 Polyline logPolyline = new Polyline
                 {
                     StrokeColor = Color.DarkOrange,
@@ -140,17 +135,9 @@ namespace Groundsman.ViewModels
                     logPolyline.Geopath.Add(new Position(point.Latitude, point.Longitude));
                 });
                 Map.MapElements.Add(logPolyline);
-                await Task.Delay(interval, ct);
             }
         }
 
-        public void CleanupLog()
-        {
-            if (cts != null)
-            {
-                cts.Cancel();
-            }
-        }
 
         void OnMapClicked(object sender, MapClickedEventArgs e)
         {
