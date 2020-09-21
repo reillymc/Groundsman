@@ -33,13 +33,11 @@
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Location permissions are needed to record and display data based on your location.</string>
+	<string>Groundsman uses your location to help you create features, display your position on the map and to record your movement path.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Location permissions are needed to record and display data based on your location.</string>
+	<string>Groundsman uses your location to help you create features, display your position on the map and to record your movement path.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Location permissions are needed to record and display data based on your location.</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>Groundsman uses APIs that request access to your calendar for app functionality</string>
+	<string>Groundsman uses your location to help you create features and display your position on the map.</string>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>
@@ -151,7 +149,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>8.2.1</string>
+	<string>8.2.3</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
