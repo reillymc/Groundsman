@@ -56,6 +56,7 @@ namespace Groundsman.Services
         {
             LogString = CSVHeader;
             LogPoints = new List<Point>();
+            File.WriteAllText(AppConstants.LOG_FILE, LogString);
             MessagingCenter.Send(this, "LogUpdated");
         }
 

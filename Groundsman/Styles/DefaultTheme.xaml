@@ -44,6 +44,13 @@
         <Setter Property="IsClippedToBounds" Value="True" />
     </Style>
 
+    <Style x:Key="FrameViewCell" TargetType="Frame">
+        <Setter Property="HasShadow" Value="false" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource Foreground}" />
+    </Style>
+
     <Style x:Key="ListLabelStyle" TargetType="Label">
         <Setter Property="TextColor" Value="{DynamicResource Text}" />
         <Setter Property="FontSize" Value="Medium" />

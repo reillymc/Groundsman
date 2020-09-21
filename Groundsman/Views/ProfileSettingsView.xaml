@@ -8,94 +8,129 @@
         <ToolbarItem Command="{Binding InfoButtonTappedCommand}" Icon="info_icon" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <TableView BackgroundColor="{DynamicResource Foreground}" Intent="Settings">
+        <TableView Intent="Settings">
             <TableRoot>
                 <TableSection Title="Profile">
                     <ViewCell>
-                        <Entry Margin="15,0"
+                        <Frame Style="{StaticResource FrameViewCell}">
+                            <Entry Margin="20,0"
                                Placeholder="User ID"
                                Text="{Binding IDEntry}"
                                TextColor="{DynamicResource Text}">
-                            <Entry.Behaviors>
-                                <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
-                            </Entry.Behaviors>
-                        </Entry>
+                                <Entry.Behaviors>
+                                    <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </Frame>
+
                     </ViewCell>
                 </TableSection>
                 <TableSection Title="GPS and Data Precision">
                     <ViewCell>
-                        <StackLayout Padding="15,0"
+                        <Frame Style="{StaticResource FrameViewCell}">
+                            <StackLayout Padding="20,0"
                                      HorizontalOptions="FillAndExpand"
                                      Orientation="Horizontal"
                                      VerticalOptions="CenterAndExpand">
-                            <Label Text="GPS Accuracy"
+                                <Label Text="GPS Accuracy"
                                    TextColor="{DynamicResource Text}"
                                    VerticalOptions="Center" />
-                            <Picker x:Name="picker"
+                                <Picker x:Name="picker"
                                     HorizontalOptions="EndAndExpand"
+                                        HorizontalTextAlignment="Center"
                                     SelectedIndex="{Binding GPSPrecisionEntry}"
                                     SelectedIndexChanged="OnPickerSelectedIndexChanged"
-                                    TitleColor="Black"
+                                    Title="GPS Accuracy"
+                                    TextColor="{DynamicResource greenPrimary}"
                                     WidthRequest="95">
-                                <Picker.ItemsSource>
-                                    <x:Array Type="{x:Type x:String}">
-                                        <x:String>Best</x:String>
-                                        <x:String>High</x:String>
-                                        <x:String>Medium</x:String>
-                                        <x:String>Low</x:String>
-                                    </x:Array>
-                                </Picker.ItemsSource>
-                            </Picker>
-                        </StackLayout>
+                                    <Picker.ItemsSource>
+                                        <x:Array Type="{x:Type x:String}">
+                                            <x:String>Best</x:String>
+                                            <x:String>High</x:String>
+                                            <x:String>Medium</x:String>
+                                            <x:String>Low</x:String>
+                                        </x:Array>
+                                    </Picker.ItemsSource>
+                                </Picker>
+                            </StackLayout>
+                        </Frame>
                     </ViewCell>
                     <ViewCell>
-                        <StackLayout Padding="15,0"
+                        <Frame Style="{StaticResource FrameViewCell}">
+                            <StackLayout Padding="20,0"
                                      HorizontalOptions="FillAndExpand"
                                      Orientation="Horizontal"
                                      VerticalOptions="CenterAndExpand">
-                            <Label Text="{Binding Source={x:Reference stepperDecimal}, Path=Value}"
+                                <Label Text="{Binding Source={x:Reference stepperDecimal}, Path=Value}"
                                    TextColor="{DynamicResource Text}"
                                    VerticalOptions="Center" />
-                            <Label Text="Decimal Places"
+                                <Label Text="Decimal Places"
                                    TextColor="{DynamicResource Text}"
                                    VerticalOptions="Center" />
-                            <Stepper x:Name="stepperDecimal"
+                                <Stepper x:Name="stepperDecimal"
                                      HorizontalOptions="EndAndExpand"
                                      Increment="1"
                                      Maximum="12"
                                      ValueChanged="OnStepperValueChanged"
                                      Value="{Binding DecimalAccuracyEntry}" />
-                        </StackLayout>
+                            </StackLayout>
+                        </Frame>
                     </ViewCell>
                 </TableSection>
                 <TableSection Title="Feature List">
-                    <SwitchCell On="{Binding ShowPointsOnMap}"
-                                OnChanged="ShowPointsOnMapChanged"
-                                Text="Show Points on Map" />
-                    <SwitchCell On="{Binding ShowLinesOnMap}"
-                                OnChanged="ShowLinesOnMapChanged"
-                                Text="Show Lines on Map" />
-                    <SwitchCell On="{Binding ShowPolygonsOnMap}"
-                                OnChanged="ShowPolygonsOnMapChanged"
-                                Text="Show Polygons on Map" />
                     <ViewCell>
-                        <StackLayout Padding="15,0"
+                        <Frame Style="{StaticResource FrameViewCell}">
+                            <StackLayout Orientation="Horizontal" Padding="20,0">
+                                <Label VerticalOptions="Center" Text="Show Points on Map"/>
+                                <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding ShowPointsOnMap}"
+                                 Toggled="ShowPointsOnMapChanged"/>
+                            </StackLayout>
+                        </Frame>
+                    </ViewCell>
+                    <ViewCell>
+                        <Frame Style="{StaticResource FrameViewCell}">
+                            <StackLayout Orientation="Horizontal" Padding="20,0">
+                                <Label VerticalOptions="Center" Text="Show Lines on Map"/>
+                                <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding ShowLinesOnMap}"
+                                 Toggled="ShowLinesOnMapChanged"/>
+                            </StackLayout>
+                        </Frame>
+                    </ViewCell>
+                    <ViewCell>
+                        <Frame Style="{StaticResource FrameViewCell}">
+                            <StackLayout Orientation="Horizontal" Padding="20,0">
+                                <Label VerticalOptions="Center" Text="Show Polygons on Map"/>
+                                <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding ShowPolygonsOnMap}"
+                                 Toggled="ShowPolygonsOnMapChanged"/>
+                            </StackLayout>
+                        </Frame>
+                    </ViewCell>
+                    <ViewCell>
+                        <Frame Style="{StaticResource FrameViewCell}">
+                            <StackLayout Padding="20,0"
                                      HorizontalOptions="FillAndExpand"
                                      Orientation="Horizontal"
                                      VerticalOptions="CenterAndExpand">
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding DeleteAllFeatures}" />
-                            </StackLayout.GestureRecognizers>
-                            <Label FontAttributes="Bold"
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding DeleteAllFeatures}" />
+                                </StackLayout.GestureRecognizers>
+                                <Label FontAttributes="Bold"
                                    Text="Clear All Features"
                                    TextColor="{StaticResource greenPrimary}" />
-                        </StackLayout>
+                            </StackLayout>
+                        </Frame>
                     </ViewCell>
                 </TableSection>
                 <TableSection Title="Logger">
-                    <SwitchCell On="{Binding ShowLogPathOnMap}"
-                                OnChanged="ShowLogPathOnMapChanged"
-                                Text="Show Log Path on Map" />
+                    <ViewCell>
+                        <Frame Style="{StaticResource FrameViewCell}">
+                            <StackLayout Orientation="Horizontal" Padding="20,0">
+                                <Label VerticalOptions="Center" Text="Show Log Path on Map"/>
+                                <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding ShowLogPathOnMap}"
+                                 Toggled="ShowLogPathOnMapChanged"/>
+                            </StackLayout>
+                        </Frame>
+                    </ViewCell>
                 </TableSection>
             </TableRoot>
         </TableView>

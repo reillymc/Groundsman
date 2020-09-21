@@ -8,47 +8,31 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout Spacing="0">
-            <Frame BackgroundColor="{DynamicResource Background}"
-                   Style="{StaticResource FrameM}"
-                   VerticalOptions="FillAndExpand">
-                <ScrollView x:Name="ScrollBox">
-                    <Label x:Name="logLabel"
-                           FontSize="Caption"
-                           PropertyChanged="LogLabel_PropertyChanged"
-                           Text="{Binding TextEntry}" />
-                </ScrollView>
-            </Frame>
-            <Grid Margin="10,0,10,10"
+            <Grid Margin="10,10,10,0"
                   ColumnDefinitions="2.5*,*,*"
                   HorizontalOptions="Fill"
                   RowDefinitions="*"
-                  VerticalOptions="End">
-                <Frame Grid.Column="0"
-                       Padding="0"
-                       HorizontalOptions="Fill"
-                       Style="{StaticResource Frame}"
-                       VerticalOptions="Fill">
-                    <StackLayout Padding="5,0" Orientation="Horizontal">
-                        <Label FontSize="Small"
+                  VerticalOptions="Start" MinimumHeightRequest="20">
+                <StackLayout Grid.Column="0" Padding="5,0" Orientation="Horizontal">
+                    <Label FontSize="Small"
                                Text="Interval:"
                                TextColor="{DynamicResource Text}"
                                VerticalOptions="Center" />
-                        <Entry FontSize="Small"
-                               HorizontalTextAlignment="End"
+                    <Entry FontSize="Small"
+                               HorizontalTextAlignment="Center"
                                Keyboard="Numeric"
                                Text="{Binding IntervalEntry}"
-                               TextColor="{StaticResource TextSecondary}"
+                               TextColor="{StaticResource greenPrimary}"
                                VerticalOptions="Center"
                                WidthRequest="30" />
-                        <Picker FontSize="Small"
+                    <Picker FontSize="Small"
                                 HorizontalOptions="FillAndExpand"
                                 ItemsSource="{Binding UnitItems}"
                                 SelectedIndex="{Binding UnitEntry}"
-                                TextColor="{StaticResource TextSecondary}"
+                                TextColor="{StaticResource greenPrimary}"
                                 TitleColor="Black"
                                 VerticalOptions="Center" />
-                    </StackLayout>
-                </Frame>
+                </StackLayout>
                 <Button Grid.Column="1"
                         Command="{Binding ToggleButtonClickCommand}"
                         HorizontalOptions="FillAndExpand"
@@ -60,6 +44,17 @@
                         Style="{StaticResource ModalButton}"
                         Text="Clear" />
             </Grid>
+            <Frame BackgroundColor="{DynamicResource Background}"
+                   Style="{StaticResource FrameM}"
+                   Padding="10,10,0,10"
+                   VerticalOptions="FillAndExpand">
+                <ScrollView x:Name="ScrollBox">
+                    <Label x:Name="logLabel"
+                           FontSize="Caption"
+                           PropertyChanged="LogLabel_PropertyChanged"
+                           Text="{Binding TextEntry}" />
+                </ScrollView>
+            </Frame>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
