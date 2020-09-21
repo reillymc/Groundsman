@@ -20,6 +20,8 @@ namespace Groundsman.ViewModels
 
         private bool _isBusy;
 
+        public Feature SelectedFeature { get; set; }
+
         /// <summary>
         /// View-model constructor.
         /// </summary>
@@ -27,7 +29,7 @@ namespace Groundsman.ViewModels
         {
             AddButtonTappedCommand = new Command(async () => await AddButtonTapped());
             ShareButtonTappedCommand = new Command(async () => await ShowShareSheet());
-            ItemTappedCommand = new Command<Feature>(async (data) => await ShowFeatureDetailsPage(data));
+            ItemTappedCommand = new Command<Feature>(async (data) => await NavigationService.NavigateToDetailPage(SelectedFeature));
             EditEntryCommand = new Command<Feature>(async (feature) => await ShowEditFeatureDetailsPage(feature));
             DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
 
@@ -39,21 +41,6 @@ namespace Groundsman.ViewModels
             {
                 GetFeatures();
             });
-        }
-
-        /// <summary>
-        /// Opens the ExistingDetailFormView page showing more detail about the feature the user tapped on in the list.
-        /// </summary>
-        /// <param name="data">Feature tapped on to be displayed.</param>
-        /// <returns></returns>
-        private async Task ShowFeatureDetailsPage(Feature data)
-        {
-            if (_isBusy) return;
-            _isBusy = true;
-
-            await NavigationService.NavigateToDetailPage(data);
-
-            _isBusy = false;
         }
 
         /// <summary>

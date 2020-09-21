@@ -2,9 +2,9 @@
 <ContentPage x:Class="Groundsman.Views.MyFeaturesView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
-             xmlns:converters="clr-namespace:Groundsman.Converters"
-             Style="{DynamicResource PageStyle}">
+             xmlns:behaviors="clr-namespace:Groundsman.Behaviors"
+             Style="{DynamicResource PageStyle}"
+             NavigationPage.BackButtonTitle="Fe List">
     <ContentPage.ToolbarItems>
         <ToolbarItem AutomationId="id_icon"
                      Command="{Binding ShareButtonTappedCommand}"
@@ -12,7 +12,6 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <ResourceDictionary>
-            <converters:ItemTappedEventArgsToItemTappedConverter x:Key="TappedItemConverter" />
             <DataTemplate x:Key="ListTemplate">
                 <ViewCell>
                     <ViewCell.ContextActions>
@@ -76,9 +75,10 @@
                   HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}"
                   ItemTemplate="{StaticResource ListTemplate}"
                   ItemsSource="{Binding FeatureList}"
-                  SeparatorColor="{DynamicResource Seperator}">
+                  SeparatorColor="{DynamicResource Seperator}"
+                  SelectedItem="{Binding SelectedFeature}">
             <ListView.Behaviors>
-                <behaviors:ListViewItemTappedBehaviour Command="{Binding ItemTappedCommand}" Converter="{StaticResource TappedItemConverter}" />
+                <behaviors:ItemTappedToCommandBehavior Command="{Binding ItemTappedCommand}" />
             </ListView.Behaviors>
             <ListView.Footer>
                 <Label Padding="10"
