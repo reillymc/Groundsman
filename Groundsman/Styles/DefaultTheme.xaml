@@ -123,6 +123,22 @@
     <Style x:Key="ModalButton" TargetType="Button">
         <Setter Property="HorizontalOptions" Value="Start" />
         <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="BackgroundColor">
+            <OnPlatform x:TypeArguments="Color"
+                        Android="{StaticResource greenPrimary}"
+                        iOS="Transparent" />
+        </Setter>
+        <Setter Property="TextColor">
+            <OnPlatform x:TypeArguments="Color"
+                        Android="White"
+                        iOS="{StaticResource greenPrimary}" />
+        </Setter>
+    </Style>
+
+    <Style x:Key="GenericButton" TargetType="Button">
+        <Setter Property="HorizontalOptions" Value="Start" />
+        <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="BackgroundColor">
             <OnPlatform x:TypeArguments="Color"
                         Android="{StaticResource greenPrimary}"
@@ -326,10 +342,10 @@
                             <Image HorizontalOptions="Center"
                                    Source="add_icon_color"
                                    VerticalOptions="Center" />
-                            <Label FontSize="Small"
-                                   HorizontalOptions="Center"
+                            <Label HorizontalOptions="Center"
+                                   FontSize="16"
                                    Text="Add Point"
-                                   TextColor="Green"
+                                   TextColor="{StaticResource greenPrimary}"
                                    VerticalOptions="Center" />
                         </StackLayout>
                     </Frame>

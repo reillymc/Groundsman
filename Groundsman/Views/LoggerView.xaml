@@ -36,12 +36,12 @@
                 <Button Grid.Column="1"
                         Command="{Binding ToggleButtonClickCommand}"
                         HorizontalOptions="FillAndExpand"
-                        Style="{StaticResource ModalButton}"
+                        Style="{StaticResource GenericButton}"
                         Text="{Binding ToggleButtonLabel}" />
                 <Button Grid.Column="2"
                         Command="{Binding ClearButtonClickCommand}"
                         HorizontalOptions="FillAndExpand"
-                        Style="{StaticResource ModalButton}"
+                        Style="{StaticResource GenericButton}"
                         Text="Clear" />
             </Grid>
             <Frame BackgroundColor="{DynamicResource Background}"

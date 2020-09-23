@@ -17,6 +17,8 @@ namespace Groundsman.ViewModels
     /// </summary>
     public class MapViewModel : BaseViewModel
     {
+        public CustomMap Map { get; private set; }
+
         public MapViewModel()
         {
             Map = new CustomMap();
@@ -24,8 +26,6 @@ namespace Groundsman.ViewModels
             Map.MapClicked += OnMapClicked;
             MessagingCenter.Subscribe<LogStore>(this, "LogUpdated", (sender) => { DrawLogPath(); });
         }
-
-        public CustomMap Map { get; private set; }
 
         // Only center map on user if location permissions are granted
         private async void CenterMapOnUser()

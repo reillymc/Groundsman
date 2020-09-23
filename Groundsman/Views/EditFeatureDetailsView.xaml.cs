@@ -10,6 +10,7 @@ namespace Groundsman.Views
 {
     public partial class EditFeatureDetailsView : ContentPage
     {
+        FeatureDetailsViewModel viewModel;
         /// <summary>
         /// Detail form constructor for when a new entry is being added.
         /// </summary>
@@ -17,7 +18,7 @@ namespace Groundsman.Views
         public EditFeatureDetailsView(FeatureType type)
         {
             InitializeComponent();
-            BindingContext = new FeatureDetailsViewModel(type);
+            BindingContext = viewModel = new FeatureDetailsViewModel(type);
         }
 
         /// <summary>
@@ -27,7 +28,7 @@ namespace Groundsman.Views
         public EditFeatureDetailsView(Feature data)
         {
             InitializeComponent();
-            BindingContext = new FeatureDetailsViewModel(data);
+            BindingContext = viewModel = new FeatureDetailsViewModel(data);
         }
 
         protected override void OnAppearing()
