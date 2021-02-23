@@ -158,7 +158,7 @@
             <StackLayout.BackgroundColor>
                 <OnPlatform x:TypeArguments="Color"
                             Android="{StaticResource greenPrimary}"
-                            iOS="{StaticResource Foreground}" />
+                            iOS="{DynamicResource Foreground}" />
             </StackLayout.BackgroundColor>
             <StackLayout Margin="15,7,15,0" Orientation="Horizontal">
                 <Button Command="{TemplateBinding BindingContext.OnCancelTappedCommand}"
@@ -342,8 +342,8 @@
                             <Image HorizontalOptions="Center"
                                    Source="add_icon_color"
                                    VerticalOptions="Center" />
-                            <Label HorizontalOptions="Center"
-                                   FontSize="16"
+                            <Label FontSize="16"
+                                   HorizontalOptions="Center"
                                    Text="Add Point"
                                    TextColor="{StaticResource greenPrimary}"
                                    VerticalOptions="Center" />
