@@ -1,8 +1,8 @@
 ﻿using Groundsman.Models;
 using Groundsman.Services;
-using Plugin.FilePicker;
-using Plugin.FilePicker.Abstractions;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -47,31 +47,38 @@ namespace Groundsman.ViewModels
 
         public async Task ImportFeaturesFromFile()
         {
-            //TODO: exception handling - 
             try
             {
-                var status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.StorageRead());
-
-                // If permissions allowed, prompt the user to pick a file.
-                if (status == PermissionStatus.Granted)
-                {
-                    FileData fileData = await CrossFilePicker.Current.PickFile();
-
-                    // If the user didn't cancel, import the contents of the file they selected.
-                    if (fileData != null)
+                var customFileType =
+                    new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
                     {
-                        string contents = System.Text.Encoding.UTF8.GetString(fileData.DataArray);
-                        await FeatureStore.ImportFeaturesAsync(contents, true);
-                    }
-                }
-                else
+                            { DevicePlatform.iOS, new[] { "public.json", "com.apple.dt.document.geojson" } }, // or general UTType values
+                            { DevicePlatform.Android, new[] { "application/json", "application/geo+json" } },
+                            { DevicePlatform.UWP, new[] { ".json", ".geojson" } },
+                            { DevicePlatform.macOS, new[] { "json", "geojson" } }, // or general UTType values
+                    });
+
+                var options = new PickOptions
                 {
-                    await NavigationService.ShowAlert("Permissions Error", "Storage permissions for Groundsman must be enabled to utilise this feature.", false);
+                    PickerTitle = "Please select a CheckSafe template file",
+                    FileTypes = customFileType,
+                };
+                var fileData = await FilePicker.PickAsync();
+
+                // If the user didn't cancel, import the contents of the file they selected.
+                if (fileData != null)
+                {
+                    var fileStream = await fileData.OpenReadAsync();
+
+                    StreamReader reader = new StreamReader(fileStream);
+                    string fileContents = reader.ReadToEnd();
+
+                    int success = await FeatureStore.ImportFeaturesAsync(fileContents, true);
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                await NavigationService.ShowAlert("Import Error", $"File must contain valid GeoJSON and be accessible to Groundsman. {ex}", false);
+                await NavigationService.ShowAlert("Import Error", $"Please allow Groundsman to access device storage.", false);
             }
         }
     }

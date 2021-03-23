@@ -69,16 +69,19 @@ namespace Groundsman.Services
 
         public async Task<bool> UpdateItemAsync(Feature item)
         {
-            for (int i = 0; i < features.Count; i++)
+            bool parseResult = TryParseFeature(item);
+            if (parseResult)
             {
-                if (features[i].properties.id == item.properties.id)
+                for (int i = 0; i < features.Count; i++)
                 {
-                    features[i] = item;
+                    if (features[i].properties.id == item.properties.id)
+                    {
+                        features[i] = item;
+                    }
                 }
+                return SaveFeaturesToFile(features, AppConstants.FEATURES_FILE);
             }
-            var save = SaveFeaturesToFile(features, AppConstants.FEATURES_FILE);
-            //notify cant find feature (or insert as new feature)
-            return save;
+            return parseResult;
         }
 
         private string GetFeaturesFile()
@@ -154,7 +157,6 @@ namespace Groundsman.Services
             if (feature.properties.id == AppConstants.NEW_ENTRY_ID)
             {
                 feature.properties.id = Guid.NewGuid().ToString();
-                return true;
             }
 
             //Importing a feature validation
@@ -218,6 +220,11 @@ namespace Groundsman.Services
                     feature.properties.name = feature.properties.name.Substring(0, 30);
                 }
 
+                foreach (char c in Path.GetInvalidFileNameChars())
+                {
+                    feature.properties.name = feature.properties.name.Replace(c, '-');
+                }
+
                 if (!string.IsNullOrWhiteSpace(feature.properties.metadataStringValue) && feature.properties.metadataStringValue.Length > 100)
                 {
                     feature.properties.name = feature.properties.name.Substring(0, 100);
@@ -257,12 +264,14 @@ namespace Groundsman.Services
 
         public async Task<bool> ExportFeatures(ObservableCollection<Feature> features)
         {
-            SaveFeaturesToFile(features, AppConstants.FEATURES_EXPORT_FILE);
+            string fileName = features.Count > 1 ? "Groundsman Feature List" : features[0].properties.name;
+
+            SaveFeaturesToFile(features, AppConstants.GetExportFile(fileName));
 
             await Share.RequestAsync(new ShareFileRequest
             {
                 Title = "Features Export",
-                File = new ShareFile(AppConstants.FEATURES_EXPORT_FILE, "text/plain"),
+                File = new ShareFile(AppConstants.GetExportFile(fileName), "text/plain"),
                 PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet
                         ? new System.Drawing.Rectangle((int)(DeviceDisplay.MainDisplayInfo.Width * .474), 80, 0, 0)
                         : System.Drawing.Rectangle.Empty

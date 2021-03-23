@@ -158,7 +158,7 @@
             <StackLayout.BackgroundColor>
                 <OnPlatform x:TypeArguments="Color"
                             Android="{StaticResource greenPrimary}"
-                            iOS="{DynamicResource Foreground}" />
+                            iOS="{StaticResource Foreground}" />
             </StackLayout.BackgroundColor>
             <StackLayout Margin="15,7,15,0" Orientation="Horizontal">
                 <Button Command="{TemplateBinding BindingContext.OnCancelTappedCommand}"
