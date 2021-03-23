@@ -64,6 +64,7 @@
     <CodesignKey>Apple Distribution: Reilly Mackenzie-Cree (E4X6YMFEBV)</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <CodesignProvision>Groundsman Distribution Profile 072020</CodesignProvision>
+    <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -330,7 +331,6 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadGenericExceptionInfoBarGroundsmaniOSHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

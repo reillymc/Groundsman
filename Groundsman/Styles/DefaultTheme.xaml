@@ -80,6 +80,7 @@
     <Style x:Key="EntryStyle" TargetType="Entry">
         <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
         <Setter Property="FontSize" Value="Small" />
+        <Setter Property="ClearButtonVisibility" Value="WhileEditing" />
     </Style>
 
     <Style x:Key="DateEntryStyle" TargetType="DatePicker">
@@ -88,7 +89,7 @@
 
     <Style x:Key="DetailCoordinateGrid" TargetType="Grid">
         <Setter Property="BackgroundColor" Value="{DynamicResource Foreground}" />
-        <Setter Property="ColumnDefinitions" Value=".8*,5*,5*,3*,1.3*" />
+        <Setter Property="ColumnDefinitions" Value=".8*,5*,5*,3*,1.5*" />
         <Setter Property="ColumnSpacing" Value="12" />
         <Setter Property="Padding" Value="10,0,0,0" />
         <Setter Property="RowDefinitions" Value="1,*" />
@@ -100,6 +101,7 @@
         <Setter Property="FontSize" Value="Small" />
         <Setter Property="Keyboard" Value="Numeric" />
         <Setter Property="behaviors:EntryNumLengthValidatorBehavior.AttachBehavior" Value="true" />
+        <Setter Property="ClearButtonVisibility" Value="WhileEditing" />
     </Style>
 
     <Style x:Key="FrameButton"

@@ -16,6 +16,7 @@
                             <Entry Margin="20,0"
                                Placeholder="User ID"
                                Text="{Binding IDEntry}"
+                               ClearButtonVisibility="WhileEditing"
                                TextColor="{DynamicResource Text}">
                                 <Entry.Behaviors>
                                     <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
