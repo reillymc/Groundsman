@@ -15,7 +15,7 @@ namespace Groundsman.Views
         /// Detail form constructor for when a new entry is being added.
         /// </summary>
         /// <param name="type">The geoJSON geometry type being added.</param>
-        public EditFeatureDetailsView(FeatureType type)
+        public EditFeatureDetailsView(GeoJSONType type)
         {
             InitializeComponent();
             BindingContext = viewModel = new FeatureDetailsViewModel(type);

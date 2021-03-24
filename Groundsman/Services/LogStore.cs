@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Point = Groundsman.Models.Point;
+using Position = Groundsman.Models.Position;
 
 namespace Groundsman.Services
 {
@@ -13,12 +13,12 @@ namespace Groundsman.Services
     {
         private CancellationTokenSource cts;
         public string LogString { get; set; }
-        public List<Point> LogPoints { get; set; }
+        public List<Position> LogPoints { get; set; }
         private readonly string CSVHeader = "Time, Latitude, Longitude, Altitude\n";
 
         public LogStore()
         {
-            LogPoints = new List<Point>();
+            LogPoints = new List<Position>();
             if (File.Exists(AppConstants.LOG_FILE))
             {
                 LogString = File.ReadAllText(AppConstants.LOG_FILE);
@@ -27,7 +27,7 @@ namespace Groundsman.Services
                     string[] stringArray = pointString.Split(",");
                     try
                     {
-                        Point point = new Point(double.Parse(stringArray[1]), double.Parse(stringArray[2]), double.Parse(stringArray[3]));
+                        Position point = new Position(double.Parse(stringArray[1]), double.Parse(stringArray[2]), double.Parse(stringArray[3]));
                         LogPoints.Add(point);
                     }
                     catch { /*TODO*/ }
@@ -55,7 +55,7 @@ namespace Groundsman.Services
         public void ClearLog()
         {
             LogString = CSVHeader;
-            LogPoints = new List<Point>();
+            LogPoints = new List<Position>();
             File.WriteAllText(AppConstants.LOG_FILE, LogString);
             MessagingCenter.Send(this, "LogUpdated");
         }
@@ -77,12 +77,12 @@ namespace Groundsman.Services
             while (true)
             {
                 await Task.Delay(interval, ct);
-                Point location = await HelperServices.GetGeoLocation();
+                Position location = await HelperServices.GetGeoLocation();
                 if (location != null)
                 {
                     string newEntry = string.Format("{0}, {1}, {2}, {3}\n", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), location.Latitude, location.Longitude, location.Altitude);
                     LogString += newEntry;
-                    LogPoints.Add(new Point(location.Latitude, location.Longitude, location.Altitude));
+                    LogPoints.Add(new Position(location.Latitude, location.Longitude, location.Altitude));
                     File.WriteAllText(AppConstants.LOG_FILE, LogString);
                     MessagingCenter.Send(this, "LogUpdated");
                 }

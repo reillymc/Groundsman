@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace Groundsman.Interfaces
@@ -12,6 +13,6 @@ namespace Groundsman.Interfaces
         Task<T> GetItemAsync(string id);
         Task<ObservableCollection<T>> GetItemsAsync(bool forceRefresh = false);
         Task<int> ImportFeaturesAsync(string contents, bool notify);
-        Task<bool> ExportFeatures(ObservableCollection<T> features);
+        Task<bool> ExportFeatures(IList<T> features);
     }
 }

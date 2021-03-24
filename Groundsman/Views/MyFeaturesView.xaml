@@ -28,17 +28,17 @@
                                VerticalOptions="Center"
                                WidthRequest="40">
                             <Image.Triggers>
-                                <DataTrigger Binding="{Binding geometry.type}"
+                                <DataTrigger Binding="{Binding Geometry.Type}"
                                              TargetType="Image"
                                              Value="Point">
                                     <Setter Property="Source" Value="point_icon.png" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding geometry.type}"
+                                <DataTrigger Binding="{Binding Geometry.Type}"
                                              TargetType="Image"
                                              Value="LineString">
                                     <Setter Property="Source" Value="line_icon.png" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding geometry.type}"
+                                <DataTrigger Binding="{Binding Geometry.Type}"
                                              TargetType="Image"
                                              Value="Polygon">
                                     <Setter Property="Source" Value="area_icon.png" />
@@ -47,7 +47,7 @@
                         </Image>
                         <StackLayout Padding="5,0" Orientation="Vertical">
                             <Label Style="{StaticResource ListLabelStyle}"
-                                   Text="{Binding properties.name}"
+                                   Text="{Binding Path=Properties[name]}"
                                    VerticalOptions="End" />
                             <Label FontSize="Small"
                                    HorizontalTextAlignment="Start"
@@ -56,8 +56,8 @@
                                    VerticalOptions="Start">
                                 <Label.Text>
                                     <MultiBinding StringFormat="{}{0:d/M/yy}  {1}">
-                                        <Binding Path="properties.date" />
-                                        <Binding Path="properties.author" />
+                                        <Binding Path="Properties[date]" />
+                                        <Binding Path="Properties[author]" />
                                     </MultiBinding>
                                 </Label.Text>
                             </Label>

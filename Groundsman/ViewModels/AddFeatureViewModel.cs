@@ -27,13 +27,13 @@ namespace Groundsman.ViewModels
             switch (id)
             {
                 case "Point":
-                    await NavigationService.NavigateToNewEditPage(FeatureType.Point);
+                    await NavigationService.NavigateToNewEditPage(GeoJSONType.Point);
                     break;
                 case "LineString":
-                    await NavigationService.NavigateToNewEditPage(FeatureType.LineString);
+                    await NavigationService.NavigateToNewEditPage(GeoJSONType.LineString);
                     break;
                 case "Polygon":
-                    await NavigationService.NavigateToNewEditPage(FeatureType.Polygon);
+                    await NavigationService.NavigateToNewEditPage(GeoJSONType.Polygon);
                     break;
                 case "Clipboard":
                     string contents = await Clipboard.GetTextAsync();

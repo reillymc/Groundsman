@@ -2,21 +2,21 @@
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Point = Groundsman.Models.Point;
+using Position = Groundsman.Models.Position;
 
 namespace Groundsman.Services
 {
     public class HelperServices
     {
         private static GeolocationAccuracy geolocationAccuracy;
-        private static Point point;
+        private static Position point;
         private static int decimalAccuracy;
 
         /// <summary>
         /// Queries the current location of the device
         /// </summary>
         /// <returns>A point object containing the device's current location</returns>
-        public static async Task<Point> GetGeoLocation()
+        public static async Task<Position> GetGeoLocation()
         {
             geolocationAccuracy = Preferences.Get("GPSPrecision", 2) switch
             {
@@ -36,7 +36,7 @@ namespace Groundsman.Services
                     var location = await Geolocation.GetLocationAsync(request);
                     if (location != null)
                     {
-                        point = new Point(Math.Round(location.Latitude, decimalAccuracy), Math.Round(location.Longitude, decimalAccuracy), Math.Round(location.Altitude ?? 0.0, decimalAccuracy));
+                        point = new Position(Math.Round(location.Latitude, decimalAccuracy), Math.Round(location.Longitude, decimalAccuracy), Math.Round(location.Altitude ?? 0.0, decimalAccuracy));
                         return point;
                     }
                 }

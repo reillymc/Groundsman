@@ -23,7 +23,7 @@ namespace Groundsman.Services
             await currentPage.Navigation.PushModalAsync(new EditFeatureDetailsView(feature));
         }
 
-        public async Task NavigateToNewEditPage(FeatureType type)
+        public async Task NavigateToNewEditPage(GeoJSONType type)
         {
             var currentPage = GetCurrentPage();
 
