@@ -1,25 +1,37 @@
-﻿using Newtonsoft.Json;
+﻿using Groundsman.JSONConverters;
+using Newtonsoft.Json;
 
-namespace Groundsman.Models {
+namespace Groundsman.Models
+{
     /// <summary>
     /// A position is the fundamental geometry construct. An array of two - three values
     /// </summary>
-    public class Position {
+    [JsonConverter(typeof(PositionConverter))]
+    public class Position
+    {
+        [JsonProperty(PropertyName = "longitude")]
+        public double Longitude { get; set; }
 
         [JsonProperty(PropertyName = "latitude")]
         public double Latitude { get; set; }
 
-        [JsonProperty(PropertyName = "longitude")]
-        public double Longitude { get; set; }
-
         [JsonProperty(PropertyName = "altitude")]
-        public double? Altitude { get; set; }
+        public double Altitude { get; set; }
+
+        public Position(double longitude, double latitude) : this(longitude, latitude, double.NaN)
+        {
+        }
 
         [JsonConstructor]
-        public Position(double lat, double lng, double? alt) {
-            Latitude = lat;
-            Longitude = lng;
-            Altitude = alt;
+        public Position(double longitude, double latitude, double altitude)
+        {
+            Latitude = longitude;
+            Longitude = latitude;
+            Altitude = altitude;
         }
+
+        public bool HasAltitude() => !double.IsNaN(Altitude);
+
+        public override string ToString() => Latitude + ", " + Longitude + ", " + Altitude;
     }
 }

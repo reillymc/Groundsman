@@ -4,12 +4,12 @@
     {
         //Geometry Types
         Point,
-        MultiPoint, //Not currently implemented
+        //MultiPoint, Not currently implemented
         LineString,
-        MultiLineString, //Not currently implemented
+        //MultiLineString, Not currently implemented
         Polygon,
-        MultiPolygon, //Not currently implemented
-        GeometryCollection, //Not currently implemented
+        //MultiPolygon, Not currently implemented
+        //GeometryCollection, Not currently implemented
 
         //GeoJSON types
         Feature,

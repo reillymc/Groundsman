@@ -36,7 +36,7 @@ namespace Groundsman.Services
                     var location = await Geolocation.GetLocationAsync(request);
                     if (location != null)
                     {
-                        point = new Position(Math.Round(location.Latitude, decimalAccuracy), Math.Round(location.Longitude, decimalAccuracy), Math.Round(location.Altitude ?? 0.0, decimalAccuracy));
+                        point = new Position(Math.Round(location.Longitude, decimalAccuracy), Math.Round(location.Latitude, decimalAccuracy), Math.Round(location.Altitude ?? 0.0, decimalAccuracy));
                         return point;
                     }
                 }

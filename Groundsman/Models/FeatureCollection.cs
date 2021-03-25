@@ -1,0 +1,20 @@
+﻿using Groundsman.JSONConverters;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+
+namespace Groundsman.Models
+{
+    /// <summary>
+    /// Array of feature objects
+    /// </summary>
+    [JsonConverter(typeof(DummyConverter))]
+    public class FeatureCollection : GeoJSONObject
+    {
+        [JsonProperty(PropertyName = "features")]
+        public IEnumerable<Feature> Features { get; set; }
+
+        [JsonConstructor]
+        public FeatureCollection(IEnumerable<Feature> features) : base(GeoJSONType.FeatureCollection) => Features = features ?? throw new ArgumentNullException("features");
+    }
+}

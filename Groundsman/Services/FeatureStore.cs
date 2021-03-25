@@ -1,12 +1,10 @@
 ﻿using Groundsman.Interfaces;
 using Groundsman.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -118,6 +116,7 @@ namespace Groundsman.Services
                 FeatureCollection importedFeaturesData = JsonConvert.DeserializeObject<FeatureCollection>(importContents);
                 if (importedFeaturesData != null)
                 {
+                    List<Feature> featurelist = new List<Feature>();
                     foreach (Feature importedFeature in importedFeaturesData.Features)
                     {
                         if (await AddItemAsync(importedFeature))
@@ -163,130 +162,70 @@ namespace Groundsman.Services
                 return true;
             }
 
-            //Importing a feature validation
 
-            // Ensure the feature has valid GeoJSON fields supplied.
-            if (feature != null && feature.Type != null && feature.Geometry != null && feature.Geometry.Coordinates != null)
+            // If author ID hasn't been set on the feature, default it to the user's ID.
+            string author = Preferences.Get("UserID", "Groundsman");
+            if (feature.Properties.ContainsKey("author"))
             {
-                var xamCoords = new List<Position>();
-                object[] trueCoords;
-
-                // Determine if feature is supported and if so convert its points
-                switch (feature.Geometry.Type)
+                author = (string)feature.Properties["author"];
+                if (author.Length > 30)
                 {
-                    case GeoJSONType.Point:
-                        trueCoords = feature.Geometry.Coordinates.ToArray();
-                        xamCoords.Add(JsonCoordToXamarinPoint(trueCoords));
-                        break;
-                    case GeoJSONType.LineString:
-                        // Iterates the root coordinates (List<object>),
-                        // then casts each element in the list to a Jarray which contain the actual coordinates.
-                        for (int i = 0; i < feature.Geometry.Coordinates.Count; i++)
-                        {
-                            trueCoords = ((JArray)feature.Geometry.Coordinates[i]).ToObject<object[]>();
-                            xamCoords.Add(JsonCoordToXamarinPoint(trueCoords));
-                        }
-                        break;
-                    case GeoJSONType.Polygon:
-                        // Iterates the root coordinates (List<object>), and casts each element in the list to a Jarray, 
-                        // then casts each Jarray's element to another Jarray which contain the actual coordinates.
-                        for (int i = 0; i < feature.Geometry.Coordinates.Count; i++)
-                        {
-                            for (int j = 0, n = ((JArray)feature.Geometry.Coordinates[i]).Count; j < n; j++)
-                            {
-                                trueCoords = ((JArray)(((JArray)feature.Geometry.Coordinates[i])[j])).ToObject<object[]>();
-                                xamCoords.Add(JsonCoordToXamarinPoint(trueCoords));
-                            }
-                        }
-                        break;
-                    default:
-                        return false;
+                    author = author.Substring(0, 30);
+                    feature.Properties["author"] = author;
                 }
-                feature.Properties.Add("xamarincoordinates", xamCoords);
+            }
+            else
+            {
+                feature.Properties.Add("author", author);
+            }
 
-
-
-                // If author ID hasn't been set on the feature, default it to the user's ID.
-                string author = Preferences.Get("UserID", "Groundsman");
-                if (feature.Properties.ContainsKey("author"))
+            // Add default name if empty
+            string name = "Unnamed " + feature.Geometry.Type;
+            if (feature.Properties.ContainsKey("name"))
+            {
+                name = (string)feature.Properties["name"];
+                if (name.Length > 30)
                 {
-                    author = (string)feature.Properties["author"];
-                    if (author.Length > 30)
+                    name = name.Substring(0, 30);
+                    foreach (char c in Path.GetInvalidFileNameChars())
                     {
-                        author = author.Substring(0, 30);
-                        feature.Properties["author"] = author;
+                        name = name.Replace(c, '-');
                     }
+                    feature.Properties["name"] = name;
                 }
-                else
-                {
-                    feature.Properties.Add("author", author);
-                }
+            }
+            else
+            {
+                feature.Properties.Add("name", name);
+            }
 
-                // Add default name if empty
-                string name = "Unnamed " + feature.Geometry.Type;
-                if (feature.Properties.ContainsKey("name"))
-                {
-                    name = (string)feature.Properties["name"];
-                    if (name.Length > 30)
-                    {
-                        name = name.Substring(0, 30);
-                        foreach (char c in Path.GetInvalidFileNameChars())
-                        {
-                            name = name.Replace(c, '-');
-                        }
-                        feature.Properties["name"] = name;
-                    }
-                }
-                else
-                {
-                    feature.Properties.Add("name", name);
-                }
+            //TODO: add checks for int and float value - also update string value check
+            //if (!string.IsNullOrWhiteSpace(feature.Properties.metadataStringValue) && feature.Properties.metadataStringValue.Length > 100)
+            //{
+            //    feature.Properties.name = feature.Properties.name.Substring(0, 100);
+            //}
 
-
-
-
-                //TODO: add checks for int and float value - also update string value check
-                //if (!string.IsNullOrWhiteSpace(feature.Properties.metadataStringValue) && feature.Properties.metadataStringValue.Length > 100)
-                //{
-                //    feature.Properties.name = feature.Properties.name.Substring(0, 100);
-                //}
-
-                // If the date field is missing or invalid, convert it into DateTime.Now.
-                string date = DateTime.Now.ToShortDateString();
-                if (feature.Properties.ContainsKey("date"))
-                {
-                    if (DateTime.TryParse((string)feature.Properties["date"], out _) == false)
-                    {
-                        feature.Properties.Add("date", date);
-                    }
-
-                }
-                else
+            // If the date field is missing or invalid, convert it into DateTime.Now.
+            string date = DateTime.Now.ToShortDateString();
+            if (feature.Properties.ContainsKey("date"))
+            {
+                if (DateTime.TryParse((string)feature.Properties["date"], out _) == false)
                 {
                     feature.Properties.Add("date", date);
                 }
-                return true;
+
             }
-            return false;
-        }
-
-        private static Position JsonCoordToXamarinPoint(object[] coords)
-        {
-            double longitude = (double)coords[0];
-            double latitude = (double)coords[1];
-            double altitude = (coords.Length == 3) ? (double)coords[2] : 0.0;
-
-            Position point = new Position(latitude, longitude, altitude);
-            return point;
+            else
+            {
+                feature.Properties.Add("date", date);
+            }
+            return true;
         }
 
         public bool SaveFeaturesToFile(IList<Feature> features, string FileName)
         {
-            FeatureCollection geoJSONObject = new FeatureCollection
-            {
-                Type = GeoJSONType.FeatureCollection,
-                Features = features
-            };
+            FeatureCollection geoJSONObject = new FeatureCollection(features);
+
             var json = JsonConvert.SerializeObject(geoJSONObject);
             File.WriteAllText(FileName, json);
             return true;

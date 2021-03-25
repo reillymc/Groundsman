@@ -7,7 +7,8 @@ namespace Groundsman.Models
     /// <summary>
     /// A Feature object represents a spatially bounded thing.  Every Feature
     /// object is a GeoJSON object no matter where it occurs in a GeoJSON text.
-    /// </summary>
+    /// </summary> 
+    [JsonConverter(typeof(DummyConverter))]
     public class Feature : GeoJSONObject
     {
         [JsonProperty(PropertyName = "geometry")]
@@ -17,7 +18,7 @@ namespace Groundsman.Models
         public IDictionary<string, object> Properties { get; set; }
 
         [JsonConstructor]
-        public Feature(Geometry geometry = null, IDictionary<string, object> properties = null)
+        public Feature(Geometry geometry = null, IDictionary<string, object> properties = null) : base(GeoJSONType.Feature)
         {
             Geometry = geometry;
             Properties = properties;

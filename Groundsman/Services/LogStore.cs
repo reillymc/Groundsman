@@ -80,9 +80,9 @@ namespace Groundsman.Services
                 Position location = await HelperServices.GetGeoLocation();
                 if (location != null)
                 {
-                    string newEntry = string.Format("{0}, {1}, {2}, {3}\n", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), location.Latitude, location.Longitude, location.Altitude);
+                    string newEntry = string.Format("{0}, {1}\n", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), location.ToString());
                     LogString += newEntry;
-                    LogPoints.Add(new Position(location.Latitude, location.Longitude, location.Altitude));
+                    LogPoints.Add(location);
                     File.WriteAllText(AppConstants.LOG_FILE, LogString);
                     MessagingCenter.Send(this, "LogUpdated");
                 }

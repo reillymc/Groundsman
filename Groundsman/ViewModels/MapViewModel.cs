@@ -9,6 +9,10 @@ using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Maps;
 using Position = Groundsman.Models.Position;
+using XFMPosition = Xamarin.Forms.Maps.Position;
+using Polygon = Groundsman.Models.Polygon;
+using XFMPolygon = Xamarin.Forms.Maps.Polygon;
+using Point = Groundsman.Models.Point;
 
 namespace Groundsman.ViewModels
 {
@@ -54,50 +58,83 @@ namespace Groundsman.ViewModels
             // Using CurrentFeature to draw the geodata on the map
             FeatureList.ForEach((Feature feature) =>
             {
-                var points = (List<Position>)feature.Properties["xamarincoordinates"]; //TODO: make safe
-                if (feature.Geometry.Type == GeoJSONType.Point && Preferences.Get("ShowPointsOnMap", true))
+                switch (feature.Geometry.Type)
                 {
-                    Pin pin = new Pin
-                    {
-                        Label = (string)feature.Properties["name"],//TODO: make safe
-                        Address = string.Format("{0}, {1}, {2}", points[0].Latitude, points[0].Longitude, points[0].Altitude),
-                        Type = PinType.Place,
-                        Position = new Xamarin.Forms.Maps.Position(points[0].Latitude, points[0].Longitude),
-                    };
-                    pin.MarkerClicked += async (sender, e) =>
-                    {
-                        await DisplayFeatureActionMenuAsync(feature);
-                    };
-                    Map.Pins.Add(pin);
-                }
-                else if (feature.Geometry.Type == GeoJSONType.LineString && Preferences.Get("ShowLinesOnMap", true))
-                {
-                    Polyline polyline = new Polyline
-                    {
-                        StrokeColor = Color.OrangeRed,
-                        StrokeWidth = 5,
-                    };
-                    points.ForEach((Position point) =>
-                    {
-                        polyline.Geopath.Add(new Xamarin.Forms.Maps.Position(point.Latitude, point.Longitude));
-                    });
-                    Map.MapElements.Add(polyline);
-                }
-                else if (feature.Geometry.Type == GeoJSONType.Polygon && Preferences.Get("ShowPolygonsOnMap", true))
-                {
-                    Polygon polygon = new Polygon
-                    {
-                        StrokeWidth = 4,
-                        StrokeColor = Color.OrangeRed,
-                        FillColor = Color.FromHex("#85cb5748"),
-                    };
-                    points.ForEach((Position point) =>
-                    {
-                        polygon.Geopath.Add(new Xamarin.Forms.Maps.Position(point.Latitude, point.Longitude));
-                    });
-                    Map.MapElements.Add(polygon);
+                    case GeoJSONType.Point:
+                        DrawPoint(feature);
+                        break;
+                    case GeoJSONType.LineString:
+                        DrawLineString(feature);
+                        break;
+                    case GeoJSONType.Polygon:
+                        DrawPolygon(feature);
+                        break;
                 }
             });
+        }
+
+        private void DrawPolygon(Feature feature)
+        {
+            if (!Preferences.Get("ShowPolygonsOnMap", true))
+            {
+                return;
+            }
+            XFMPolygon xfmpolygon = new XFMPolygon
+            {
+                StrokeWidth = 4,
+                StrokeColor = Color.OrangeRed,
+                FillColor = Color.FromHex("#85cb5748"),
+            };
+
+            Polygon polygon = (Polygon)feature.Geometry;
+            foreach (LineString lineString in polygon.Coordinates)
+            {
+                foreach (Position pos in lineString.Coordinates)
+                {
+                    xfmpolygon.Geopath.Add(new XFMPosition(pos.Latitude, pos.Longitude));
+                }
+            }
+            Map.MapElements.Add(xfmpolygon);
+        }
+
+        private void DrawLineString(Feature feature)
+        {
+            if (!Preferences.Get("ShowLinesOnMap", true))
+            {
+                return;
+            }
+            Polyline polyline = new Polyline
+            {
+                StrokeColor = Color.OrangeRed,
+                StrokeWidth = 5,
+            };
+            LineString lineString = (LineString)feature.Geometry;
+            lineString.Coordinates.ForEach((Position point) =>
+            {
+                polyline.Geopath.Add(new XFMPosition(point.Latitude, point.Longitude));
+            });
+            Map.MapElements.Add(polyline);
+        }
+
+        private void DrawPoint(Feature feature)
+        {
+            if (!Preferences.Get("ShowPointsOnMap", true))
+            {
+                return;
+            }
+            Point point = (Point)feature.Geometry;
+            Pin pin = new Pin
+            {
+                Label = (string)feature.Properties["name"],
+                Address = string.Format("{0}, {1}, {2}", point.Coordinates.Latitude, point.Coordinates.Longitude, point.Coordinates.Altitude),
+                Type = PinType.Place,
+                Position = new XFMPosition(point.Coordinates.Latitude, point.Coordinates.Longitude),
+            };
+            pin.MarkerClicked += async (sender, e) =>
+            {
+                await DisplayFeatureActionMenuAsync(feature);
+            };
+            Map.Pins.Add(pin);
         }
 
         public async void RefreshMap()
@@ -142,15 +179,26 @@ namespace Groundsman.ViewModels
             FeatureList.ForEach(async (Feature feature) =>
             {
                 bool ItemHit = false;
-                var pointList = (List<Position>)feature.Properties["xamarincoordinates"]; //TODO: make safe
-                Position[] points = pointList.ToArray();
+
                 if (feature.Geometry.Type == GeoJSONType.Polygon && Preferences.Get("ShowPolygonsOnMap", true))
                 {
-                    ItemHit |= IsPointInPolygon(new Position(e.Position.Latitude, e.Position.Longitude, 0), points);
+                    Polygon polygon = (Polygon)feature.Geometry;
+                    List<Position> posList = new List<Position>();
+                    foreach (LineString lineString in polygon.Coordinates)
+                    {
+                        foreach (Position pos in lineString.Coordinates)
+                        {
+                            posList.Add(pos);
+                        }
+                    }
+                    ItemHit |= IsPointInPolygon(new Position(e.Position.Longitude, e.Position.Latitude, 0), posList);
                 }
                 else if (feature.Geometry.Type == GeoJSONType.LineString && Preferences.Get("ShowLinesOnMap", true))
                 {
-                    ItemHit |= IsPointOnLine(new Position(e.Position.Latitude, e.Position.Longitude, 0), points);
+                    LineString lineString = (LineString)feature.Geometry;
+                    List<Position> positions = new List<Position>(lineString.Coordinates);
+    
+                    ItemHit |= IsPointOnLine(new Position(e.Position.Longitude, e.Position.Latitude, 0), positions);
                 }
 
                 if (ItemHit)
@@ -160,7 +208,7 @@ namespace Groundsman.ViewModels
             });
             if (Preferences.Get("ShowLogPathOnMap", true))
             {
-                if (IsPointOnLine(new Position(e.Position.Latitude, e.Position.Longitude, 0), LogStore.LogPoints.ToArray()))
+                if (IsPointOnLine(new Position(e.Position.Longitude, e.Position.Latitude, 0), LogStore.LogPoints))
                 {
                     await DisplayLogActionMenuAsync();
                 }
@@ -203,13 +251,13 @@ namespace Groundsman.ViewModels
             }
         }
 
-        public bool IsPointInPolygon(Position p, Position[] polygon)
+        public bool IsPointInPolygon(Position p, List<Position> polygon)
         {
             double minX = polygon[0].Longitude;
             double maxX = polygon[0].Longitude;
             double minY = polygon[0].Latitude;
             double maxY = polygon[0].Latitude;
-            for (int i = 1; i < polygon.Length; i++)
+            for (int i = 1; i < polygon.Count; i++)
             {
                 Position q = polygon[i];
                 minX = Math.Min(q.Longitude, minX);
@@ -225,7 +273,7 @@ namespace Groundsman.ViewModels
 
             // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
             bool inside = false;
-            for (int i = 0, j = polygon.Length - 1; i < polygon.Length; j = i++)
+            for (int i = 0, j = polygon.Count - 1; i < polygon.Count; j = i++)
             {
                 if ((polygon[i].Latitude > p.Latitude) != (polygon[j].Latitude > p.Latitude) &&
                      p.Longitude < (polygon[j].Longitude - polygon[i].Longitude) * (p.Latitude - polygon[i].Latitude) / (polygon[j].Latitude - polygon[i].Latitude) + polygon[i].Longitude)
@@ -236,7 +284,7 @@ namespace Groundsman.ViewModels
             return inside;
         }
 
-        public bool IsPointOnLine(Position LocationTapped, Position[] polyline)
+        public bool IsPointOnLine(Position LocationTapped, List<Position> polyline)
         {
             double Lat1;
             double Lat2;
@@ -249,7 +297,7 @@ namespace Groundsman.ViewModels
             double PB;
             double delta = 0.000075; // delta determines line tap accuracy
 
-            for (int i = 1; i < polyline.Length; i++)
+            for (int i = 1; i < polyline.Count; i++)
             {
                 Lat1 = polyline[i - 1].Latitude;
                 Lat2 = polyline[i].Latitude;

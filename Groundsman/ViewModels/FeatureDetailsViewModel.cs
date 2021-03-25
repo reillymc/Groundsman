@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using Point = Groundsman.Models.Point;
 using Position = Groundsman.Models.Position;
 
 namespace Groundsman.ViewModels
@@ -24,10 +25,9 @@ namespace Groundsman.ViewModels
         public ICommand OnCancelTappedCommand { get; set; }
         public ICommand ShareEntryCommand { get; set; }
         private Feature feature = new Feature { };
-
+        private GeoJSONType featureType;
         private string FeatureID;
-        List<Position> Xamarincoordinates;
-        public ObservableCollection<DisplayPoint> GeolocationValues { get; set; }
+        public ObservableCollection<DisplayPosition> GeolocationValues { get; set; }
 
         public string DateEntry { get; set; }
         public string NameEntry { get; set; }
@@ -68,18 +68,12 @@ namespace Groundsman.ViewModels
         /// </summary>
         public FeatureDetailsViewModel(GeoJSONType featureType)
         {
-            feature.Type = GeoJSONType.Feature;
-            Xamarincoordinates = new List<Position>();
-
             FeatureID = AppConstants.NEW_ENTRY_ID;
-            feature.Geometry = new Geometry
-            {
-                Type = featureType
-            };
+            this.featureType = featureType;
             feature.Properties = new Dictionary<string, object>();
 
             DateEntry = DateTime.Now.ToShortDateString();
-            GeolocationValues = new ObservableCollection<DisplayPoint>();
+            GeolocationValues = new ObservableCollection<DisplayPosition>();
             GeolocationEntryEnabled = true;
             LoadingIconActive = false;
 
@@ -111,16 +105,13 @@ namespace Groundsman.ViewModels
         /// </summary>
         public FeatureDetailsViewModel(Feature feature)
         {
+            InitCommandBindings();
             this.feature = feature;
+            featureType = feature.Geometry.Type;
 
             if (feature.Properties.ContainsKey("id"))
             {
                 FeatureID = (string)feature.Properties["id"];
-            }
-
-            if (feature.Properties.ContainsKey("xamarincoordinates"))
-            {
-                Xamarincoordinates = (List<Position>)feature.Properties["xamarincoordinates"];
             }
 
             if (feature.Properties.ContainsKey("name"))
@@ -134,13 +125,8 @@ namespace Groundsman.ViewModels
             }
 
 
-            GeolocationValues = new ObservableCollection<DisplayPoint>();
+            GeolocationValues = new ObservableCollection<DisplayPosition>();
 
-            for (int i = 0; i < Xamarincoordinates.Count; i++)
-            {
-                DisplayPoint convertedPoint = new DisplayPoint(i + 1, Xamarincoordinates[i].Latitude.ToString(), Xamarincoordinates[i].Longitude.ToString(), Xamarincoordinates[i].Altitude.ToString());
-                GeolocationValues.Add(convertedPoint);
-            }
 
             GeolocationEntryEnabled = true;
 
@@ -165,22 +151,39 @@ namespace Groundsman.ViewModels
             LoadingIconActive = false;
 
 
-            InitCommandBindings();
+            
+
+            int index = 1;
 
 
+            //SWITCH TEMPLATE - maybe make method?
             switch (feature.Geometry.Type)
             {
-                case GeoJSONType.LineString:
-                    ShowAddButton = true;
+                case GeoJSONType.Point:
+                    Point point = (Point)feature.Geometry;
+                    GeolocationValues.Add(new DisplayPosition(1, point.Coordinates));
                     break;
-                case GeoJSONType.Polygon:
-                    ShowAddButton = true;
-                    ShowClosePolygon = true;
-                    if (GeolocationValues[0].Latitude == GeolocationValues[GeolocationValues.Count - 1].Latitude && GeolocationValues[0].Longitude == GeolocationValues[GeolocationValues.Count - 1].Longitude && GeolocationValues[0].Altitude == GeolocationValues[GeolocationValues.Count - 1].Altitude)
+                case GeoJSONType.LineString:
+                    LineString linestring = (LineString)feature.Geometry;
+                    foreach (Position pos in linestring.Coordinates)
                     {
-                        GeolocationValues.RemoveAt(GeolocationValues.Count - 1);
+                        GeolocationValues.Add(new DisplayPosition(index, pos));
                     }
                     break;
+                case GeoJSONType.Polygon:
+                    Polygon polygon = (Polygon)feature.Geometry;
+                    foreach (LineString ls in polygon.Coordinates)
+                    {
+                        foreach (Position pos in ls.Coordinates)
+                        {
+                            GeolocationValues.Add(new DisplayPosition(index, pos));
+                        }
+                    }
+                    break;
+                default:
+                    //Unrecognised feature alert!!
+                    break;
+
             }
             NumPointFields = GeolocationValues.Count + 1;
         }
@@ -190,9 +193,9 @@ namespace Groundsman.ViewModels
         /// </summary>
         private void InitCommandBindings()
         {
-            GetFeatureCommand = new Command<DisplayPoint>(async (point) => { await GetDataPoint(point); });
+            GetFeatureCommand = new Command<DisplayPosition>(async (point) => { await GetDataPoint(point); });
             AddPointCommand = new Command(() => AddPoint(1));
-            DeletePointCommand = new Command<DisplayPoint>((item) => DeletePoint(item));
+            DeletePointCommand = new Command<DisplayPosition>((item) => DeletePoint(item));
             ShareEntryCommand = new Command(async () => await FeatureStore.ExportFeatures(new ObservableCollection<Feature> { feature }));
             OnDoneTappedCommand = new Command(async () => await OnSaveUpdateActivated());
             OnCancelTappedCommand = new Command(async () => await OnDismiss(true));
@@ -202,13 +205,13 @@ namespace Groundsman.ViewModels
         /// Queries the current device's location coordinates
         /// </summary>
         /// <param name="point">Point to set GPS data to.</param>
-        private async Task GetDataPoint(DisplayPoint point)
+        private async Task GetDataPoint(DisplayPosition point)
         {
             GeolocationEntryEnabled = false;
             LoadingIconActive = true;
 
             Position location = await HelperServices.GetGeoLocation();
-            DisplayPoint convertedPoint = new DisplayPoint(0, location.Latitude.ToString(), location.Longitude.ToString(), location.Altitude.ToString());
+            DisplayPosition convertedPoint = new DisplayPosition(0, location);
             if (location != null)
             {
                 point.Latitude = convertedPoint.Latitude;
@@ -229,7 +232,7 @@ namespace Groundsman.ViewModels
             IsBusy = true;
             for (int i = 0; i < count; i++)
             {
-                GeolocationValues.Add(new DisplayPoint(GeolocationValues.Count + 1, "0", "0", "0"));
+                GeolocationValues.Add(new DisplayPosition(GeolocationValues.Count + 1, "0", "0", "0"));
                 NumPointFields++;
             }
             IsBusy = false;
@@ -239,7 +242,7 @@ namespace Groundsman.ViewModels
         /// Deletes a geolocation point from the list.
         /// </summary>
         /// <param name="item">Item to delete</param>
-        private void DeletePoint(DisplayPoint item)
+        private void DeletePoint(DisplayPosition item)
         {
             if (IsBusy) return;
             if (GeolocationValues[0] == item)
@@ -275,10 +278,9 @@ namespace Groundsman.ViewModels
 
         private async Task<bool> TryParseSaveFeature()
         {
-            // Specific requirements and coordinate parsing
             try
             {
-                switch (feature.Geometry.Type)
+                switch (featureType)
                 {
                     case GeoJSONType.Point:
                         if (GeolocationValues.Count != 1)
@@ -286,13 +288,7 @@ namespace Groundsman.ViewModels
                             await NavigationService.ShowAlert("Unsupported Entry", "A point must only contain 1 data point.", false);
                             return false;
                         }
-                        Xamarincoordinates.Clear();
-                        feature.Geometry.Coordinates = new List<object>() {
-                        Convert.ToDouble(GeolocationValues[0].Longitude),
-                        Convert.ToDouble(GeolocationValues[0].Latitude),
-                        Convert.ToDouble(GeolocationValues[0].Altitude)
-                        };
-                        Xamarincoordinates.Add(new Position(Convert.ToDouble(GeolocationValues[0].Latitude), Convert.ToDouble(GeolocationValues[0].Longitude), Convert.ToDouble(GeolocationValues[0].Altitude)));
+                        feature.Geometry = new Point(new Position(Convert.ToDouble(GeolocationValues[0].Longitude), Convert.ToDouble(GeolocationValues[0].Latitude), Convert.ToDouble(GeolocationValues[0].Altitude)));
                         break;
                     case GeoJSONType.LineString:
                         if (GeolocationValues.Count < 2)
@@ -300,18 +296,13 @@ namespace Groundsman.ViewModels
                             await NavigationService.ShowAlert("Incomplete Entry", "A line must contain at least 2 data points.", false);
                             return false;
                         }
-                        Xamarincoordinates.Clear();
-                        feature.Geometry.Coordinates = new List<object>(GeolocationValues.Count);
-                        foreach (DisplayPoint pointValue in GeolocationValues)
-                        {
-                            feature.Geometry.Coordinates.Add(new JArray(new double[3] {
-                            Convert.ToDouble(pointValue.Longitude),
-                            Convert.ToDouble(pointValue.Latitude),
-                            Convert.ToDouble(pointValue.Altitude)
-                            }));
 
-                            Xamarincoordinates.Add(new Position(Convert.ToDouble(pointValue.Latitude), Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Altitude)));
+                        List<Position> posList = new List<Position>();
+                        foreach (DisplayPosition pointValue in GeolocationValues)
+                        {
+                            posList.Add(new Position(Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Latitude), Convert.ToDouble(pointValue.Altitude)));
                         }
+                        feature.Geometry = new LineString(posList);
                         break;
                     case GeoJSONType.Polygon:
                         if (GeolocationValues.Count < 3)
@@ -321,28 +312,21 @@ namespace Groundsman.ViewModels
                         }
 
                         // This specific method of structuring points means that users will not be able to create multiple shapes in one polygon (whereas true GEOJSON allows that).
-                        // This doesn't matter since our app interface can't allow for it anyway.
-                        feature.Geometry.Coordinates = new List<object>(GeolocationValues.Count);
-                        List<object> innerPoints = new List<object>(GeolocationValues.Count);
-
-                        List<DisplayPoint> ClosedPoly = new List<DisplayPoint>(GeolocationValues)
+                        // This doesn't matter since our app interface can't allow for it yet.
+                        List<DisplayPosition> ClosedPoly = new List<DisplayPosition>(GeolocationValues)
                         {
-                            new DisplayPoint(GeolocationValues.Count + 1, GeolocationValues[0].Latitude, GeolocationValues[0].Longitude, GeolocationValues[0].Altitude)
+                            new DisplayPosition(GeolocationValues.Count + 1, GeolocationValues[0])
                         };
-
-                        Xamarincoordinates.Clear();
-                        foreach (DisplayPoint pointValue in ClosedPoly)
+                        List<Position> polyPosList = new List<Position>();
+                        foreach (DisplayPosition pointValue in ClosedPoly)
                         {
-                            innerPoints.Add(new JArray(new double[3] {
-                            Convert.ToDouble(pointValue.Longitude),
-                            Convert.ToDouble(pointValue.Latitude),
-                            Convert.ToDouble(pointValue.Altitude)
-                            }));
-
-                            Xamarincoordinates.Add(new Position(Convert.ToDouble(pointValue.Latitude), Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Altitude)));
-
+                            polyPosList.Add(new Position(Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Latitude), Convert.ToDouble(pointValue.Altitude)));
                         }
-                        feature.Geometry.Coordinates.Add(innerPoints);
+                        List<LineString> polyLS = new List<LineString>() { new LineString(polyPosList) };
+                        feature.Geometry = new Polygon(polyLS);
+                        break;
+                    default:
+                        //Unrecognised feature alert!!
                         break;
                 }
             }
@@ -389,14 +373,13 @@ namespace Groundsman.ViewModels
 
             if (string.IsNullOrEmpty(NameEntry))
             {
-                addprops("name", feature.Geometry.Type);
+                addprops("name", feature.Geometry.Type.ToString());
             }
             else
             {
                 addprops("name", NameEntry);
             }
 
-            addprops("xamarincoordinates", Xamarincoordinates);
             addprops("id", FeatureID);
             addprops("date", DateTime.Parse(DateEntry).ToShortDateString());
             addprops("author", Preferences.Get("UserID", "Groundsman"));
