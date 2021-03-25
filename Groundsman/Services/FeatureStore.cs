@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Position = Groundsman.Models.Position;
 
 namespace Groundsman.Services
 {
@@ -180,7 +179,7 @@ namespace Groundsman.Services
             }
 
             // Add default name if empty
-            string name = "Unnamed " + feature.Geometry.Type;
+            string name = feature.Geometry.Type.ToString();
             if (feature.Properties.ContainsKey("name"))
             {
                 name = (string)feature.Properties["name"];
@@ -199,25 +198,58 @@ namespace Groundsman.Services
                 feature.Properties.Add("name", name);
             }
 
-            //TODO: add checks for int and float value - also update string value check
-            //if (!string.IsNullOrWhiteSpace(feature.Properties.metadataStringValue) && feature.Properties.metadataStringValue.Length > 100)
-            //{
-            //    feature.Properties.name = feature.Properties.name.Substring(0, 100);
-            //}
+            if (feature.Properties.ContainsKey("metadataStringValue"))
+            {
+                string metadataStringValue = (string)feature.Properties["metadataStringValue"];
+                if (!string.IsNullOrEmpty(metadataStringValue) && metadataStringValue.Length > 30)
+                {
+                    metadataStringValue = name.Substring(0, 30);
+                    foreach (char c in Path.GetInvalidFileNameChars())
+                    {
+                        metadataStringValue = metadataStringValue.Replace(c, '-');
+                    }
+                    feature.Properties["metadataStringValue"] = metadataStringValue;
+                }
+            }
 
-            // If the date field is missing or invalid, convert it into DateTime.Now.
-            string date = DateTime.Now.ToShortDateString();
+            if (feature.Properties.ContainsKey("metadataIntegerValue"))
+            {
+                try
+                {
+                    int metadataIntegerValue = Convert.ToInt32(feature.Properties["metadataIntegerValue"]);
+                    feature.Properties["metadataIntegerValue"] = metadataIntegerValue;
+                }
+                catch
+                {
+                    //Could not parse int value warning
+                }
+            }
+
+            if (feature.Properties.ContainsKey("metadataFloatValue"))
+            {
+                try
+                {
+                    double metadataFloatValue = Convert.ToSingle(feature.Properties["metadataFloatValue"]);
+                    feature.Properties["metadataFloatValue"] = metadataFloatValue;
+                }
+                catch
+                {
+                    //Could not parse float value warning
+                }
+            }
+
+            DateTime date = DateTime.Now;
             if (feature.Properties.ContainsKey("date"))
             {
-                if (DateTime.TryParse((string)feature.Properties["date"], out _) == false)
+                // If the date field is missing or invalid, convert it into DateTime.Now.
+                if (DateTime.TryParse((string)feature.Properties["date"], out date) == false)
                 {
-                    feature.Properties.Add("date", date);
+                    //warning date couldnt be parsed
                 }
-
-            }
-            else
+                feature.Properties["date"] = date.ToShortDateString();
+            } else
             {
-                feature.Properties.Add("date", date);
+                feature.Properties.Add("date", date.ToShortDateString());
             }
             return true;
         }

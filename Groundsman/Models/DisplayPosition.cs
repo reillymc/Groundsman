@@ -50,15 +50,31 @@ namespace Groundsman.Models
         {
             Longitude = position.Longitude.ToString();
             Latitude = position.Latitude.ToString();
-            Altitude = position.Altitude.ToString();
+            if (double.IsNormal(position.Altitude))
+            {
+                Altitude = position.Altitude.ToString();
+            } else
+            {
+                Altitude = "";
+            }
             Index = index;
         }
+
         public DisplayPosition(int index, DisplayPosition position)
         {
-            Longitude = position.Longitude.ToString();
-            Latitude = position.Latitude.ToString();
-            Altitude = position.Altitude.ToString();
+            Longitude = position.Longitude;
+            Latitude = position.Latitude;
+            Altitude = position.Altitude;
             Index = index;
+        }
+
+        public bool Equals(DisplayPosition comparePosition)
+        {
+            if (ReferenceEquals(this, comparePosition))
+            {
+                return true;
+            }
+            return Latitude == comparePosition.Latitude && Longitude == comparePosition.Longitude && Altitude == comparePosition.Altitude;
         }
     }
 }

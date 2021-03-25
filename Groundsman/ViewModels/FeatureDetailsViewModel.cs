@@ -164,6 +164,7 @@ namespace Groundsman.ViewModels
                         GeolocationValues.Add(new DisplayPosition(index, pos));
                         index++;
                     }
+                    ShowAddButton = true;
                     break;
                 case GeoJSONType.Polygon:
                     Polygon polygon = (Polygon)feature.Geometry;
@@ -175,6 +176,13 @@ namespace Groundsman.ViewModels
                             index++;
                         }
                     }
+                    //Remove last position so that poly can be closed duplicating the first posiiton back to the end after editing
+                    if (GeolocationValues[0].Equals(GeolocationValues[^1]))
+                    {
+                        GeolocationValues.RemoveAt(GeolocationValues.Count - 1);
+                    }
+                    ShowAddButton = true;
+                    ShowClosePolygon = true;
                     break;
                 default:
                     //Unrecognised feature alert!!
@@ -284,19 +292,28 @@ namespace Groundsman.ViewModels
                             await NavigationService.ShowAlert("Unsupported Entry", "A point must only contain 1 data point.", false);
                             return false;
                         }
-                        feature.Geometry = new Point(new Position(Convert.ToDouble(GeolocationValues[0].Longitude), Convert.ToDouble(GeolocationValues[0].Latitude), Convert.ToDouble(GeolocationValues[0].Altitude)));
+                        feature.Geometry = !string.IsNullOrEmpty(GeolocationValues[0].Altitude)
+                            ? new Point(new Position(Convert.ToDouble(GeolocationValues[0].Longitude), Convert.ToDouble(GeolocationValues[0].Latitude), Convert.ToDouble(GeolocationValues[0].Altitude)))
+                            : new Point(new Position(Convert.ToDouble(GeolocationValues[0].Longitude), Convert.ToDouble(GeolocationValues[0].Latitude)));
                         break;
+
                     case GeoJSONType.LineString:
                         if (GeolocationValues.Count < 2)
                         {
                             await NavigationService.ShowAlert("Incomplete Entry", "A line must contain at least 2 data points.", false);
                             return false;
                         }
-
                         List<Position> posList = new List<Position>();
                         foreach (DisplayPosition pointValue in GeolocationValues)
                         {
-                            posList.Add(new Position(Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Latitude), Convert.ToDouble(pointValue.Altitude)));
+                            if (!string.IsNullOrEmpty(pointValue.Altitude))
+                            {
+                                posList.Add(new Position(Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Latitude), Convert.ToDouble(pointValue.Altitude)));
+                            }
+                            else
+                            {
+                                posList.Add(new Position(Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Latitude)));
+                            }
                         }
                         feature.Geometry = new LineString(posList);
                         break;
@@ -309,17 +326,22 @@ namespace Groundsman.ViewModels
 
                         // This specific method of structuring points means that users will not be able to create multiple shapes in one polygon (whereas true GEOJSON allows that).
                         // This doesn't matter since our app interface can't allow for it yet.
-                        List<DisplayPosition> ClosedPoly = new List<DisplayPosition>(GeolocationValues)
-                        {
-                            new DisplayPosition(GeolocationValues.Count + 1, GeolocationValues[0])
-                        };
                         List<Position> polyPosList = new List<Position>();
-                        foreach (DisplayPosition pointValue in ClosedPoly)
+                        foreach (DisplayPosition pointValue in GeolocationValues)
                         {
-                            polyPosList.Add(new Position(Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Latitude), Convert.ToDouble(pointValue.Altitude)));
+                            if (!string.IsNullOrEmpty(pointValue.Altitude))
+                            {
+                                polyPosList.Add(new Position(Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Latitude), Convert.ToDouble(pointValue.Altitude)));
+                            }
+                            else
+                            {
+                                polyPosList.Add(new Position(Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Latitude)));
+                            }
                         }
-                        List<LinearRing> polyLS = new List<LinearRing>() { new LinearRing(polyPosList) };
-                        feature.Geometry = new Polygon(polyLS);
+                        // Close polygon with duplicated first feature
+                        polyPosList.Add(polyPosList[0]);
+
+                        feature.Geometry = new Polygon(new List<LinearRing>() { new LinearRing(polyPosList) });
                         break;
                     default:
                         //Unrecognised feature alert!!
@@ -329,12 +351,6 @@ namespace Groundsman.ViewModels
             catch
             {
                 await NavigationService.ShowAlert("Data Error", "Coordinate fields only support numeric values.", false);
-
-                //undo close poly
-                if (feature.Geometry.Type == GeoJSONType.Polygon)
-                {
-                    GeolocationValues.RemoveAt(GeolocationValues.Count - 1);
-                }
                 return false;
             }
 
