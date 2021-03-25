@@ -11,9 +11,9 @@ namespace Groundsman.Models
     internal class Polygon: Geometry
     {
         [JsonProperty(PropertyName = "coordinates")]
-        public IEnumerable<LineString> Coordinates { get; set; }
+        public IEnumerable<LinearRing> Coordinates { get; set; }
 
-        public Polygon(IEnumerable<LineString> coordinates) : base(GeoJSONType.Polygon)
+        public Polygon(IEnumerable<LinearRing> coordinates) : base(GeoJSONType.Polygon)
         {
             Coordinates = coordinates;
         }

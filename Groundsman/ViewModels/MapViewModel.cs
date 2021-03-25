@@ -1,23 +1,24 @@
-﻿using Groundsman.Models;
-using Groundsman.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Groundsman.Models;
+using Groundsman.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Maps;
-using Position = Groundsman.Models.Position;
-using XFMPosition = Xamarin.Forms.Maps.Position;
-using Polygon = Groundsman.Models.Polygon;
-using XFMPolygon = Xamarin.Forms.Maps.Polygon;
 using Point = Groundsman.Models.Point;
+using Polygon = Groundsman.Models.Polygon;
+using Position = Groundsman.Models.Position;
+using XFMPolygon = Xamarin.Forms.Maps.Polygon;
+using XFMPosition = Xamarin.Forms.Maps.Position;
 
 namespace Groundsman.ViewModels
 {
     /// <summary>
     /// ViewModel for maps page
+    /// Notes Xamarin Forms Maps Position Long/Lat is inverted to Lat/Long
     /// </summary>
     public class MapViewModel : BaseViewModel
     {
@@ -31,19 +32,21 @@ namespace Groundsman.ViewModels
             MessagingCenter.Subscribe<LogStore>(this, "LogUpdated", (sender) => { DrawLogPath(); });
         }
 
+        public Position defaultMapCentre = new Position(153.021, -27.47);
+
         // Only center map on user if location permissions are granted
         private async void CenterMapOnUser()
         {
             var status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
             if (status != PermissionStatus.Granted)
             {
-                Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Xamarin.Forms.Maps.Position(-27.47004901089882, 153.021072), Distance.FromMiles(1.0)));
+                Map.MoveToRegion(MapSpan.FromCenterAndRadius(new XFMPosition(defaultMapCentre.Latitude, defaultMapCentre.Longitude), Distance.FromMiles(1.0)));
                 return;
             }
             else
             {
                 Position location = await HelperServices.GetGeoLocation();
-                Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Xamarin.Forms.Maps.Position(location.Latitude, location.Longitude), Distance.FromMiles(1.0)));
+                Map.MoveToRegion(MapSpan.FromCenterAndRadius(new XFMPosition(location.Latitude, location.Longitude), Distance.FromMiles(1.0)));
             }
         }
 
@@ -126,7 +129,7 @@ namespace Groundsman.ViewModels
             Pin pin = new Pin
             {
                 Label = (string)feature.Properties["name"],
-                Address = string.Format("{0}, {1}, {2}", point.Coordinates.Latitude, point.Coordinates.Longitude, point.Coordinates.Altitude),
+                Address = string.Format("{0}, {1}, {2}", point.Coordinates.Longitude, point.Coordinates.Latitude, point.Coordinates.Altitude),
                 Type = PinType.Place,
                 Position = new XFMPosition(point.Coordinates.Latitude, point.Coordinates.Longitude),
             };
@@ -168,7 +171,7 @@ namespace Groundsman.ViewModels
                 };
                 logFile.ForEach((Position point) =>
                 {
-                    logPolyline.Geopath.Add(new Xamarin.Forms.Maps.Position(point.Latitude, point.Longitude));
+                    logPolyline.Geopath.Add(new XFMPosition(point.Latitude, point.Longitude));
                 });
                 Map.MapElements.Add(logPolyline);
             }
@@ -191,7 +194,7 @@ namespace Groundsman.ViewModels
                             posList.Add(pos);
                         }
                     }
-                    ItemHit |= IsPointInPolygon(new Position(e.Position.Longitude, e.Position.Latitude, 0), posList);
+                    ItemHit |= IsPointInPolygon(new Position(e.Position.Longitude, e.Position.Latitude), posList);
                 }
                 else if (feature.Geometry.Type == GeoJSONType.LineString && Preferences.Get("ShowLinesOnMap", true))
                 {
@@ -208,7 +211,7 @@ namespace Groundsman.ViewModels
             });
             if (Preferences.Get("ShowLogPathOnMap", true))
             {
-                if (IsPointOnLine(new Position(e.Position.Longitude, e.Position.Latitude, 0), LogStore.LogPoints))
+                if (IsPointOnLine(new Position(e.Position.Longitude, e.Position.Latitude), LogStore.LogPoints))
                 {
                     await DisplayLogActionMenuAsync();
                 }

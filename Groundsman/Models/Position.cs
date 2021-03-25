@@ -25,13 +25,29 @@ namespace Groundsman.Models
         [JsonConstructor]
         public Position(double longitude, double latitude, double altitude)
         {
-            Latitude = longitude;
-            Longitude = latitude;
+            Longitude = longitude;
+            Latitude = latitude;
             Altitude = altitude;
         }
 
         public bool HasAltitude() => !double.IsNaN(Altitude);
 
         public override string ToString() => Latitude + ", " + Longitude + ", " + Altitude;
+
+        public bool Equals(Position comparePosition)
+        {
+            if (ReferenceEquals(this, comparePosition))
+            {
+                return true;
+            }
+            bool comparison = Latitude == comparePosition.Latitude && Longitude == comparePosition.Longitude;
+
+            if (!double.IsNaN(Altitude) || !double.IsNaN(comparePosition.Altitude))
+            {
+                comparison = comparison && (Altitude == comparePosition.Altitude);
+            }
+
+            return comparison;
+        }
     }
 }

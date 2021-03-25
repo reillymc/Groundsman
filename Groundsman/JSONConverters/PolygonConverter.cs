@@ -23,12 +23,26 @@ namespace Groundsman.JSONConverters
 
             // Take this array of arrays of arrays and create line strings
             // and use those to create create polygons
-            return new Polygon(coordinates.Select(x => new LineString(x)));
+
+            List<LinearRing> coordList =  new List<LinearRing>();
+            foreach(IEnumerable<Position> coordPos in coordinates)
+            {
+                coordList.Add(new LinearRing(coordPos));
+            }
+
+            Polygon polygon = new Polygon(coordList);
+            return polygon;
         }
 
         public override void WriteJson(JsonWriter writer, Polygon value, JsonSerializer serializer)
         {
-            JToken.FromObject(new { type = value.Type.ToString(), coordinates = value.Coordinates.Select(x => x.Coordinates) }).WriteTo(writer);
+            Polygon test = value;
+            List<List<Position>> coordinates = new List<List<Position>>();
+            foreach (LinearRing linearRing in value.Coordinates)
+            {
+                coordinates.Add((List<Position>)linearRing.Coordinates);
+            }
+            JToken.FromObject(new { type = value.Type.ToString(), coordinates }).WriteTo(writer);
         }
     }
 }

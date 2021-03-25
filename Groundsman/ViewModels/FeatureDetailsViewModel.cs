@@ -1,11 +1,10 @@
-using Groundsman.Models;
-using Groundsman.Services;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Groundsman.Models;
+using Groundsman.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Point = Groundsman.Models.Point;
@@ -147,14 +146,9 @@ namespace Groundsman.ViewModels
                 MetadataFloatEntry = floatval.ToString();
             }
 
-
             LoadingIconActive = false;
 
-
-            
-
             int index = 1;
-
 
             //SWITCH TEMPLATE - maybe make method?
             switch (feature.Geometry.Type)
@@ -168,6 +162,7 @@ namespace Groundsman.ViewModels
                     foreach (Position pos in linestring.Coordinates)
                     {
                         GeolocationValues.Add(new DisplayPosition(index, pos));
+                        index++;
                     }
                     break;
                 case GeoJSONType.Polygon:
@@ -177,6 +172,7 @@ namespace Groundsman.ViewModels
                         foreach (Position pos in ls.Coordinates)
                         {
                             GeolocationValues.Add(new DisplayPosition(index, pos));
+                            index++;
                         }
                     }
                     break;
@@ -322,7 +318,7 @@ namespace Groundsman.ViewModels
                         {
                             polyPosList.Add(new Position(Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Latitude), Convert.ToDouble(pointValue.Altitude)));
                         }
-                        List<LineString> polyLS = new List<LineString>() { new LineString(polyPosList) };
+                        List<LinearRing> polyLS = new List<LinearRing>() { new LinearRing(polyPosList) };
                         feature.Geometry = new Polygon(polyLS);
                         break;
                     default:
