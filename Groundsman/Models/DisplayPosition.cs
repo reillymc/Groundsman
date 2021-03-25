@@ -4,6 +4,7 @@ namespace Groundsman.Models
 {
     /// <summary>
     /// String representation of a position that plays nicely with Xamarin entries
+    /// Inherits INotifyPropertyChanged so that Xamarin UI can detect changes (e.g. when matching close poly point to first point)
     /// </summary>
     public class DisplayPosition : INotifyPropertyChanged
     {

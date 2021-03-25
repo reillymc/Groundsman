@@ -12,7 +12,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <DataTemplate x:Key="ListTemplate">
-                <ViewCell>
+                <ViewCell Tapped="ViewCell_Tapped">
                     <ViewCell.ContextActions>
                         <MenuItem Command="{Binding Path=BindingContext.EditEntryCommand, Source={x:Reference listView}}"
                                   CommandParameter="{Binding .}"

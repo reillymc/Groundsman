@@ -12,7 +12,7 @@
             <StackLayout>
                 <Frame Padding="10,10,0,10" Style="{DynamicResource FrameM}">
                     <StackLayout>
-                        <Label Style="{StaticResource LabelTitle}" Text="Properties" />
+                        <Label Style="{StaticResource LabelTitle}" Text="Details" />
                         <StackLayout Margin="8,0,0,0">
                             <Entry FontSize="Small"
                                    Placeholder="Name"
@@ -99,7 +99,7 @@
                        Padding="10,10,0,10"
                        Style="{StaticResource Frame}">
                     <StackLayout>
-                        <Label Style="{StaticResource LabelTitle}" Text="Metadata" />
+                        <Label Style="{StaticResource LabelTitle}" Text="Properties" />
                         <StackLayout Margin="8,0,0,0" Orientation="Vertical">
                             <Entry Placeholder="String"
                                    Style="{StaticResource EntryStyle}"
@@ -111,7 +111,7 @@
                             <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
                             <Entry Placeholder="Integer"
                                    Style="{StaticResource EntryStyle}"
-                                   Text="{Binding MetadataIntegerEntry}">
+                                   Text="{Binding MetadataIntegerEntry}" Keyboard="Numeric">
                                 <Entry.Behaviors>
                                     <behaviors:EntryLengthValidatorBehavior MaxLength="8" />
                                 </Entry.Behaviors>

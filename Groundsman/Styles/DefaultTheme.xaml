@@ -346,7 +346,7 @@
                                    VerticalOptions="Center" />
                             <Label FontSize="16"
                                    HorizontalOptions="Center"
-                                   Text="Add Point"
+                                   Text="Add Position"
                                    TextColor="{StaticResource greenPrimary}"
                                    VerticalOptions="Center" />
                         </StackLayout>

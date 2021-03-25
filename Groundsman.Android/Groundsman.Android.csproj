@@ -269,12 +269,6 @@
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\drawable\import_icon.png">
-      <SubType>
-      </SubType>
-      <Generator>
-      </Generator>
-    </AndroidResource>
     <AndroidResource Include="Resources\drawable\line_icon.png">
       <SubType>
       </SubType>
@@ -286,6 +280,18 @@
       </SubType>
       <Generator>
       </Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\paste_icon.png">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\import_icon.png">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\info_icon.xml">
+      <SubType></SubType>
+      <Generator></Generator>
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
