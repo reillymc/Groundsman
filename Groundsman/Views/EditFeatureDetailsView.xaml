@@ -35,7 +35,7 @@
 
         <DataTemplate x:Key="ItemTemplate">
             <Frame Style="{StaticResource CoordinateItemFrame}">
-                <SwipeView>
+                <SwipeView IsEnabled="{Binding Source={x:Reference Name=EditFeatureDetailsViewPage}, Path=BindingContext.ShowAddButton}">
                     <SwipeView.RightItems>
                         <SwipeItems Mode="Reveal">
                             <SwipeItem BackgroundColor="{StaticResource Delete}"
@@ -54,33 +54,36 @@
                                    VerticalOptions="Center" />
                             <Entry Grid.Row="1"
                                    Grid.Column="1"
+                                   Placeholder="0"
                                    Style="{StaticResource DetailCoordinateEntry}"
                                    Text="{Binding Latitude}" />
                             <Entry Grid.Row="1"
                                    Grid.Column="2"
+                                   Placeholder="0"
                                    Style="{StaticResource DetailCoordinateEntry}"
                                    Text="{Binding Longitude}" />
                             <Entry Grid.Row="1"
                                    Grid.Column="3"
+                                   Placeholder="0"
                                    Style="{StaticResource DetailCoordinateEntry}"
                                    Text="{Binding Altitude}" />
                             <Grid Grid.Row="1"
                                   Grid.Column="4"
                                   Margin="0,0,8,0"
                                   HeightRequest="20"
-                                  WidthRequest="20"
                                   HorizontalOptions="StartAndExpand"
-                                  VerticalOptions="FillAndExpand">
+                                  VerticalOptions="FillAndExpand"
+                                  WidthRequest="20">
                                 <ActivityIndicator IsRunning="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
                                                    IsVisible="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
                                                    Color="{StaticResource greenPrimary}" />
                                 <Button BackgroundColor="Transparent"
                                         Command="{Binding Path=BindingContext.GetFeatureCommand, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
                                         CommandParameter="{Binding .}"
-                                        Image="current_location"
                                         HeightRequest="20"
-                                        WidthRequest="20"
-                                        IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}" />
+                                        Image="current_location"
+                                        IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
+                                        WidthRequest="20" />
                             </Grid>
                             <TemplatedView Grid.Row="0"
                                            Grid.Column="1"
@@ -109,9 +112,10 @@
                                 </Entry.Behaviors>
                             </Entry>
                             <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
-                            <Entry Placeholder="Integer"
+                            <Entry Keyboard="Numeric"
+                                   Placeholder="Integer"
                                    Style="{StaticResource EntryStyle}"
-                                   Text="{Binding MetadataIntegerEntry}" Keyboard="Numeric">
+                                   Text="{Binding MetadataIntegerEntry}">
                                 <Entry.Behaviors>
                                     <behaviors:EntryLengthValidatorBehavior MaxLength="8" />
                                 </Entry.Behaviors>

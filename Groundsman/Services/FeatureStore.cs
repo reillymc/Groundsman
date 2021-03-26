@@ -229,7 +229,7 @@ namespace Groundsman.Services
             {
                 try
                 {
-                    double metadataFloatValue = Convert.ToSingle(feature.Properties["metadataFloatValue"]);
+                    float metadataFloatValue = Convert.ToSingle(feature.Properties["metadataFloatValue"]);
                     feature.Properties["metadataFloatValue"] = metadataFloatValue;
                 }
                 catch

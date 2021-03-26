@@ -30,9 +30,9 @@ namespace Groundsman.ViewModels
 
         public string DateEntry { get; set; }
         public string NameEntry { get; set; }
-        public string MetadataStringEntry { get; set; }
-        public string MetadataIntegerEntry { get; set; }
-        public string MetadataFloatEntry { get; set; }
+        public string MetadataStringEntry { get; set; } = "";
+        public string MetadataIntegerEntry { get; set; } = "";
+        public string MetadataFloatEntry { get; set; } = "";
 
         public bool ShowAddButton { get; set; }
         public bool ShowClosePolygon { get; set; }
@@ -143,7 +143,10 @@ namespace Groundsman.ViewModels
             if (feature.Properties.ContainsKey("metadataFloatValue"))
             {
                 float floatval = Convert.ToSingle(feature.Properties["metadataFloatValue"]);
-                MetadataFloatEntry = floatval.ToString();
+                if (float.IsNormal(floatval))
+                {
+                    MetadataFloatEntry = floatval.ToString();
+                }
             }
 
             LoadingIconActive = false;
@@ -236,7 +239,7 @@ namespace Groundsman.ViewModels
             IsBusy = true;
             for (int i = 0; i < count; i++)
             {
-                GeolocationValues.Add(new DisplayPosition(GeolocationValues.Count + 1, "0", "0", "0"));
+                GeolocationValues.Add(new DisplayPosition(GeolocationValues.Count + 1, "", "", ""));
                 NumPointFields++;
             }
             IsBusy = false;
@@ -249,7 +252,7 @@ namespace Groundsman.ViewModels
         private void DeletePoint(DisplayPosition item)
         {
             if (IsBusy) return;
-            if (GeolocationValues[0] == item)
+            if (GeolocationValues.Count == 1)
             {
                 NavigationService.ShowAlert("Cannot Remove Position", "All features must have at least one position", false);
                 return;
@@ -289,38 +292,29 @@ namespace Groundsman.ViewModels
                     case GeoJSONType.Point:
                         if (GeolocationValues.Count != 1)
                         {
-                            await NavigationService.ShowAlert("Unsupported Entry", "A point must only contain 1 data point.", false);
+                            await NavigationService.ShowAlert("Unsupported Entry", "A point must only contain 1 positions.", false);
                             return false;
                         }
-                        feature.Geometry = !string.IsNullOrEmpty(GeolocationValues[0].Altitude)
-                            ? new Point(new Position(Convert.ToDouble(GeolocationValues[0].Longitude), Convert.ToDouble(GeolocationValues[0].Latitude), Convert.ToDouble(GeolocationValues[0].Altitude)))
-                            : new Point(new Position(Convert.ToDouble(GeolocationValues[0].Longitude), Convert.ToDouble(GeolocationValues[0].Latitude)));
+                        feature.Geometry = new Point(ConvertPosition(GeolocationValues[0]));
                         break;
 
                     case GeoJSONType.LineString:
                         if (GeolocationValues.Count < 2)
                         {
-                            await NavigationService.ShowAlert("Incomplete Entry", "A line must contain at least 2 data points.", false);
+                            await NavigationService.ShowAlert("Incomplete Entry", "A line must contain at least 2 positions.", false);
                             return false;
                         }
                         List<Position> posList = new List<Position>();
                         foreach (DisplayPosition pointValue in GeolocationValues)
                         {
-                            if (!string.IsNullOrEmpty(pointValue.Altitude))
-                            {
-                                posList.Add(new Position(Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Latitude), Convert.ToDouble(pointValue.Altitude)));
-                            }
-                            else
-                            {
-                                posList.Add(new Position(Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Latitude)));
-                            }
+                            posList.Add(ConvertPosition(pointValue));
                         }
                         feature.Geometry = new LineString(posList);
                         break;
                     case GeoJSONType.Polygon:
                         if (GeolocationValues.Count < 3)
                         {
-                            await NavigationService.ShowAlert("Incomplete Entry", "A polygon must contain at least 4 data points.", false);
+                            await NavigationService.ShowAlert("Incomplete Entry", "A polygon must contain at least 4 positions.", false);
                             return false;
                         }
 
@@ -329,14 +323,7 @@ namespace Groundsman.ViewModels
                         List<Position> polyPosList = new List<Position>();
                         foreach (DisplayPosition pointValue in GeolocationValues)
                         {
-                            if (!string.IsNullOrEmpty(pointValue.Altitude))
-                            {
-                                polyPosList.Add(new Position(Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Latitude), Convert.ToDouble(pointValue.Altitude)));
-                            }
-                            else
-                            {
-                                polyPosList.Add(new Position(Convert.ToDouble(pointValue.Longitude), Convert.ToDouble(pointValue.Latitude)));
-                            }
+                            polyPosList.Add(ConvertPosition(pointValue));
                         }
                         // Close polygon with duplicated first feature
                         polyPosList.Add(polyPosList[0]);
@@ -355,25 +342,33 @@ namespace Groundsman.ViewModels
             }
 
             //Metadata
-            addprops("metadataStringValue", MetadataStringEntry);
+            if (string.IsNullOrEmpty("metadataStringValue"))
+            {
+                feature.Properties.Remove("metadataStringValue");
+            }
+            else
+            {
+                feature.Properties["metadataStringValue"] = MetadataStringEntry;
+            }
+
             try
             {
-                if (!string.IsNullOrEmpty(MetadataIntegerEntry))
+                if (string.IsNullOrEmpty(MetadataIntegerEntry))
                 {
-                    addprops("metadataIntegerValue", Convert.ToInt32(MetadataIntegerEntry));
+                    feature.Properties.Remove("metadataIntegerValue");
                 }
                 else
                 {
-                    addprops("metadataIntegerValue", null);
+                    feature.Properties["metadataIntegerValue"] = Convert.ToInt32(MetadataIntegerEntry);
                 }
 
-                if (!string.IsNullOrEmpty(MetadataFloatEntry))
+                if (string.IsNullOrEmpty(MetadataFloatEntry))
                 {
-                    addprops("metadataFloatValue", Convert.ToSingle(MetadataFloatEntry));
+                    feature.Properties.Remove("metadataFloatValue");
                 }
                 else
                 {
-                    addprops("metadataFloatValue", null);
+                    feature.Properties["metadataFloatValue"] = Convert.ToSingle(MetadataFloatEntry);
                 }
             }
             catch
@@ -382,44 +377,19 @@ namespace Groundsman.ViewModels
                 return false;
             }
 
+            feature.Properties["name"] = string.IsNullOrEmpty(NameEntry) ? feature.Geometry.Type.ToString() : NameEntry;
+            feature.Properties["id"] = FeatureID;
+            feature.Properties["date"] = DateTime.Parse(DateEntry).ToShortDateString();
+            feature.Properties["author"] = Preferences.Get("UserID", "Groundsman");
 
-            if (string.IsNullOrEmpty(NameEntry))
-            {
-                addprops("name", feature.Geometry.Type.ToString());
-            }
-            else
-            {
-                addprops("name", NameEntry);
-            }
-
-            addprops("id", FeatureID);
-            addprops("date", DateTime.Parse(DateEntry).ToShortDateString());
-            addprops("author", Preferences.Get("UserID", "Groundsman"));
-
-            bool success;
-            if (FeatureID == AppConstants.NEW_ENTRY_ID)
-            {
-                success = await FeatureStore.AddItemAsync(feature);
-            }
-            else
-            {
-                success = await FeatureStore.UpdateItemAsync(feature);
-            }
-
-            return success;
+            return FeatureID == AppConstants.NEW_ENTRY_ID ? await FeatureStore.AddItemAsync(feature) : await FeatureStore.UpdateItemAsync(feature);
         }
 
-        private void addprops(string key, object value)
+        private Position ConvertPosition(DisplayPosition displayPosition)
         {
-            if (feature.Properties.ContainsKey(key))
-            {
-                feature.Properties[key] = value;
-            }
-            else
-            {
-                feature.Properties.Add(key, value);
-            }
+            double longitude = string.IsNullOrEmpty(displayPosition.Longitude) ? 0 : Convert.ToDouble(displayPosition.Longitude);
+            double latitude = string.IsNullOrEmpty(displayPosition.Latitude) ? 0 : Convert.ToDouble(displayPosition.Latitude);
+            return string.IsNullOrEmpty(displayPosition.Altitude) ? new Position(longitude, latitude) : new Position(longitude, latitude, Convert.ToDouble(displayPosition.Altitude));
         }
-
     }
 }
