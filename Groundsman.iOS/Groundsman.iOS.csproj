@@ -106,6 +106,7 @@
     <Folder Include="Assets.xcassets\delete_icon.imageset\" />
     <Folder Include="Assets.xcassets\share_icon.imageset\" />
     <Folder Include="Assets.xcassets\trash_icon.imageset\" />
+    <Folder Include="Assets.xcassets\customControlColor.colorset\" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="Resources\iTunesArtwork%402x" />
@@ -328,6 +329,7 @@
     <ImageAsset Include="Assets.xcassets\current_location.imageset\icons8-target-90%403x.png">
       <Visible>false</Visible>
     </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\customControlColor.colorset\Contents.json" />
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>

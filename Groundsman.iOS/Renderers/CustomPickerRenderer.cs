@@ -26,7 +26,9 @@ namespace Groundsman.iOS.Renderers
             Control.LeftViewMode = UITextFieldViewMode.Always;
             Control.RightViewMode = UITextFieldViewMode.Always;
             Control.BorderStyle = UITextBorderStyle.None;
-            Element.HeightRequest = 30;
+            Control.Layer.CornerRadius = 8;
+            Control.BackgroundColor = UIColor.FromName("customControlColor");
+            Element.HeightRequest = 32;
         }
     }
 }
