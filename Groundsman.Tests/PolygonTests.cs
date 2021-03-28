@@ -18,6 +18,9 @@ namespace Groundsman.Tests
             //return new Polygon(new List<LinearRing>() { new LinearRing(new List<Position> { new Position(35, 10), new Position(45, 45), new Position(15, 40), new Position(10, 20), new Position(35, 10) }), new LinearRing(new List<Position> { new Position(20, 30), new Position(35, 35), new Position(30, 20), new Position(20, 30) }) });
         }
 
+        private Position GetPosition(double lon, double lat) => new Position(lon, lat);
+
+
         /// <summary>
         /// A point is within a polygon of a single LinearRing
         /// </summary>
@@ -26,7 +29,7 @@ namespace Groundsman.Tests
         {
             Polygon polygon = GetSingleLRPolygon();
 
-            bool contains = polygon.ContainsPosition(new Position(26, 28));
+            bool contains = polygon.ContainsPosition(GetPosition(26, 28));
 
             Assert.IsTrue(contains);
         }
@@ -39,7 +42,7 @@ namespace Groundsman.Tests
         {
             Polygon polygon = GetSingleLRPolygon();
 
-            bool contains = polygon.ContainsPosition(new Position(35, 23));
+            bool contains = polygon.ContainsPosition(GetPosition(35, 23));
 
             Assert.IsFalse(contains);
         }
@@ -52,7 +55,7 @@ namespace Groundsman.Tests
         {
             Polygon polygon = GetTwoLRPolygon();
 
-            bool contains = polygon.ContainsPosition(new Position(35, 23));
+            bool contains = polygon.ContainsPosition(GetPosition(35, 23));
 
             Assert.IsTrue(contains);
         }
@@ -65,7 +68,7 @@ namespace Groundsman.Tests
         {
             Polygon polygon = GetTwoLRPolygon();
 
-            bool contains = polygon.ContainsPosition(new Position(26, 28));
+            bool contains = polygon.ContainsPosition(GetPosition(26, 28));
 
             Assert.IsFalse(contains);
         }
@@ -78,7 +81,7 @@ namespace Groundsman.Tests
         {
             Polygon polygon = GetTwoLRPolygon();
 
-            bool contains = polygon.ContainsPosition(new Position(14, 17));
+            bool contains = polygon.ContainsPosition(GetPosition(14, 17));
 
             Assert.IsFalse(contains);
         }

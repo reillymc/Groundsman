@@ -48,7 +48,7 @@ namespace Groundsman.iOS
                 using (StreamReader reader = new StreamReader(url.Path))
                 {
                     string filecontent = reader.ReadToEnd();
-                    mainForms.FeatureStore.ImportFeaturesAsync(filecontent, true);
+                    mainForms.ImportFileAsync(filecontent);
                 }
             }
             return true;

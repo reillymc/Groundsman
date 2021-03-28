@@ -8,7 +8,6 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
-using Xamarin.Forms;
 
 namespace Groundsman.Services
 {
@@ -22,17 +21,31 @@ namespace Groundsman.Services
             features = new ObservableCollection<Feature>();
         }
 
-        public async Task<bool> AddItemAsync(Feature item)
+        public async Task<bool> AddItemAsync(Feature feature)
         {
-            //IMPORT CHECKING
-            bool parseResult = TryParseFeature(item);
+            bool parseResult = TryParseFeature(feature);
             if (parseResult)
             {
                 //EnsureUniqueID(importedFeature);
-                features.Add(item);
-                var save = SaveFeaturesToFile(features, AppConstants.FEATURES_FILE);
+                features.Add(feature);
+                SaveFeaturesToFile(features, AppConstants.FEATURES_FILE);
             }
             return parseResult;
+        }
+
+        public async Task<int> AddItemsAsync(FeatureCollection item)
+        {
+            int successfulImport = 0;
+            foreach (Feature feature in item.Features)
+            {
+                if (TryParseFeature(feature))
+                {
+                    features.Add(feature);
+                    successfulImport++;
+                }
+            }
+            SaveFeaturesToFile(features, AppConstants.FEATURES_FILE);
+            return successfulImport;
         }
 
         public async Task<bool> DeleteItemAsync(Feature item)
@@ -45,9 +58,8 @@ namespace Groundsman.Services
         public async Task<bool> DeleteItemsAsync()
         {
             features.Clear();
-            int successful = await ImportFeaturesAsync(GetTemplateFile(), false);
-            var save = SaveFeaturesToFile(features, AppConstants.FEATURES_FILE);
-            return save;
+            await ImportFeaturesAsync(GetTemplateFile());
+            return SaveFeaturesToFile(features, AppConstants.FEATURES_FILE);
         }
 
         public Task<Feature> GetItemAsync(string id)
@@ -60,7 +72,7 @@ namespace Groundsman.Services
             if (forceRefresh)
             {
                 features.Clear();
-                int successful = await ImportFeaturesAsync(GetFeaturesFile(), false);
+                await ImportFeaturesAsync(GetFeaturesFile());
             }
             return features;
         }
@@ -105,51 +117,35 @@ namespace Groundsman.Services
             return text;
         }
 
-        //handle notifying errors and success counts where method called from
-        public async Task<int> ImportFeaturesAsync(string importContents, bool notify)
+        /// <summary>
+        /// Imports GeoJSON and adds the new features to the feature list
+        /// </summary>
+        /// <param name="importContents">A serialised GeoJSON object</param>
+        /// <returns>Number of features successfully imported</returns>
+        public async Task<int> ImportFeaturesAsync(string importContents)
         {
-            int successfulImport = 0;
-            int failedImport = 0;
-            try
+            GeoJSONObject importedGeoJSON = GeoJSONObject.ImportGeoJSON(importContents);
+            if (importedGeoJSON == null)
             {
-                FeatureCollection importedFeaturesData = JsonConvert.DeserializeObject<FeatureCollection>(importContents);
-                if (importedFeaturesData != null)
-                {
-                    List<Feature> featurelist = new List<Feature>();
-                    foreach (Feature importedFeature in importedFeaturesData.Features)
-                    {
-                        if (await AddItemAsync(importedFeature))
-                        {
-                            successfulImport++;
-                        }
-                        else
-                        {
-                            failedImport++;
-                        }
-                    }
-                }
-                MessagingCenter.Send(this, "Hi");
-                if (notify)
-                {
-                    if (failedImport == 0)
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Import Complete", $"Groundsman imported {successfulImport} new features.", "Ok");
-                    }
-                    else
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Import Complete", $"Groundsman imported {successfulImport} new features. {failedImport} features failed to import", "Ok");
-                    }
-                }
+                throw new ArgumentException("Import data does not contain valid GeoJSON");
             }
-            catch (Exception ex)
+            return importedGeoJSON.Type switch
             {
-                await Application.Current.MainPage.DisplayAlert("Import Error", $"Groundsman can only import valid GeoJSON. Error: {ex.Message}", "Ok");
-            }
-            return successfulImport;
+                GeoJSONType.Point => await AddItemAsync(new Feature((Point)importedGeoJSON)) ? 1 : 0,
+                GeoJSONType.LineString => await AddItemAsync(new Feature((LineString)importedGeoJSON)) ? 1 : 0,
+                GeoJSONType.Polygon => await AddItemAsync(new Feature((Polygon)importedGeoJSON)) ? 1 : 0,
+                GeoJSONType.Feature => await AddItemAsync((Feature)importedGeoJSON) ? 1 : 0,
+                GeoJSONType.FeatureCollection => await AddItemsAsync((FeatureCollection)importedGeoJSON),
+                _ => throw new ArgumentException("Import data does not contain a supported GeoJSON type."),
+            };
         }
 
         private static bool TryParseFeature(Feature feature)
         {
+            if (feature.Properties == null)
+            {
+                feature.Properties = new Dictionary<string, object>();
+            }
             //if feature is freshly created, no need to parse
             if (!feature.Properties.ContainsKey("id"))
             {
@@ -247,7 +243,8 @@ namespace Groundsman.Services
                     //warning date couldnt be parsed
                 }
                 feature.Properties["date"] = date.ToShortDateString();
-            } else
+            }
+            else
             {
                 feature.Properties.Add("date", date.ToShortDateString());
             }

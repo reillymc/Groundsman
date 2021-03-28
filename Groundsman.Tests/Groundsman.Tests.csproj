@@ -17,4 +17,13 @@
     <ProjectReference Include="..\Groundsman\Groundsman.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="GeoJSONFiles\PointFeature.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="GeoJSONFiles\PointGeometry.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

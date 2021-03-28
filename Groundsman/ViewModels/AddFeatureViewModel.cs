@@ -36,12 +36,25 @@ namespace Groundsman.ViewModels
                     await NavigationService.NavigateToNewEditPage(GeoJSONType.Polygon);
                     break;
                 case "Clipboard":
-                    string contents = await Clipboard.GetTextAsync();
-                    await FeatureStore.ImportFeaturesAsync(contents, true);
+                    await ImportFeaturesFromClipboard();
                     break;
                 case "File":
                     await ImportFeaturesFromFile();
                     break;
+            }
+        }
+
+        public async Task ImportFeaturesFromClipboard()
+        {
+            string contents = await Clipboard.GetTextAsync();
+            try
+            {
+                int successfulImports = await FeatureStore.ImportFeaturesAsync(contents);
+                await NavigationService.ShowImportAlert(successfulImports);
+            }
+            catch (Exception ex)
+            {
+                await NavigationService.ShowAlert("Import Error", ex.Message, false);
             }
         }
 
@@ -73,7 +86,15 @@ namespace Groundsman.ViewModels
                     StreamReader reader = new StreamReader(fileStream);
                     string fileContents = reader.ReadToEnd();
 
-                    int success = await FeatureStore.ImportFeaturesAsync(fileContents, true);
+                    try
+                    {
+                        int successfulImports = await FeatureStore.ImportFeaturesAsync(fileContents);
+                        await NavigationService.ShowImportAlert(successfulImports);
+                    }
+                    catch (Exception ex)
+                    {
+                        await NavigationService.ShowAlert("Import Error", ex.Message, false);
+                    }
                 }
             }
             catch

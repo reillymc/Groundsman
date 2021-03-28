@@ -11,6 +11,8 @@ namespace Groundsman.Tests
             return LineString.ImportGeoJSON("{\"type\":\"LineString\",\"coordinates\":[[153.03150415420532, -27.477759278724388],[153.0296802520752,-27.479339341068858]]}");
         }
 
+        private Position GetPosition(double lon, double lat) => new Position(lon, lat);
+
         /// <summary>
         /// A point lies on a LineString
         /// </summary>
@@ -19,7 +21,7 @@ namespace Groundsman.Tests
         {
             LineString lineString = GetLineString();
 
-            bool contains = lineString.ContainsPosition(new Position(153.030135557055, -27.4787212395597));
+            bool contains = lineString.ContainsPosition(GetPosition(153.030135557055, -27.4787212395597));
 
             Assert.IsTrue(contains);
         }
@@ -32,7 +34,7 @@ namespace Groundsman.Tests
         {
             LineString lineString = GetLineString();
 
-            bool contains = lineString.ContainsPosition(new Position(154, -28));
+            bool contains = lineString.ContainsPosition(GetPosition(154, -28));
 
             Assert.IsFalse(contains);
         }

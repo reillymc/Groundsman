@@ -14,5 +14,6 @@ namespace Groundsman.Interfaces
         Task NavigateBack(bool modal);
         Page GetCurrentPage();
         Task<bool> ShowAlert(string title, string body, bool question);
+        Task ShowImportAlert(int successfulImports);
     }
 }

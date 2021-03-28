@@ -78,5 +78,11 @@ namespace Groundsman.Services
             }
             return response;
         }
+
+        public async Task ShowImportAlert(int successfulImports)
+        {
+            var currentPage = GetCurrentPage();
+            await currentPage.DisplayAlert("Feature Import", $"Groundsman has successfully imported {successfulImports} features!", "Ok");
+        }
     }
 }

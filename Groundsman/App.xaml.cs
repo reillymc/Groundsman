@@ -2,6 +2,7 @@
 using Groundsman.Models;
 using Groundsman.Services;
 using Groundsman.Views;
+using System;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -43,6 +44,19 @@ namespace Groundsman
         protected override void OnResume()
         {
             // Handle when your app resumes
+        }
+
+        public async void ImportFileAsync(string fileContent)
+        {
+            try
+            {
+                int successfulImports = await FeatureStore.ImportFeaturesAsync(fileContent);
+                await NavigationService.ShowImportAlert(successfulImports);
+            }
+            catch (Exception ex)
+            {
+                await NavigationService.ShowAlert("Import Error", ex.Message, false);
+            }
         }
     }
 }

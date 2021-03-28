@@ -37,7 +37,7 @@ namespace Groundsman.Models
         {
             bool inside = false;
 
-            // Operate for each LR in polygon. If contained in the ring it will invert the inside bool variable. Its inverted becasue this way this methos will support cultiple overlapping LRs. E.g. In LR 1 = true, in LR 1 and in LR 2 = false.
+            // Operate for each LR in polygon. If contained in the ring it will invert the inside bool variable. Its inverted becasue this way this method will support multiple overlapping LRs. E.g. In LR 1 = true, in LR 1 and in LR 2 = false.
             foreach (LinearRing linearRing in Coordinates)
             {
                 List<Position> coords = (List<Position>)linearRing.Coordinates;

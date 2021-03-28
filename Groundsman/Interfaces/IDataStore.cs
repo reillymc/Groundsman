@@ -12,7 +12,7 @@ namespace Groundsman.Interfaces
         Task<bool> DeleteItemsAsync();
         Task<T> GetItemAsync(string id);
         Task<ObservableCollection<T>> GetItemsAsync(bool forceRefresh = false);
-        Task<int> ImportFeaturesAsync(string contents, bool notify);
+        Task<int> ImportFeaturesAsync(string contents);
         Task<bool> ExportFeatures(IList<T> features);
     }
 }

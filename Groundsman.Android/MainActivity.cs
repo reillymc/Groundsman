@@ -61,7 +61,7 @@ namespace Groundsman.Droid
                 fileStream.CopyTo(memOfFile);
                 string decoded = Encoding.UTF8.GetString(memOfFile.ToArray());
 
-                mainForms.FeatureStore.ImportFeaturesAsync(decoded, true);
+                mainForms.ImportFileAsync(decoded);
             }
         }
 
