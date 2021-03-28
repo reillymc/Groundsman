@@ -14,12 +14,6 @@ namespace Groundsman.Views
             BindingContext = viewModel = new MyFeaturesViewModel();
         }
 
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            viewModel.GetFeatures();
-        }
-
         private void ViewCell_Tapped(object sender, System.EventArgs e)
         {
             if (Device.RuntimePlatform == Device.Android)

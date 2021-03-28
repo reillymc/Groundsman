@@ -1,7 +1,6 @@
 ﻿using Groundsman.Models;
 using Groundsman.Services;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -49,12 +48,6 @@ namespace Groundsman.ViewModels
             }
         }
 
-        private async void GetFeatures()
-        {
-            ObservableCollection<Feature> updates = await FeatureStore.GetItemsAsync();
-            FeatureList.ReplaceRange(updates);
-        }
-
         public void CleanFeatures()
         {
             Map.MapElements.Clear();
@@ -63,7 +56,6 @@ namespace Groundsman.ViewModels
 
         public async void RefreshMap()
         {
-            GetFeatures();
             CleanFeatures();
             DrawFeatures();
             DrawLogPath();
@@ -73,9 +65,11 @@ namespace Groundsman.ViewModels
             Map.IsShowingUser = status == PermissionStatus.Granted;
         }
 
+        /// <summary>
+        /// Iterates through all features in the feature list and calls the apropriate draw method baysed on feature type
+        /// </summary>
         public void DrawFeatures()
         {
-            // Using CurrentFeature to draw the geodata on the map
             FeatureList.ForEach((Feature feature) =>
             {
                 switch (feature.Geometry.Type)
@@ -172,7 +166,12 @@ namespace Groundsman.ViewModels
             }
         }
 
-        async void OnMapClicked(object sender, MapClickedEventArgs e)
+        /// <summary>
+        /// When map is clicked, iterates through all features in the feature list and shows the feature info menu if feature has been tapped
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void OnMapClicked(object sender, MapClickedEventArgs e)
         {
             FeatureList.ForEach(async (Feature feature) =>
             {

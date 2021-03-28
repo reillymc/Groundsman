@@ -12,11 +12,11 @@ namespace Groundsman.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Feature> FeatureStore => DependencyService.Get<IDataStore<Feature>>();
+        public IDataService<Feature> FeatureStore => DependencyService.Get<IDataService<Feature>>();
         public INavigationService<Feature> NavigationService => DependencyService.Get<INavigationService<Feature>>();
         public static LogStore LogStore = new LogStore();
 
-        private ObservableRangeCollection<Feature> featureList = new ObservableRangeCollection<Feature>();
+        private ObservableRangeCollection<Feature> featureList = App.featureList;
         public ObservableRangeCollection<Feature> FeatureList
         {
             get { return featureList; }

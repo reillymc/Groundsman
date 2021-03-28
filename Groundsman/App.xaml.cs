@@ -10,18 +10,19 @@ namespace Groundsman
 {
     public partial class App : Application
     {
-        public IDataStore<Feature> FeatureStore => DependencyService.Get<IDataStore<Feature>>();
+        public IDataService<Feature> FeatureStore => DependencyService.Get<IDataService<Feature>>();
         public INavigationService<Feature> NavigationService => DependencyService.Get<INavigationService<Feature>>();
         public enum Theme { Light, Dark }
         public static Theme AppTheme { get; set; }
 
+        public static ObservableRangeCollection<Feature> featureList = new ObservableRangeCollection<Feature>();
+
         public App()
         {
-            Device.SetFlags(new[] { "SwipeView_Experimental" });
             InitializeComponent();
-            DependencyService.Register<FeatureStore>();
+            DependencyService.Register<FeatureService>();
             DependencyService.Register<NavigationService>();
-            FeatureStore.GetItemsAsync(true);
+            FeatureStore.ImportFeaturesAsync(AppConstants.GetFeaturesFile());
             MainPage = new NavigationPage(HomePage.Instance);
 
             // If the user ID hasn't been set yet, prompt the user to create one upon app launch.

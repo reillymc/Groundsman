@@ -1,7 +1,4 @@
 using Groundsman.Models;
-using Groundsman.Services;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -18,8 +15,6 @@ namespace Groundsman.ViewModels
         public Command EditEntryCommand { get; set; }
         public Command DeleteEntryCommand { get; set; }
 
-        private bool _isBusy;
-
         public Feature SelectedFeature { get; set; }
 
         /// <summary>
@@ -34,13 +29,6 @@ namespace Groundsman.ViewModels
             DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
 
             Title = "My Features";
-
-            GetFeatures();
-
-            MessagingCenter.Subscribe<FeatureStore>(this, "Hi", (sender) =>
-            {
-                GetFeatures();
-            });
         }
 
         /// <summary>
@@ -49,12 +37,12 @@ namespace Groundsman.ViewModels
         /// <returns></returns>
         private async Task ShowShareSheet()
         {
-            if (_isBusy) return;
-            _isBusy = true;
+            if (IsBusy) return;
+            IsBusy = true;
 
-            await FeatureStore.ExportFeatures(await FeatureStore.GetItemsAsync());
+            await FeatureStore.ExportFeatures(App.featureList);
 
-            _isBusy = false;
+            IsBusy = false;
         }
 
         /// <summary>
@@ -63,12 +51,12 @@ namespace Groundsman.ViewModels
         /// <returns></returns>
         private async Task AddButtonTapped()
         {
-            if (_isBusy) return;
-            _isBusy = true;
+            if (IsBusy) return;
+            IsBusy = true;
 
             await NavigationService.PushAddFeaturePage();
 
-            _isBusy = false;
+            IsBusy = false;
         }
 
         /// <summary>
@@ -77,13 +65,12 @@ namespace Groundsman.ViewModels
         /// <param name="feature">Feature to edit.</param>
         private async Task ShowEditFeatureDetailsPage(Feature feature)
         {
-            Debug.WriteLine("HIIII");
-            if (_isBusy) return;
-            _isBusy = true;
+            if (IsBusy) return;
+            IsBusy = true;
 
             await NavigationService.NavigateToEditPage(feature);
 
-            _isBusy = false;
+            IsBusy = false;
         }
 
         /// <summary>
@@ -93,27 +80,17 @@ namespace Groundsman.ViewModels
         /// <returns></returns>
         private async Task DeleteFeature(Feature feature)
         {
-            Debug.WriteLine("HIIII");
-            if (_isBusy) return;
-            _isBusy = true;
+            if (IsBusy) return;
+            IsBusy = true;
 
             bool yesResponse = await NavigationService.ShowAlert("Delete Feature", "Are you sure you want to delete this feature?", true);
             if (yesResponse)
             {
                 await FeatureStore.DeleteItemAsync(feature);
-                GetFeatures();
+               // GetFeatures();
             }
 
-            _isBusy = false;
-        }
-
-        /// <summary>
-        /// Call the feature store to fetch from file and then set the resulting current features to the list source collection.
-        /// </summary>
-        public async void GetFeatures()
-        {
-            ObservableCollection<Feature> updates = await FeatureStore.GetItemsAsync();
-            FeatureList.ReplaceRange(updates);
+            IsBusy = false;
         }
     }
 }
