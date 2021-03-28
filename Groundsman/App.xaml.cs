@@ -3,6 +3,7 @@ using Groundsman.Models;
 using Groundsman.Services;
 using Groundsman.Views;
 using System;
+using System.IO;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -16,10 +17,12 @@ namespace Groundsman
         public static Theme AppTheme { get; set; }
 
         public static ObservableRangeCollection<Feature> featureList = new ObservableRangeCollection<Feature>();
+        public static ShakeService shakeService;
 
         public App()
         {
             InitializeComponent();
+            shakeService = new ShakeService(this);
             DependencyService.Register<FeatureService>();
             DependencyService.Register<NavigationService>();
             FeatureStore.ImportFeaturesAsync(AppConstants.GetFeaturesFile());
@@ -30,6 +33,8 @@ namespace Groundsman
             {
                 _ = NavigationService.PushWelcomePage();
             }
+
+
         }
 
         protected override void OnStart()
@@ -57,6 +62,23 @@ namespace Groundsman
             catch (Exception ex)
             {
                 await NavigationService.ShowAlert("Import Error", ex.Message, false);
+            }
+        }
+
+        public async void UndoDelete()
+        {
+            bool result = await NavigationService.GetCurrentPage().DisplayAlert("Undo Delete", "", "Undo", "Cancel");
+            if (result)
+            {
+                try
+                {
+                    string contents = File.ReadAllText(AppConstants.DELETED_FEATURE_FILE);
+                    await FeatureStore.ImportFeaturesAsync(contents);
+                }
+                catch
+                {
+                    await NavigationService.ShowAlert("Sorry", "Groundsman was unable to recover the last deleted feature", false);
+                }
             }
         }
     }

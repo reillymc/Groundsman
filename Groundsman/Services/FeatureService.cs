@@ -41,6 +41,7 @@ namespace Groundsman.Services
 
         public async Task<bool> DeleteItemAsync(Feature item)
         {
+            SaveFeatureToFile(item, AppConstants.DELETED_FEATURE_FILE);
             bool deleteSuccessful = App.featureList.Remove(item);
             var save = SaveFeaturesToFile(App.featureList, AppConstants.FEATURES_FILE);
             return save;

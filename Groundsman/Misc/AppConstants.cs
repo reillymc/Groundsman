@@ -11,10 +11,12 @@ namespace Groundsman
 
         private static readonly string FEATURES_FILENAME = "locations.json";
         private static readonly string LOG_FILENAME = "log.csv";
+        private static readonly string DELETED_FEATURE_FILENAME = "deleted.json";
 
         public static readonly string NEW_ENTRY_ID = "-1";
         public static readonly string FEATURES_FILE = Path.Combine(DATA_PATH, FEATURES_FILENAME);
         public static readonly string LOG_FILE = Path.Combine(DATA_PATH, LOG_FILENAME);
+        public static readonly string DELETED_FEATURE_FILE = Path.Combine(CACHE_PATH, DELETED_FEATURE_FILENAME);
 
         public static string GetExportFile(string fileName)
         {
@@ -23,9 +25,9 @@ namespace Groundsman
 
         public static string GetFeaturesFile()
         {
-            if (File.Exists(AppConstants.FEATURES_FILE))
+            if (File.Exists(FEATURES_FILE))
             {
-                string text = File.ReadAllText(AppConstants.FEATURES_FILE);
+                string text = File.ReadAllText(FEATURES_FILE);
                 return text;
             }
             else

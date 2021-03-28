@@ -184,7 +184,7 @@ namespace Groundsman.ViewModels
                 }
                 else if (feature.Geometry.Type == GeoJSONType.LineString && Preferences.Get("ShowLinesOnMap", true))
                 {
-                    LineString lineString = (LineString)feature.Geometry;    
+                    LineString lineString = (LineString)feature.Geometry;
                     ItemHit |= lineString.ContainsPosition(new Position(e.Position.Longitude, e.Position.Latitude, 0));
                 }
 
@@ -210,12 +210,9 @@ namespace Groundsman.ViewModels
             switch (result)
             {
                 case "Delete":
-                    bool yesResponse = await NavigationService.GetCurrentPage().DisplayAlert("Delete Feature", "Are you sure you want to delete this feature?", "Yes", "No");
-                    if (yesResponse)
-                    {
-                        await FeatureStore.DeleteItemAsync(feature);
-                        RefreshMap();
-                    }
+                    shakeService.Start();
+                    await FeatureStore.DeleteItemAsync(feature);
+                    RefreshMap();
                     break;
                 case "View":
                     await NavigationService.NavigateToDetailPage(feature);
