@@ -2,7 +2,8 @@
 <ContentPage x:Class="Groundsman.Views.MyFeaturesView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:behaviors="clr-namespace:Groundsman.Behaviors"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:NavigationPage.PrefersLargeTitles="true"
              Style="{DynamicResource PageStyle}">
     <ContentPage.ToolbarItems>
         <ToolbarItem AutomationId="id_icon"
@@ -70,15 +71,13 @@
 
     <AbsoluteLayout x:Name="absLayout">
         <ListView x:Name="listView"
+                  
                   HasUnevenRows="True"
+                  ItemSelected="DeselectItem"
                   HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}"
                   ItemTemplate="{StaticResource ListTemplate}"
                   ItemsSource="{Binding FeatureList}"
-                  SeparatorColor="{DynamicResource Seperator}"
-                  SelectedItem="{Binding SelectedFeature}">
-            <ListView.Behaviors>
-                <behaviors:ItemTappedToCommandBehavior Command="{Binding ItemTappedCommand}" />
-            </ListView.Behaviors>
+                  SeparatorColor="{DynamicResource Seperator}">
             <ListView.Footer>
                 <Label Padding="10"
                        FontSize="Small"

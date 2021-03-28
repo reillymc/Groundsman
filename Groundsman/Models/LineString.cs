@@ -41,7 +41,7 @@ namespace Groundsman.Models
             double AB;
             double AP;
             double PB;
-            double delta = 0.000075; // Delta determines line tap accuracy
+            double delta = 0.0001; // Delta determines line tap accuracy
 
             var polyline = (List<Position>)Coordinates;
 

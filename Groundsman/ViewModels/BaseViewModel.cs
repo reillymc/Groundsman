@@ -16,6 +16,7 @@ namespace Groundsman.ViewModels
         public INavigationService<Feature> NavigationService => DependencyService.Get<INavigationService<Feature>>();
         public static LogStore LogStore = new LogStore();
         public static ShakeService shakeService = App.shakeService;
+        public bool HasItems { get; set; }
         private ObservableRangeCollection<Feature> featureList = App.featureList;
         public ObservableRangeCollection<Feature> FeatureList
         {
@@ -25,6 +26,7 @@ namespace Groundsman.ViewModels
                 if (featureList == value)
                     return;
                 featureList = value;
+                HasItems = featureList.Count > 0;
             }
         }
 

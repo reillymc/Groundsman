@@ -22,6 +22,8 @@ namespace Groundsman.ViewModels
 
         public int DecimalAccuracyEntry { get; set; }
         public int GPSPrecisionEntry { get; set; }
+        public bool EnableAltitude { get; set; }
+        public bool EnableShakeToUndo { get; set; }
         public bool ShowPointsOnMap { get; set; }
         public bool ShowLinesOnMap { get; set; }
         public bool ShowPolygonsOnMap { get; set; }
@@ -61,6 +63,8 @@ namespace Groundsman.ViewModels
             IDEntry = Preferences.Get("UserID", "Groundsman");
             DecimalAccuracyEntry = Preferences.Get("DataDecimalAccuracy", 6);
             GPSPrecisionEntry = Preferences.Get("GPSPrecision", 2);
+            EnableAltitude = Preferences.Get("EnableAltitude", true);
+            EnableShakeToUndo = Preferences.Get("EnableShakeToUndo", true);
             ShowPointsOnMap = Preferences.Get("ShowPointsOnMap", true);
             ShowLinesOnMap = Preferences.Get("ShowLinesOnMap", true);
             ShowPolygonsOnMap = Preferences.Get("ShowPolygonsOnMap", true);

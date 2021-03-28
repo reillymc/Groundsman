@@ -1,5 +1,7 @@
 ﻿using Xamarin.Forms;
 using Groundsman.ViewModels;
+using System;
+using Groundsman.Models;
 
 namespace Groundsman.Views
 {
@@ -12,6 +14,17 @@ namespace Groundsman.Views
         {
             InitializeComponent();
             BindingContext = viewModel = new MyFeaturesViewModel();
+        }
+
+
+        public void DeselectItem(object sender, EventArgs e)
+        {
+            var selected = ((ListView)sender).SelectedItem;
+            if (selected != null)
+            {
+                viewModel.ItemTappedCommand.Execute((Feature)selected);
+                ((ListView)sender).SelectedItem = null;
+            }
         }
 
         private void ViewCell_Tapped(object sender, System.EventArgs e)

@@ -41,6 +41,19 @@ namespace Groundsman.Views
             viewModel.UpdatePreferences();
         }
 
+
+        private void EnableShakeToUndoChanged(object sender, ToggledEventArgs e)
+        {
+            Preferences.Set("EnableShakeToUndo", e.Value);
+        }
+
+
+        private void EnableAltitudeChanged(object sender, ToggledEventArgs e)
+        {
+            Preferences.Set("EnableAltitude", e.Value);
+        }
+
+
         private void ShowPointsOnMapChanged(object sender, ToggledEventArgs e)
         {
             Preferences.Set("ShowPointsOnMap", e.Value);

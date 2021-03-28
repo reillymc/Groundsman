@@ -17,6 +17,7 @@ namespace Groundsman.ViewModels
 
         public Feature SelectedFeature { get; set; }
 
+        
         /// <summary>
         /// View-model constructor.
         /// </summary>
@@ -24,11 +25,21 @@ namespace Groundsman.ViewModels
         {
             AddButtonTappedCommand = new Command(async () => await AddButtonTapped());
             ShareButtonTappedCommand = new Command(async () => await ShowShareSheet());
-            ItemTappedCommand = new Command<Feature>(async (data) => await NavigationService.NavigateToDetailPage(SelectedFeature));
+            ItemTappedCommand = new Command<Feature>(async (feature) => await ShowFeatureDetailsPage(feature));
             EditEntryCommand = new Command<Feature>(async (feature) => await ShowEditFeatureDetailsPage(feature));
             DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
 
             Title = "My Features";
+        }
+
+        private async Task ShowFeatureDetailsPage(Feature feature)
+        {
+            if (IsBusy) return;
+            IsBusy = true;
+
+            await NavigationService.NavigateToDetailPage(feature);
+
+            IsBusy = false;
         }
 
         /// <summary>

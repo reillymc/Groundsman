@@ -78,7 +78,42 @@
                         </Frame>
                     </ViewCell>
                 </TableSection>
-                <TableSection Title="Feature List">
+                <TableSection Title="Feature List and Editor">
+                    <ViewCell>
+                        <Frame Style="{StaticResource FrameViewCell}">
+                            <StackLayout Orientation="Horizontal" Padding="20,0">
+                                <Label VerticalOptions="Center" Text="Include Altitude in Positions"/>
+                                <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding EnableAltitude}"
+                                 Toggled="EnableAltitudeChanged"/>
+                            </StackLayout>
+                        </Frame>
+                    </ViewCell>
+                    <ViewCell>
+                        <Frame Style="{StaticResource FrameViewCell}">
+                            <StackLayout Orientation="Horizontal" Padding="20,0">
+                                <Label VerticalOptions="Center" Text="Enable Shake to Undo Delete"/>
+                                <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding EnableShakeToUndo}"
+                                 Toggled="EnableShakeToUndoChanged"/>
+                            </StackLayout>
+                        </Frame>
+                    </ViewCell>
+                    <ViewCell>
+                        <Frame Style="{StaticResource FrameViewCell}">
+                            <StackLayout Padding="20,0"
+                                     HorizontalOptions="FillAndExpand"
+                                     Orientation="Horizontal"
+                                     VerticalOptions="CenterAndExpand">
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding DeleteAllFeatures}" />
+                                </StackLayout.GestureRecognizers>
+                                <Label FontAttributes="Bold"
+                                   Text="Clear All Features"
+                                   TextColor="{StaticResource greenPrimary}" />
+                            </StackLayout>
+                        </Frame>
+                    </ViewCell>
+                </TableSection>
+                <TableSection Title="Map">
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
                             <StackLayout Orientation="Horizontal" Padding="20,0">
@@ -103,32 +138,6 @@
                                 <Label VerticalOptions="Center" Text="Show Polygons on Map"/>
                                 <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding ShowPolygonsOnMap}"
                                  Toggled="ShowPolygonsOnMapChanged"/>
-                            </StackLayout>
-                        </Frame>
-                    </ViewCell>
-                    <ViewCell>
-                        <Frame Style="{StaticResource FrameViewCell}">
-                            <StackLayout Padding="20,0"
-                                     HorizontalOptions="FillAndExpand"
-                                     Orientation="Horizontal"
-                                     VerticalOptions="CenterAndExpand">
-                                <StackLayout.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding DeleteAllFeatures}" />
-                                </StackLayout.GestureRecognizers>
-                                <Label FontAttributes="Bold"
-                                   Text="Clear All Features"
-                                   TextColor="{StaticResource greenPrimary}" />
-                            </StackLayout>
-                        </Frame>
-                    </ViewCell>
-                </TableSection>
-                <TableSection Title="Logger">
-                    <ViewCell>
-                        <Frame Style="{StaticResource FrameViewCell}">
-                            <StackLayout Orientation="Horizontal" Padding="20,0">
-                                <Label VerticalOptions="Center" Text="Show Log Path on Map"/>
-                                <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding ShowLogPathOnMap}"
-                                 Toggled="ShowLogPathOnMapChanged"/>
                             </StackLayout>
                         </Frame>
                     </ViewCell>
