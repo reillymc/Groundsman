@@ -2,6 +2,8 @@
 <ContentPage x:Class="Groundsman.Views.LoggerView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Groundsman.ViewModels"
+             x:DataType="viewModels:LoggerViewModel"
              Style="{StaticResource PageStyle}">
     <ContentPage.ToolbarItems>
         <ToolbarItem Command="{Binding ShareButtonClickCommand}" Icon="share_icon" />
@@ -11,27 +13,30 @@
             <Grid Margin="10,10,10,0"
                   ColumnDefinitions="2.5*,*,*"
                   HorizontalOptions="Fill"
+                  MinimumHeightRequest="20"
                   RowDefinitions="*"
-                  VerticalOptions="Start" MinimumHeightRequest="20">
-                <StackLayout Grid.Column="0" Padding="5,0" Orientation="Horizontal">
+                  VerticalOptions="Start">
+                <StackLayout Grid.Column="0"
+                             Padding="5,0"
+                             Orientation="Horizontal">
                     <Label FontSize="Small"
-                               Text="Interval:"
-                               TextColor="{DynamicResource Text}"
-                               VerticalOptions="Center" />
+                           Text="Interval:"
+                           TextColor="{DynamicResource Text}"
+                           VerticalOptions="Center" />
                     <Entry FontSize="Small"
-                               HorizontalTextAlignment="Center"
-                               Keyboard="Numeric"
-                               Text="{Binding IntervalEntry}"
-                               TextColor="{StaticResource greenPrimary}"
-                               VerticalOptions="Center"
-                               WidthRequest="30" />
+                           HorizontalTextAlignment="Center"
+                           Keyboard="Numeric"
+                           Text="{Binding IntervalEntry}"
+                           TextColor="{StaticResource greenPrimary}"
+                           VerticalOptions="Center"
+                           WidthRequest="30" />
                     <Picker FontSize="Small"
-                                HorizontalOptions="FillAndExpand"
-                                ItemsSource="{Binding UnitItems}"
-                                SelectedIndex="{Binding UnitEntry}"
-                                TextColor="{StaticResource greenPrimary}"
-                                TitleColor="Black"
-                                VerticalOptions="Center" />
+                            HorizontalOptions="FillAndExpand"
+                            ItemsSource="{Binding UnitItems}"
+                            SelectedIndex="{Binding UnitEntry}"
+                            TextColor="{StaticResource greenPrimary}"
+                            TitleColor="Black"
+                            VerticalOptions="Center" />
                 </StackLayout>
                 <Button Grid.Column="1"
                         Command="{Binding ToggleButtonClickCommand}"
@@ -44,9 +49,9 @@
                         Style="{StaticResource GenericButton}"
                         Text="Clear" />
             </Grid>
-            <Frame BackgroundColor="{DynamicResource Background}"
+            <Frame Padding="10,10,0,10"
+                   BackgroundColor="{DynamicResource Background}"
                    Style="{StaticResource FrameM}"
-                   Padding="10,10,0,10"
                    VerticalOptions="FillAndExpand">
                 <ScrollView x:Name="ScrollBox">
                     <Label x:Name="logLabel"

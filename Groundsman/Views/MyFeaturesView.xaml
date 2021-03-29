@@ -2,6 +2,8 @@
 <ContentPage x:Class="Groundsman.Views.MyFeaturesView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Groundsman.ViewModels" xmlns:models="clr-namespace:Groundsman.Models"
+             x:DataType="viewModels:MyFeaturesViewModel"
              Style="{DynamicResource PageStyle}">
     <ContentPage.ToolbarItems>
         <ToolbarItem AutomationId="id_icon"
@@ -10,7 +12,7 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <ResourceDictionary>
-            <DataTemplate x:Key="ListTemplate">
+            <DataTemplate x:Key="ListTemplate" x:DataType="models:Feature">
                 <ViewCell Tapped="ViewCell_Tapped">
                     <ViewCell.ContextActions>
                         <MenuItem Command="{Binding Path=BindingContext.DeleteEntryCommand, Source={x:Reference listView}}"
@@ -18,7 +20,7 @@
                                   IsDestructive="True"
                                   Text="Delete" />
                     </ViewCell.ContextActions>
-                    <StackLayout Padding="12,0,0,0" Orientation="Horizontal">
+                    <StackLayout Padding="12,0,0,0" Orientation="Horizontal" BackgroundColor="{DynamicResource Absolute}">
                         <Image HeightRequest="40"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"
@@ -67,11 +69,11 @@
 
     <AbsoluteLayout x:Name="absLayout">
         <ListView x:Name="listView"
-                  RowHeight="56"
-                  ItemSelected="DeselectItem"
                   HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}"
+                  ItemSelected="DeselectItem"
                   ItemTemplate="{StaticResource ListTemplate}"
                   ItemsSource="{Binding FeatureList}"
+                  RowHeight="56"
                   SeparatorColor="{DynamicResource Seperator}">
             <ListView.Footer>
                 <Label Padding="10"

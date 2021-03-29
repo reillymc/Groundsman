@@ -3,6 +3,7 @@ using Groundsman.Models;
 using Groundsman.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -16,8 +17,8 @@ namespace Groundsman.ViewModels
         public INavigationService<Feature> NavigationService => DependencyService.Get<INavigationService<Feature>>();
         public static LogStore LogStore = new LogStore();
         public static ShakeService shakeService = App.shakeService;
-        private ObservableRangeCollection<Feature> featureList = App.featureList;
-        public ObservableRangeCollection<Feature> FeatureList
+        private ObservableCollection<Feature> featureList = App.featureList;
+        public ObservableCollection<Feature> FeatureList
         {
             get => featureList;
             set

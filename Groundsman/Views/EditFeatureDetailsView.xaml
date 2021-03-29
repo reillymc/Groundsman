@@ -4,21 +4,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             xmlns:viewModels="clr-namespace:Groundsman.ViewModels"
              x:Name="EditFeatureDetailsViewPage"
              ios:Page.ModalPresentationStyle="FormSheet"
+             x:DataType="viewModels:FeatureDetailsViewModel"
              Style="{StaticResource PageTintedStyle}">
     <ContentPage.Resources>
         <DataTemplate x:Key="HeaderTemplate">
             <StackLayout>
                 <Frame Padding="10,10,0,10" Style="{DynamicResource FrameM}">
-                    <Grid RowDefinitions="*,Auto" ColumnDefinitions="4*,*">
-                        <Label Grid.Row="0" Style="{StaticResource LabelTitle}" Text="Details" />
+                    <Grid ColumnDefinitions="4*,*" RowDefinitions="*,Auto">
+                        <Label Grid.Row="0"
+                               Style="{StaticResource LabelTitle}"
+                               Text="Details" />
                         <StackLayout Grid.Row="1" Margin="8,0,0,0">
                             <Entry FontSize="Small"
                                    Placeholder="Name"
-                                   VerticalOptions="Start"
                                    Style="{StaticResource EntryStyle}"
-                                   Text="{Binding NameEntry}">
+                                   Text="{Binding NameEntry}"
+                                   VerticalOptions="Start">
                                 <Entry.Behaviors>
                                     <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
                                 </Entry.Behaviors>
@@ -26,13 +30,22 @@
                             <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
                             <DatePicker Date="{Binding DateEntry, StringFormat='{0:dd/MM/yyyy}'}"
                                         FontSize="Small"
-                                        VerticalOptions="Start"
-                                        Style="{StaticResource DateEntryStyle}" />
+                                        Style="{StaticResource DateEntryStyle}"
+                                        VerticalOptions="Start" />
                         </StackLayout>
-                        <StackLayout Grid.RowSpan="2" Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center">
-                            <ImageButton BackgroundColor="Transparent"  Margin="0,12,5,0" Source="share_icon_color" WidthRequest="26" HeightRequest="26" Command="{Binding ShareEntryCommand}" CommandParameter="{Binding Source={RelativeSource Self}}"/>
+                        <StackLayout Grid.RowSpan="2"
+                                     Grid.Column="1"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center">
+                            <ImageButton Margin="0,12,5,0"
+                                         BackgroundColor="Transparent"
+                                         Command="{Binding ShareEntryCommand}"
+                                         CommandParameter="{Binding Source={RelativeSource Self}}"
+                                         HeightRequest="26"
+                                         Source="share_icon_color"
+                                         WidthRequest="26" />
                         </StackLayout>
-                        
+
                     </Grid>
                 </Frame>
                 <TemplatedView ControlTemplate="{StaticResource DetailCoordinatesHeader}" />
@@ -102,7 +115,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="FooterTemplate">
-            <StackLayout Padding="0" Margin="0">
+            <StackLayout Margin="0" Padding="0">
                 <TemplatedView ControlTemplate="{StaticResource DetailCoordinatesEditFooter}" />
                 <Frame Margin="10,10,10,180"
                        Padding="10,10,0,10"

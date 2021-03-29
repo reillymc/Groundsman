@@ -3,6 +3,7 @@ using Groundsman.Models;
 using Groundsman.Services;
 using Groundsman.Views;
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -16,7 +17,7 @@ namespace Groundsman
         public enum Theme { Light, Dark }
         public static Theme AppTheme { get; set; }
 
-        public static ObservableRangeCollection<Feature> featureList = new ObservableRangeCollection<Feature>();
+        public static ObservableCollection<Feature> featureList = new ObservableCollection<Feature>();
         public static ShakeService shakeService;
 
         public App()

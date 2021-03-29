@@ -3,6 +3,8 @@
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
+             xmlns:viewModels="clr-namespace:Groundsman.ViewModels"
+             x:DataType="viewModels:ProfileSettingsViewModel"
              Style="{StaticResource PageStyle}">
     <ContentPage.ToolbarItems>
         <ToolbarItem Command="{Binding InfoButtonTappedCommand}" Icon="info_icon" />
@@ -14,10 +16,10 @@
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
                             <Entry Margin="20,0"
-                               Placeholder="User ID"
-                               Text="{Binding IDEntry}"
-                               ClearButtonVisibility="WhileEditing"
-                               TextColor="{DynamicResource Text}">
+                                   ClearButtonVisibility="WhileEditing"
+                                   Placeholder="User ID"
+                                   Text="{Binding IDEntry}"
+                                   TextColor="{DynamicResource Text}">
                                 <Entry.Behaviors>
                                     <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
                                 </Entry.Behaviors>
@@ -30,20 +32,20 @@
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
                             <StackLayout Padding="20,0"
-                                     HorizontalOptions="FillAndExpand"
-                                     Orientation="Horizontal"
-                                     VerticalOptions="CenterAndExpand">
+                                         HorizontalOptions="FillAndExpand"
+                                         Orientation="Horizontal"
+                                         VerticalOptions="CenterAndExpand">
                                 <Label Text="GPS Accuracy"
-                                   TextColor="{DynamicResource Text}"
-                                   VerticalOptions="Center" />
+                                       TextColor="{DynamicResource Text}"
+                                       VerticalOptions="Center" />
                                 <Picker x:Name="picker"
-                                    HorizontalOptions="EndAndExpand"
+                                        Title="GPS Accuracy"
+                                        HorizontalOptions="EndAndExpand"
                                         HorizontalTextAlignment="Center"
-                                    SelectedIndex="{Binding GPSPrecisionEntry}"
-                                    SelectedIndexChanged="OnPickerSelectedIndexChanged"
-                                    Title="GPS Accuracy"
-                                    TextColor="{DynamicResource greenPrimary}"
-                                    WidthRequest="95">
+                                        SelectedIndex="{Binding GPSPrecisionEntry}"
+                                        SelectedIndexChanged="OnPickerSelectedIndexChanged"
+                                        TextColor="{DynamicResource greenPrimary}"
+                                        WidthRequest="95">
                                     <Picker.ItemsSource>
                                         <x:Array Type="{x:Type x:String}">
                                             <x:String>Best</x:String>
@@ -59,21 +61,21 @@
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
                             <StackLayout Padding="20,0"
-                                     HorizontalOptions="FillAndExpand"
-                                     Orientation="Horizontal"
-                                     VerticalOptions="CenterAndExpand">
+                                         HorizontalOptions="FillAndExpand"
+                                         Orientation="Horizontal"
+                                         VerticalOptions="CenterAndExpand">
                                 <Label Text="{Binding Source={x:Reference stepperDecimal}, Path=Value}"
-                                   TextColor="{DynamicResource Text}"
-                                   VerticalOptions="Center" />
+                                       TextColor="{DynamicResource Text}"
+                                       VerticalOptions="Center" />
                                 <Label Text="Decimal Places"
-                                   TextColor="{DynamicResource Text}"
-                                   VerticalOptions="Center" />
+                                       TextColor="{DynamicResource Text}"
+                                       VerticalOptions="Center" />
                                 <Stepper x:Name="stepperDecimal"
-                                     HorizontalOptions="EndAndExpand"
-                                     Increment="1"
-                                     Maximum="12"
-                                     ValueChanged="OnStepperValueChanged"
-                                     Value="{Binding DecimalAccuracyEntry}" />
+                                         HorizontalOptions="EndAndExpand"
+                                         Increment="1"
+                                         Maximum="12"
+                                         ValueChanged="OnStepperValueChanged"
+                                         Value="{Binding DecimalAccuracyEntry}" />
                             </StackLayout>
                         </Frame>
                     </ViewCell>
@@ -81,34 +83,38 @@
                 <TableSection Title="Feature List and Editor">
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
-                            <StackLayout Orientation="Horizontal" Padding="20,0">
-                                <Label VerticalOptions="Center" Text="Include Altitude in Positions"/>
-                                <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding EnableAltitude}"
-                                 Toggled="EnableAltitudeChanged"/>
+                            <StackLayout Padding="20,0" Orientation="Horizontal">
+                                <Label Text="Include Altitude in Positions" VerticalOptions="Center" />
+                                <Switch HorizontalOptions="EndAndExpand"
+                                        IsToggled="{Binding EnableAltitude}"
+                                        Toggled="EnableAltitudeChanged"
+                                        VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
                     </ViewCell>
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
-                            <StackLayout Orientation="Horizontal" Padding="20,0">
-                                <Label VerticalOptions="Center" Text="Enable Shake to Undo Delete"/>
-                                <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding EnableShakeToUndo}"
-                                 Toggled="EnableShakeToUndoChanged"/>
+                            <StackLayout Padding="20,0" Orientation="Horizontal">
+                                <Label Text="Enable Shake to Undo Delete" VerticalOptions="Center" />
+                                <Switch HorizontalOptions="EndAndExpand"
+                                        IsToggled="{Binding EnableShakeToUndo}"
+                                        Toggled="EnableShakeToUndoChanged"
+                                        VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
                     </ViewCell>
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
                             <StackLayout Padding="20,0"
-                                     HorizontalOptions="FillAndExpand"
-                                     Orientation="Horizontal"
-                                     VerticalOptions="CenterAndExpand">
+                                         HorizontalOptions="FillAndExpand"
+                                         Orientation="Horizontal"
+                                         VerticalOptions="CenterAndExpand">
                                 <StackLayout.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding DeleteAllFeatures}" />
                                 </StackLayout.GestureRecognizers>
                                 <Label FontAttributes="Bold"
-                                   Text="Reset Feature List"
-                                   TextColor="{StaticResource greenPrimary}" />
+                                       Text="Reset Feature List"
+                                       TextColor="{StaticResource greenPrimary}" />
                             </StackLayout>
                         </Frame>
                     </ViewCell>
@@ -116,28 +122,34 @@
                 <TableSection Title="Map">
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
-                            <StackLayout Orientation="Horizontal" Padding="20,0">
-                                <Label VerticalOptions="Center" Text="Draw Points"/>
-                                <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding ShowPointsOnMap}"
-                                 Toggled="ShowPointsOnMapChanged"/>
+                            <StackLayout Padding="20,0" Orientation="Horizontal">
+                                <Label Text="Draw Points" VerticalOptions="Center" />
+                                <Switch HorizontalOptions="EndAndExpand"
+                                        IsToggled="{Binding ShowPointsOnMap}"
+                                        Toggled="ShowPointsOnMapChanged"
+                                        VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
                     </ViewCell>
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
-                            <StackLayout Orientation="Horizontal" Padding="20,0">
-                                <Label VerticalOptions="Center" Text="Draw Lines"/>
-                                <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding ShowLinesOnMap}"
-                                 Toggled="ShowLinesOnMapChanged"/>
+                            <StackLayout Padding="20,0" Orientation="Horizontal">
+                                <Label Text="Draw Lines" VerticalOptions="Center" />
+                                <Switch HorizontalOptions="EndAndExpand"
+                                        IsToggled="{Binding ShowLinesOnMap}"
+                                        Toggled="ShowLinesOnMapChanged"
+                                        VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
                     </ViewCell>
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
-                            <StackLayout Orientation="Horizontal" Padding="20,0">
-                                <Label VerticalOptions="Center" Text="Draw Polygons"/>
-                                <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding ShowPolygonsOnMap}"
-                                 Toggled="ShowPolygonsOnMapChanged"/>
+                            <StackLayout Padding="20,0" Orientation="Horizontal">
+                                <Label Text="Draw Polygons" VerticalOptions="Center" />
+                                <Switch HorizontalOptions="EndAndExpand"
+                                        IsToggled="{Binding ShowPolygonsOnMap}"
+                                        Toggled="ShowPolygonsOnMapChanged"
+                                        VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
                     </ViewCell>
