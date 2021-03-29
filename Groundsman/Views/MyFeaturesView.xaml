@@ -2,8 +2,6 @@
 <ContentPage x:Class="Groundsman.Views.MyFeaturesView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-             ios:NavigationPage.PrefersLargeTitles="true"
              Style="{DynamicResource PageStyle}">
     <ContentPage.ToolbarItems>
         <ToolbarItem AutomationId="id_icon"
@@ -23,7 +21,7 @@
                                   IsDestructive="True"
                                   Text="Delete" />
                     </ViewCell.ContextActions>
-                    <StackLayout Padding="12,6,8,10" Orientation="Horizontal">
+                    <StackLayout Padding="12,0,0,0" Orientation="Horizontal">
                         <Image HeightRequest="40"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"
@@ -49,12 +47,12 @@
                         <StackLayout Padding="5,0" Orientation="Vertical">
                             <Label Style="{StaticResource ListLabelStyle}"
                                    Text="{Binding Path=Properties[name]}"
-                                   VerticalOptions="End" />
+                                   VerticalOptions="EndAndExpand" />
                             <Label FontSize="Small"
                                    HorizontalTextAlignment="Start"
                                    LineBreakMode="TailTruncation"
                                    TextColor="{DynamicResource TextSecondary}"
-                                   VerticalOptions="Start">
+                                   VerticalOptions="StartAndExpand">
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="{Binding Properties[date], StringFormat='{0:d/M/yy}'}" />
@@ -72,7 +70,7 @@
 
     <AbsoluteLayout x:Name="absLayout">
         <ListView x:Name="listView"
-                  RowHeight="54"
+                  RowHeight="56"
                   ItemSelected="DeselectItem"
                   HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}"
                   ItemTemplate="{StaticResource ListTemplate}"
@@ -85,15 +83,15 @@
                        TextColor="{DynamicResource TextSecondary}" />
             </ListView.Footer>
         </ListView>
-        <Button Margin="10"
+        <Button Margin="16"
                 AbsoluteLayout.LayoutBounds="1.0,1.0,-1,-1"
                 AbsoluteLayout.LayoutFlags="PositionProportional"
                 BackgroundColor="{StaticResource greenPrimary}"
-                BorderRadius="25"
+                BorderRadius="30"
                 Command="{Binding AddButtonTappedCommand}"
-                HeightRequest="50"
+                HeightRequest="60"
                 ImageSource="add_icon"
-                WidthRequest="50" />
+                WidthRequest="60" />
     </AbsoluteLayout>
 
 </ContentPage>

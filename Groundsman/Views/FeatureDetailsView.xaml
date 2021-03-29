@@ -2,7 +2,6 @@
 <ContentPage x:Class="Groundsman.Views.FeatureDetailsView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              x:Name="FeatureDetailsViewPage"
              Style="{StaticResource PageTintedStyle}">
     <ContentPage.ToolbarItems>
@@ -89,6 +88,12 @@
                         HeaderTemplate="{StaticResource HeaderTemplate}"
                         ItemTemplate="{StaticResource ItemTemplate}"
                         ItemsSource="{Binding GeolocationValues}"
-                        VerticalOptions="FillAndExpand" />
+                        VerticalOptions="FillAndExpand">
+            <!--Temp workaround for iOS large title issue-->
+            <CollectionView.Margin>
+                <OnPlatform x:TypeArguments="Thickness" 
+                        iOS="0,60,00,0" />
+            </CollectionView.Margin>
+        </CollectionView>
     </ContentPage.Content>
 </ContentPage>
