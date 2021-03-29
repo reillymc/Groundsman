@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Groundsman.Misc;
 using Groundsman.Models;
 using Groundsman.Services;
 using Xamarin.Essentials;
@@ -23,9 +24,8 @@ namespace Groundsman.ViewModels
         public ICommand OnDoneTappedCommand { get; set; }
         public ICommand OnCancelTappedCommand { get; set; }
         public ICommand ShareEntryCommand { get; set; }
-        private Feature feature = new Feature { };
-        private GeoJSONType featureType;
-        private string FeatureID;
+        private readonly Feature Feature = new Feature { };
+        //private GeoJSONType featureType;
         public ObservableCollection<DisplayPosition> GeolocationValues { get; set; }
 
         public string DateEntry { get; set; }
@@ -44,12 +44,12 @@ namespace Groundsman.ViewModels
             set { SetProperty(ref loadingIconActive, value); }
         }
 
-        private bool geolocationEntryEnabled;
+        private bool geolocationEntryEnabled = true;
         public bool GeolocationEntryEnabled
         {
             get { return geolocationEntryEnabled; }
             set { SetProperty(ref geolocationEntryEnabled, value); }
-        }
+        } 
 
         private int _NumPointFields;
         public int NumPointFields
@@ -67,14 +67,15 @@ namespace Groundsman.ViewModels
         /// </summary>
         public FeatureDetailsViewModel(GeoJSONType featureType)
         {
-            FeatureID = AppConstants.NEW_ENTRY_ID;
-            this.featureType = featureType;
-            feature.Properties = new Dictionary<string, object>();
+            //this.featureType = featureType;
+            Feature.Geometry = new Geometry(featureType);
+            Feature.Properties = new Dictionary<string, object>
+            {
+                ["id"] = AppConstants.NEW_ENTRY_ID
+            };
 
             DateEntry = DateTime.Now.ToShortDateString();
             GeolocationValues = new ObservableCollection<DisplayPosition>();
-            GeolocationEntryEnabled = true;
-            LoadingIconActive = false;
 
             InitCommandBindings();
 
@@ -105,13 +106,7 @@ namespace Groundsman.ViewModels
         public FeatureDetailsViewModel(Feature feature)
         {
             InitCommandBindings();
-            this.feature = feature;
-            featureType = feature.Geometry.Type;
-
-            if (feature.Properties.ContainsKey("id"))
-            {
-                FeatureID = (string)feature.Properties["id"];
-            }
+            Feature = feature;
 
             if (feature.Properties.ContainsKey("name"))
             {
@@ -126,8 +121,6 @@ namespace Groundsman.ViewModels
 
             GeolocationValues = new ObservableCollection<DisplayPosition>();
 
-
-            GeolocationEntryEnabled = true;
 
             if (feature.Properties.ContainsKey("metadataStringValue"))
             {
@@ -148,8 +141,6 @@ namespace Groundsman.ViewModels
                     MetadataFloatEntry = floatval.ToString();
                 }
             }
-
-            LoadingIconActive = false;
 
             int index = 1;
 
@@ -203,24 +194,25 @@ namespace Groundsman.ViewModels
             GetFeatureCommand = new Command<DisplayPosition>(async (point) => { await GetDataPoint(point); });
             AddPointCommand = new Command(() => AddPoint(1));
             DeletePointCommand = new Command<DisplayPosition>((item) => DeletePoint(item));
-            ShareEntryCommand = new Command(async () => await ShareFeature());
+            ShareEntryCommand = new Command<View>(async (view) => await ShareFeature(view));
             OnDoneTappedCommand = new Command(async () => await OnSaveUpdateActivated());
             OnCancelTappedCommand = new Command(async () => await OnDismiss(true));
         }
 
-        private async Task ShareFeature()
+        private async Task ShareFeature(View element)
         {
             if (IsBusy) return;
-
             IsBusy = true;
-            if (await TryParseSaveFeature())
-            {
-                await FeatureStore.ExportFeatures(new List<Feature> { feature });
-                IsBusy = false;
-                return;
-            }
-            IsBusy = false;
 
+            if (await ParseFeature())
+            {
+                var bounds = element.GetAbsoluteBounds().ToSystemRectangle();
+                ShareFileRequest share = FeatureStore.ExportFeatures(new List<Feature>() { Feature });
+                share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
+                await Share.RequestAsync(share);
+            }
+            
+            IsBusy = false;
         }
 
         /// <summary>
@@ -289,20 +281,27 @@ namespace Groundsman.ViewModels
         {
             if (IsBusy) return;
             IsBusy = true;
-            if (await TryParseSaveFeature())
+            if (await ParseFeature())
             {
-                await NavigationService.NavigateBack(true);
+                if (await SaveFeature())
+                {
+                    await NavigationService.NavigateBack(true);
+                }
+                else
+                {
+                    await NavigationService.ShowAlert("Save Failed", "Please check all of your entried are valid", false);
+                }
                 IsBusy = false;
                 return;
             }
             IsBusy = false;
         }
 
-        private async Task<bool> TryParseSaveFeature()
+        private async Task<bool> ParseFeature()
         {
             try
             {
-                switch (featureType)
+                switch (Feature.Geometry.Type)
                 {
                     case GeoJSONType.Point:
                         if (GeolocationValues.Count != 1)
@@ -310,7 +309,7 @@ namespace Groundsman.ViewModels
                             await NavigationService.ShowAlert("Unsupported Entry", "A point must only contain 1 positions.", false);
                             return false;
                         }
-                        feature.Geometry = new Point(ConvertPosition(GeolocationValues[0]));
+                        Feature.Geometry = new Point(ConvertPosition(GeolocationValues[0]));
                         break;
 
                     case GeoJSONType.LineString:
@@ -324,7 +323,7 @@ namespace Groundsman.ViewModels
                         {
                             posList.Add(ConvertPosition(pointValue));
                         }
-                        feature.Geometry = new LineString(posList);
+                        Feature.Geometry = new LineString(posList);
                         break;
                     case GeoJSONType.Polygon:
                         if (GeolocationValues.Count < 3)
@@ -343,7 +342,7 @@ namespace Groundsman.ViewModels
                         // Close polygon with duplicated first feature
                         polyPosList.Add(polyPosList[0]);
 
-                        feature.Geometry = new Polygon(new List<LinearRing>() { new LinearRing(polyPosList) });
+                        Feature.Geometry = new Polygon(new List<LinearRing>() { new LinearRing(polyPosList) });
                         break;
                     default:
                         //Unrecognised feature alert!!
@@ -359,31 +358,31 @@ namespace Groundsman.ViewModels
             //Metadata
             if (string.IsNullOrEmpty("metadataStringValue"))
             {
-                feature.Properties.Remove("metadataStringValue");
+                Feature.Properties.Remove("metadataStringValue");
             }
             else
             {
-                feature.Properties["metadataStringValue"] = MetadataStringEntry;
+                Feature.Properties["metadataStringValue"] = MetadataStringEntry;
             }
 
             try
             {
                 if (string.IsNullOrEmpty(MetadataIntegerEntry))
                 {
-                    feature.Properties.Remove("metadataIntegerValue");
+                    Feature.Properties.Remove("metadataIntegerValue");
                 }
                 else
                 {
-                    feature.Properties["metadataIntegerValue"] = Convert.ToInt32(MetadataIntegerEntry);
+                    Feature.Properties["metadataIntegerValue"] = Convert.ToInt32(MetadataIntegerEntry);
                 }
 
                 if (string.IsNullOrEmpty(MetadataFloatEntry))
                 {
-                    feature.Properties.Remove("metadataFloatValue");
+                    Feature.Properties.Remove("metadataFloatValue");
                 }
                 else
                 {
-                    feature.Properties["metadataFloatValue"] = Convert.ToSingle(MetadataFloatEntry);
+                    Feature.Properties["metadataFloatValue"] = Convert.ToSingle(MetadataFloatEntry);
                 }
             }
             catch
@@ -392,12 +391,16 @@ namespace Groundsman.ViewModels
                 return false;
             }
 
-            feature.Properties["name"] = string.IsNullOrEmpty(NameEntry) ? feature.Geometry.Type.ToString() : NameEntry;
-            feature.Properties["id"] = FeatureID;
-            feature.Properties["date"] = DateTime.Parse(DateEntry).ToShortDateString();
-            feature.Properties["author"] = Preferences.Get("UserID", "Groundsman");
+            Feature.Properties["name"] = string.IsNullOrEmpty(NameEntry) ? Feature.Geometry.Type.ToString() : NameEntry;
+            Feature.Properties["date"] = DateTime.Parse(DateEntry).ToShortDateString();
+            Feature.Properties["author"] = Preferences.Get("UserID", "Groundsman");
 
-            return FeatureID == AppConstants.NEW_ENTRY_ID ? await FeatureStore.AddItemAsync(feature) : await FeatureStore.UpdateItemAsync(feature);
+            return true;
+        }
+
+        private async Task<bool> SaveFeature()
+        {
+            return (string)Feature.Properties["id"] == AppConstants.NEW_ENTRY_ID ? await FeatureStore.AddItemAsync(Feature) : await FeatureStore.UpdateItemAsync(Feature);
         }
 
         private Position ConvertPosition(DisplayPosition displayPosition)

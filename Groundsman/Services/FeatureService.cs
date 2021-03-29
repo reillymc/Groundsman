@@ -115,12 +115,12 @@ namespace Groundsman.Services
             return true;
         }
 
-        public async Task<bool> ExportFeatures(IList<Feature> items)
+        public ShareFileRequest ExportFeatures(IList<Feature> items)
         {
-            string fileName;
+            string fileName = "";
             if (items.Count > 1)
             {
-                fileName = "Groundsman Feature List";
+                fileName = "Groundsman Feature Collection";
                 SaveFeaturesToFile(items, AppConstants.GetExportFile(fileName));
             }
             else if (items.Count == 1)
@@ -128,20 +128,12 @@ namespace Groundsman.Services
                 fileName = (string)items[0].Properties["name"];
                 SaveFeatureToFile(items[0], AppConstants.GetExportFile(fileName));
             }
-            else
-            {
-                return false;
-            }
 
-            await Share.RequestAsync(new ShareFileRequest
+            return new ShareFileRequest
             {
                 Title = "Features Export",
-                File = new ShareFile(AppConstants.GetExportFile(fileName), "text/plain"),
-                PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet
-                        ? new System.Drawing.Rectangle((int)(DeviceDisplay.MainDisplayInfo.Width * .474), 80, 0, 0)
-                        : System.Drawing.Rectangle.Empty
-            });
-            return true;
+                File = new ShareFile(AppConstants.GetExportFile(fileName), "application/json"),
+            };
         }
 
         private static bool ParseProperties(Feature feature)

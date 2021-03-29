@@ -30,7 +30,7 @@
                                         Style="{StaticResource DateEntryStyle}" />
                         </StackLayout>
                         <StackLayout Grid.RowSpan="2" Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center">
-                            <ImageButton BackgroundColor="Transparent"  Margin="0,12,5,0" Source="share_icon_color" WidthRequest="26" HeightRequest="26" Command="{Binding ShareEntryCommand}"/>
+                            <ImageButton BackgroundColor="Transparent"  Margin="0,12,5,0" Source="share_icon_color" WidthRequest="26" HeightRequest="26" Command="{Binding ShareEntryCommand}" CommandParameter="{Binding Source={RelativeSource Self}}"/>
                         </StackLayout>
                         
                     </Grid>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace Groundsman.Interfaces
 {
@@ -10,6 +11,6 @@ namespace Groundsman.Interfaces
         Task<bool> DeleteItemAsync(T item);
         Task<bool> DeleteItemsAsync();
         Task<int> ImportFeaturesAsync(string contents);
-        Task<bool> ExportFeatures(IList<T> items);
+        ShareFileRequest ExportFeatures(IList<T> items);
     }
 }

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Groundsman.Models;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Groundsman.ViewModels
@@ -36,7 +37,11 @@ namespace Groundsman.ViewModels
             if (IsBusy) return;
             IsBusy = true;
 
-            await FeatureStore.ExportFeatures(App.featureList);
+            ShareFileRequest share = FeatureStore.ExportFeatures(App.featureList);
+            share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet
+                    ? new System.Drawing.Rectangle((int)(DeviceDisplay.MainDisplayInfo.Width * .474), 80, 0, 0)
+                    : System.Drawing.Rectangle.Empty;
+            await Share.RequestAsync(share);
 
             IsBusy = false;
         }
