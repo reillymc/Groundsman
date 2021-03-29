@@ -51,10 +51,11 @@ namespace Groundsman.Models
         {
             Longitude = position.Longitude.ToString();
             Latitude = position.Latitude.ToString();
-            if (double.IsNormal(position.Altitude))
+            if (!double.IsNaN(position.Altitude))
             {
                 Altitude = position.Altitude.ToString();
-            } else
+            }
+            else
             {
                 Altitude = "";
             }

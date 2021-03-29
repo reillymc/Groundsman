@@ -300,59 +300,56 @@
                    HasShadow="False"
                    HorizontalOptions="Fill"
                    VerticalOptions="Fill" />
-            <ContentView>
-                <StackLayout>
-                    <Grid IsVisible="{TemplateBinding BindingContext.ShowClosePolygon}" Style="{DynamicResource DetailCoordinateGrid}">
-                        <Label Grid.Row="1"
-                               Grid.Column="0"
-                               FontSize="Small"
-                               HorizontalOptions="Center"
-                               Style="{StaticResource LabelBody}"
-                               Text="{TemplateBinding BindingContext.NumPointFields}"
-                               VerticalOptions="Center" />
-                        <Entry Grid.Row="1"
-                               Grid.Column="1"
-                               FontSize="Small"
-                               IsEnabled="False"
-                               Style="{StaticResource EntryStyle}"
-                               Text="{TemplateBinding BindingContext.GeolocationValues[0].Latitude}" />
-
-                        <Entry Grid.Row="1"
-                               Grid.Column="2"
-                               FontSize="Small"
-                               IsEnabled="False"
-                               Style="{StaticResource EntryStyle}"
-                               Text="{TemplateBinding BindingContext.GeolocationValues[0].Longitude}" />
-                        <Entry Grid.Row="1"
-                               Grid.Column="3"
-                               FontSize="Small"
-                               IsEnabled="False"
-                               Style="{StaticResource EntryStyle}"
-                               Text="{TemplateBinding BindingContext.GeolocationValues[0].Altitude}" />
-                    </Grid>
-                    <Frame Margin="5"
-                           Padding="8"
-                           BackgroundColor="Transparent"
-                           HasShadow="False"
-                           HeightRequest="20"
-                           HorizontalOptions="CenterAndExpand"
-                           IsVisible="{TemplateBinding BindingContext.ShowAddButton}">
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Command="{TemplateBinding BindingContext.AddPointCommand}" />
-                        </Frame.GestureRecognizers>
-                        <StackLayout Orientation="Horizontal" VerticalOptions="Center">
-                            <Image HorizontalOptions="Center"
+            <StackLayout Margin="0" Padding="0">
+                <Grid IsVisible="{TemplateBinding BindingContext.ShowClosePolygon}" Style="{DynamicResource DetailCoordinateGrid}">
+                    <Label Grid.Row="1"
+                            Grid.Column="0"
+                            FontSize="Small"
+                            HorizontalOptions="Center"
+                            Style="{StaticResource LabelBody}"
+                            Text="{TemplateBinding BindingContext.NumPointFields}"
+                            VerticalOptions="Center" />
+                    <Entry Grid.Row="1"
+                            Grid.Column="1"
+                            FontSize="Small"
+                            IsEnabled="False"
+                            Style="{StaticResource EntryStyle}"
+                            Text="{TemplateBinding BindingContext.GeolocationValues[0].Latitude}" />
+                    <Entry Grid.Row="1"
+                            Grid.Column="2"
+                            FontSize="Small"
+                            IsEnabled="False"
+                            Style="{StaticResource EntryStyle}"
+                            Text="{TemplateBinding BindingContext.GeolocationValues[0].Longitude}" />
+                    <Entry Grid.Row="1"
+                            Grid.Column="3"
+                            FontSize="Small"
+                            IsEnabled="False"
+                            Style="{StaticResource EntryStyle}"
+                            Text="{TemplateBinding BindingContext.GeolocationValues[0].Altitude}" />
+                </Grid>
+                <Frame Margin="5"
+                        Padding="8"
+                        BackgroundColor="Transparent"
+                        HasShadow="False"
+                        HeightRequest="20"
+                        HorizontalOptions="CenterAndExpand"
+                        IsVisible="{TemplateBinding BindingContext.ShowAddButton}">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{TemplateBinding BindingContext.AddPointCommand}" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                        <Image HorizontalOptions="Center"
                                    Source="add_icon_color"
                                    VerticalOptions="Center" />
-                            <Label FontSize="16"
+                        <Label FontSize="16"
                                    HorizontalOptions="Center"
                                    Text="Add Position"
                                    TextColor="{StaticResource greenPrimary}"
                                    VerticalOptions="Center" />
-                        </StackLayout>
-                    </Frame>
-                </StackLayout>
-            </ContentView>
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
         </Grid>
     </ControlTemplate>
 

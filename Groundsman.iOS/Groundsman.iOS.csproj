@@ -108,6 +108,7 @@
     <Folder Include="Assets.xcassets\share_icon.imageset\" />
     <Folder Include="Assets.xcassets\trash_icon.imageset\" />
     <Folder Include="Assets.xcassets\customControlColor.colorset\" />
+    <Folder Include="Assets.xcassets\share_icon_color.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="Resources\iTunesArtwork%402x" />
@@ -331,6 +332,9 @@
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\customControlColor.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\share_icon_color.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\share_icon_color.imageset\share_icon_color.png" />
+    <ImageAsset Include="Assets.xcassets\share_icon_color.imageset\share_icon_color-1.png" />
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>

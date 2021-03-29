@@ -13,9 +13,6 @@
             <DataTemplate x:Key="ListTemplate">
                 <ViewCell Tapped="ViewCell_Tapped">
                     <ViewCell.ContextActions>
-                        <MenuItem Command="{Binding Path=BindingContext.EditEntryCommand, Source={x:Reference listView}}"
-                                  CommandParameter="{Binding .}"
-                                  Text="Edit" />
                         <MenuItem Command="{Binding Path=BindingContext.DeleteEntryCommand, Source={x:Reference listView}}"
                                   CommandParameter="{Binding .}"
                                   IsDestructive="True"

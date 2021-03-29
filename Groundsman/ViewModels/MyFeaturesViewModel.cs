@@ -1,5 +1,5 @@
-using Groundsman.Models;
 using System.Threading.Tasks;
+using Groundsman.Models;
 using Xamarin.Forms;
 
 namespace Groundsman.ViewModels
@@ -12,12 +12,8 @@ namespace Groundsman.ViewModels
         public Command AddButtonTappedCommand { set; get; }
         public Command ShareButtonTappedCommand { set; get; }
         public Command ItemTappedCommand { set; get; }
-        public Command EditEntryCommand { get; set; }
         public Command DeleteEntryCommand { get; set; }
 
-        public Feature SelectedFeature { get; set; }
-
-        
         /// <summary>
         /// View-model constructor.
         /// </summary>
@@ -25,21 +21,10 @@ namespace Groundsman.ViewModels
         {
             AddButtonTappedCommand = new Command(async () => await AddButtonTapped());
             ShareButtonTappedCommand = new Command(async () => await ShowShareSheet());
-            ItemTappedCommand = new Command<Feature>(async (feature) => await ShowFeatureDetailsPage(feature));
-            EditEntryCommand = new Command<Feature>(async (feature) => await ShowEditFeatureDetailsPage(feature));
+            ItemTappedCommand = new Command<Feature>(async (feature) => await ShowEditFeatureDetailsPage(feature));
             DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
 
             Title = "My Features";
-        }
-
-        private async Task ShowFeatureDetailsPage(Feature feature)
-        {
-            if (IsBusy) return;
-            IsBusy = true;
-
-            await NavigationService.NavigateToDetailPage(feature);
-
-            IsBusy = false;
         }
 
         /// <summary>

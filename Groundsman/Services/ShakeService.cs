@@ -19,6 +19,15 @@ namespace Groundsman.Services
         private void Accelerometer_ShakeDetected(object sender, EventArgs e)
         {
             Stop();
+            try
+            {
+                // Use default vibration length
+                Vibration.Vibrate();
+            }
+            catch
+            {
+                // Other error has occurred.
+            }
             Current.UndoDelete();
         }
 

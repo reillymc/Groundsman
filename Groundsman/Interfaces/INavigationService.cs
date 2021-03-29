@@ -6,7 +6,6 @@ namespace Groundsman.Interfaces
 {
     public interface INavigationService<T>
     {
-        Task NavigateToDetailPage(T feature);
         Task NavigateToEditPage(T feature);
         Task NavigateToNewEditPage(GeoJSONType type);
         Task PushAddFeaturePage();

@@ -1,7 +1,7 @@
-﻿using Groundsman.Models;
-using Groundsman.Services;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Groundsman.Models;
+using Groundsman.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -92,16 +92,20 @@ namespace Groundsman.ViewModels
             if (Preferences.Get("ShowPointsOnMap", true))
             {
                 Point point = (Point)feature.Geometry;
+                string address = double.IsNaN(point.Coordinates.Altitude) || !Preferences.Get("EnableAltitude", true)
+                    ? string.Format("{0}, {1}", point.Coordinates.Longitude, point.Coordinates.Latitude)
+                    : string.Format("{0}, {1}, {2}", point.Coordinates.Longitude, point.Coordinates.Latitude, point.Coordinates.Altitude);
                 Pin pin = new Pin
                 {
                     Label = (string)feature.Properties["name"],
-                    Address = string.Format("{0}, {1}, {2}", point.Coordinates.Longitude, point.Coordinates.Latitude, point.Coordinates.Altitude),
+                    Address = address,
                     Type = PinType.Place,
                     Position = new XFMPosition(point.Coordinates.Latitude, point.Coordinates.Longitude),
                 };
-                pin.MarkerClicked += async (sender, e) =>
+                pin.InfoWindowClicked += async (sender, e) =>
                 {
                     await DisplayFeatureActionMenuAsync(feature);
+                    e.HideInfoWindow = true;
                 };
                 Map.Pins.Add(pin);
             }
@@ -150,7 +154,7 @@ namespace Groundsman.ViewModels
 
         private void DrawLogPath()
         {
-            if (Preferences.Get("ShowLogPathOnMap", true))
+            if (Preferences.Get("ShowLinesOnMap", true))
             {
                 List<Position> logFile = LogStore.LogPoints;
                 Polyline logPolyline = new Polyline
@@ -193,7 +197,7 @@ namespace Groundsman.ViewModels
                     await DisplayFeatureActionMenuAsync(feature);
                 }
             });
-            if (Preferences.Get("ShowLogPathOnMap", true))
+            if (Preferences.Get("ShowLinesOnMap", true))
             {
                 LineString logLine = new LineString(LogStore.LogPoints);
                 if (logLine.ContainsPosition(new Position(e.Position.Longitude, e.Position.Latitude)))
@@ -205,7 +209,7 @@ namespace Groundsman.ViewModels
 
         async Task DisplayFeatureActionMenuAsync(Feature feature)
         {
-            string result = await NavigationService.GetCurrentPage().DisplayActionSheet((string)feature.Properties["name"], "Dismiss", "Delete", "View", "Edit");
+            string result = await NavigationService.GetCurrentPage().DisplayActionSheet((string)feature.Properties["name"], "Dismiss", "Delete", "View");
 
             switch (result)
             {
@@ -215,9 +219,6 @@ namespace Groundsman.ViewModels
                     RefreshMap();
                     break;
                 case "View":
-                    await NavigationService.NavigateToDetailPage(feature);
-                    break;
-                case "Edit":
                     await NavigationService.NavigateToEditPage(feature);
                     break;
                 default:

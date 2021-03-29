@@ -203,9 +203,24 @@ namespace Groundsman.ViewModels
             GetFeatureCommand = new Command<DisplayPosition>(async (point) => { await GetDataPoint(point); });
             AddPointCommand = new Command(() => AddPoint(1));
             DeletePointCommand = new Command<DisplayPosition>((item) => DeletePoint(item));
-            ShareEntryCommand = new Command(async () => await FeatureStore.ExportFeatures(new ObservableCollection<Feature> { feature }));
+            ShareEntryCommand = new Command(async () => await ShareFeature());
             OnDoneTappedCommand = new Command(async () => await OnSaveUpdateActivated());
             OnCancelTappedCommand = new Command(async () => await OnDismiss(true));
+        }
+
+        private async Task ShareFeature()
+        {
+            if (IsBusy) return;
+
+            IsBusy = true;
+            if (await TryParseSaveFeature())
+            {
+                await FeatureStore.ExportFeatures(new List<Feature> { feature });
+                IsBusy = false;
+                return;
+            }
+            IsBusy = false;
+
         }
 
         /// <summary>
@@ -335,9 +350,9 @@ namespace Groundsman.ViewModels
                         break;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                await NavigationService.ShowAlert("Data Error", "Coordinate fields only support numeric values.", false);
+                await NavigationService.ShowAlert("Saving Error", $"{ex.Message}", false);
                 return false;
             }
 
@@ -387,9 +402,16 @@ namespace Groundsman.ViewModels
 
         private Position ConvertPosition(DisplayPosition displayPosition)
         {
-            double longitude = string.IsNullOrEmpty(displayPosition.Longitude) ? 0 : Convert.ToDouble(displayPosition.Longitude);
-            double latitude = string.IsNullOrEmpty(displayPosition.Latitude) ? 0 : Convert.ToDouble(displayPosition.Latitude);
-            return string.IsNullOrEmpty(displayPosition.Altitude) ? new Position(longitude, latitude) : new Position(longitude, latitude, Convert.ToDouble(displayPosition.Altitude));
+            try
+            {
+                double longitude = string.IsNullOrEmpty(displayPosition.Longitude) ? 0 : Convert.ToDouble(displayPosition.Longitude);
+                double latitude = string.IsNullOrEmpty(displayPosition.Latitude) ? 0 : Convert.ToDouble(displayPosition.Latitude);
+                return string.IsNullOrEmpty(displayPosition.Altitude) ? new Position(longitude, latitude) : new Position(longitude, latitude, Convert.ToDouble(displayPosition.Altitude));
+            }
+            catch
+            {
+                throw new ArgumentException("Coordinates may only contain numeric values");
+            }
         }
     }
 }

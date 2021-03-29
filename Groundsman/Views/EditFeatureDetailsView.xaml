@@ -11,11 +11,12 @@
         <DataTemplate x:Key="HeaderTemplate">
             <StackLayout>
                 <Frame Padding="10,10,0,10" Style="{DynamicResource FrameM}">
-                    <StackLayout>
-                        <Label Style="{StaticResource LabelTitle}" Text="Details" />
-                        <StackLayout Margin="8,0,0,0">
+                    <Grid RowDefinitions="*,Auto" ColumnDefinitions="4*,*">
+                        <Label Grid.Row="0" Style="{StaticResource LabelTitle}" Text="Details" />
+                        <StackLayout Grid.Row="1" Margin="8,0,0,0">
                             <Entry FontSize="Small"
                                    Placeholder="Name"
+                                   VerticalOptions="Start"
                                    Style="{StaticResource EntryStyle}"
                                    Text="{Binding NameEntry}">
                                 <Entry.Behaviors>
@@ -25,9 +26,14 @@
                             <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
                             <DatePicker Date="{Binding DateEntry, StringFormat='{0:dd/MM/yyyy}'}"
                                         FontSize="Small"
+                                        VerticalOptions="Start"
                                         Style="{StaticResource DateEntryStyle}" />
                         </StackLayout>
-                    </StackLayout>
+                        <StackLayout Grid.RowSpan="2" Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center">
+                            <ImageButton BackgroundColor="Transparent"  Margin="0,12,5,0" Source="share_icon_color" WidthRequest="26" HeightRequest="26" Command="{Binding ShareEntryCommand}"/>
+                        </StackLayout>
+                        
+                    </Grid>
                 </Frame>
                 <TemplatedView ControlTemplate="{StaticResource DetailCoordinatesHeader}" />
             </StackLayout>
@@ -96,7 +102,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="FooterTemplate">
-            <StackLayout>
+            <StackLayout Padding="0" Margin="0">
                 <TemplatedView ControlTemplate="{StaticResource DetailCoordinatesEditFooter}" />
                 <Frame Margin="10,10,10,180"
                        Padding="10,10,0,10"

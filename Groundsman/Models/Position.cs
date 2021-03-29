@@ -1,4 +1,5 @@
-﻿using Groundsman.JSONConverters;
+﻿using System;
+using Groundsman.JSONConverters;
 using Newtonsoft.Json;
 
 namespace Groundsman.Models
@@ -25,7 +26,11 @@ namespace Groundsman.Models
         [JsonConstructor]
         public Position(double longitude, double latitude, double altitude)
         {
-            Longitude = longitude;
+            if (double.IsNaN(longitude) || double.IsNaN(latitude))
+            {
+                throw new ArgumentNullException("Longitude and Latitude cannot be null in a position");
+            }
+                Longitude = longitude;
             Latitude = latitude;
             Altitude = altitude;
         }

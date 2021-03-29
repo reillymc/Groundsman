@@ -9,13 +9,6 @@ namespace Groundsman.Services
 {
     public class NavigationService : INavigationService<Feature>
     {
-        public async Task NavigateToDetailPage(Feature feature)
-        {
-            var currentPage = GetCurrentPage();
-
-            await currentPage.Navigation.PushAsync(new FeatureDetailsView(feature));
-        }
-
         public async Task NavigateToEditPage(Feature feature)
         {
             var currentPage = GetCurrentPage();

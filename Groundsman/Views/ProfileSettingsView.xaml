@@ -107,7 +107,7 @@
                                     <TapGestureRecognizer Command="{Binding DeleteAllFeatures}" />
                                 </StackLayout.GestureRecognizers>
                                 <Label FontAttributes="Bold"
-                                   Text="Clear All Features"
+                                   Text="Reset Feature List"
                                    TextColor="{StaticResource greenPrimary}" />
                             </StackLayout>
                         </Frame>
@@ -117,7 +117,7 @@
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
                             <StackLayout Orientation="Horizontal" Padding="20,0">
-                                <Label VerticalOptions="Center" Text="Show Points on Map"/>
+                                <Label VerticalOptions="Center" Text="Draw Points"/>
                                 <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding ShowPointsOnMap}"
                                  Toggled="ShowPointsOnMapChanged"/>
                             </StackLayout>
@@ -126,7 +126,7 @@
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
                             <StackLayout Orientation="Horizontal" Padding="20,0">
-                                <Label VerticalOptions="Center" Text="Show Lines on Map"/>
+                                <Label VerticalOptions="Center" Text="Draw Lines"/>
                                 <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding ShowLinesOnMap}"
                                  Toggled="ShowLinesOnMapChanged"/>
                             </StackLayout>
@@ -135,7 +135,7 @@
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
                             <StackLayout Orientation="Horizontal" Padding="20,0">
-                                <Label VerticalOptions="Center" Text="Show Polygons on Map"/>
+                                <Label VerticalOptions="Center" Text="Draw Polygons"/>
                                 <Switch HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsToggled="{Binding ShowPolygonsOnMap}"
                                  Toggled="ShowPolygonsOnMapChanged"/>
                             </StackLayout>
