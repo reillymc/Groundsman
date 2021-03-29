@@ -7,7 +7,7 @@
 
     <Color x:Key="Background">#000000</Color>
     <Color x:Key="Foreground">#111111</Color>
-    <Color x:Key="Seperator">#323432</Color>
+    <Color x:Key="Seperator">#3a3a3a</Color>
     <Color x:Key="Text">#FFFFFF</Color>
     <Color x:Key="TextSecondary">#a0a0a0</Color>
 

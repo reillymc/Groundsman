@@ -18,7 +18,9 @@ namespace Groundsman.iOS.Renderers
                 if (UIDevice.CurrentDevice.CheckSystemVersion(13, 0))
                 {
                     NavigationController.NavigationBar.PrefersLargeTitles = true;
+                    NavigationController.ExtendedLayoutIncludesOpaqueBars = true;
                     NavigationItem.LargeTitleDisplayMode = UINavigationItemLargeTitleDisplayMode.Automatic;
+                    NavigationController.NavigationBar.SizeToFit();
                 }
             }
         }

@@ -27,7 +27,7 @@ namespace Groundsman.Views
             }
         }
 
-        private void ViewCell_Tapped(object sender, System.EventArgs e)
+        private void ViewCell_Tapped(object sender, EventArgs e)
         {
             if (Device.RuntimePlatform == Device.Android)
             {

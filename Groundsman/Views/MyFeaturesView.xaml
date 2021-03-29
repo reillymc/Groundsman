@@ -23,7 +23,7 @@
                                   IsDestructive="True"
                                   Text="Delete" />
                     </ViewCell.ContextActions>
-                    <StackLayout Padding="10,6" Orientation="Horizontal">
+                    <StackLayout Padding="12,6,8,10" Orientation="Horizontal">
                         <Image HeightRequest="40"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"
@@ -55,12 +55,13 @@
                                    LineBreakMode="TailTruncation"
                                    TextColor="{DynamicResource TextSecondary}"
                                    VerticalOptions="Start">
-                                <Label.Text>
-                                    <MultiBinding StringFormat="{}{0:d/M/yy}  {1}">
-                                        <Binding Path="Properties[date]" />
-                                        <Binding Path="Properties[author]" />
-                                    </MultiBinding>
-                                </Label.Text>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding Properties[date], StringFormat='{0:d/M/yy}'}" />
+                                        <Span Text=" · " />
+                                        <Span Text="{Binding Properties[author]}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
                             </Label>
                         </StackLayout>
                     </StackLayout>
@@ -71,8 +72,7 @@
 
     <AbsoluteLayout x:Name="absLayout">
         <ListView x:Name="listView"
-                  
-                  HasUnevenRows="True"
+                  RowHeight="54"
                   ItemSelected="DeselectItem"
                   HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}"
                   ItemTemplate="{StaticResource ListTemplate}"
