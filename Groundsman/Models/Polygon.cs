@@ -1,7 +1,8 @@
-﻿using Groundsman.JSONConverters;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Groundsman.JSONConverters;
+using Newtonsoft.Json;
 
 namespace Groundsman.Models
 {
@@ -16,16 +17,29 @@ namespace Groundsman.Models
 
         public Polygon(IEnumerable<LinearRing> coordinates) : base(GeoJSONType.Polygon)
         {
-            Coordinates = coordinates;
+            if (coordinates != null)
+            {
+                if (coordinates.Count() > 0)
+                {
+                    Coordinates = coordinates;
+                }
+                else
+                {
+                    throw new ArgumentException("A Polygon must have one or more linear rings.", "Coordinates");
+                }
+            }
+            else
+            {
+                throw new ArgumentNullException("Coordinates", "A Polygon must have coordinates.");
+            }
         }
-
 
         /// <summary>
         /// Import an individual polygon geometry
         /// </summary>
         /// <param name="json">GeJSON polygon geometry</param>
         /// <returns>Polygon object from GeoJSON</returns>
-        public static Polygon ImportGeoJSON(string json) => JsonConvert.DeserializeObject<Polygon>(json);
+        public static new Polygon ImportGeoJSON(string json) => JsonConvert.DeserializeObject<Polygon>(json);
 
 
         /// <summary>

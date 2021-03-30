@@ -41,11 +41,17 @@ namespace Groundsman.Services
 
             if (modal)
             {
-                await currentPage.Navigation.PopModalAsync();
+                if (currentPage.Navigation.ModalStack.Count > 0)
+                {
+                    await currentPage.Navigation.PopModalAsync();
+                }
             }
             else
             {
-                await currentPage.Navigation.PopAsync();
+                if (currentPage.Navigation.NavigationStack.Count > 0)
+                {
+                    await currentPage.Navigation.PopAsync();
+                }
             }
         }
 

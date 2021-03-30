@@ -1,7 +1,8 @@
-﻿using Groundsman.JSONConverters;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Groundsman.JSONConverters;
+using Newtonsoft.Json;
 
 namespace Groundsman.Models
 {
@@ -14,7 +15,23 @@ namespace Groundsman.Models
         [JsonProperty(PropertyName = "coordinates")]
         public IEnumerable<Position> Coordinates { get; set; }
 
-        public LineString(IEnumerable<Position> coordinates) : base(GeoJSONType.LineString) => Coordinates = coordinates;
+        public LineString(IEnumerable<Position> coordinates) : base(GeoJSONType.LineString)
+        {
+            if (coordinates != null)
+            {
+                if (coordinates.Count() >= 2)
+                {
+                    Coordinates = coordinates;
+                } else
+                {
+                    throw new ArgumentException("A LineString must have two or more positions.", "Coordinates");
+                }
+            }
+            else
+            {
+                throw new ArgumentNullException("Coordinates", "A LineString must have coordinates.");
+            }
+        }
 
 
         /// <summary>
@@ -22,7 +39,7 @@ namespace Groundsman.Models
         /// </summary>
         /// <param name="json">GeJSON LineString geometry</param>
         /// <returns>LineString object from GeoJSON</returns>
-        public static LineString ImportGeoJSON(string json) => JsonConvert.DeserializeObject<LineString>(json);
+        public static new LineString ImportGeoJSON(string json) => JsonConvert.DeserializeObject<LineString>(json);
 
 
         /// <summary>

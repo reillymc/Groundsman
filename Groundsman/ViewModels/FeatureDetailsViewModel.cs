@@ -10,6 +10,7 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using Point = Groundsman.Models.Point;
 using Position = Groundsman.Models.Position;
+using System.Linq;
 
 namespace Groundsman.ViewModels
 {
@@ -49,7 +50,7 @@ namespace Groundsman.ViewModels
         {
             get { return geolocationEntryEnabled; }
             set { SetProperty(ref geolocationEntryEnabled, value); }
-        } 
+        }
 
         private int _NumPointFields;
         public int NumPointFields
@@ -204,14 +205,14 @@ namespace Groundsman.ViewModels
             if (IsBusy) return;
             IsBusy = true;
 
-            if (await ParseFeature())
+            if (await ValidateGeometry() && await ValidateProperties())
             {
                 var bounds = element.GetAbsoluteBounds().ToSystemRectangle();
                 ShareFileRequest share = FeatureStore.ExportFeatures(new List<Feature>() { Feature });
                 share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
                 await Share.RequestAsync(share);
             }
-            
+
             IsBusy = false;
         }
 
@@ -281,7 +282,7 @@ namespace Groundsman.ViewModels
         {
             if (IsBusy) return;
             IsBusy = true;
-            if (await ParseFeature())
+            if (await ValidateGeometry() && await ValidateProperties())
             {
                 if (await SaveFeature())
                 {
@@ -297,101 +298,83 @@ namespace Groundsman.ViewModels
             IsBusy = false;
         }
 
-        private async Task<bool> ParseFeature()
+        private async Task<bool> ValidateGeometry()
         {
             try
             {
                 switch (Feature.Geometry.Type)
                 {
                     case GeoJSONType.Point:
-                        if (GeolocationValues.Count != 1)
-                        {
-                            await NavigationService.ShowAlert("Unsupported Entry", "A point must only contain 1 positions.", false);
-                            return false;
-                        }
-                        Feature.Geometry = new Point(ConvertPosition(GeolocationValues[0]));
+                        Feature.Geometry = new Point(new Position(GeolocationValues[0]));
                         break;
-
                     case GeoJSONType.LineString:
-                        if (GeolocationValues.Count < 2)
-                        {
-                            await NavigationService.ShowAlert("Incomplete Entry", "A line must contain at least 2 positions.", false);
-                            return false;
-                        }
-                        List<Position> posList = new List<Position>();
-                        foreach (DisplayPosition pointValue in GeolocationValues)
-                        {
-                            posList.Add(ConvertPosition(pointValue));
-                        }
-                        Feature.Geometry = new LineString(posList);
+                        Feature.Geometry = new LineString(GeolocationValues.Select(pointValue => new Position(pointValue)));
                         break;
                     case GeoJSONType.Polygon:
-                        if (GeolocationValues.Count < 3)
-                        {
-                            await NavigationService.ShowAlert("Incomplete Entry", "A polygon must contain at least 4 positions.", false);
-                            return false;
-                        }
-
-                        // This specific method of structuring points means that users will not be able to create multiple shapes in one polygon (whereas true GEOJSON allows that).
-                        // This doesn't matter since our app interface can't allow for it yet.
-                        List<Position> polyPosList = new List<Position>();
-                        foreach (DisplayPosition pointValue in GeolocationValues)
-                        {
-                            polyPosList.Add(ConvertPosition(pointValue));
-                        }
+                        // This method does not allow for creating a polygon with multiple LinearRings
+                        List<Position> positions = (GeolocationValues.Select(pointValue => new Position(pointValue))).ToList();
                         // Close polygon with duplicated first feature
-                        polyPosList.Add(polyPosList[0]);
-
-                        Feature.Geometry = new Polygon(new List<LinearRing>() { new LinearRing(polyPosList) });
+                        positions.Add(positions[0]);
+                        Feature.Geometry = new Polygon(new List<LinearRing>() { new LinearRing(positions) });
                         break;
                     default:
-                        //Unrecognised feature alert!!
-                        break;
+                        throw new ArgumentException($"Could not save unsupported feature of type {Feature.Geometry.Type}", "Type");
                 }
             }
             catch (Exception ex)
             {
-                await NavigationService.ShowAlert("Saving Error", $"{ex.Message}", false);
+                await NavigationService.ShowAlert("Invalid Feature Geometry", $"{ex.Message}", false);
                 return false;
             }
+            return true;
+        }
 
-            //Metadata
-            if (string.IsNullOrEmpty("metadataStringValue"))
-            {
-                Feature.Properties.Remove("metadataStringValue");
-            }
-            else
+        private async Task<bool> ValidateProperties()
+        {
+            if (!string.IsNullOrEmpty(MetadataStringEntry))
             {
                 Feature.Properties["metadataStringValue"] = MetadataStringEntry;
             }
-
-            try
+            else
             {
-                if (string.IsNullOrEmpty(MetadataIntegerEntry))
-                {
-                    Feature.Properties.Remove("metadataIntegerValue");
-                }
-                else
+                Feature.Properties.Remove("metadataStringValue");
+            }
+
+            if (!string.IsNullOrEmpty(MetadataIntegerEntry))
+            {
+                try
                 {
                     Feature.Properties["metadataIntegerValue"] = Convert.ToInt32(MetadataIntegerEntry);
                 }
-
-                if (string.IsNullOrEmpty(MetadataFloatEntry))
+                catch
                 {
-                    Feature.Properties.Remove("metadataFloatValue");
+                    await NavigationService.ShowAlert("Invalid Feature Properties", "The Integer field only supports a whole number.", false);
+                    return false;
                 }
-                else
+            }
+            else
+            {
+                Feature.Properties.Remove("metadataIntegerValue");
+            }
+
+            if (!string.IsNullOrEmpty(MetadataFloatEntry))
+            {
+                try
                 {
                     Feature.Properties["metadataFloatValue"] = Convert.ToSingle(MetadataFloatEntry);
                 }
+                catch
+                {
+                    await NavigationService.ShowAlert("Invalid Feature Properties", "The Float field only supports a number value.", false);
+                    return false;
+                }
             }
-            catch
+            else
             {
-                await NavigationService.ShowAlert("Data Error", "Integer and float fields only support numeric values.", false);
-                return false;
+                Feature.Properties.Remove("metadataFloatValue");
             }
 
-            Feature.Properties["name"] = string.IsNullOrEmpty(NameEntry) ? Feature.Geometry.Type.ToString() : NameEntry;
+            Feature.Properties["name"] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : Feature.Geometry.Type.ToString();
             Feature.Properties["date"] = DateTime.Parse(DateEntry).ToShortDateString();
             Feature.Properties["author"] = Preferences.Get("UserID", "Groundsman");
 
@@ -401,20 +384,6 @@ namespace Groundsman.ViewModels
         private async Task<bool> SaveFeature()
         {
             return (string)Feature.Properties["id"] == AppConstants.NEW_ENTRY_ID ? await FeatureStore.AddItemAsync(Feature) : await FeatureStore.UpdateItemAsync(Feature);
-        }
-
-        private Position ConvertPosition(DisplayPosition displayPosition)
-        {
-            try
-            {
-                double longitude = string.IsNullOrEmpty(displayPosition.Longitude) ? 0 : Convert.ToDouble(displayPosition.Longitude);
-                double latitude = string.IsNullOrEmpty(displayPosition.Latitude) ? 0 : Convert.ToDouble(displayPosition.Latitude);
-                return string.IsNullOrEmpty(displayPosition.Altitude) ? new Position(longitude, latitude) : new Position(longitude, latitude, Convert.ToDouble(displayPosition.Altitude));
-            }
-            catch
-            {
-                throw new ArgumentException("Coordinates may only contain numeric values");
-            }
         }
     }
 }

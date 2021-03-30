@@ -1,4 +1,5 @@
-﻿using Groundsman.JSONConverters;
+﻿using System;
+using Groundsman.JSONConverters;
 using Newtonsoft.Json;
 
 namespace Groundsman.Models
@@ -13,6 +14,6 @@ namespace Groundsman.Models
         public Position Coordinates { get; set; }
 
         [JsonConstructor]
-        public Point(Position coordinates) : base(GeoJSONType.Point) => Coordinates = coordinates;
+        public Point(Position coordinates) : base(GeoJSONType.Point) => Coordinates = coordinates ?? throw new ArgumentNullException("Coordinates", "A Point must have coordinates.");
     }
 }

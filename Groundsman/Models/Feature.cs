@@ -21,7 +21,7 @@ namespace Groundsman.Models
         public Feature(Geometry geometry = null, IDictionary<string, object> properties = null) : base(GeoJSONType.Feature)
         {
             Geometry = geometry;
-            Properties = properties;
+            Properties = properties ?? new Dictionary<string, object>();
         }
     }
 }

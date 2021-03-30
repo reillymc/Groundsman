@@ -1,7 +1,7 @@
-﻿using Groundsman.JSONConverters;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Groundsman.JSONConverters;
+using Newtonsoft.Json;
 
 namespace Groundsman.Models
 {

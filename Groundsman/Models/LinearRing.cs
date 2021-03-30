@@ -17,12 +17,12 @@ namespace Groundsman.Models
 
             if (coords.Length < 4)
             {
-                throw new ArgumentOutOfRangeException("A linear ring requires 4 or more positions.");
+                throw new ArgumentOutOfRangeException("Coordinates", "A polygon's linear ring must have four or more positions.");
             }
 
             if (!coords.First().Equals(coords.Last()))
             {
-                throw new ArgumentException("The first and last value must be equivalent.", "coordinates");
+                throw new ArgumentException("The first and last values of a polygon's linear ring must be identiacal.", "Coordinates");
             }
         }
     }

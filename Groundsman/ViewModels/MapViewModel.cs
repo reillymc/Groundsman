@@ -156,17 +156,20 @@ namespace Groundsman.ViewModels
         {
             if (Preferences.Get("ShowLinesOnMap", true))
             {
-                List<Position> logFile = LogStore.LogPoints;
-                Polyline logPolyline = new Polyline
+                if (LogStore.LogPoints.Count > 1)
                 {
-                    StrokeColor = Color.DarkOrange,
-                    StrokeWidth = 3,
-                };
-                logFile.ForEach((Position point) =>
-                {
-                    logPolyline.Geopath.Add(new XFMPosition(point.Latitude, point.Longitude));
-                });
-                Map.MapElements.Add(logPolyline);
+                    List<Position> logFile = LogStore.LogPoints;
+                    Polyline logPolyline = new Polyline
+                    {
+                        StrokeColor = Color.DarkOrange,
+                        StrokeWidth = 3,
+                    };
+                    logFile.ForEach((Position point) =>
+                    {
+                        logPolyline.Geopath.Add(new XFMPosition(point.Latitude, point.Longitude));
+                    });
+                    Map.MapElements.Add(logPolyline);
+                }
             }
         }
 
@@ -199,10 +202,13 @@ namespace Groundsman.ViewModels
             });
             if (Preferences.Get("ShowLinesOnMap", true))
             {
-                LineString logLine = new LineString(LogStore.LogPoints);
-                if (logLine.ContainsPosition(new Position(e.Position.Longitude, e.Position.Latitude)))
+                if (LogStore.LogPoints.Count > 1)
                 {
-                    await DisplayLogActionMenuAsync();
+                    LineString logLine = new LineString(LogStore.LogPoints);
+                    if (logLine.ContainsPosition(new Position(e.Position.Longitude, e.Position.Latitude)))
+                    {
+                        await DisplayLogActionMenuAsync();
+                    }
                 }
             }
         }

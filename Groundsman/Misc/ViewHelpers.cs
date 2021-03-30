@@ -1,11 +1,10 @@
-﻿using System;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace Groundsman.Misc
 {
     public static class ViewHelpers
     {
-        public static Rectangle GetAbsoluteBounds(this Xamarin.Forms.View element)
+        public static Rectangle GetAbsoluteBounds(this View element)
         {
             Element looper = element;
 
@@ -17,7 +16,7 @@ namespace Groundsman.Misc
             while (looper.Parent != null)
             {
                 looper = looper.Parent;
-                if (looper is Xamarin.Forms.View v)
+                if (looper is View v)
                 {
                     absoluteX += v.X + v.Margin.Top;
                     absoluteY += v.Y + v.Margin.Left;

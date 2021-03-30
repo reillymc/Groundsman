@@ -2,7 +2,8 @@
 <ContentPage x:Class="Groundsman.Views.MyFeaturesView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewModels="clr-namespace:Groundsman.ViewModels" xmlns:models="clr-namespace:Groundsman.Models"
+             xmlns:models="clr-namespace:Groundsman.Models"
+             xmlns:viewModels="clr-namespace:Groundsman.ViewModels"
              x:DataType="viewModels:MyFeaturesViewModel"
              Style="{DynamicResource PageStyle}">
     <ContentPage.ToolbarItems>
@@ -20,7 +21,9 @@
                                   IsDestructive="True"
                                   Text="Delete" />
                     </ViewCell.ContextActions>
-                    <StackLayout Padding="12,0,0,0" Orientation="Horizontal" BackgroundColor="{DynamicResource Absolute}">
+                    <StackLayout Padding="12,0,0,0"
+                                 BackgroundColor="{DynamicResource Absolute}"
+                                 Orientation="Horizontal">
                         <Image HeightRequest="40"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"

@@ -1,10 +1,10 @@
-﻿using Groundsman.Interfaces;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.IO;
+using Groundsman.Interfaces;
 using Groundsman.Models;
 using Groundsman.Services;
 using Groundsman.Views;
-using System;
-using System.Collections.ObjectModel;
-using System.IO;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
