@@ -63,14 +63,7 @@ namespace Groundsman.ViewModels
             set
             {
                 int temp = UnitEntry;
-                if (value == 1)
-                {
-                    UnitItems = new List<string> { "Second", "Minute", "Hour" };
-                }
-                else
-                {
-                    UnitItems = new List<string> { "Seconds", "Minutes", "Hours" };
-                }
+                UnitItems = value == 1 ? new List<string> { "Second", "Minute", "Hour" } : new List<string> { "Seconds", "Minutes", "Hours" };
                 UnitEntry = temp;
                 _intervalEntry = value;
                 OnPropertyChanged();

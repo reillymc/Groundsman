@@ -3,6 +3,7 @@
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
+             xmlns:misc="clr-namespace:Groundsman.Misc"
              xmlns:viewModels="clr-namespace:Groundsman.ViewModels"
              x:DataType="viewModels:ProfileSettingsViewModel"
              Style="{StaticResource PageStyle}">
@@ -10,7 +11,7 @@
         <ToolbarItem Command="{Binding InfoButtonTappedCommand}" Icon="info_icon" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <TableView Intent="Settings">
+        <TableView BackgroundColor="{DynamicResource Background}" Intent="Settings">
             <TableRoot>
                 <TableSection Title="Profile">
                     <ViewCell>
@@ -38,14 +39,14 @@
                                 <Label Text="GPS Accuracy"
                                        TextColor="{DynamicResource Text}"
                                        VerticalOptions="Center" />
-                                <Picker x:Name="picker"
-                                        Title="GPS Accuracy"
-                                        HorizontalOptions="EndAndExpand"
-                                        HorizontalTextAlignment="Center"
-                                        SelectedIndex="{Binding GPSPrecisionEntry}"
-                                        SelectedIndexChanged="OnPickerSelectedIndexChanged"
-                                        TextColor="{DynamicResource greenPrimary}"
-                                        WidthRequest="95">
+                                <misc:CustomPicker x:Name="picker"
+                                                   Title="GPS Accuracy"
+                                                   HorizontalOptions="EndAndExpand"
+                                                   HorizontalTextAlignment="Center"
+                                                   SelectedIndex="{Binding GPSPrecisionEntry}"
+                                                   SelectedIndexChanged="OnPickerSelectedIndexChanged"
+                                                   TextColor="{DynamicResource greenPrimary}"
+                                                   WidthRequest="95">
                                     <Picker.ItemsSource>
                                         <x:Array Type="{x:Type x:String}">
                                             <x:String>Best</x:String>
@@ -54,7 +55,7 @@
                                             <x:String>Low</x:String>
                                         </x:Array>
                                     </Picker.ItemsSource>
-                                </Picker>
+                                </misc:CustomPicker>
                             </StackLayout>
                         </Frame>
                     </ViewCell>

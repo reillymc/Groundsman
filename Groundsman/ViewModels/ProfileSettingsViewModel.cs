@@ -39,7 +39,7 @@ namespace Groundsman.ViewModels
 
         private async Task ExecuteDeleteAllFeaturesCommand()
         {
-            bool yesResponse = await NavigationService.ShowAlert("Clear Features", "This will permanently erase all saved features. Do you wish to continue?", true);
+            bool yesResponse = await NavigationService.ShowAlert("Reset Feature List?", "This will permanently erase all saved features. Do you wish to continue?", true);
             if (yesResponse)
             {
                 await FeatureStore.DeleteItemsAsync();

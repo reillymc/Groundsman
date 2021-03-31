@@ -19,7 +19,7 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>MinimumOSVersion</key>
-	<string>11.0</string>
+	<string>11.1</string>
 	<key>CFBundleDisplayName</key>
 	<string>Groundsman</string>
 	<key>CFBundleIdentifier</key>

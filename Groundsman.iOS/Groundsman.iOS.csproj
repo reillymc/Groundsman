@@ -79,6 +79,7 @@
     <Compile Include="Renderers\CustomMapRenderer.cs" />
     <Compile Include="Renderers\ModalPresentationRenderer.cs" />
     <Compile Include="Renderers\CustomListViewRenderer.cs" />
+    <Compile Include="Renderers\ExtendedPickerRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />

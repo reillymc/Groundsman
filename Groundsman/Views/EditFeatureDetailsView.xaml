@@ -3,7 +3,9 @@
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
+             xmlns:controls="clr-namespace:Groundsman.Controls"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             xmlns:models="clr-namespace:Groundsman.Models"
              xmlns:viewModels="clr-namespace:Groundsman.ViewModels"
              x:Name="EditFeatureDetailsViewPage"
              ios:Page.ModalPresentationStyle="FormSheet"
@@ -12,7 +14,7 @@
     <ContentPage.Resources>
         <DataTemplate x:Key="HeaderTemplate">
             <StackLayout>
-                <Frame Padding="10,10,0,10" Style="{DynamicResource FrameM}">
+                <Frame Padding="10,10,0,10" StyleClass="Base, DefaultMargin">
                     <Grid ColumnDefinitions="4*,*" RowDefinitions="*,Auto">
                         <Label Grid.Row="0"
                                Style="{StaticResource LabelTitle}"
@@ -48,11 +50,54 @@
 
                     </Grid>
                 </Frame>
-                <TemplatedView ControlTemplate="{StaticResource DetailCoordinatesHeader}" />
+                <Grid Margin="10,0">
+                    <Frame Margin="0,0,0,20"
+                           BackgroundColor="{DynamicResource Foreground}"
+                           CornerRadius="10"
+                           HasShadow="False"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill" />
+                    <Frame Margin="0,20,0,0"
+                           BackgroundColor="{DynamicResource Foreground}"
+                           CornerRadius="0"
+                           HasShadow="False"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill" />
+                    <ContentView>
+                        <StackLayout>
+                            <Label Margin="10,10,0,0"
+                                   Style="{StaticResource LabelTitle}"
+                                   Text="Coordinates" />
+                            <Grid Style="{DynamicResource DetailCoordinateGrid}">
+                                <Label Grid.Row="1"
+                                       Grid.Column="0"
+                                       Margin="0,9"
+                                       HorizontalOptions="Center"
+                                       Style="{StaticResource LabelHeader}"
+                                       Text="#" />
+                                <Label Grid.Row="1"
+                                       Grid.Column="1"
+                                       Margin="0,9"
+                                       Style="{StaticResource LabelHeader}"
+                                       Text="Latitude" />
+                                <Label Grid.Row="1"
+                                       Grid.Column="2"
+                                       Margin="0,9"
+                                       Style="{StaticResource LabelHeader}"
+                                       Text="Longitude" />
+                                <Label Grid.Row="1"
+                                       Grid.Column="3"
+                                       Margin="0,9"
+                                       Style="{StaticResource LabelHeader}"
+                                       Text="Altitude" />
+                            </Grid>
+                        </StackLayout>
+                    </ContentView>
+                </Grid>
             </StackLayout>
         </DataTemplate>
 
-        <DataTemplate x:Key="ItemTemplate">
+        <DataTemplate x:Key="ItemTemplate" x:DataType="models:DisplayPosition">
             <Frame Style="{StaticResource CoordinateItemFrame}">
                 <SwipeView IsEnabled="{Binding Source={x:Reference Name=EditFeatureDetailsViewPage}, Path=BindingContext.ShowAddButton}">
                     <SwipeView.RightItems>
@@ -116,10 +161,77 @@
 
         <DataTemplate x:Key="FooterTemplate">
             <StackLayout Margin="0" Padding="0">
-                <TemplatedView ControlTemplate="{StaticResource DetailCoordinatesEditFooter}" />
+                <Grid Margin="10,0">
+                    <!--  Hacky implementation of only top rounded corners  -->
+                    <Frame Margin="0,10,0,0"
+                           BackgroundColor="{DynamicResource Foreground}"
+                           CornerRadius="10"
+                           HasShadow="False"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill" />
+                    <Frame Margin="0,0,0,10"
+                           BackgroundColor="{DynamicResource Foreground}"
+                           CornerRadius="0"
+                           HasShadow="False"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill" />
+                    <StackLayout Margin="0" Padding="0">
+                        <Grid IsVisible="{Binding ShowClosePolygon}" Style="{DynamicResource DetailCoordinateGrid}">
+                            <Label Grid.Row="1"
+                                   Grid.Column="0"
+                                   FontSize="Small"
+                                   HorizontalOptions="Center"
+                                   Style="{StaticResource LabelBody}"
+                                   Text="{Binding NumPointFields}"
+                                   VerticalOptions="Center" />
+                            <Entry Grid.Row="1"
+                                   Grid.Column="1"
+                                   FontSize="Small"
+                                   IsEnabled="False"
+                                   Placeholder="0"
+                                   Style="{StaticResource EntryStyle}"
+                                   Text="{Binding GeolocationValues[0].Latitude}" />
+                            <Entry Grid.Row="1"
+                                   Grid.Column="2"
+                                   FontSize="Small"
+                                   IsEnabled="False"
+                                   Placeholder="0"
+                                   Style="{StaticResource EntryStyle}"
+                                   Text="{Binding GeolocationValues[0].Longitude}" />
+                            <Entry Grid.Row="1"
+                                   Grid.Column="3"
+                                   FontSize="Small"
+                                   IsEnabled="False"
+                                   Placeholder="0"
+                                   Style="{StaticResource EntryStyle}"
+                                   Text="{Binding GeolocationValues[0].Altitude}" />
+                        </Grid>
+                        <Frame Margin="5"
+                               Padding="8"
+                               BackgroundColor="Transparent"
+                               HasShadow="False"
+                               HeightRequest="20"
+                               HorizontalOptions="CenterAndExpand"
+                               IsVisible="{Binding ShowAddButton}">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding AddPointCommand}" />
+                            </Frame.GestureRecognizers>
+                            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                                <Image HorizontalOptions="Center"
+                                       Source="add_icon_color"
+                                       VerticalOptions="Center" />
+                                <Label FontSize="16"
+                                       HorizontalOptions="Center"
+                                       Text="Add Position"
+                                       TextColor="{StaticResource greenPrimary}"
+                                       VerticalOptions="Center" />
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                </Grid>
                 <Frame Margin="10,10,10,180"
                        Padding="10,10,0,10"
-                       Style="{StaticResource Frame}">
+                       StyleClass="Base">
                     <StackLayout>
                         <Label Style="{StaticResource LabelTitle}" Text="Properties" />
                         <StackLayout Margin="8,0,0,0" Orientation="Vertical">
@@ -152,7 +264,7 @@
 
     <ContentPage.Content>
         <StackLayout Spacing="0">
-            <TemplatedView ControlTemplate="{StaticResource ModalPageNavigationBarDone}" />
+            <controls:ModalNavigationBar HasDoneButton="True" />
             <CollectionView x:Name="GeodataList"
                             Footer="{Binding .}"
                             FooterTemplate="{StaticResource FooterTemplate}"

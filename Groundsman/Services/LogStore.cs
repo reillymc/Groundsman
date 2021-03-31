@@ -41,11 +41,11 @@ namespace Groundsman.Services
 
         public async Task ExportLogFile()
         {
-            File.WriteAllText(AppConstants.LOG_FILE, LogString);
+            File.WriteAllText(AppConstants.EXPORT_LOG_FILE, LogString);
             await Share.RequestAsync(new ShareFileRequest
             {
-                Title = "Groundsman Logfile",
-                File = new ShareFile(AppConstants.LOG_FILE, "text/csv"),
+                Title = "Groundsman Log",
+                File = new ShareFile(AppConstants.EXPORT_LOG_FILE, "text/csv"),
                 PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet
                     ? new System.Drawing.Rectangle((int)(DeviceDisplay.MainDisplayInfo.Width * .474), 80, 0, 0)
                     : System.Drawing.Rectangle.Empty

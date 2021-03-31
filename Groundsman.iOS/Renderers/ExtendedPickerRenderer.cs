@@ -1,15 +1,14 @@
 ﻿using CoreGraphics;
 using Groundsman.iOS.Renderers;
-using Groundsman.Misc;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-[assembly: ExportRenderer(typeof(CustomPicker), typeof(CustomPickerRenderer))]
+[assembly: ExportRenderer(typeof(Picker), typeof(ExtendedPickerRenderer))]
 namespace Groundsman.iOS.Renderers
 
 {
-    public class CustomPickerRenderer : PickerRenderer
+    public class ExtendedPickerRenderer : PickerRenderer
     {
         protected override void OnElementChanged(ElementChangedEventArgs<Picker> e)
         {
@@ -27,9 +26,6 @@ namespace Groundsman.iOS.Renderers
             Control.LeftViewMode = UITextFieldViewMode.Always;
             Control.RightViewMode = UITextFieldViewMode.Always;
             Control.BorderStyle = UITextBorderStyle.None;
-            Control.Layer.CornerRadius = 8;
-            Control.BackgroundColor = UIColor.FromName("customControlColor");
-            Element.HeightRequest = 32;
         }
     }
 }
