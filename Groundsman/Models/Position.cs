@@ -82,7 +82,7 @@ namespace Groundsman.Models
 
         public bool HasAltitude() => !double.IsNaN(Altitude);
 
-        public override string ToString() => Latitude + ", " + Longitude + ", " + Altitude;
+        public override string ToString() => $"{Longitude}, {Latitude}, {Altitude}";
 
         public bool Equals(Position comparePosition)
         {

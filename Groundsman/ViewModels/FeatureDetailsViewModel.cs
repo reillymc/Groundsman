@@ -25,9 +25,15 @@ namespace Groundsman.ViewModels
         public ICommand OnDoneTappedCommand { get; set; }
         public ICommand OnCancelTappedCommand { get; set; }
         public ICommand ShareEntryCommand { get; set; }
+        public ICommand AddPropertyCommand { get; set; }
+        public ICommand DeletePropertyCommand { get; set; }
+
         private readonly Feature Feature = new Feature { };
-        //private GeoJSONType featureType;
+
+        public List<string> PropertyTypes { get; set; } = new List<string>() { "String", "Integer", "Float", "Boolean" };
+
         public ObservableCollection<DisplayPosition> GeolocationValues { get; set; }
+        public ObservableCollection<Property> FeatureProperties { get; set; }
 
         public string DateEntry { get; set; }
         public string NameEntry { get; set; }
@@ -99,6 +105,8 @@ namespace Groundsman.ViewModels
                     break;
             }
             NumPointFields = GeolocationValues.Count + 1;
+
+            FeatureProperties = new ObservableCollection<Property>();
         }
 
         /// <summary>
@@ -121,28 +129,7 @@ namespace Groundsman.ViewModels
 
 
             GeolocationValues = new ObservableCollection<DisplayPosition>();
-
-
-            if (feature.Properties.ContainsKey("metadataStringValue"))
-            {
-                MetadataStringEntry = (string)feature.Properties["metadataStringValue"];
-            }
-
-            if (feature.Properties.ContainsKey("metadataIntegerValue"))
-            {
-                int intval = Convert.ToInt32(feature.Properties["metadataIntegerValue"]);
-                MetadataIntegerEntry = intval.ToString();
-            }
-
-            if (feature.Properties.ContainsKey("metadataFloatValue"))
-            {
-                float floatval = Convert.ToSingle(feature.Properties["metadataFloatValue"]);
-                if (float.IsNormal(floatval))
-                {
-                    MetadataFloatEntry = floatval.ToString();
-                }
-            }
-
+            
             int index = 1;
 
             //SWITCH TEMPLATE - maybe make method?
@@ -185,6 +172,16 @@ namespace Groundsman.ViewModels
 
             }
             NumPointFields = GeolocationValues.Count + 1;
+
+            FeatureProperties = new ObservableCollection<Property>();
+
+            foreach (KeyValuePair<string, object> property in feature.Properties)
+            {
+                if (property.Key != "author" && property.Key != "name" && property.Key != "id" && property.Key != "date")
+                {
+                    FeatureProperties.Add(Property.FromObject(property.Key.ToString(), property.Value));
+                }
+            }
         }
 
         /// <summary>
@@ -195,10 +192,24 @@ namespace Groundsman.ViewModels
             GetFeatureCommand = new Command<DisplayPosition>(async (point) => { await GetDataPoint(point); });
             AddPointCommand = new Command(() => AddPoint(1));
             DeletePointCommand = new Command<DisplayPosition>((item) => DeletePoint(item));
+            AddPropertyCommand = new Command(() => AddProperty());
+            DeletePropertyCommand = new Command<Property>((item) => DeleteProperty(item));
             ShareEntryCommand = new Command<View>(async (view) => await ShareFeature(view));
             OnDoneTappedCommand = new Command(async () => await OnSaveUpdateActivated());
             OnCancelTappedCommand = new Command(async () => await OnDismiss(true));
         }
+
+        private void DeleteProperty(Property item)
+        {
+            FeatureProperties.Remove(item);
+        }
+
+        private void AddProperty()
+        {
+            //FeatureProperties.Insert(0, new Property("", ""));
+            FeatureProperties.Add(new Property("", ""));
+        }
+
 
         private async Task ShareFeature(View element)
         {
@@ -266,7 +277,18 @@ namespace Groundsman.ViewModels
                 return;
             }
             IsBusy = true;
-            GeolocationValues.Remove(item);
+            // Workaround for when removing GeolocationValues[0] not updating front-end close polygon fields referencing GeolocationValues[0]
+            if (item == GeolocationValues[0])
+            {
+                GeolocationValues[0].Longitude = GeolocationValues[1].Longitude;
+                GeolocationValues[0].Latitude = GeolocationValues[1].Latitude;
+                GeolocationValues[0].Altitude = GeolocationValues[1].Altitude;
+                GeolocationValues.RemoveAt(1);
+            }
+            else
+            {
+                GeolocationValues.Remove(item);
+            }
             for (int i = 0; i < GeolocationValues.Count; i++)
             {
                 GeolocationValues[i].Index = i + 1;
@@ -331,47 +353,50 @@ namespace Groundsman.ViewModels
 
         private async Task<bool> ValidateProperties()
         {
-            if (!string.IsNullOrEmpty(MetadataStringEntry))
+            string IDTemp = (string)Feature.Properties["id"];
+            Feature.Properties.Clear();
+            Feature.Properties.Add("id", IDTemp);
+            //IEnumerable<Property> OrderedFeatureProperties = FeatureProperties.OrderBy(property => property.Key); can allow for fordering later
+            foreach (Property property in FeatureProperties)
             {
-                Feature.Properties["metadataStringValue"] = MetadataStringEntry;
-            }
-            else
-            {
-                Feature.Properties.Remove("metadataStringValue");
-            }
+                if (!string.IsNullOrEmpty(property.Key.ToString()))
+                {
+                    try
+                    {
+                        switch (property.Type)
+                        {
+                            case 0:
+                                Feature.Properties[property.Key] = property.Value;
+                                break;
+                            case 1:
+                                int intValue = Convert.ToInt16(property.Value);
+                                Feature.Properties[property.Key] = intValue;
+                                break;
+                            case 2:
+                                float floatValue = Convert.ToSingle(property.Value);
+                                Feature.Properties[property.Key] = floatValue;
+                                break;
+                            case 3:
+                                bool boolValue = Convert.ToBoolean(property.Value);
+                                Feature.Properties[property.Key] = boolValue;
+                                break;
+                            default:
+                                break;
+                        }
 
-            if (!string.IsNullOrEmpty(MetadataIntegerEntry))
-            {
-                try
-                {
-                    Feature.Properties["metadataIntegerValue"] = Convert.ToInt32(MetadataIntegerEntry);
-                }
-                catch
-                {
-                    await NavigationService.ShowAlert("Invalid Feature Properties", "The Integer field only supports a whole number.", false);
-                    return false;
-                }
-            }
-            else
-            {
-                Feature.Properties.Remove("metadataIntegerValue");
-            }
+                    }
 
-            if (!string.IsNullOrEmpty(MetadataFloatEntry))
-            {
-                try
-                {
-                    Feature.Properties["metadataFloatValue"] = Convert.ToSingle(MetadataFloatEntry);
+                    catch
+                    {
+                        await NavigationService.ShowAlert("Invalid Feature Property", $"{property.Key} value {property.Value} is incorrectly formatted.", false);
+                        return false;
+                    }
+
                 }
-                catch
+                else
                 {
-                    await NavigationService.ShowAlert("Invalid Feature Properties", "The Float field only supports a number value.", false);
-                    return false;
+                    Feature.Properties.Remove(property.Key);
                 }
-            }
-            else
-            {
-                Feature.Properties.Remove("metadataFloatValue");
             }
 
             Feature.Properties["name"] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : Feature.Geometry.Type.ToString();

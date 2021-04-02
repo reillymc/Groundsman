@@ -164,5 +164,18 @@
         </BoxView>
     </ControlTemplate>
 
+    <ControlTemplate x:Key="BodySeperatorVertical">
+        <BoxView Margin="0"
+                 BackgroundColor="{DynamicResource Seperator}"
+                 WidthRequest="1"
+                 HorizontalOptions="End">
+            <BoxView.IsVisible>
+                <OnPlatform x:TypeArguments="x:Boolean"
+                            Android="False"
+                            iOS="True" />
+            </BoxView.IsVisible>
+        </BoxView>
+    </ControlTemplate>
+
 
 </ResourceDictionary>

@@ -14,7 +14,7 @@ namespace Groundsman.Services
         private CancellationTokenSource cts;
         public string LogString { get; set; }
         public List<Position> LogPoints { get; set; }
-        private readonly string CSVHeader = "Time, Latitude, Longitude, Altitude\n";
+        private readonly string CSVHeader = "Time, Longitude, Latitude, Altitude\n";
 
         public LogStore()
         {

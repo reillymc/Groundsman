@@ -12,7 +12,8 @@
              x:DataType="viewModels:FeatureDetailsViewModel"
              Style="{StaticResource PageTintedStyle}">
     <ContentPage.Resources>
-        <DataTemplate x:Key="HeaderTemplate">
+
+                <DataTemplate x:Key="HeaderTemplate">
             <StackLayout>
                 <Frame Padding="10,10,0,10" StyleClass="Base, DefaultMargin">
                     <Grid ColumnDefinitions="4*,*" RowDefinitions="*,Auto">
@@ -79,12 +80,12 @@
                                        Grid.Column="1"
                                        Margin="0,9"
                                        Style="{StaticResource LabelHeader}"
-                                       Text="Latitude" />
+                                       Text="Longitude" />
                                 <Label Grid.Row="1"
                                        Grid.Column="2"
                                        Margin="0,9"
                                        Style="{StaticResource LabelHeader}"
-                                       Text="Longitude" />
+                                       Text="Latitude" />
                                 <Label Grid.Row="1"
                                        Grid.Column="3"
                                        Margin="0,9"
@@ -120,12 +121,12 @@
                                    Grid.Column="1"
                                    Placeholder="0"
                                    Style="{StaticResource DetailCoordinateEntry}"
-                                   Text="{Binding Latitude}" />
+                                   Text="{Binding Longitude}" />
                             <Entry Grid.Row="1"
                                    Grid.Column="2"
                                    Placeholder="0"
                                    Style="{StaticResource DetailCoordinateEntry}"
-                                   Text="{Binding Longitude}" />
+                                   Text="{Binding Latitude}" />
                             <Entry Grid.Row="1"
                                    Grid.Column="3"
                                    Placeholder="0"
@@ -190,14 +191,14 @@
                                    IsEnabled="False"
                                    Placeholder="0"
                                    Style="{StaticResource EntryStyle}"
-                                   Text="{Binding GeolocationValues[0].Latitude}" />
+                                   Text="{Binding GeolocationValues[0].Longitude}" />
                             <Entry Grid.Row="1"
                                    Grid.Column="2"
                                    FontSize="Small"
                                    IsEnabled="False"
                                    Placeholder="0"
                                    Style="{StaticResource EntryStyle}"
-                                   Text="{Binding GeolocationValues[0].Longitude}" />
+                                   Text="{Binding GeolocationValues[0].Latitude}" />
                             <Entry Grid.Row="1"
                                    Grid.Column="3"
                                    FontSize="Small"
@@ -229,36 +230,106 @@
                         </Frame>
                     </StackLayout>
                 </Grid>
-                <Frame Margin="10,10,10,180"
+                <Frame Margin="10,10,10,350"
                        Padding="10,10,0,10"
-                       StyleClass="Base">
+                       StyleClass="Base" HeightRequest="150">
                     <StackLayout>
                         <Label Style="{StaticResource LabelTitle}" Text="Properties" />
-                        <StackLayout Margin="8,0,0,0" Orientation="Vertical">
-                            <Entry Placeholder="String"
-                                   Style="{StaticResource EntryStyle}"
-                                   Text="{Binding MetadataStringEntry}">
-                                <Entry.Behaviors>
-                                    <behaviors:EntryLengthValidatorBehavior MaxLength="100" />
-                                </Entry.Behaviors>
-                            </Entry>
-                            <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
-                            <Entry Keyboard="Numeric"
-                                   Placeholder="Integer"
-                                   Style="{StaticResource EntryStyle}"
-                                   Text="{Binding MetadataIntegerEntry}">
-                                <Entry.Behaviors>
-                                    <behaviors:EntryLengthValidatorBehavior MaxLength="8" />
-                                </Entry.Behaviors>
-                            </Entry>
-                            <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
-                            <Entry Placeholder="Float"
-                                   Style="{StaticResource DetailCoordinateEntry}"
-                                   Text="{Binding MetadataFloatEntry}" />
-                        </StackLayout>
+                        <CollectionView x:Name="PropertiesList"
+                                        ItemTemplate="{StaticResource PropertyItemTemplate}"
+                                        ItemsSource="{Binding FeatureProperties}"
+                                        Margin="5,0,0,0"
+                                        VerticalOptions="Start" 
+                                        Footer="{Binding .}"
+                                        ItemsLayout="HorizontalList"
+                                        FooterTemplate="{StaticResource PropertiesFooterTemplate}"
+                                        ItemsUpdatingScrollMode="KeepLastItemInView"/>
+
                     </StackLayout>
                 </Frame>
             </StackLayout>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PropertyItemTemplate" x:DataType="models:Property">
+            <Grid Padding="10,0,10,0"
+                  ColumnDefinitions="3*,*,15"
+                  RowDefinitions="0.5*,1*,0.5*,1*"
+                  WidthRequest="280">
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       Style="{StaticResource LabelHeader}"
+                       Text="Name"
+                       VerticalOptions="End" />
+                <Entry Grid.Row="1"
+                       Grid.Column="0"
+                       Placeholder="Property Name..."
+                       Style="{StaticResource EntryStyle}"
+                       Text="{Binding Key}"
+                       VerticalOptions="Start" />
+                <Label Grid.Row="0"
+                       Grid.Column="1"
+                       Style="{StaticResource LabelHeader}"
+                       Text="Type"
+                       VerticalOptions="End" />
+                <Picker Grid.Row="1"
+                        Grid.Column="1"
+                        HeightRequest="30"
+                        SelectedIndex="{Binding Type}"
+                        Style="{StaticResource DetailCoordinateEntry}"
+                        TextColor="{StaticResource greenPrimary}"
+                        VerticalOptions="Start">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>String</x:String>
+                            <x:String>Integer</x:String>
+                            <x:String>Float</x:String>
+                            <x:String>Boolean</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+                <Label Grid.Row="2"
+                       Grid.ColumnSpan="2"
+                       Style="{StaticResource LabelHeader}"
+                       Text="Value"
+                       VerticalOptions="End" />
+                <Entry Grid.Row="3"
+                       Grid.ColumnSpan="2"
+                       Placeholder="Property Value..."
+                       Style="{StaticResource EntryStyle}"
+                       Text="{Binding Value}"
+                       VerticalOptions="Start" />
+                <TemplatedView Grid.RowSpan="4"
+                               Grid.Column="2"
+                               Margin="14,0,0,0"
+                               ControlTemplate="{StaticResource BodySeperatorVertical}" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PropertiesFooterTemplate">
+            <Frame StyleClass="Base">
+                <Frame Margin="0,0,10,0"
+                       Padding="0"
+                       BackgroundColor="Transparent"
+                       HasShadow="False"
+                       HeightRequest="20"
+                       WidthRequest="40">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddPropertyCommand}" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Vertical" VerticalOptions="Center">
+                        <Image HeightRequest="20"
+                               HorizontalOptions="Center"
+                               Source="add_icon_color"
+                               VerticalOptions="Center" />
+                        <Label FontSize="16"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               Text="New"
+                               TextColor="{StaticResource greenPrimary}"
+                               VerticalOptions="Center" />
+                    </StackLayout>
+                </Frame>
+            </Frame>
         </DataTemplate>
     </ContentPage.Resources>
 

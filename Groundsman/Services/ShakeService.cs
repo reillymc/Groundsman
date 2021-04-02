@@ -51,7 +51,7 @@ namespace Groundsman.Services
                         Accelerometer.Start(speed);
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     // Other error has occurred.
                 }
