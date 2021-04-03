@@ -106,7 +106,12 @@ namespace Groundsman.ViewModels
             }
             NumPointFields = GeolocationValues.Count + 1;
 
-            FeatureProperties = new ObservableCollection<Property>();
+            FeatureProperties = new ObservableCollection<Property>
+            {
+                new Property("Default String Property", string.Empty, 0),
+                new Property("Default Integer Property", null, 1),
+                new Property("Default Float Property", null, 2)
+            };
         }
 
         /// <summary>
@@ -388,7 +393,7 @@ namespace Groundsman.ViewModels
 
                     catch
                     {
-                        await NavigationService.ShowAlert("Invalid Feature Property", $"{property.Key} value {property.Value} is incorrectly formatted.", false);
+                        await NavigationService.ShowAlert("Invalid Feature Property", $"{property.Key} '{property.Value}' is incorrectly formatted.", false);
                         return false;
                     }
 

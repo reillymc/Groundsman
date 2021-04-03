@@ -28,9 +28,9 @@
       },
       "properties": {
         "author": "Groundsman",
-        "Example String Property": "This is an example polygon",
-        "Example Integer Property": 1,
-        "Example Float Property": 1.1,
+        "Default String Property": "This is an example polygon",
+        "Default Integer Property": 1,
+        "Default Float Property": 1.1,
         "name": "Example Polygon"
       }
     },
@@ -51,9 +51,9 @@
       },
       "properties": {
         "author": "Groundsman",
-        "Example String Property": "This is a test line",
-        "Example Integer Property": 2,
-        "Example Float Property": 2.2,
+        "Default String Property": "This is a test line",
+        "Default Integer Property": 2,
+        "Default Float Property": 2.2,
         "name": "Test Line"
       }
     },
@@ -68,9 +68,9 @@
       },
       "properties": {
         "author": "Groundsman",
-        "Example String Property": "This is a sample point",
-        "Example Integer Property": 3,
-        "Example Float Property": 3.3,
+        "Default String Property": "This is a sample point",
+        "Default Integer Property": 3,
+        "Default Float Property": 3.3,
         "name": "Sample Point"
       }
     }
