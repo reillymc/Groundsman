@@ -27,7 +27,7 @@ namespace Groundsman.ViewModels
             Map = new CustomMap();
             CenterMapOnUser();
             Map.MapClicked += OnMapClicked;
-            MessagingCenter.Subscribe<LogStore>(this, "LogUpdated", (sender) => { DrawLogPath(); });
+            //MessagingCenter.Subscribe<LogStore>(this, "LogUpdated", (sender) => { DrawLogPath(); });
         }
 
         public Position defaultMapCentre = new Position(153.021, -27.47);
@@ -58,7 +58,7 @@ namespace Groundsman.ViewModels
         {
             CleanFeatures();
             DrawFeatures();
-            DrawLogPath();
+           // DrawLogPath();
 
             //SetShowingUser
             var status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
@@ -152,26 +152,26 @@ namespace Groundsman.ViewModels
             }
         }
 
-        private void DrawLogPath()
-        {
-            if (Preferences.Get("ShowLinesOnMap", true))
-            {
-                if (LogStore.LogPoints.Count > 1)
-                {
-                    List<Position> logFile = LogStore.LogPoints;
-                    Polyline logPolyline = new Polyline
-                    {
-                        StrokeColor = Color.DarkOrange,
-                        StrokeWidth = 3,
-                    };
-                    logFile.ForEach((Position point) =>
-                    {
-                        logPolyline.Geopath.Add(new XFMPosition(point.Latitude, point.Longitude));
-                    });
-                    Map.MapElements.Add(logPolyline);
-                }
-            }
-        }
+        //private void DrawLogPath()
+        //{
+        //    if (Preferences.Get("ShowLinesOnMap", true))
+        //    {
+        //        if (LogStore.LogPoints.Count > 1)
+        //        {
+        //            Polyline logPolyline = new Polyline
+        //            {
+        //                StrokeColor = Color.DarkOrange,
+        //                StrokeWidth = 3,
+        //            };
+        //            LogStore.LogPoints.ForEach((DisplayPosition displayPosition) =>
+        //            {
+        //                Position position = new Position(displayPosition);
+        //                logPolyline.Geopath.Add(new XFMPosition(position.Latitude, position.Longitude));
+        //            });
+        //            Map.MapElements.Add(logPolyline);
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// When map is clicked, iterates through all features in the feature list and shows the feature info menu if feature has been tapped
@@ -200,17 +200,6 @@ namespace Groundsman.ViewModels
                     await DisplayFeatureActionMenuAsync(feature);
                 }
             });
-            if (Preferences.Get("ShowLinesOnMap", true))
-            {
-                if (LogStore.LogPoints.Count > 1)
-                {
-                    LineString logLine = new LineString(LogStore.LogPoints);
-                    if (logLine.ContainsPosition(new Position(e.Position.Longitude, e.Position.Latitude)))
-                    {
-                        await DisplayLogActionMenuAsync();
-                    }
-                }
-            }
         }
 
         async Task DisplayFeatureActionMenuAsync(Feature feature)
@@ -238,7 +227,7 @@ namespace Groundsman.ViewModels
 
             if (result == "Clear")
             {
-                LogStore.ClearLog();
+                //LogStore.ClearLog();
                 RefreshMap();
             }
         }

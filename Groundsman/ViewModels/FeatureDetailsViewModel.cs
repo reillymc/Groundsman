@@ -142,13 +142,13 @@ namespace Groundsman.ViewModels
             {
                 case GeoJSONType.Point:
                     Point point = (Point)feature.Geometry;
-                    GeolocationValues.Add(new DisplayPosition(1, point.Coordinates));
+                    GeolocationValues.Add(new DisplayPosition("1", point.Coordinates));
                     break;
                 case GeoJSONType.LineString:
                     LineString linestring = (LineString)feature.Geometry;
                     foreach (Position pos in linestring.Coordinates)
                     {
-                        GeolocationValues.Add(new DisplayPosition(index, pos));
+                        GeolocationValues.Add(new DisplayPosition(index.ToString(), pos));
                         index++;
                     }
                     ShowAddButton = true;
@@ -159,7 +159,7 @@ namespace Groundsman.ViewModels
                     {
                         foreach (Position pos in ls.Coordinates)
                         {
-                            GeolocationValues.Add(new DisplayPosition(index, pos));
+                            GeolocationValues.Add(new DisplayPosition(index.ToString(), pos));
                             index++;
                         }
                     }
@@ -242,7 +242,7 @@ namespace Groundsman.ViewModels
             LoadingIconActive = true;
 
             Position location = await HelperServices.GetGeoLocation();
-            DisplayPosition convertedPoint = new DisplayPosition(0, location);
+            DisplayPosition convertedPoint = new DisplayPosition("0", location);
             if (location != null)
             {
                 point.Latitude = convertedPoint.Latitude;
@@ -263,7 +263,7 @@ namespace Groundsman.ViewModels
             IsBusy = true;
             for (int i = 0; i < count; i++)
             {
-                GeolocationValues.Add(new DisplayPosition(GeolocationValues.Count + 1, "", "", ""));
+                GeolocationValues.Add(new DisplayPosition((GeolocationValues.Count + 1).ToString(), "", "", ""));
                 NumPointFields++;
             }
             IsBusy = false;
@@ -296,7 +296,7 @@ namespace Groundsman.ViewModels
             }
             for (int i = 0; i < GeolocationValues.Count; i++)
             {
-                GeolocationValues[i].Index = i + 1;
+                GeolocationValues[i].Index = (i + 1).ToString();
             }
             NumPointFields--;
             IsBusy = false;

@@ -10,7 +10,7 @@ namespace Groundsman
         private static readonly string CACHE_PATH = FileSystem.CacheDirectory;
 
         private static readonly string FEATURES_FILENAME = "locations.json";
-        private static readonly string LOG_FILENAME = "log.csv";
+        private static readonly string LOG_FILENAME = "logLine.json";
         private static readonly string EXPORT_LOG_FILENAME = "Groundsman Log.csv";
         private static readonly string DELETED_FEATURE_FILENAME = "deleted.json";
 
@@ -48,6 +48,19 @@ namespace Groundsman
                 text = reader.ReadToEnd();
             }
             return text;
+        }
+
+        public static string GetLogFile()
+        {
+            if (File.Exists(LOG_FILE))
+            {
+                string text = File.ReadAllText(LOG_FILE);
+                return text;
+            }
+            else
+            {
+                throw new FileNotFoundException("Log file could not be found");
+            }
         }
     }
 }

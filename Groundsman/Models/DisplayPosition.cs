@@ -10,12 +10,12 @@ namespace Groundsman.Models
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private int _index;
+        private string _index;
         private string _longitude;
         private string _latitude;
         private string _altitude;
 
-        public int Index
+        public string Index
         {
             get => _index;
             set { _index = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Index")); }
@@ -39,15 +39,15 @@ namespace Groundsman.Models
             set { _altitude = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Altitude")); }
         }
 
-        public DisplayPosition(int index, string longitude, string latitude, string alt)
+        public DisplayPosition(string index, string longitude, string latitude, string altitude)
         {
-            Longitude = latitude;
-            Latitude = longitude;
-            Altitude = alt;
+            Longitude = longitude;
+            Latitude = latitude;
+            Altitude = altitude;
             Index = index;
         }
 
-        public DisplayPosition(int index, Position position)
+        public DisplayPosition(string index, Position position)
         {
             Longitude = position.Longitude.ToString();
             Latitude = position.Latitude.ToString();
@@ -62,13 +62,15 @@ namespace Groundsman.Models
             Index = index;
         }
 
-        public DisplayPosition(int index, DisplayPosition position)
+        public DisplayPosition(string index, DisplayPosition position)
         {
             Longitude = position.Longitude;
             Latitude = position.Latitude;
             Altitude = position.Altitude;
             Index = index;
         }
+
+        public override string ToString() => $"{Index}, {Longitude}, {Latitude}, {Altitude}";
 
         public bool Equals(DisplayPosition comparePosition)
         {

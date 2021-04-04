@@ -28,29 +28,24 @@ namespace Groundsman.Services
             decimalAccuracy = Preferences.Get("DataDecimalAccuracy", 8);
             try
             {
-                var status = await CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
-                if (status == PermissionStatus.Granted)
+                // Gets current location of device (MORE ACCURATE, but slower)
+                var request = new GeolocationRequest(geolocationAccuracy);
+                var location = await Geolocation.GetLocationAsync(request);
+                if (location != null)
                 {
-                    // Gets current location of device (MORE ACCURATE, but slower)
-                    var request = new GeolocationRequest(geolocationAccuracy);
-                    var location = await Geolocation.GetLocationAsync(request);
-                    if (location != null)
-                    {
-                        point = new Position(Math.Round(location.Longitude, decimalAccuracy), Math.Round(location.Latitude, decimalAccuracy), Math.Round(location.Altitude ?? 0.0, decimalAccuracy));
-                        return point;
-                    }
+                    point = new Position(Math.Round(location.Longitude, decimalAccuracy), Math.Round(location.Latitude, decimalAccuracy), Math.Round(location.Altitude ?? 0.0, decimalAccuracy));
+                    return point;
                 }
                 else
                 {
-                    throw new PermissionException("Permission not granted.");
+                    return null;
                 }
             }
             catch (Exception)
             {
                 await Application.Current.MainPage.DisplayAlert("Geolocation Error", "Location permissions for Groundsman must be enabled to fetch location", "Ok");
-                throw new Exception();
+                return null;
             }
-            return null;
         }
 
         /// <summary>

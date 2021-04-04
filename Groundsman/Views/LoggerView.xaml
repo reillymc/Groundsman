@@ -3,6 +3,7 @@
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors"
+             xmlns:models="clr-namespace:Groundsman.Models"
              xmlns:viewModels="clr-namespace:Groundsman.ViewModels"
              x:DataType="viewModels:LoggerViewModel"
              BackgroundColor="{DynamicResource Background}"
@@ -10,6 +11,42 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Command="{Binding ShareButtonClickCommand}" Icon="share_icon" />
     </ContentPage.ToolbarItems>
+
+
+    <ContentPage.Resources>
+        <DataTemplate x:Key="Header">
+            <Label
+                       FontSize="Micro"
+                       Style="{StaticResource LabelHeader}"
+                       Text="Time,  Longitude,  Latitude,  Altitude" />
+
+        </DataTemplate>
+
+        <DataTemplate x:Key="Body" x:DataType="models:DisplayPosition">
+            <Grid ColumnDefinitions="Auto,Auto,Auto,Auto" Padding="0,0,10,0" ColumnSpacing="5">
+                <Label Grid.Row="1"
+                       Grid.Column="0"
+                       FontSize="Micro"
+                       Text="{Binding Index, StringFormat='{0},'}"
+                       VerticalOptions="Center" />
+                <Label Grid.Row="1"
+                       Grid.Column="1"
+                       FontSize="Micro"
+                       VerticalOptions="Center"
+                       Text="{Binding Longitude, StringFormat='{0},'}" />
+                <Label Grid.Row="1"
+                       Grid.Column="2"
+                       FontSize="Micro"
+                       VerticalOptions="Center"
+                       Text="{Binding Latitude, StringFormat='{0},'}" />
+                <Label Grid.Row="1"
+                       Grid.Column="3"
+                       FontSize="Micro"
+                       VerticalOptions="Center"
+                       Text="{Binding Altitude, StringFormat='{0}'}" />
+            </Grid>
+        </DataTemplate>
+    </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout Spacing="0">
             <Frame Margin="10,10,10,0"
@@ -63,12 +100,13 @@
                    BackgroundColor="{DynamicResource Foreground}"
                    StyleClass="Base, DefaultMargin"
                    VerticalOptions="FillAndExpand">
-                <ScrollView x:Name="ScrollBox">
-                    <Label x:Name="logLabel"
-                           FontSize="Caption"
-                           PropertyChanged="LogLabel_PropertyChanged"
-                           Text="{Binding TextEntry}" />
-                </ScrollView>
+                <CollectionView x:Name="GeodataList"
+                                Header="{Binding .}"
+                                HeaderTemplate="{StaticResource Header}"
+                                ItemTemplate="{StaticResource Body}"
+                                ItemsSource="{Binding LogPositions}"
+                                ItemsUpdatingScrollMode="KeepLastItemInView"
+                                VerticalOptions="FillAndExpand" IsEnabled="{Binding ScrollEnabled}" />
             </Frame>
         </StackLayout>
     </ContentPage.Content>
