@@ -1,4 +1,5 @@
-﻿using Groundsman.ViewModels;
+﻿using Groundsman.Models;
+using Groundsman.ViewModels;
 using Xamarin.Forms;
 
 namespace Groundsman.Views
@@ -10,6 +11,12 @@ namespace Groundsman.Views
         {
             InitializeComponent();
             BindingContext = viewModel = new LoggerViewModel();
+        }
+
+        public LoggerView(Feature feature)
+        {
+            InitializeComponent();
+            BindingContext = viewModel = new LoggerViewModel(feature);
         }
 
         protected override void OnAppearing()

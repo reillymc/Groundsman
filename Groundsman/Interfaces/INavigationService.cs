@@ -8,6 +8,8 @@ namespace Groundsman.Interfaces
     {
         Task NavigateToEditPage(T feature);
         Task NavigateToNewEditPage(GeoJSONType type);
+        Task NavigateToNewLoggerPage();
+        Task NavigateToLoggerPage(T feature);
         Task PushAddFeaturePage();
         Task PushWelcomePage();
         Task NavigateBack(bool modal);

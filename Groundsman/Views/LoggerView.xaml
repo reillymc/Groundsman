@@ -3,8 +3,11 @@
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors"
+             xmlns:controls="clr-namespace:Groundsman.Controls"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              xmlns:models="clr-namespace:Groundsman.Models"
              xmlns:viewModels="clr-namespace:Groundsman.ViewModels"
+             ios:Page.ModalPresentationStyle="FormSheet"
              x:DataType="viewModels:LoggerViewModel"
              BackgroundColor="{DynamicResource Background}"
              Style="{StaticResource PageStyle}">
@@ -15,15 +18,16 @@
 
     <ContentPage.Resources>
         <DataTemplate x:Key="Header">
-            <Label
-                       FontSize="Micro"
-                       Style="{StaticResource LabelHeader}"
-                       Text="Time,  Longitude,  Latitude,  Altitude" />
+            <Label FontSize="Micro"
+                   Style="{StaticResource LabelHeader}"
+                   Text="Time,  Longitude,  Latitude,  Altitude" />
 
         </DataTemplate>
 
         <DataTemplate x:Key="Body" x:DataType="models:DisplayPosition">
-            <Grid ColumnDefinitions="Auto,Auto,Auto,Auto" Padding="0,0,10,0" ColumnSpacing="5">
+            <Grid Padding="0,0,10,0"
+                  ColumnDefinitions="Auto,Auto,Auto,Auto"
+                  ColumnSpacing="5">
                 <Label Grid.Row="1"
                        Grid.Column="0"
                        FontSize="Micro"
@@ -32,82 +36,113 @@
                 <Label Grid.Row="1"
                        Grid.Column="1"
                        FontSize="Micro"
-                       VerticalOptions="Center"
-                       Text="{Binding Longitude, StringFormat='{0},'}" />
+                       Text="{Binding Longitude, StringFormat='{0},'}"
+                       VerticalOptions="Center" />
                 <Label Grid.Row="1"
                        Grid.Column="2"
                        FontSize="Micro"
-                       VerticalOptions="Center"
-                       Text="{Binding Latitude, StringFormat='{0},'}" />
+                       Text="{Binding Latitude, StringFormat='{0},'}"
+                       VerticalOptions="Center" />
                 <Label Grid.Row="1"
                        Grid.Column="3"
                        FontSize="Micro"
-                       VerticalOptions="Center"
-                       Text="{Binding Altitude, StringFormat='{0}'}" />
+                       Text="{Binding Altitude, StringFormat='{0}'}"
+                       VerticalOptions="Center" />
             </Grid>
         </DataTemplate>
     </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout Spacing="0">
-            <Frame Margin="10,10,10,0"
-                   Padding="10"
-                   StyleClass="Base">
-                <Grid BackgroundColor="{DynamicResource Foreground}"
-                      ColumnDefinitions="2.5*,*,*"
+            <controls:ModalNavigationBar HasDoneButton="True" MinimumHeightRequest="48" />
+            <StackLayout>
+                <Frame Padding="10,10,0,10" StyleClass="Base, DefaultMargin">
+                    <Grid ColumnDefinitions="4*,*" RowDefinitions="*,Auto">
+                        <Label Grid.Row="0"
+                               Style="{StaticResource LabelTitle}"
+                               Text="Details" />
+                        <StackLayout Grid.Row="1" Margin="8,0,0,0">
+                            <Entry FontSize="Small"
+                                   Placeholder="Name"
+                                   Style="{StaticResource EntryStyle}"
+                                   Text="{Binding NameEntry}"
+                                   VerticalOptions="Start">
+                                <Entry.Behaviors>
+                                    <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </StackLayout>
+                    </Grid>
+                </Frame>
+                <Grid BackgroundColor="{DynamicResource Background}"
+                      ColumnDefinitions="*,*"
                       HorizontalOptions="Fill"
-                      MinimumHeightRequest="20"
+                      MinimumHeightRequest="60"
                       RowDefinitions="*"
                       VerticalOptions="Start">
-                    <StackLayout Grid.Column="0"
-                                 Padding="5,0"
-                                 Orientation="Horizontal">
-                        <Label FontSize="Small"
-                               Text="Interval:"
-                               TextColor="{DynamicResource Text}"
-                               VerticalOptions="Center" />
-                        <Entry FontSize="Small"
-                               HorizontalTextAlignment="Center"
-                               Keyboard="Numeric"
-                               Text="{Binding IntervalEntry}"
-                               TextColor="{StaticResource greenPrimary}"
-                               VerticalOptions="Center"
-                               WidthRequest="30">
-                            <Entry.Behaviors>
-                                <behaviors:EntryLengthValidatorBehavior MaxLength="3" />
-                            </Entry.Behaviors>
-                        </Entry>
-                        <Picker FontSize="Small"
-                                HorizontalOptions="Fill"
-                                ItemsSource="{Binding UnitItems}"
-                                SelectedIndex="{Binding UnitEntry}"
-                                TextColor="{StaticResource greenPrimary}"
-                                TitleColor="Black"
-                                VerticalOptions="Center" />
-                    </StackLayout>
-                    <Button Grid.Column="1"
-                            Command="{Binding ToggleButtonClickCommand}"
-                            HorizontalOptions="FillAndExpand"
-                            Style="{StaticResource GenericButton}"
-                            Text="{Binding ToggleButtonLabel}" />
-                    <Button Grid.Column="2"
-                            Command="{Binding ClearButtonClickCommand}"
-                            HorizontalOptions="FillAndExpand"
-                            Style="{StaticResource GenericButton}"
-                            Text="Clear" />
+                    <Frame Grid.Column="0"
+                           Margin="10,10,0,0"
+                           Padding="20"
+                           StyleClass="Base">
+                        <StackLayout Padding="5,0" Orientation="Horizontal">
+                            <Label FontSize="Small"
+                                   Text="Interval:"
+                                   TextColor="{DynamicResource Text}"
+                                   VerticalOptions="Center" />
+                            <Entry FontSize="Small"
+                                   HorizontalTextAlignment="Center"
+                                   Keyboard="Numeric"
+                                   Text="{Binding IntervalEntry}"
+                                   TextColor="{StaticResource greenPrimary}"
+                                   VerticalOptions="Center"
+                                   WidthRequest="30">
+                                <Entry.Behaviors>
+                                    <behaviors:EntryLengthValidatorBehavior MaxLength="3" />
+                                </Entry.Behaviors>
+                            </Entry>
+                            <Picker FontSize="Small"
+                                    HorizontalOptions="Fill"
+                                    ItemsSource="{Binding UnitItems}"
+                                    SelectedIndex="{Binding UnitEntry}"
+                                    TextColor="{StaticResource greenPrimary}"
+                                    TitleColor="Black"
+                                    VerticalOptions="Center" />
+                        </StackLayout>
+                    </Frame>
+                    <Frame Grid.Column="1"
+                           Margin="10,10,10,0"
+                           Padding="20"
+                           StyleClass="Base">
+                        <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                            <Button Command="{Binding ToggleButtonClickCommand}"
+                                    HorizontalOptions="Start"
+                                    Style="{StaticResource GenericButton}"
+                                    Text="{Binding ToggleButtonLabel}" />
+
+                            <Button Command="{Binding ClearButtonClickCommand}"
+                                    HorizontalOptions="CenterAndExpand"
+                                    Style="{StaticResource GenericButton}"
+                                    Text="Clear" />
+                            <Button Command="{Binding ShareButtonClickCommand}"
+                                    HorizontalOptions="EndAndExpand"
+                                    ImageSource="share_icon_color" />
+                        </StackLayout>
+                    </Frame>
                 </Grid>
-            </Frame>
-            <Frame Padding="10,10,0,10"
-                   BackgroundColor="{DynamicResource Foreground}"
-                   StyleClass="Base, DefaultMargin"
-                   VerticalOptions="FillAndExpand">
-                <CollectionView x:Name="GeodataList"
-                                Header="{Binding .}"
-                                HeaderTemplate="{StaticResource Header}"
-                                ItemTemplate="{StaticResource Body}"
-                                ItemsSource="{Binding LogPositions}"
-                                ItemsUpdatingScrollMode="KeepLastItemInView"
-                                VerticalOptions="FillAndExpand" IsEnabled="{Binding ScrollEnabled}" />
-            </Frame>
+                <Frame Margin="10,10,10,50"
+                       Padding="10,10,0,10"
+                       BackgroundColor="{DynamicResource Foreground}"
+                       StyleClass="Base"
+                       VerticalOptions="FillAndExpand">
+                    <CollectionView x:Name="GeodataList"
+                                    Header="{Binding .}"
+                                    HeaderTemplate="{StaticResource Header}"
+                                    IsEnabled="{Binding ScrollEnabled}"
+                                    ItemTemplate="{StaticResource Body}"
+                                    ItemsSource="{Binding LogPositions}"
+                                    ItemsUpdatingScrollMode="KeepLastItemInView"
+                                    VerticalOptions="FillAndExpand" />
+                </Frame>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

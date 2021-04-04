@@ -41,6 +41,9 @@ namespace Groundsman.ViewModels
                 case "File":
                     await ImportFeaturesFromFile();
                     break;
+                case "Log":
+                    await NavigationService.NavigateToNewLoggerPage();
+                    break;
             }
         }
 

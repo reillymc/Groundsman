@@ -17,12 +17,6 @@
             </x:Arguments>
         </NavigationPage>
 
-        <NavigationPage Title="Logger" Icon="log_icon">
-            <x:Arguments>
-                <views:LoggerView />
-            </x:Arguments>
-        </NavigationPage>
-
         <NavigationPage Title="Map" Icon="map_icon">
             <x:Arguments>
                 <views:MapView />

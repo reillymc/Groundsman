@@ -23,6 +23,20 @@ namespace Groundsman.Services
             await currentPage.Navigation.PushModalAsync(new EditFeatureDetailsView(type));
         }
 
+        public async Task NavigateToLoggerPage(Feature feature)
+        {
+            var currentPage = GetCurrentPage();
+
+            await currentPage.Navigation.PushModalAsync(new LoggerView(feature));
+        }
+
+        public async Task NavigateToNewLoggerPage()
+        {
+            var currentPage = GetCurrentPage();
+
+            await currentPage.Navigation.PushModalAsync(new LoggerView());
+        }
+
         public async Task PushAddFeaturePage()
         {
             var currentPage = GetCurrentPage();

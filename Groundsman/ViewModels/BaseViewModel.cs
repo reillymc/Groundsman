@@ -15,7 +15,6 @@ namespace Groundsman.ViewModels
     {
         public IDataService<Feature> FeatureStore => DependencyService.Get<IDataService<Feature>>();
         public INavigationService<Feature> NavigationService => DependencyService.Get<INavigationService<Feature>>();
-        public static LogStore LogStore = new LogStore();
         public static ShakeService shakeService = App.shakeService;
         private ObservableCollection<Feature> featureList = App.featureList;
         public ObservableCollection<Feature> FeatureList

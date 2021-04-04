@@ -22,7 +22,7 @@ namespace Groundsman.ViewModels
         {
             AddButtonTappedCommand = new Command(async () => await AddButtonTapped());
             ShareButtonTappedCommand = new Command(async () => await ShowShareSheet());
-            ItemTappedCommand = new Command<Feature>(async (feature) => await ShowEditFeatureDetailsPage(feature));
+            ItemTappedCommand = new Command<Feature>(async (feature) => await ShowFeatureDetailsPage(feature));
             DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
 
             Title = "My Features";
@@ -64,13 +64,18 @@ namespace Groundsman.ViewModels
         /// Displays the edit page for the selected feature.
         /// </summary>
         /// <param name="feature">Feature to edit.</param>
-        private async Task ShowEditFeatureDetailsPage(Feature feature)
+        private async Task ShowFeatureDetailsPage(Feature feature)
         {
             if (IsBusy) return;
             IsBusy = true;
-
-            await NavigationService.NavigateToEditPage(feature);
-
+            if (feature.Properties.ContainsKey("DateTimes"))
+            {
+                await NavigationService.NavigateToLoggerPage(feature);
+            }
+            else
+            {
+                await NavigationService.NavigateToEditPage(feature);
+            }
             IsBusy = false;
         }
 

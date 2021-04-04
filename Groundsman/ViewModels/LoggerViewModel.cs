@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -20,7 +22,10 @@ namespace Groundsman.ViewModels
         public ICommand ToggleButtonClickCommand { set; get; }
         public ICommand ClearButtonClickCommand { set; get; }
         public ICommand ShareButtonClickCommand { set; get; }
+        public ICommand OnCancelTappedCommand { get; set; }
+        public ICommand OnDoneTappedCommand { get; set; }
 
+        public Feature LogFeature;
         public ObservableCollection<DisplayPosition> LogPositions { get; set; }
         private List<string> DateTimeList = new List<string>();
 
@@ -84,32 +89,29 @@ namespace Groundsman.ViewModels
             }
         }
 
+        public string NameEntry { get; set; }
+
         public LoggerViewModel()
         {
-            Title = "Logger";
+            Title = "New Log Line";
             LogPositions = new ObservableCollection<DisplayPosition>();
 
-            try
+            LogFeature = new Feature
             {
-                Feature LogLine = Feature.ImportGeoJSON(AppConstants.GetLogFile());
-                JArray dt = (JArray)LogLine.Properties["DateTimes"];
-                string[] datetimes = dt.ToObject<string[]>();
-                LineString line = (LineString)LogLine.Geometry;
-                int index = 0;
-                foreach (Position position in line.Coordinates)
+                Properties = new Dictionary<string, object>
                 {
-                    DateTimeList.Add(datetimes[index]);
-                    LogPositions.Add(new DisplayPosition(datetimes[index], position));
-                    index++;
+                    ["id"] = AppConstants.NEW_ENTRY_ID
                 }
-            }
-            catch (Exception ex)
-            { /*TODO*/
-                NavigationService.ShowAlert("", ex.Message, false);
-                
-            }
+            };
 
 
+
+            InitCommands();
+
+        }
+
+        private void InitCommands()
+        {
             ToggleButtonClickCommand = new Command(() =>
             {
                 if (isLogging)
@@ -140,10 +142,41 @@ namespace Groundsman.ViewModels
                 isLogging = !isLogging;
                 ScrollEnabled = !isLogging;
             });
-
             ClearButtonClickCommand = new Command(() => { ClearLog(); });
-
             ShareButtonClickCommand = new Command(async () => { await ExportLogFile(); });
+            OnCancelTappedCommand = new Command(async () => await OnDismiss(true));
+            OnDoneTappedCommand = new Command(async () => await OnSaveUpdateActivated());
+        }
+
+        public LoggerViewModel(Feature Log)
+        {
+            Title = NameEntry = (string)Log.Properties["name"];
+
+            LogFeature = Log;
+            LogPositions = new ObservableCollection<DisplayPosition>();
+            object test = Log.Properties["DateTimes"];
+            string[] datetimes = ((IEnumerable)test).Cast<object>()
+                             .Select(x => x.ToString())
+                             .ToArray();
+            //string[] datetimes = (string[])Log.Properties["DateTimes"];
+            LineString line = (LineString)Log.Geometry;
+            int index = 0;
+            foreach (Position position in line.Coordinates)
+            {
+                DateTimeList.Add(datetimes[index]);
+                LogPositions.Add(new DisplayPosition(datetimes[index], position));
+                index++;
+            }
+            InitCommands();
+        }
+
+
+        private async Task OnSaveUpdateActivated()
+        {
+            if (await SaveLogAsync())
+            {
+                await NavigationService.NavigateBack(true);
+            }
         }
 
         public void StartLogging(int Interval)
@@ -169,16 +202,15 @@ namespace Groundsman.ViewModels
                     DisplayPosition position = new DisplayPosition(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), location.Longitude.ToString(), location.Latitude.ToString(), location.Altitude.ToString());
                     LogPositions.Add(position);
                     DateTimeList.Add(position.Index);
-                    SaveLog();
                 }
             }
         }
 
-        private void SaveLog()
+        private async Task<bool> SaveLogAsync()
         {
             if (LogPositions.Count < 2)
             {
-                return;
+                return false;
             }
             List<Position> posList = new List<Position>();
             foreach (DisplayPosition displayPosition in LogPositions)
@@ -186,20 +218,18 @@ namespace Groundsman.ViewModels
                 posList.Add(new Position(displayPosition));
             }
 
-            Feature logLine = new Feature
-            {
-                Properties = new Dictionary<string, object>(),
-                Geometry = new LineString(posList)
-            };
+            LogFeature.Geometry = new LineString(posList);
+            LogFeature.Properties["DateTimes"] = DateTimeList.ToArray();
+            LogFeature.Properties["name"] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : "Log LineString";
+            LogFeature.Properties["date"] = DateTime.Now.ToShortDateString();
+            LogFeature.Properties["author"] = Preferences.Get("UserID", "Groundsman");
 
-            logLine.Properties.Add("DateTimes", DateTimeList.ToArray());
-            File.WriteAllText(AppConstants.LOG_FILE, logLine.ExportGeoJSON());
+            return (string)LogFeature.Properties["id"] == AppConstants.NEW_ENTRY_ID ? await FeatureStore.AddItemAsync(LogFeature) : await FeatureStore.UpdateItemAsync(LogFeature);
         }
 
         private void ClearLog()
         {
             LogPositions.Clear();
-            File.WriteAllText(AppConstants.LOG_FILE, "");
         }
 
         public async Task ExportLogFile()

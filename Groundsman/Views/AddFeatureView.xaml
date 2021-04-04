@@ -50,6 +50,25 @@
             <Grid Padding="20,0">
                 <Frame Grid.Row="0"
                        Grid.Column="0"
+                       Margin="0,0,0,20"
+                       BackgroundColor="{DynamicResource Foreground}"
+                       HasShadow="False"
+                       HeightRequest="18">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Log" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                        <Label HorizontalOptions="StartAndExpand"
+                               Style="{StaticResource FrameButtonLabel}"
+                               Text="Logger Line" />
+                        <Image HorizontalOptions="Center"
+                               Source="line_icon"
+                               VerticalOptions="EndAndExpand" />
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Row="1"
+                       Grid.Column="0"
+                       Margin="0,20,0,0"
                        BackgroundColor="{DynamicResource Foreground}"
                        HasShadow="False"
                        HeightRequest="18">
@@ -65,8 +84,9 @@
                                VerticalOptions="EndAndExpand" />
                     </StackLayout>
                 </Frame>
-                <Frame Grid.Row="1"
+                <Frame Grid.Row="2"
                        Grid.Column="0"
+                       Margin="0,0,0,20"
                        BackgroundColor="{DynamicResource Foreground}"
                        HasShadow="False"
                        HeightRequest="18">
