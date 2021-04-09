@@ -292,7 +292,7 @@ namespace Groundsman.ViewModels
 
             if (await ValidateGeometry() && await ValidateProperties())
             {
-                if (await SaveFeature())
+                if (SaveFeature())
                 {
                     await NavigationService.NavigateBack(true);
                 }
@@ -320,7 +320,7 @@ namespace Groundsman.ViewModels
                         break;
                     case GeoJSONType.Polygon:
                         // This method does not allow for creating a polygon with multiple LinearRings
-                        List<Position> positions = (Positions.Select(pointValue => new Position(pointValue))).ToList();
+                        List<Position> positions = Positions.Select(pointValue => new Position(pointValue)).ToList();
                         // Close polygon with duplicated first feature
                         positions.Add(positions[0]);
                         Feature.Geometry = new Polygon(new List<LinearRing>() { new LinearRing(positions) });
@@ -391,9 +391,6 @@ namespace Groundsman.ViewModels
             return true;
         }
 
-        private async Task<bool> SaveFeature()
-        {
-            return (string)Feature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? await FeatureStore.AddItemAsync(Feature) : await FeatureStore.UpdateItemAsync(Feature);
-        }
+        private bool SaveFeature() => (string)Feature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? FeatureStore.AddItem(Feature) : FeatureStore.UpdateItem(Feature);
     }
 }

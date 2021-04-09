@@ -1,9 +1,8 @@
-﻿using Groundsman.Models;
-using Groundsman.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Groundsman.Models;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -52,7 +51,7 @@ namespace Groundsman.ViewModels
             string contents = await Clipboard.GetTextAsync();
             try
             {
-                int successfulImports = await FeatureStore.ImportFeaturesAsync(contents);
+                int successfulImports = FeatureStore.ImportItems(contents);
                 await NavigationService.ShowImportAlert(successfulImports);
             }
             catch (Exception ex)
@@ -91,7 +90,7 @@ namespace Groundsman.ViewModels
 
                     try
                     {
-                        int successfulImports = await FeatureStore.ImportFeaturesAsync(fileContents);
+                        int successfulImports = FeatureStore.ImportItems(fileContents);
                         await NavigationService.ShowImportAlert(successfulImports);
                     }
                     catch (Exception ex)

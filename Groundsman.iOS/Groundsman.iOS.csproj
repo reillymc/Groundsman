@@ -50,7 +50,7 @@
     <CodesignKey>Apple Development: Reilly Mackenzie-Cree (ZH63974M2B)</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <CodesignProvision>Groundsman Dev Prov (Max/Plus)</CodesignProvision>
+    <CodesignProvision>iOS Team Provisioning Profile: *</CodesignProvision>
     <MtouchLink>None</MtouchLink>
     <MtouchInterpreter>-all</MtouchInterpreter>
   </PropertyGroup>

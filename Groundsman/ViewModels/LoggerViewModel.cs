@@ -223,7 +223,7 @@ namespace Groundsman.ViewModels
             LogFeature.Properties[Constants.DateProperty] = DateTime.Now.ToShortDateString();
             LogFeature.Properties[Constants.AuthorProperty] = Preferences.Get(Constants.UserIDKey, "Groundsman");
 
-            return (string)LogFeature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? await FeatureStore.AddItemAsync(LogFeature) : await FeatureStore.UpdateItemAsync(LogFeature);
+            return (string)LogFeature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? FeatureStore.AddItem(LogFeature) : FeatureStore.UpdateItem(LogFeature);
         }
 
         private void ClearLog()

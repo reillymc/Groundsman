@@ -26,7 +26,7 @@ namespace Groundsman
             shakeService = new ShakeService(this);
             DependencyService.Register<FeatureService>();
             DependencyService.Register<NavigationService>();
-            FeatureStore.ImportFeaturesAsync(Constants.FeaturesFileContents);
+            FeatureStore.ImportItems(Constants.FeaturesFileContents);
             MainPage = new NavigationPage(HomePage.Instance);
 
             // If the user ID hasn't been set yet, prompt the user to create one upon app launch.
@@ -55,7 +55,7 @@ namespace Groundsman
         {
             try
             {
-                int successfulImports = await FeatureStore.ImportFeaturesAsync(fileContent);
+                int successfulImports = FeatureStore.ImportItems(fileContent);
                 await NavigationService.ShowImportAlert(successfulImports);
             }
             catch (Exception ex)
@@ -72,7 +72,7 @@ namespace Groundsman
                 try
                 {
                     string contents = File.ReadAllText(Constants.DELETED_FEATURE_FILE);
-                    await FeatureStore.ImportFeaturesAsync(contents);
+                    _ = FeatureStore.ImportItems(contents);
                 }
                 catch
                 {

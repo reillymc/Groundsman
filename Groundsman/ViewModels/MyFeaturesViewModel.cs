@@ -23,7 +23,7 @@ namespace Groundsman.ViewModels
             AddButtonTappedCommand = new Command(async () => await AddButtonTapped());
             ShareButtonTappedCommand = new Command(async () => await ShowShareSheet());
             ItemTappedCommand = new Command<Feature>(async (feature) => await ShowFeatureDetailsPage(feature));
-            DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
+            DeleteEntryCommand = new Command<Feature>((feature) => DeleteFeature(feature));
 
             Title = "My Features";
         }
@@ -84,13 +84,13 @@ namespace Groundsman.ViewModels
         /// </summary>
         /// <param name="feature">Feature to delete.</param>
         /// <returns></returns>
-        private async Task DeleteFeature(Feature feature)
+        private void DeleteFeature(Feature feature)
         {
             if (IsBusy) return;
             IsBusy = true;
 
             shakeService.Start();
-            await FeatureStore.DeleteItemAsync(feature);
+            _ = FeatureStore.DeleteItem(feature);
 
             IsBusy = false;
         }

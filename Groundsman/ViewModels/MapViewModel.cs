@@ -134,7 +134,7 @@ namespace Groundsman.ViewModels
                 {
                     StrokeWidth = 4,
                     StrokeColor = Color.OrangeRed,
-                    FillColor = Color.FromHex("#85cb5748"),
+                    FillColor = Color.OrangeRed.AddLuminosity(.1).MultiplyAlpha(0.6),
                 };
 
                 Polygon polygon = (Polygon)feature.Geometry;
@@ -154,9 +154,9 @@ namespace Groundsman.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void OnMapClicked(object sender, MapClickedEventArgs e)
+        private void OnMapClicked(object sender, MapClickedEventArgs e)
         {
-            FeatureList.ForEach(async (Feature feature) =>
+            FeatureList.ForEach((Feature feature) =>
             {
                 bool ItemHit = false;
 
@@ -173,7 +173,7 @@ namespace Groundsman.ViewModels
 
                 if (ItemHit)
                 {
-                    await DisplayFeatureActionMenuAsync(feature);
+                    _ = DisplayFeatureActionMenuAsync(feature);
                 }
             });
         }
@@ -186,7 +186,7 @@ namespace Groundsman.ViewModels
             {
                 case "Delete":
                     shakeService.Start();
-                    await FeatureStore.DeleteItemAsync(feature);
+                    _ = FeatureStore.DeleteItem(feature);
                     RefreshMap();
                     break;
                 case "View":

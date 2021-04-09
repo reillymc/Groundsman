@@ -11,19 +11,18 @@ namespace Groundsman.Services
 {
     public class FeatureService : IDataService<Feature>
     {
-        public async Task<bool> AddItemAsync(Feature item)
+        public bool AddItem(Feature item)
         {
-            bool parseResult = ParseProperties(item);
-            if (parseResult)
+            if (ParseProperties(item))
             {
-                //EnsureUniqueID(importedFeature);
                 App.featureList.Add(item);
-                SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
+                _ = SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
+                return true;
             }
-            return parseResult;
+            return false;
         }
 
-        public async Task<int> AddItemsAsync(IEnumerable<Feature> item)
+        public int AddItems(IEnumerable<Feature> item)
         {
             int successfulImport = 0;
             foreach (Feature feature in item)
@@ -34,53 +33,49 @@ namespace Groundsman.Services
                     successfulImport++;
                 }
             }
-            SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
+            _ = SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
             return successfulImport;
         }
 
 
-        public async Task<bool> DeleteItemAsync(Feature item)
+        public bool DeleteItem(Feature item)
         {
             SaveFeatureToFile(item, Constants.DELETED_FEATURE_FILE);
             bool deleteSuccessful = App.featureList.Remove(item);
-            var save = SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
-            return save;
+            _ = SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
+            return deleteSuccessful;
         }
 
         /// <summary>
         /// Clears and resets feature list to default template items
         /// </summary>
-        /// <returns>True if saving of template files to feature list was successful</returns>
-        public async Task<bool> DeleteItemsAsync()
+        public void ResetItems()
         {
             App.featureList.Clear();
-            await ImportFeaturesAsync(Constants.GetTemplateFile());
-            return SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
+            ImportItems(Constants.GetTemplateFile());
+            _ = SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
         }
 
-        public async Task<bool> UpdateItemAsync(Feature item)
+        public bool UpdateItem(Feature item)
         {
-            //bool parseResult = TryParseFeature(item); SHOULD be implemented infuture for final verification once JSON importing is split from general verification
             for (int i = 0; i < App.featureList.Count; i++)
             {
                 if (App.featureList[i].Properties[Constants.IdentifierProperty] == item.Properties[Constants.IdentifierProperty])
                 {
                     App.featureList[i] = item;
+                    _ = SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
+                    return true;
                 }
-
             }
-            return SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
-
+            return false;
         }
-
-
 
         /// <summary>
         /// Imports GeoJSON and adds the new features to the feature list
         /// </summary>
         /// <param name="contents">A serialised GeoJSON object</param>
         /// <returns>Number of features successfully imported</returns>
-        public async Task<int> ImportFeaturesAsync(string contents)
+        public int ImportItems(string contents)
         {
             GeoJSONObject importedGeoJSON = GeoJSONObject.ImportGeoJSON(contents);
             if (importedGeoJSON == null)
@@ -89,44 +84,44 @@ namespace Groundsman.Services
             }
             return importedGeoJSON.Type switch
             {
-                GeoJSONType.Point => await AddItemAsync(new Feature((Point)importedGeoJSON)) ? 1 : 0,
-                GeoJSONType.LineString => await AddItemAsync(new Feature((LineString)importedGeoJSON)) ? 1 : 0,
-                GeoJSONType.Polygon => await AddItemAsync(new Feature((Polygon)importedGeoJSON)) ? 1 : 0,
-                GeoJSONType.Feature => await AddItemAsync((Feature)importedGeoJSON) ? 1 : 0,
-                GeoJSONType.FeatureCollection => await AddItemsAsync(((FeatureCollection)importedGeoJSON).Features),
+                GeoJSONType.Point => AddItem(new Feature((Point)importedGeoJSON)) ? 1 : 0,
+                GeoJSONType.LineString => AddItem(new Feature((LineString)importedGeoJSON)) ? 1 : 0,
+                GeoJSONType.Polygon => AddItem(new Feature((Polygon)importedGeoJSON)) ? 1 : 0,
+                GeoJSONType.Feature => AddItem((Feature)importedGeoJSON) ? 1 : 0,
+                GeoJSONType.FeatureCollection => AddItems(((FeatureCollection)importedGeoJSON).Features),
                 _ => throw new ArgumentException("Import data does not contain a supported GeoJSON type."),
             };
         }
 
-        private bool SaveFeatureToFile(Feature item, string FileName)
+        private Task SaveFeatureToFile(Feature item, string FileName)
         {
             var json = JsonConvert.SerializeObject(item);
-            File.WriteAllText(FileName, json);
-            return true;
+            return File.WriteAllTextAsync(FileName, json);
         }
 
-
-        public bool SaveFeaturesToFile(IList<Feature> items, string FileName)
+        public Task SaveFeaturesToFile(IList<Feature> items, string FileName)
         {
             FeatureCollection geoJSONObject = new FeatureCollection(items);
-
-            var json = JsonConvert.SerializeObject(geoJSONObject);
-            File.WriteAllText(FileName, json);
-            return true;
+            return File.WriteAllTextAsync(FileName, JsonConvert.SerializeObject(geoJSONObject));
         }
 
         public ShareFileRequest ExportFeatures(IList<Feature> items)
         {
-            string fileName = "";
-            if (items.Count > 1)
+            string fileName;
+            switch (items.Count)
             {
-                fileName = "Groundsman Feature Collection";
-                SaveFeaturesToFile(items, Constants.GetExportFile(fileName, ExportType.GeoJSON));
-            }
-            else if (items.Count == 1)
-            {
-                fileName = (string)items[0].Properties[Constants.NameProperty];
-                SaveFeatureToFile(items[0], Constants.GetExportFile(fileName, ExportType.GeoJSON));
+                case 0:
+                    fileName = "Groundsman Feature Collection";
+                    SaveFeaturesToFile(items, Constants.GetExportFile(fileName, ExportType.GeoJSON));
+                    break;
+                case 1:
+                    fileName = (string)items[0].Properties[Constants.NameProperty];
+                    SaveFeatureToFile(items[0], Constants.GetExportFile(fileName, ExportType.GeoJSON));
+                    break;
+                default:
+                    fileName = "Groundsman Feature Collection";
+                    SaveFeaturesToFile(items, Constants.GetExportFile(fileName, ExportType.GeoJSON));
+                    break;
             }
 
             return new ShareFileRequest
@@ -155,7 +150,7 @@ namespace Groundsman.Services
 
 
             // If author ID hasn't been set on the feature, default it to the user's ID.
-            string author = Preferences.Get(Constants.UserIDKey, "Groundsman");
+            string author = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
             if (feature.Properties.ContainsKey(Constants.AuthorProperty))
             {
                 author = (string)feature.Properties[Constants.AuthorProperty];
@@ -198,6 +193,7 @@ namespace Groundsman.Services
                 {
                     //warning date couldnt be parsed
                 }
+
                 feature.Properties[Constants.DateProperty] = date.ToShortDateString();
             }
             else
