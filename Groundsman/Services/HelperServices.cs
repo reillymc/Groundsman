@@ -8,24 +8,20 @@ namespace Groundsman.Services
 {
     public class HelperServices
     {
-        private static GeolocationAccuracy geolocationAccuracy;
-        private static Position point;
-        private static int decimalAccuracy;
-
         /// <summary>
         /// Queries the current location of the device
         /// </summary>
         /// <returns>A point object containing the device's current location</returns>
         public static async Task<Position> GetGeoLocation()
         {
-            geolocationAccuracy = Preferences.Get("GPSPrecision", 2) switch
+            GeolocationAccuracy geolocationAccuracy = Preferences.Get(Constants.GPSPrecisionKey, Constants.DefaultGPSPrecisionValue) switch
             {
                 0 => GeolocationAccuracy.Best,
                 1 => GeolocationAccuracy.High,
                 3 => GeolocationAccuracy.Low,
                 _ => GeolocationAccuracy.Medium,
             };
-            decimalAccuracy = Preferences.Get("DataDecimalAccuracy", 8);
+            int decimalAccuracy = Preferences.Get(Constants.DecimalAccuracyKey, Constants.DefaultDecimalAccuracyValue);
             try
             {
                 // Gets current location of device (MORE ACCURATE, but slower)
@@ -33,13 +29,9 @@ namespace Groundsman.Services
                 var location = await Geolocation.GetLocationAsync(request);
                 if (location != null)
                 {
-                    point = new Position(Math.Round(location.Longitude, decimalAccuracy), Math.Round(location.Latitude, decimalAccuracy), Math.Round(location.Altitude ?? 0.0, decimalAccuracy));
-                    return point;
+                    return new Position(Math.Round(location.Longitude, decimalAccuracy), Math.Round(location.Latitude, decimalAccuracy), Math.Round(location.Altitude ?? 0.0, decimalAccuracy));
                 }
-                else
-                {
-                    return null;
-                }
+                return null;
             }
             catch (Exception)
             {

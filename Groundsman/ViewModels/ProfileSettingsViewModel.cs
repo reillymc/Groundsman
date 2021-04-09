@@ -9,32 +9,60 @@ namespace Groundsman.ViewModels
         public Command DeleteAllFeatures { get; set; }
         public Command InfoButtonTappedCommand { get; set; }
 
-        private string _IDEntry;
         public string IDEntry
         {
-            get { return _IDEntry; }
+            get => Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
             set
             {
-                _IDEntry = value;
-                HandleTextChanged();
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    Preferences.Set(Constants.UserIDKey, value);
+                }
+                else
+                {
+                    Preferences.Set(Constants.UserIDKey, Constants.DefaultUserValue);
+                }
             }
         }
 
-        public int DecimalAccuracyEntry { get; set; }
-        public int GPSPrecisionEntry { get; set; }
-        public bool EnableAltitude { get; set; }
-        public bool EnableShakeToUndo { get; set; }
-        public bool ShowPointsOnMap { get; set; }
-        public bool ShowLinesOnMap { get; set; }
-        public bool ShowPolygonsOnMap { get; set; }
-        public bool ShowLogPathOnMap { get; set; }
+        public int DecimalAccuracyEntry
+        {
+            get => Preferences.Get(Constants.DecimalAccuracyKey, Constants.DefaultDecimalAccuracyValue);
+            set => Preferences.Set(Constants.DecimalAccuracyKey, value);
+        }
+        public int GPSPrecisionEntry
+        {
+            get => Preferences.Get(Constants.GPSPrecisionKey, Constants.DefaultGPSPrecisionValue);
+            set => Preferences.Set(Constants.GPSPrecisionKey, value);
+        }
+
+        public bool EnableShakeToUndo
+        {
+            get => Preferences.Get(Constants.ShakeToUndoKey, true);
+            set => Preferences.Set(Constants.ShakeToUndoKey, value);
+        }
+
+        public bool ShowPointsOnMap
+        {
+            get => Preferences.Get(Constants.MapDrawPointsKey, true);
+            set => Preferences.Set(Constants.MapDrawPointsKey, value);
+        }
+        public bool ShowLinesOnMap
+        {
+            get => Preferences.Get(Constants.MapDrawLinesKey, true);
+            set => Preferences.Set(Constants.MapDrawLinesKey, value);
+        }
+        public bool ShowPolygonsOnMap
+        {
+            get => Preferences.Get(Constants.MapDrawPolygonsKey, true);
+            set => Preferences.Set(Constants.MapDrawPolygonsKey, value);
+        }
 
         public ProfileSettingsViewModel()
         {
             Title = "Settings";
             DeleteAllFeatures = new Command(async () => await ExecuteDeleteAllFeaturesCommand());
             InfoButtonTappedCommand = new Command(async () => await NavigationService.ShowAlert("Credits", "Development:\nReilly MacKenzie-Cree\nGeorge Delosa\nAri Luangamath\n\nIcons by Icons8\nhttps://icons8.com", false));
-            UpdatePreferences();
         }
 
         private async Task ExecuteDeleteAllFeaturesCommand()
@@ -44,31 +72,6 @@ namespace Groundsman.ViewModels
             {
                 await FeatureStore.DeleteItemsAsync();
             }
-        }
-
-        private void HandleTextChanged()
-        {
-            if (string.IsNullOrWhiteSpace(IDEntry) == false)
-            {
-                Preferences.Set("UserID", IDEntry);
-            }
-            else
-            {
-                Preferences.Set("UserID", "Groundsman");
-            }
-        }
-
-        public void UpdatePreferences()
-        {
-            IDEntry = Preferences.Get("UserID", "Groundsman");
-            DecimalAccuracyEntry = Preferences.Get("DataDecimalAccuracy", 6);
-            GPSPrecisionEntry = Preferences.Get("GPSPrecision", 2);
-            EnableAltitude = Preferences.Get("EnableAltitude", true);
-            EnableShakeToUndo = Preferences.Get("EnableShakeToUndo", true);
-            ShowPointsOnMap = Preferences.Get("ShowPointsOnMap", true);
-            ShowLinesOnMap = Preferences.Get("ShowLinesOnMap", true);
-            ShowPolygonsOnMap = Preferences.Get("ShowPolygonsOnMap", true);
-            ShowLogPathOnMap = Preferences.Get("ShowLogPathOnMap", true);
         }
     }
 }

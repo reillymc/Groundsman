@@ -191,21 +191,21 @@
                                    IsEnabled="False"
                                    Placeholder="0"
                                    Style="{StaticResource EntryStyle}"
-                                   Text="{Binding GeolocationValues[0].Longitude}" />
+                                   Text="{Binding Positions[0].Longitude}" />
                             <Entry Grid.Row="1"
                                    Grid.Column="2"
                                    FontSize="Small"
                                    IsEnabled="False"
                                    Placeholder="0"
                                    Style="{StaticResource EntryStyle}"
-                                   Text="{Binding GeolocationValues[0].Latitude}" />
+                                   Text="{Binding Positions[0].Latitude}" />
                             <Entry Grid.Row="1"
                                    Grid.Column="3"
                                    FontSize="Small"
                                    IsEnabled="False"
                                    Placeholder="0"
                                    Style="{StaticResource EntryStyle}"
-                                   Text="{Binding GeolocationValues[0].Altitude}" />
+                                   Text="{Binding Positions[0].Altitude}" />
                         </Grid>
                         <Frame Margin="5"
                                Padding="8"
@@ -237,7 +237,7 @@
                         <Label Style="{StaticResource LabelTitle}" Text="Properties" />
                         <CollectionView x:Name="PropertiesList"
                                         ItemTemplate="{StaticResource PropertyItemTemplate}"
-                                        ItemsSource="{Binding FeatureProperties}"
+                                        ItemsSource="{Binding Properties}"
                                         Margin="5,0,0,0"
                                         VerticalOptions="Start" 
                                         Footer="{Binding .}"
@@ -342,7 +342,7 @@
                             Header="{Binding .}"
                             HeaderTemplate="{StaticResource HeaderTemplate}"
                             ItemTemplate="{StaticResource ItemTemplate}"
-                            ItemsSource="{Binding GeolocationValues}"
+                            ItemsSource="{Binding Positions}"
                             VerticalOptions="FillAndExpand" />
         </StackLayout>
     </ContentPage.Content>

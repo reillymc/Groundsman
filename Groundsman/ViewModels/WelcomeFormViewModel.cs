@@ -31,9 +31,9 @@ namespace Groundsman.ViewModels
         /// </summary>
         private async Task SubmitIDEntry()
         {
-            if (string.IsNullOrWhiteSpace(IDEntry) == false)
+            if (!string.IsNullOrWhiteSpace(IDEntry))
             {
-                Preferences.Set("UserID", IDEntry);
+                Preferences.Set(Constants.UserIDKey, IDEntry);
                 await Application.Current.SavePropertiesAsync();
                 await NavigationService.NavigateBack(true);
             }

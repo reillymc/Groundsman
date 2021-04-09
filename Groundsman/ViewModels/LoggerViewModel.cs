@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Groundsman.Models;
 using Groundsman.Services;
-using Newtonsoft.Json.Linq;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -43,7 +42,7 @@ namespace Groundsman.ViewModels
             }
         }
 
-        private List<string> _UnitItems = new List<string> { "Seconds", "Minutes", "Hours" };
+        private List<string> _UnitItems = new List<string>() { "Seconds", "Minutes", "Hours" };
         public List<string> UnitItems
         {
             get { return _UnitItems; }
@@ -100,7 +99,7 @@ namespace Groundsman.ViewModels
             {
                 Properties = new Dictionary<string, object>
                 {
-                    ["id"] = AppConstants.NEW_ENTRY_ID
+                    [Constants.IdentifierProperty] = Constants.NewFeatureID
                 }
             };
 
@@ -150,11 +149,11 @@ namespace Groundsman.ViewModels
 
         public LoggerViewModel(Feature Log)
         {
-            Title = NameEntry = (string)Log.Properties["name"];
+            Title = NameEntry = (string)Log.Properties[Constants.NameProperty];
 
             LogFeature = Log;
             LogPositions = new ObservableCollection<DisplayPosition>();
-            object test = Log.Properties["DateTimes"];
+            object test = Log.Properties[Constants.LogDateTimeListProperty];
             string[] datetimes = ((IEnumerable)test).Cast<object>()
                              .Select(x => x.ToString())
                              .ToArray();
@@ -219,12 +218,12 @@ namespace Groundsman.ViewModels
             }
 
             LogFeature.Geometry = new LineString(posList);
-            LogFeature.Properties["DateTimes"] = DateTimeList.ToArray();
-            LogFeature.Properties["name"] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : "Log LineString";
-            LogFeature.Properties["date"] = DateTime.Now.ToShortDateString();
-            LogFeature.Properties["author"] = Preferences.Get("UserID", "Groundsman");
+            LogFeature.Properties[Constants.LogDateTimeListProperty] = DateTimeList.ToArray();
+            LogFeature.Properties[Constants.NameProperty] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : "Log LineString";
+            LogFeature.Properties[Constants.DateProperty] = DateTime.Now.ToShortDateString();
+            LogFeature.Properties[Constants.AuthorProperty] = Preferences.Get(Constants.UserIDKey, "Groundsman");
 
-            return (string)LogFeature.Properties["id"] == AppConstants.NEW_ENTRY_ID ? await FeatureStore.AddItemAsync(LogFeature) : await FeatureStore.UpdateItemAsync(LogFeature);
+            return (string)LogFeature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? await FeatureStore.AddItemAsync(LogFeature) : await FeatureStore.UpdateItemAsync(LogFeature);
         }
 
         private void ClearLog()
@@ -241,11 +240,11 @@ namespace Groundsman.ViewModels
                 LogString += $"{position}\n";
             }
 
-            File.WriteAllText(AppConstants.EXPORT_LOG_FILE, LogString);
+            File.WriteAllText(Constants.EXPORT_LOG_FILE, LogString);
             await Share.RequestAsync(new ShareFileRequest
             {
                 Title = "Groundsman Log",
-                File = new ShareFile(AppConstants.EXPORT_LOG_FILE, "text/csv"),
+                File = new ShareFile(Constants.EXPORT_LOG_FILE, "text/csv"),
                 PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet
                     ? new System.Drawing.Rectangle((int)(DeviceDisplay.MainDisplayInfo.Width * .474), 80, 0, 0)
                     : System.Drawing.Rectangle.Empty

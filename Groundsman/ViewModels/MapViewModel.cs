@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Groundsman.Models;
 using Groundsman.Services;
 using Xamarin.Essentials;
@@ -27,7 +26,6 @@ namespace Groundsman.ViewModels
             Map = new CustomMap();
             CenterMapOnUser();
             Map.MapClicked += OnMapClicked;
-            //MessagingCenter.Subscribe<LogStore>(this, "LogUpdated", (sender) => { DrawLogPath(); });
         }
 
         public Position defaultMapCentre = new Position(153.021, -27.47);
@@ -58,7 +56,6 @@ namespace Groundsman.ViewModels
         {
             CleanFeatures();
             DrawFeatures();
-           // DrawLogPath();
 
             //SetShowingUser
             var status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
@@ -89,12 +86,12 @@ namespace Groundsman.ViewModels
 
         private void DrawPoint(Feature feature)
         {
-            if (Preferences.Get("ShowPointsOnMap", true))
+            if (Preferences.Get(Constants.MapDrawPointsKey, true))
             {
                 Point point = (Point)feature.Geometry;
-                string address = double.IsNaN(point.Coordinates.Altitude) || !Preferences.Get("EnableAltitude", true)
-                    ? string.Format("{0}, {1}", point.Coordinates.Longitude, point.Coordinates.Latitude)
-                    : string.Format("{0}, {1}, {2}", point.Coordinates.Longitude, point.Coordinates.Latitude, point.Coordinates.Altitude);
+                string address = double.IsNaN(point.Coordinates.Altitude)
+                    ? $"{point.Coordinates.Longitude}, {point.Coordinates.Latitude}"
+                    : $"{point.Coordinates.Longitude}, {point.Coordinates.Latitude}, {point.Coordinates.Altitude}";
                 Pin pin = new Pin
                 {
                     Label = (string)feature.Properties["name"],
@@ -113,7 +110,7 @@ namespace Groundsman.ViewModels
 
         private void DrawLineString(Feature feature)
         {
-            if (Preferences.Get("ShowLinesOnMap", true))
+            if (Preferences.Get(Constants.MapDrawLinesKey, true))
             {
                 Polyline polyline = new Polyline
                 {
@@ -131,7 +128,7 @@ namespace Groundsman.ViewModels
 
         private void DrawPolygon(Feature feature)
         {
-            if (Preferences.Get("ShowPolygonsOnMap", true))
+            if (Preferences.Get(Constants.MapDrawPolygonsKey, true))
             {
                 XFMPolygon xfmpolygon = new XFMPolygon
                 {
@@ -152,27 +149,6 @@ namespace Groundsman.ViewModels
             }
         }
 
-        //private void DrawLogPath()
-        //{
-        //    if (Preferences.Get("ShowLinesOnMap", true))
-        //    {
-        //        if (LogStore.LogPoints.Count > 1)
-        //        {
-        //            Polyline logPolyline = new Polyline
-        //            {
-        //                StrokeColor = Color.DarkOrange,
-        //                StrokeWidth = 3,
-        //            };
-        //            LogStore.LogPoints.ForEach((DisplayPosition displayPosition) =>
-        //            {
-        //                Position position = new Position(displayPosition);
-        //                logPolyline.Geopath.Add(new XFMPosition(position.Latitude, position.Longitude));
-        //            });
-        //            Map.MapElements.Add(logPolyline);
-        //        }
-        //    }
-        //}
-
         /// <summary>
         /// When map is clicked, iterates through all features in the feature list and shows the feature info menu if feature has been tapped
         /// </summary>
@@ -184,12 +160,12 @@ namespace Groundsman.ViewModels
             {
                 bool ItemHit = false;
 
-                if (feature.Geometry.Type == GeoJSONType.Polygon && Preferences.Get("ShowPolygonsOnMap", true))
+                if (feature.Geometry.Type == GeoJSONType.Polygon && Preferences.Get(Constants.MapDrawPolygonsKey, true))
                 {
                     Polygon polygon = (Polygon)feature.Geometry;
                     ItemHit |= polygon.ContainsPosition(new Position(e.Position.Longitude, e.Position.Latitude));
                 }
-                else if (feature.Geometry.Type == GeoJSONType.LineString && Preferences.Get("ShowLinesOnMap", true))
+                else if (feature.Geometry.Type == GeoJSONType.LineString && Preferences.Get(Constants.MapDrawLinesKey, true))
                 {
                     LineString lineString = (LineString)feature.Geometry;
                     ItemHit |= lineString.ContainsPosition(new Position(e.Position.Longitude, e.Position.Latitude, 0));
@@ -204,7 +180,7 @@ namespace Groundsman.ViewModels
 
         async Task DisplayFeatureActionMenuAsync(Feature feature)
         {
-            string result = await NavigationService.GetCurrentPage().DisplayActionSheet((string)feature.Properties["name"], "Dismiss", "Delete", "View");
+            string result = await NavigationService.GetCurrentPage().DisplayActionSheet((string)feature.Properties[Constants.NameProperty], "Dismiss", "Delete", "View");
 
             switch (result)
             {
@@ -214,21 +190,17 @@ namespace Groundsman.ViewModels
                     RefreshMap();
                     break;
                 case "View":
-                    await NavigationService.NavigateToEditPage(feature);
+                    if (feature.Properties.ContainsKey(Constants.LogDateTimeListProperty))
+                    {
+                        await NavigationService.NavigateToLoggerPage(feature);
+                    }
+                    else
+                    {
+                        await NavigationService.NavigateToEditPage(feature);
+                    }
                     break;
                 default:
                     break;
-            }
-        }
-
-        async Task DisplayLogActionMenuAsync()
-        {
-            string result = await NavigationService.GetCurrentPage().DisplayActionSheet("Logger Path", "Dismiss", "Clear");
-
-            if (result == "Clear")
-            {
-                //LogStore.ClearLog();
-                RefreshMap();
             }
         }
     }

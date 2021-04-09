@@ -18,7 +18,7 @@ namespace Groundsman.Services
             {
                 //EnsureUniqueID(importedFeature);
                 App.featureList.Add(item);
-                SaveFeaturesToFile(App.featureList, AppConstants.FEATURES_FILE);
+                SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
             }
             return parseResult;
         }
@@ -34,16 +34,16 @@ namespace Groundsman.Services
                     successfulImport++;
                 }
             }
-            SaveFeaturesToFile(App.featureList, AppConstants.FEATURES_FILE);
+            SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
             return successfulImport;
         }
 
 
         public async Task<bool> DeleteItemAsync(Feature item)
         {
-            SaveFeatureToFile(item, AppConstants.DELETED_FEATURE_FILE);
+            SaveFeatureToFile(item, Constants.DELETED_FEATURE_FILE);
             bool deleteSuccessful = App.featureList.Remove(item);
-            var save = SaveFeaturesToFile(App.featureList, AppConstants.FEATURES_FILE);
+            var save = SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
             return save;
         }
 
@@ -54,8 +54,8 @@ namespace Groundsman.Services
         public async Task<bool> DeleteItemsAsync()
         {
             App.featureList.Clear();
-            await ImportFeaturesAsync(AppConstants.GetTemplateFile());
-            return SaveFeaturesToFile(App.featureList, AppConstants.FEATURES_FILE);
+            await ImportFeaturesAsync(Constants.GetTemplateFile());
+            return SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
         }
 
         public async Task<bool> UpdateItemAsync(Feature item)
@@ -63,13 +63,13 @@ namespace Groundsman.Services
             //bool parseResult = TryParseFeature(item); SHOULD be implemented infuture for final verification once JSON importing is split from general verification
             for (int i = 0; i < App.featureList.Count; i++)
             {
-                if (App.featureList[i].Properties["id"] == item.Properties["id"])
+                if (App.featureList[i].Properties[Constants.IdentifierProperty] == item.Properties[Constants.IdentifierProperty])
                 {
                     App.featureList[i] = item;
                 }
 
             }
-            return SaveFeaturesToFile(App.featureList, AppConstants.FEATURES_FILE);
+            return SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
 
         }
 
@@ -121,18 +121,18 @@ namespace Groundsman.Services
             if (items.Count > 1)
             {
                 fileName = "Groundsman Feature Collection";
-                SaveFeaturesToFile(items, AppConstants.GetExportFile(fileName));
+                SaveFeaturesToFile(items, Constants.GetExportFile(fileName, ExportType.GeoJSON));
             }
             else if (items.Count == 1)
             {
-                fileName = (string)items[0].Properties["name"];
-                SaveFeatureToFile(items[0], AppConstants.GetExportFile(fileName));
+                fileName = (string)items[0].Properties[Constants.NameProperty];
+                SaveFeatureToFile(items[0], Constants.GetExportFile(fileName, ExportType.GeoJSON));
             }
 
             return new ShareFileRequest
             {
                 Title = "Features Export",
-                File = new ShareFile(AppConstants.GetExportFile(fileName), "application/json"),
+                File = new ShareFile(Constants.GetExportFile(fileName, ExportType.GeoJSON), "application/json"),
             };
         }
 
@@ -143,38 +143,38 @@ namespace Groundsman.Services
                 feature.Properties = new Dictionary<string, object>();
             }
 
-            if (!feature.Properties.ContainsKey("id"))
+            if (!feature.Properties.ContainsKey(Constants.IdentifierProperty))
             {
-                feature.Properties.Add("id", Guid.NewGuid().ToString());
+                feature.Properties.Add(Constants.IdentifierProperty, Guid.NewGuid().ToString());
             }
-            else if ((string)feature.Properties["id"] == AppConstants.NEW_ENTRY_ID) //Until parsing is properly modular - brand new features are not checked again below
+            else if ((string)feature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID) //Until parsing is properly modular - brand new features are not checked again below
             {
-                feature.Properties["id"] = Guid.NewGuid().ToString();
+                feature.Properties[Constants.IdentifierProperty] = Guid.NewGuid().ToString();
                 return true;
             }
 
 
             // If author ID hasn't been set on the feature, default it to the user's ID.
-            string author = Preferences.Get("UserID", "Groundsman");
-            if (feature.Properties.ContainsKey("author"))
+            string author = Preferences.Get(Constants.UserIDKey, "Groundsman");
+            if (feature.Properties.ContainsKey(Constants.AuthorProperty))
             {
-                author = (string)feature.Properties["author"];
+                author = (string)feature.Properties[Constants.AuthorProperty];
                 if (author.Length > 30)
                 {
                     author = author.Substring(0, 30);
-                    feature.Properties["author"] = author;
+                    feature.Properties[Constants.AuthorProperty] = author;
                 }
             }
             else
             {
-                feature.Properties.Add("author", author);
+                feature.Properties.Add(Constants.AuthorProperty, author);
             }
 
             // Add default name if empty
             string name = feature.Geometry.Type.ToString();
-            if (feature.Properties.ContainsKey("name"))
+            if (feature.Properties.ContainsKey(Constants.NameProperty))
             {
-                name = (string)feature.Properties["name"];
+                name = (string)feature.Properties[Constants.NameProperty];
                 if (name.Length > 30)
                 {
                     name = name.Substring(0, 30);
@@ -182,67 +182,27 @@ namespace Groundsman.Services
                     {
                         name = name.Replace(c, '-');
                     }
-                    feature.Properties["name"] = name;
+                    feature.Properties[Constants.NameProperty] = name;
                 }
             }
             else
             {
-                feature.Properties.Add("name", name);
-            }
-
-            if (feature.Properties.ContainsKey("metadataStringValue"))
-            {
-                string metadataStringValue = (string)feature.Properties["metadataStringValue"];
-                if (!string.IsNullOrEmpty(metadataStringValue) && metadataStringValue.Length > 30)
-                {
-                    metadataStringValue = name.Substring(0, 30);
-                    foreach (char c in Path.GetInvalidFileNameChars())
-                    {
-                        metadataStringValue = metadataStringValue.Replace(c, '-');
-                    }
-                    feature.Properties["metadataStringValue"] = metadataStringValue;
-                }
-            }
-
-            if (feature.Properties.ContainsKey("metadataIntegerValue"))
-            {
-                try
-                {
-                    int metadataIntegerValue = Convert.ToInt32(feature.Properties["metadataIntegerValue"]);
-                    feature.Properties["metadataIntegerValue"] = metadataIntegerValue;
-                }
-                catch
-                {
-                    //Could not parse int value warning
-                }
-            }
-
-            if (feature.Properties.ContainsKey("metadataFloatValue"))
-            {
-                try
-                {
-                    float metadataFloatValue = Convert.ToSingle(feature.Properties["metadataFloatValue"]);
-                    feature.Properties["metadataFloatValue"] = metadataFloatValue;
-                }
-                catch
-                {
-                    //Could not parse float value warning
-                }
+                feature.Properties.Add(Constants.NameProperty, name);
             }
 
             DateTime date = DateTime.Now;
-            if (feature.Properties.ContainsKey("date"))
+            if (feature.Properties.ContainsKey(Constants.DateProperty))
             {
                 // If the date field is missing or invalid, convert it into DateTime.Now.
-                if (DateTime.TryParse((string)feature.Properties["date"], out date) == false)
+                if (DateTime.TryParse((string)feature.Properties[Constants.DateProperty], out date) == false)
                 {
                     //warning date couldnt be parsed
                 }
-                feature.Properties["date"] = date.ToShortDateString();
+                feature.Properties[Constants.DateProperty] = date.ToShortDateString();
             }
             else
             {
-                feature.Properties.Add("date", date.ToShortDateString());
+                feature.Properties.Add(Constants.DateProperty, date.ToShortDateString());
             }
             return true;
         }

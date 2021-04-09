@@ -26,16 +26,14 @@ namespace Groundsman
             shakeService = new ShakeService(this);
             DependencyService.Register<FeatureService>();
             DependencyService.Register<NavigationService>();
-            FeatureStore.ImportFeaturesAsync(AppConstants.GetFeaturesFile());
+            FeatureStore.ImportFeaturesAsync(Constants.FeaturesFileContents);
             MainPage = new NavigationPage(HomePage.Instance);
 
             // If the user ID hasn't been set yet, prompt the user to create one upon app launch.
-            if (Preferences.Get("UserID", "Groundsman") == "Groundsman")
+            if (!Preferences.ContainsKey(Constants.UserIDKey))
             {
                 _ = NavigationService.PushWelcomePage();
             }
-
-
         }
 
         protected override void OnStart()
@@ -73,7 +71,7 @@ namespace Groundsman
             {
                 try
                 {
-                    string contents = File.ReadAllText(AppConstants.DELETED_FEATURE_FILE);
+                    string contents = File.ReadAllText(Constants.DELETED_FEATURE_FILE);
                     await FeatureStore.ImportFeaturesAsync(contents);
                 }
                 catch

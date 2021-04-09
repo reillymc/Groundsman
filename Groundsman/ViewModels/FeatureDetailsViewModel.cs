@@ -22,24 +22,20 @@ namespace Groundsman.ViewModels
         public ICommand GetFeatureCommand { get; set; }
         public ICommand AddPointCommand { get; set; }
         public ICommand DeletePointCommand { get; set; }
+        public ICommand AddPropertyCommand { get; set; }
+        public ICommand DeletePropertyCommand { get; set; }
         public ICommand OnDoneTappedCommand { get; set; }
         public ICommand OnCancelTappedCommand { get; set; }
         public ICommand ShareEntryCommand { get; set; }
-        public ICommand AddPropertyCommand { get; set; }
-        public ICommand DeletePropertyCommand { get; set; }
 
-        private readonly Feature Feature = new Feature { };
+        private Feature Feature = new Feature { Type = GeoJSONType.Feature };
+        public Dictionary<string, object> HiddenProperties = new Dictionary<string, object>();
 
-        public List<string> PropertyTypes { get; set; } = new List<string>() { "String", "Integer", "Float", "Boolean" };
-
-        public ObservableCollection<DisplayPosition> GeolocationValues { get; set; }
-        public ObservableCollection<Property> FeatureProperties { get; set; }
+        public ObservableCollection<DisplayPosition> Positions { get; set; } = new ObservableCollection<DisplayPosition>();
+        public ObservableCollection<Property> Properties { get; set; } = new ObservableCollection<Property>();
 
         public string DateEntry { get; set; }
         public string NameEntry { get; set; }
-        public string MetadataStringEntry { get; set; } = "";
-        public string MetadataIntegerEntry { get; set; } = "";
-        public string MetadataFloatEntry { get; set; } = "";
 
         public bool ShowAddButton { get; set; }
         public bool ShowClosePolygon { get; set; }
@@ -74,17 +70,15 @@ namespace Groundsman.ViewModels
         /// </summary>
         public FeatureDetailsViewModel(GeoJSONType featureType)
         {
-            //this.featureType = featureType;
             Feature.Geometry = new Geometry(featureType);
-            Feature.Properties = new Dictionary<string, object>
-            {
-                ["id"] = AppConstants.NEW_ENTRY_ID
-            };
+
+            HiddenProperties.Add(Constants.IdentifierProperty, Constants.NewFeatureID);
+
+            Properties.Add(new Property("Default String Property", string.Empty, 0));
+            Properties.Add(new Property("Default Integer Property", null, 1));
+            Properties.Add(new Property("Default Float Property", null, 2));
 
             DateEntry = DateTime.Now.ToShortDateString();
-            GeolocationValues = new ObservableCollection<DisplayPosition>();
-
-            InitCommandBindings();
 
             switch (featureType)
             {
@@ -103,15 +97,12 @@ namespace Groundsman.ViewModels
                     ShowClosePolygon = true;
                     AddPoint(3);
                     break;
+                default:
+                    throw new ArgumentException("Feature type not supported", featureType.ToString());
             }
-            NumPointFields = GeolocationValues.Count + 1;
+            NumPointFields = Positions.Count + 1;
 
-            FeatureProperties = new ObservableCollection<Property>
-            {
-                new Property("Default String Property", string.Empty, 0),
-                new Property("Default Integer Property", null, 1),
-                new Property("Default Float Property", null, 2)
-            };
+            InitCommandBindings();
         }
 
         /// <summary>
@@ -119,36 +110,22 @@ namespace Groundsman.ViewModels
         /// </summary>
         public FeatureDetailsViewModel(Feature feature)
         {
-            InitCommandBindings();
-            Feature = feature;
+            Title = NameEntry = (string)feature.Properties[Constants.NameProperty];
+            DateEntry = (string)feature.Properties[Constants.DateProperty];
 
-            if (feature.Properties.ContainsKey("name"))
-            {
-                Title = NameEntry = (string)feature.Properties["name"];
-            }
-
-            if (feature.Properties.ContainsKey("date"))
-            {
-                DateEntry = (string)feature.Properties["date"];
-            }
-
-
-            GeolocationValues = new ObservableCollection<DisplayPosition>();
-            
+            Feature.Geometry = new Geometry(feature.Geometry.Type);
             int index = 1;
-
-            //SWITCH TEMPLATE - maybe make method?
             switch (feature.Geometry.Type)
             {
                 case GeoJSONType.Point:
                     Point point = (Point)feature.Geometry;
-                    GeolocationValues.Add(new DisplayPosition("1", point.Coordinates));
+                    Positions.Add(new DisplayPosition("1", point.Coordinates));
                     break;
                 case GeoJSONType.LineString:
                     LineString linestring = (LineString)feature.Geometry;
                     foreach (Position pos in linestring.Coordinates)
                     {
-                        GeolocationValues.Add(new DisplayPosition(index.ToString(), pos));
+                        Positions.Add(new DisplayPosition(index.ToString(), pos));
                         index++;
                     }
                     ShowAddButton = true;
@@ -159,34 +136,37 @@ namespace Groundsman.ViewModels
                     {
                         foreach (Position pos in ls.Coordinates)
                         {
-                            GeolocationValues.Add(new DisplayPosition(index.ToString(), pos));
+                            Positions.Add(new DisplayPosition(index.ToString(), pos));
                             index++;
                         }
                     }
                     //Remove last position so that poly can be closed duplicating the first posiiton back to the end after editing
-                    if (GeolocationValues[0].Equals(GeolocationValues[^1]))
+                    if (Positions[0].Equals(Positions[^1]))
                     {
-                        GeolocationValues.RemoveAt(GeolocationValues.Count - 1);
+                        Positions.RemoveAt(Positions.Count - 1);
                     }
                     ShowAddButton = true;
                     ShowClosePolygon = true;
                     break;
                 default:
-                    //Unrecognised feature alert!!
-                    break;
+                    throw new ArgumentException("Feature type not supported", feature.Type.ToString());
 
             }
-            NumPointFields = GeolocationValues.Count + 1;
-
-            FeatureProperties = new ObservableCollection<Property>();
+            NumPointFields = Positions.Count + 1;
 
             foreach (KeyValuePair<string, object> property in feature.Properties)
             {
-                if (property.Key != "author" && property.Key != "name" && property.Key != "id" && property.Key != "date")
+                if (property.Key != Constants.AuthorProperty && property.Key != Constants.NameProperty && property.Key != Constants.IdentifierProperty && property.Key != Constants.DateProperty && property.Key != Constants.LogDateTimeListProperty)
                 {
-                    FeatureProperties.Add(Property.FromObject(property.Key.ToString(), property.Value));
+                    Properties.Add(Property.FromObject(property.Key.ToString(), property.Value));
+                }
+                else
+                {
+                    HiddenProperties.Add(property.Key, property.Value);
                 }
             }
+
+            InitCommandBindings();
         }
 
         /// <summary>
@@ -206,13 +186,13 @@ namespace Groundsman.ViewModels
 
         private void DeleteProperty(Property item)
         {
-            FeatureProperties.Remove(item);
+            Properties.Remove(item);
         }
 
         private void AddProperty()
         {
             //FeatureProperties.Insert(0, new Property("", ""));
-            FeatureProperties.Add(new Property("", ""));
+            Properties.Add(new Property("", ""));
         }
 
 
@@ -263,7 +243,7 @@ namespace Groundsman.ViewModels
             IsBusy = true;
             for (int i = 0; i < count; i++)
             {
-                GeolocationValues.Add(new DisplayPosition((GeolocationValues.Count + 1).ToString(), "", "", ""));
+                Positions.Add(new DisplayPosition((Positions.Count + 1).ToString(), "", "", ""));
                 NumPointFields++;
             }
             IsBusy = false;
@@ -276,27 +256,27 @@ namespace Groundsman.ViewModels
         private void DeletePoint(DisplayPosition item)
         {
             if (IsBusy) return;
-            if (GeolocationValues.Count == 1)
+            if (Positions.Count == 1)
             {
                 NavigationService.ShowAlert("Cannot Remove Position", "All features must have at least one position", false);
                 return;
             }
             IsBusy = true;
             // Workaround for when removing GeolocationValues[0] not updating front-end close polygon fields referencing GeolocationValues[0]
-            if (item == GeolocationValues[0])
+            if (item == Positions[0])
             {
-                GeolocationValues[0].Longitude = GeolocationValues[1].Longitude;
-                GeolocationValues[0].Latitude = GeolocationValues[1].Latitude;
-                GeolocationValues[0].Altitude = GeolocationValues[1].Altitude;
-                GeolocationValues.RemoveAt(1);
+                Positions[0].Longitude = Positions[1].Longitude;
+                Positions[0].Latitude = Positions[1].Latitude;
+                Positions[0].Altitude = Positions[1].Altitude;
+                Positions.RemoveAt(1);
             }
             else
             {
-                GeolocationValues.Remove(item);
+                Positions.Remove(item);
             }
-            for (int i = 0; i < GeolocationValues.Count; i++)
+            for (int i = 0; i < Positions.Count; i++)
             {
-                GeolocationValues[i].Index = (i + 1).ToString();
+                Positions[i].Index = (i + 1).ToString();
             }
             NumPointFields--;
             IsBusy = false;
@@ -309,6 +289,7 @@ namespace Groundsman.ViewModels
         {
             if (IsBusy) return;
             IsBusy = true;
+
             if (await ValidateGeometry() && await ValidateProperties())
             {
                 if (await SaveFeature())
@@ -332,20 +313,20 @@ namespace Groundsman.ViewModels
                 switch (Feature.Geometry.Type)
                 {
                     case GeoJSONType.Point:
-                        Feature.Geometry = new Point(new Position(GeolocationValues[0]));
+                        Feature.Geometry = new Point(new Position(Positions[0]));
                         break;
                     case GeoJSONType.LineString:
-                        Feature.Geometry = new LineString(GeolocationValues.Select(pointValue => new Position(pointValue)));
+                        Feature.Geometry = new LineString(Positions.Select(pointValue => new Position(pointValue)).ToList());
                         break;
                     case GeoJSONType.Polygon:
                         // This method does not allow for creating a polygon with multiple LinearRings
-                        List<Position> positions = (GeolocationValues.Select(pointValue => new Position(pointValue))).ToList();
+                        List<Position> positions = (Positions.Select(pointValue => new Position(pointValue))).ToList();
                         // Close polygon with duplicated first feature
                         positions.Add(positions[0]);
                         Feature.Geometry = new Polygon(new List<LinearRing>() { new LinearRing(positions) });
                         break;
                     default:
-                        throw new ArgumentException($"Could not save unsupported feature of type {Feature.Geometry.Type}", "Type");
+                        throw new ArgumentException($"Could not save unsupported feature of type {Feature.Geometry.Type}", Feature.Geometry.Type.ToString());
                 }
             }
             catch (Exception ex)
@@ -358,11 +339,9 @@ namespace Groundsman.ViewModels
 
         private async Task<bool> ValidateProperties()
         {
-            string IDTemp = (string)Feature.Properties["id"];
-            Feature.Properties.Clear();
-            Feature.Properties.Add("id", IDTemp);
-            //IEnumerable<Property> OrderedFeatureProperties = FeatureProperties.OrderBy(property => property.Key); can allow for fordering later
-            foreach (Property property in FeatureProperties)
+            Dictionary<string, object> FinalProperties = new Dictionary<string, object>(HiddenProperties);
+            //IEnumerable<Property> OrderedFeatureProperties = FeatureProperties.OrderBy(property => property.Key); can allow for ordering later
+            foreach (Property property in Properties)
             {
                 if (!string.IsNullOrEmpty(property.Key.ToString()))
                 {
@@ -371,19 +350,19 @@ namespace Groundsman.ViewModels
                         switch (property.Type)
                         {
                             case 0:
-                                Feature.Properties[property.Key] = property.Value;
+                                FinalProperties[property.Key] = property.Value;
                                 break;
                             case 1:
                                 int intValue = Convert.ToInt16(property.Value);
-                                Feature.Properties[property.Key] = intValue;
+                                FinalProperties[property.Key] = intValue;
                                 break;
                             case 2:
                                 float floatValue = Convert.ToSingle(property.Value);
-                                Feature.Properties[property.Key] = floatValue;
+                                FinalProperties[property.Key] = floatValue;
                                 break;
                             case 3:
                                 bool boolValue = Convert.ToBoolean(property.Value);
-                                Feature.Properties[property.Key] = boolValue;
+                                FinalProperties[property.Key] = boolValue;
                                 break;
                             default:
                                 break;
@@ -404,16 +383,17 @@ namespace Groundsman.ViewModels
                 }
             }
 
-            Feature.Properties["name"] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : Feature.Geometry.Type.ToString();
-            Feature.Properties["date"] = DateTime.Parse(DateEntry).ToShortDateString();
-            Feature.Properties["author"] = Preferences.Get("UserID", "Groundsman");
+            FinalProperties[Constants.NameProperty] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : Feature.Geometry.Type.ToString();
+            FinalProperties[Constants.DateProperty] = DateTime.Parse(DateEntry).ToShortDateString();
+            FinalProperties[Constants.AuthorProperty] = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
 
+            Feature.Properties = FinalProperties;
             return true;
         }
 
         private async Task<bool> SaveFeature()
         {
-            return (string)Feature.Properties["id"] == AppConstants.NEW_ENTRY_ID ? await FeatureStore.AddItemAsync(Feature) : await FeatureStore.UpdateItemAsync(Feature);
+            return (string)Feature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? await FeatureStore.AddItemAsync(Feature) : await FeatureStore.UpdateItemAsync(Feature);
         }
     }
 }

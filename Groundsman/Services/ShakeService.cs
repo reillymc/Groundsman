@@ -42,7 +42,7 @@ namespace Groundsman.Services
 
         public void Start()
         {
-            if (Preferences.Get("EnableShakeToUndo", true))
+            if (Preferences.Get(Constants.ShakeToUndoKey, true))
             {
                 try
                 {

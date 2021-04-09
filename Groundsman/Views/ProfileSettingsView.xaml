@@ -26,7 +26,6 @@
                                 </Entry.Behaviors>
                             </Entry>
                         </Frame>
-
                     </ViewCell>
                 </TableSection>
                 <TableSection Title="GPS and Data Precision">
@@ -39,12 +38,10 @@
                                 <Label Text="GPS Accuracy"
                                        TextColor="{DynamicResource Text}"
                                        VerticalOptions="Center" />
-                                <misc:CustomPicker x:Name="picker"
-                                                   Title="GPS Accuracy"
+                                <misc:CustomPicker Title="GPS Accuracy"
                                                    HorizontalOptions="EndAndExpand"
                                                    HorizontalTextAlignment="Center"
                                                    SelectedIndex="{Binding GPSPrecisionEntry}"
-                                                   SelectedIndexChanged="OnPickerSelectedIndexChanged"
                                                    TextColor="{DynamicResource greenPrimary}"
                                                    WidthRequest="95">
                                     <Picker.ItemsSource>
@@ -65,17 +62,16 @@
                                          HorizontalOptions="FillAndExpand"
                                          Orientation="Horizontal"
                                          VerticalOptions="CenterAndExpand">
-                                <Label Text="{Binding Source={x:Reference stepperDecimal}, Path=Value}"
+                                <Label Text="{Binding Source={x:Reference DecimalAccuracyStepper}, Path=Value}"
                                        TextColor="{DynamicResource Text}"
                                        VerticalOptions="Center" />
                                 <Label Text="Decimal Places"
                                        TextColor="{DynamicResource Text}"
                                        VerticalOptions="Center" />
-                                <Stepper x:Name="stepperDecimal"
+                                <Stepper x:Name="DecimalAccuracyStepper"
                                          HorizontalOptions="EndAndExpand"
                                          Increment="1"
                                          Maximum="12"
-                                         ValueChanged="OnStepperValueChanged"
                                          Value="{Binding DecimalAccuracyEntry}" />
                             </StackLayout>
                         </Frame>
@@ -85,21 +81,9 @@
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
                             <StackLayout Padding="20,0" Orientation="Horizontal">
-                                <Label Text="Include Altitude in Positions" VerticalOptions="Center" />
-                                <Switch HorizontalOptions="EndAndExpand"
-                                        IsToggled="{Binding EnableAltitude}"
-                                        Toggled="EnableAltitudeChanged"
-                                        VerticalOptions="Center" />
-                            </StackLayout>
-                        </Frame>
-                    </ViewCell>
-                    <ViewCell>
-                        <Frame Style="{StaticResource FrameViewCell}">
-                            <StackLayout Padding="20,0" Orientation="Horizontal">
                                 <Label Text="Enable Shake to Undo Delete" VerticalOptions="Center" />
                                 <Switch HorizontalOptions="EndAndExpand"
                                         IsToggled="{Binding EnableShakeToUndo}"
-                                        Toggled="EnableShakeToUndoChanged"
                                         VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
@@ -127,7 +111,6 @@
                                 <Label Text="Draw Points" VerticalOptions="Center" />
                                 <Switch HorizontalOptions="EndAndExpand"
                                         IsToggled="{Binding ShowPointsOnMap}"
-                                        Toggled="ShowPointsOnMapChanged"
                                         VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
@@ -138,7 +121,6 @@
                                 <Label Text="Draw Lines" VerticalOptions="Center" />
                                 <Switch HorizontalOptions="EndAndExpand"
                                         IsToggled="{Binding ShowLinesOnMap}"
-                                        Toggled="ShowLinesOnMapChanged"
                                         VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
@@ -149,7 +131,6 @@
                                 <Label Text="Draw Polygons" VerticalOptions="Center" />
                                 <Switch HorizontalOptions="EndAndExpand"
                                         IsToggled="{Binding ShowPolygonsOnMap}"
-                                        Toggled="ShowPolygonsOnMapChanged"
                                         VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
