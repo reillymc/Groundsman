@@ -13,7 +13,7 @@
              Style="{StaticResource PageTintedStyle}">
     <ContentPage.Resources>
 
-                <DataTemplate x:Key="HeaderTemplate">
+        <DataTemplate x:Key="HeaderTemplate">
             <StackLayout>
                 <Frame Padding="10,10,0,10" StyleClass="Base, DefaultMargin">
                     <Grid ColumnDefinitions="4*,*" RowDefinitions="*,Auto">

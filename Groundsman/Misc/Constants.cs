@@ -28,6 +28,7 @@ namespace Groundsman
         public static readonly string MapDrawPointsKey = "ShowPointsOnMap";
         public static readonly string MapDrawLinesKey = "ShowLinesOnMap";
         public static readonly string MapDrawPolygonsKey = "ShowPolygonsOnMap";
+        public static readonly string ShareLogAsGeoJSONKey = "ShareLogAsGeoJSONKey";
 
 
         // Hardcoded feature property keys

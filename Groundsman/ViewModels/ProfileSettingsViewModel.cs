@@ -42,6 +42,12 @@ namespace Groundsman.ViewModels
             set => Preferences.Set(Constants.ShakeToUndoKey, value);
         }
 
+        public bool ShareLogAsGeoJSON
+        {
+            get => Preferences.Get(Constants.ShareLogAsGeoJSONKey, false);
+            set => Preferences.Set(Constants.ShareLogAsGeoJSONKey, value);
+        }
+
         public bool ShowPointsOnMap
         {
             get => Preferences.Get(Constants.MapDrawPointsKey, true);

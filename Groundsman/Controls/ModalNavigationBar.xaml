@@ -5,7 +5,7 @@
              xmlns:viewModels="clr-namespace:Groundsman.ViewModels"
              x:Name="this">
     <ContentView.Content>
-        <StackLayout>
+        <StackLayout MinimumHeightRequest="48">
             <StackLayout.BackgroundColor>
                 <OnPlatform x:TypeArguments="Color"
                             Android="{StaticResource greenPrimary}"

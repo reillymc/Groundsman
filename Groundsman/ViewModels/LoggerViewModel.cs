@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Groundsman.Misc;
 using Groundsman.Models;
 using Groundsman.Services;
 using Xamarin.Essentials;
@@ -109,7 +110,7 @@ namespace Groundsman.ViewModels
         {
             ToggleButtonClickCommand = new Command(() => { ToggleLogging(); });
             ClearButtonClickCommand = new Command(() => { LogPositions.Clear(); });
-            ShareButtonClickCommand = new Command(async () => { await ExportLogFile(); });
+            ShareButtonClickCommand = new Command<View>(async (view) => { await ShareLog(view); });
             OnCancelTappedCommand = new Command(async () => await OnDismiss(true));
             OnDoneTappedCommand = new Command(async () => await OnSaveUpdateActivated());
         }
@@ -231,24 +232,38 @@ namespace Groundsman.ViewModels
             return (string)LogFeature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? FeatureStore.AddItem(LogFeature) : FeatureStore.UpdateItem(LogFeature);
         }
 
-        public async Task ExportLogFile()
+        public async Task ShareLog(View element)
         {
-            string LogString = "Time, Longitude, Latitude, Altitude\n";
+            if (IsBusy) return;
 
-            foreach (DisplayPosition position in LogPositions)
+            IsBusy = true;
+
+            var bounds = element.GetAbsoluteBounds().ToSystemRectangle();
+
+            if (Preferences.Get(Constants.ShareLogAsGeoJSONKey, false))
             {
-                LogString += $"{position}\n";
+                ShareFileRequest share = FeatureStore.ExportFeatures(new List<Feature>() { LogFeature });
+                share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
+                await Share.RequestAsync(share);
+            }
+            else
+            {
+                string LogString = "Time, Longitude, Latitude, Altitude\n";
+                foreach (DisplayPosition position in LogPositions)
+                {
+                    LogString += $"{position}\n";
+                }
+
+                File.WriteAllText(Constants.EXPORT_LOG_FILE, LogString);
+                await Share.RequestAsync(new ShareFileRequest
+                {
+                    Title = "Groundsman Log",
+                    File = new ShareFile(Constants.EXPORT_LOG_FILE, "text/csv"),
+                    PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty
+                });
             }
 
-            File.WriteAllText(Constants.EXPORT_LOG_FILE, LogString);
-            await Share.RequestAsync(new ShareFileRequest
-            {
-                Title = "Groundsman Log",
-                File = new ShareFile(Constants.EXPORT_LOG_FILE, "text/csv"),
-                PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet
-                    ? new System.Drawing.Rectangle((int)(DeviceDisplay.MainDisplayInfo.Width * .474), 80, 0, 0)
-                    : System.Drawing.Rectangle.Empty
-            });
+            IsBusy = false;
         }
     }
 }

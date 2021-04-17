@@ -11,17 +11,12 @@
              x:DataType="viewModels:LoggerViewModel"
              BackgroundColor="{DynamicResource Background}"
              Style="{StaticResource PageStyle}">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Command="{Binding ShareButtonClickCommand}" Icon="share_icon" />
-    </ContentPage.ToolbarItems>
-
 
     <ContentPage.Resources>
         <DataTemplate x:Key="Header">
             <Label FontSize="Micro"
                    Style="{StaticResource LabelHeader}"
                    Text="Time,  Longitude,  Latitude,  Altitude" />
-
         </DataTemplate>
 
         <DataTemplate x:Key="Body" x:DataType="models:DisplayPosition">
@@ -51,88 +46,86 @@
             </Grid>
         </DataTemplate>
     </ContentPage.Resources>
+
     <ContentPage.Content>
         <StackLayout Spacing="0">
-            <controls:ModalNavigationBar HasDoneButton="True" MinimumHeightRequest="48" />
+            <controls:ModalNavigationBar HasDoneButton="True" />
             <StackLayout>
                 <Frame Padding="10,10,0,10" StyleClass="Base, DefaultMargin">
-                    <Grid ColumnDefinitions="4*,*" RowDefinitions="*,Auto">
-                        <Label Grid.Row="0"
-                               Style="{StaticResource LabelTitle}"
-                               Text="Details" />
-                        <StackLayout Grid.Row="1" Margin="8,0,0,0">
-                            <Entry FontSize="Small"
-                                   Placeholder="Name"
-                                   Style="{StaticResource EntryStyle}"
-                                   Text="{Binding NameEntry}"
-                                   VerticalOptions="Start">
-                                <Entry.Behaviors>
-                                    <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
-                                </Entry.Behaviors>
-                            </Entry>
-                        </StackLayout>
+                    <StackLayout Orientation="Vertical">
+                        <Label Style="{StaticResource LabelTitle}" Text="Details" />
+                        <Entry Margin="8,0,0,0"
+                               FontSize="Small"
+                               Placeholder="Name"
+                               Style="{StaticResource EntryStyle}"
+                               Text="{Binding NameEntry}"
+                               VerticalOptions="Start">
+                            <Entry.Behaviors>
+                                <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
+                            </Entry.Behaviors>
+                        </Entry>
+                    </StackLayout>
+                </Frame>
+                <Frame BackgroundColor="Transparent" HasShadow="False" Padding="0" MinimumHeightRequest="60">
+                    <Grid BackgroundColor="{DynamicResource Background}"
+                          ColumnDefinitions="*,*"
+                          RowDefinitions="*">
+                        <Frame Grid.Column="0"
+                               Margin="10,10,0,0"
+                               Padding="20"
+                               StyleClass="Base">
+                            <StackLayout Orientation="Horizontal">
+                                <Label FontSize="Small"
+                                       Text="Interval:"
+                                       TextColor="{DynamicResource Text}"
+                                       VerticalOptions="Center" />
+                                <Entry FontSize="Small"
+                                       HorizontalTextAlignment="Center"
+                                       Keyboard="Numeric"
+                                       Text="{Binding IntervalEntry}"
+                                       TextColor="{StaticResource greenPrimary}"
+                                       VerticalOptions="Center"
+                                       WidthRequest="30">
+                                    <Entry.Behaviors>
+                                        <behaviors:EntryLengthValidatorBehavior MaxLength="3" />
+                                    </Entry.Behaviors>
+                                </Entry>
+                                <Picker FontSize="Small"
+                                        HorizontalOptions="Fill"
+                                        ItemsSource="{Binding UnitItems}"
+                                        SelectedIndex="{Binding UnitEntry}"
+                                        TextColor="{StaticResource greenPrimary}"
+                                        TitleColor="Black"
+                                        VerticalOptions="Center" />
+                            </StackLayout>
+                        </Frame>
+                        <Frame Grid.Column="1"
+                               Margin="10,10,10,0"
+                               Padding="20"
+                               StyleClass="Base">
+                            <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                                <Button Command="{Binding ToggleButtonClickCommand}"
+                                        HorizontalOptions="Start"
+                                        Style="{StaticResource GenericButton}"
+                                        Text="{Binding ToggleButtonLabel}" />
+
+                                <Button Command="{Binding ClearButtonClickCommand}"
+                                        HorizontalOptions="CenterAndExpand"
+                                        Style="{StaticResource GenericButton}"
+                                        Text="Clear" />
+                                <Button Command="{Binding ShareButtonClickCommand}"
+                                        CommandParameter="{Binding Source={RelativeSource Self}}"
+                                        HorizontalOptions="EndAndExpand"
+                                        ImageSource="share_icon_color" />
+                            </StackLayout>
+                        </Frame>
                     </Grid>
                 </Frame>
-                <Grid BackgroundColor="{DynamicResource Background}"
-                      ColumnDefinitions="*,*"
-                      HorizontalOptions="Fill"
-                      MinimumHeightRequest="60"
-                      RowDefinitions="*"
-                      VerticalOptions="Start">
-                    <Frame Grid.Column="0"
-                           Margin="10,10,0,0"
-                           Padding="20"
-                           StyleClass="Base">
-                        <StackLayout Padding="5,0" Orientation="Horizontal">
-                            <Label FontSize="Small"
-                                   Text="Interval:"
-                                   TextColor="{DynamicResource Text}"
-                                   VerticalOptions="Center" />
-                            <Entry FontSize="Small"
-                                   HorizontalTextAlignment="Center"
-                                   Keyboard="Numeric"
-                                   Text="{Binding IntervalEntry}"
-                                   TextColor="{StaticResource greenPrimary}"
-                                   VerticalOptions="Center"
-                                   WidthRequest="30">
-                                <Entry.Behaviors>
-                                    <behaviors:EntryLengthValidatorBehavior MaxLength="3" />
-                                </Entry.Behaviors>
-                            </Entry>
-                            <Picker FontSize="Small"
-                                    HorizontalOptions="Fill"
-                                    ItemsSource="{Binding UnitItems}"
-                                    SelectedIndex="{Binding UnitEntry}"
-                                    TextColor="{StaticResource greenPrimary}"
-                                    TitleColor="Black"
-                                    VerticalOptions="Center" />
-                        </StackLayout>
-                    </Frame>
-                    <Frame Grid.Column="1"
-                           Margin="10,10,10,0"
-                           Padding="20"
-                           StyleClass="Base">
-                        <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
-                            <Button Command="{Binding ToggleButtonClickCommand}"
-                                    HorizontalOptions="Start"
-                                    Style="{StaticResource GenericButton}"
-                                    Text="{Binding ToggleButtonLabel}" />
-
-                            <Button Command="{Binding ClearButtonClickCommand}"
-                                    HorizontalOptions="CenterAndExpand"
-                                    Style="{StaticResource GenericButton}"
-                                    Text="Clear" />
-                            <Button Command="{Binding ShareButtonClickCommand}"
-                                    HorizontalOptions="EndAndExpand"
-                                    ImageSource="share_icon_color" />
-                        </StackLayout>
-                    </Frame>
-                </Grid>
                 <Frame Margin="10,10,10,50"
                        Padding="10,10,0,10"
                        BackgroundColor="{DynamicResource Foreground}"
                        StyleClass="Base"
-                       VerticalOptions="FillAndExpand">
+                       VerticalOptions="Fill">
                     <CollectionView x:Name="GeodataList"
                                     Header="{Binding .}"
                                     HeaderTemplate="{StaticResource Header}"

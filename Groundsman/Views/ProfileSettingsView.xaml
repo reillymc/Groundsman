@@ -90,6 +90,16 @@
                     </ViewCell>
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
+                            <StackLayout Padding="20,0" Orientation="Horizontal">
+                                <Label Text="Share Logs as GeoJSON" VerticalOptions="Center" />
+                                <Switch HorizontalOptions="EndAndExpand"
+                                        IsToggled="{Binding ShareLogAsGeoJSON}"
+                                        VerticalOptions="Center" />
+                            </StackLayout>
+                        </Frame>
+                    </ViewCell>
+                    <ViewCell>
+                        <Frame Style="{StaticResource FrameViewCell}">
                             <StackLayout Padding="20,0"
                                          HorizontalOptions="FillAndExpand"
                                          Orientation="Horizontal"
