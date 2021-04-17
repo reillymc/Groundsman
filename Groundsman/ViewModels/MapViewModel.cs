@@ -28,33 +28,26 @@ namespace Groundsman.ViewModels
             Map.MapClicked += OnMapClicked;
         }
 
-        public Position defaultMapCentre = new Position(153.021, -27.47);
-
-        // Only center map on user if location permissions are granted
+        // Only center map on user if location permissions are granted otherwise center on Brisbane
         private async void CenterMapOnUser()
         {
-            var status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
-            if (status != PermissionStatus.Granted)
-            {
-                Map.MoveToRegion(MapSpan.FromCenterAndRadius(new XFMPosition(defaultMapCentre.Latitude, defaultMapCentre.Longitude), Distance.FromMiles(1.0)));
-                return;
-            }
-            else
+            try
             {
                 Position location = await HelperServices.GetGeoLocation();
                 Map.MoveToRegion(MapSpan.FromCenterAndRadius(new XFMPosition(location.Latitude, location.Longitude), Distance.FromMiles(1.0)));
             }
-        }
-
-        public void CleanFeatures()
-        {
-            Map.MapElements.Clear();
-            Map.Pins.Clear();
+            catch
+            {
+                Map.MoveToRegion(MapSpan.FromCenterAndRadius(new XFMPosition(-27.47, 153.021), Distance.FromMiles(1.0)));
+            }
         }
 
         public async void RefreshMap()
         {
-            CleanFeatures();
+            // Clear Features
+            Map.MapElements.Clear();
+            Map.Pins.Clear();
+
             DrawFeatures();
 
             //SetShowingUser

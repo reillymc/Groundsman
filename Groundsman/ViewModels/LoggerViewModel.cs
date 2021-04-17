@@ -28,7 +28,7 @@ namespace Groundsman.ViewModels
         public ObservableCollection<DisplayPosition> LogPositions { get; set; }
         private List<string> DateTimeList = new List<string>();
 
-        private bool isLogging;
+        public bool isLogging;
 
 
         private bool _ScrollEnabled = true;
@@ -102,49 +102,48 @@ namespace Groundsman.ViewModels
                     [Constants.IdentifierProperty] = Constants.NewFeatureID
                 }
             };
-
-
-
             InitCommands();
-
         }
 
         private void InitCommands()
         {
-            ToggleButtonClickCommand = new Command(() =>
-            {
-                if (isLogging)
-                {
-                    ToggleButtonLabel = "Start";
-                    StopLogging();
-                }
-                else
-                {
-                    ToggleButtonLabel = "Stop";
-                    if (IntervalEntry < 1)
-                    {
-                        IntervalEntry = 1;
-                    }
-                    switch (UnitEntry)
-                    {
-                        case 0:
-                            StartLogging(IntervalEntry);
-                            break;
-                        case 1:
-                            StartLogging(IntervalEntry * 60);
-                            break;
-                        case 2:
-                            StartLogging(IntervalEntry * 3600);
-                            break;
-                    }
-                }
-                isLogging = !isLogging;
-                ScrollEnabled = !isLogging;
-            });
-            ClearButtonClickCommand = new Command(() => { ClearLog(); });
+            ToggleButtonClickCommand = new Command(() => { ToggleLogging(); });
+            ClearButtonClickCommand = new Command(() => { LogPositions.Clear(); });
             ShareButtonClickCommand = new Command(async () => { await ExportLogFile(); });
             OnCancelTappedCommand = new Command(async () => await OnDismiss(true));
             OnDoneTappedCommand = new Command(async () => await OnSaveUpdateActivated());
+        }
+
+        public void ToggleLogging()
+        {
+            if (isLogging)
+            {
+                ToggleButtonLabel = "Start";
+                cts.Cancel();
+                cts.Dispose();
+            }
+            else
+            {
+                ToggleButtonLabel = "Stop";
+                if (IntervalEntry < 1)
+                {
+                    IntervalEntry = 1;
+                }
+                switch (UnitEntry)
+                {
+                    case 0:
+                        StartLogging(IntervalEntry);
+                        break;
+                    case 1:
+                        StartLogging(IntervalEntry * 60);
+                        break;
+                    case 2:
+                        StartLogging(IntervalEntry * 3600);
+                        break;
+                }
+            }
+            isLogging = !isLogging;
+            ScrollEnabled = !isLogging;
         }
 
         public LoggerViewModel(Feature Log)
@@ -172,9 +171,16 @@ namespace Groundsman.ViewModels
 
         private async Task OnSaveUpdateActivated()
         {
-            if (await SaveLogAsync())
+            try
             {
-                await NavigationService.NavigateBack(true);
+                if (SaveLog())
+                {
+                    await NavigationService.NavigateBack(true);
+                }
+            }
+            catch (Exception e)
+            {
+                await Application.Current.MainPage.DisplayAlert("Unable To Save Log", $"{e.Message}.", "Ok");
             }
         }
 
@@ -184,33 +190,33 @@ namespace Groundsman.ViewModels
             _ = UpdaterAsync(new TimeSpan(0, 0, Interval), cts.Token);
         }
 
-        public void StopLogging()
-        {
-            cts.Cancel();
-            cts.Dispose();
-        }
-
         private async Task UpdaterAsync(TimeSpan interval, CancellationToken ct)
         {
             while (true)
             {
                 await Task.Delay(interval, ct);
-                Position location = await HelperServices.GetGeoLocation();
-                if (location != null)
+                try
                 {
+                    Position location = await HelperServices.GetGeoLocation();
                     DisplayPosition position = new DisplayPosition(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), location.Longitude.ToString(), location.Latitude.ToString(), location.Altitude.ToString());
                     LogPositions.Add(position);
                     DateTimeList.Add(position.Index);
                 }
+                catch
+                {
+                    await Application.Current.MainPage.DisplayAlert("Unable To Fetch Location", "Ensure Groundsman has access to your device's location.", "Ok");
+                    ToggleLogging();
+                }
+                try
+                {
+                    SaveLog();
+                }
+                catch { } // Ignore if cant auto save
             }
         }
 
-        private async Task<bool> SaveLogAsync()
+        private bool SaveLog()
         {
-            if (LogPositions.Count < 2)
-            {
-                return false;
-            }
             List<Position> posList = new List<Position>();
             foreach (DisplayPosition displayPosition in LogPositions)
             {
@@ -222,13 +228,7 @@ namespace Groundsman.ViewModels
             LogFeature.Properties[Constants.NameProperty] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : "Log LineString";
             LogFeature.Properties[Constants.DateProperty] = DateTime.Now.ToShortDateString();
             LogFeature.Properties[Constants.AuthorProperty] = Preferences.Get(Constants.UserIDKey, "Groundsman");
-
             return (string)LogFeature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? FeatureStore.AddItem(LogFeature) : FeatureStore.UpdateItem(LogFeature);
-        }
-
-        private void ClearLog()
-        {
-            LogPositions.Clear();
         }
 
         public async Task ExportLogFile()

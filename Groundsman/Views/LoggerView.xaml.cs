@@ -19,9 +19,13 @@ namespace Groundsman.Views
             BindingContext = viewModel = new LoggerViewModel(feature);
         }
 
-        protected override void OnAppearing()
+        protected override void OnDisappearing()
         {
-            base.OnAppearing();
+            base.OnDisappearing();
+            if (viewModel.isLogging)
+            {
+                viewModel.ToggleLogging();
+            }
         }
     }
 }

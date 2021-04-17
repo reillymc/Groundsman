@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
-using Xamarin.Forms;
 using Position = Groundsman.Models.Position;
 
 namespace Groundsman.Services
@@ -21,23 +20,13 @@ namespace Groundsman.Services
                 3 => GeolocationAccuracy.Low,
                 _ => GeolocationAccuracy.Medium,
             };
-            int decimalAccuracy = Preferences.Get(Constants.DecimalAccuracyKey, Constants.DefaultDecimalAccuracyValue);
-            try
+            Location location = await Geolocation.GetLocationAsync(new GeolocationRequest(geolocationAccuracy));
+            if (location != null)
             {
-                // Gets current location of device (MORE ACCURATE, but slower)
-                var request = new GeolocationRequest(geolocationAccuracy);
-                var location = await Geolocation.GetLocationAsync(request);
-                if (location != null)
-                {
-                    return new Position(Math.Round(location.Longitude, decimalAccuracy), Math.Round(location.Latitude, decimalAccuracy), Math.Round(location.Altitude ?? 0.0, decimalAccuracy));
-                }
-                return null;
+                int decimalAccuracy = Preferences.Get(Constants.DecimalAccuracyKey, Constants.DefaultDecimalAccuracyValue);
+                return new Position(Math.Round(location.Longitude, decimalAccuracy), Math.Round(location.Latitude, decimalAccuracy), Math.Round(location.Altitude ?? 0.0, decimalAccuracy));
             }
-            catch (Exception)
-            {
-                await Application.Current.MainPage.DisplayAlert("Geolocation Error", "Location permissions for Groundsman must be enabled to fetch location", "Ok");
-                return null;
-            }
+            throw new ArgumentNullException(nameof(location), "Fetched location was empty");
         }
 
         /// <summary>

@@ -139,15 +139,11 @@
                                   HorizontalOptions="StartAndExpand"
                                   VerticalOptions="FillAndExpand"
                                   WidthRequest="20">
-                                <ActivityIndicator IsRunning="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                                                   IsVisible="{Binding Path=BindingContext.LoadingIconActive, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                                                   Color="{StaticResource greenPrimary}" />
                                 <Button BackgroundColor="Transparent"
                                         Command="{Binding Path=BindingContext.GetFeatureCommand, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
                                         CommandParameter="{Binding .}"
                                         HeightRequest="20"
                                         Image="current_location"
-                                        IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
                                         WidthRequest="20" />
                             </Grid>
                             <TemplatedView Grid.Row="0"

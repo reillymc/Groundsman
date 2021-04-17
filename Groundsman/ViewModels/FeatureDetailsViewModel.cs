@@ -40,20 +40,6 @@ namespace Groundsman.ViewModels
         public bool ShowAddButton { get; set; }
         public bool ShowClosePolygon { get; set; }
 
-        private bool loadingIconActive;
-        public bool LoadingIconActive
-        {
-            get { return loadingIconActive; }
-            set { SetProperty(ref loadingIconActive, value); }
-        }
-
-        private bool geolocationEntryEnabled = true;
-        public bool GeolocationEntryEnabled
-        {
-            get { return geolocationEntryEnabled; }
-            set { SetProperty(ref geolocationEntryEnabled, value); }
-        }
-
         private int _NumPointFields;
         public int NumPointFields
         {
@@ -174,27 +160,15 @@ namespace Groundsman.ViewModels
         /// </summary>
         private void InitCommandBindings()
         {
-            GetFeatureCommand = new Command<DisplayPosition>(async (point) => { await GetDataPoint(point); });
+            GetFeatureCommand = new Command<DisplayPosition>(async (point) => { await GetDataPoint(point); }, (point) => { return !IsBusy; });
             AddPointCommand = new Command(() => AddPoint(1));
             DeletePointCommand = new Command<DisplayPosition>((item) => DeletePoint(item));
-            AddPropertyCommand = new Command(() => AddProperty());
-            DeletePropertyCommand = new Command<Property>((item) => DeleteProperty(item));
+            AddPropertyCommand = new Command(() => Properties.Add(new Property("", "")));
+            DeletePropertyCommand = new Command<Property>((item) => Properties.Remove(item));
             ShareEntryCommand = new Command<View>(async (view) => await ShareFeature(view));
             OnDoneTappedCommand = new Command(async () => await OnSaveUpdateActivated());
             OnCancelTappedCommand = new Command(async () => await OnDismiss(true));
         }
-
-        private void DeleteProperty(Property item)
-        {
-            Properties.Remove(item);
-        }
-
-        private void AddProperty()
-        {
-            //FeatureProperties.Insert(0, new Property("", ""));
-            Properties.Add(new Property("", ""));
-        }
-
 
         private async Task ShareFeature(View element)
         {
@@ -208,7 +182,6 @@ namespace Groundsman.ViewModels
                 share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
                 await Share.RequestAsync(share);
             }
-
             IsBusy = false;
         }
 
@@ -218,19 +191,24 @@ namespace Groundsman.ViewModels
         /// <param name="point">Point to set GPS data to.</param>
         private async Task GetDataPoint(DisplayPosition point)
         {
-            GeolocationEntryEnabled = false;
-            LoadingIconActive = true;
-
-            Position location = await HelperServices.GetGeoLocation();
-            DisplayPosition convertedPoint = new DisplayPosition("0", location);
-            if (location != null)
+            if (IsBusy) return;
+            IsBusy = true;
+            try
             {
+                Position location = await HelperServices.GetGeoLocation();
+                DisplayPosition convertedPoint = new DisplayPosition("0", location);
                 point.Latitude = convertedPoint.Latitude;
                 point.Longitude = convertedPoint.Longitude;
                 point.Altitude = convertedPoint.Altitude;
             }
-            GeolocationEntryEnabled = true;
-            LoadingIconActive = false;
+            catch
+            {
+                await Application.Current.MainPage.DisplayAlert("Unable To Fetch Location", "Ensure Groundsman has access to your device's location.", "Ok");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         /// <summary>
@@ -367,7 +345,6 @@ namespace Groundsman.ViewModels
                             default:
                                 break;
                         }
-
                     }
 
                     catch
