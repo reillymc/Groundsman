@@ -1,7 +1,11 @@
-﻿using Foundation;
-using Groundsman.Models;
+﻿using System;
 using System.IO;
+using CoreLocation;
+using Foundation;
+using Groundsman.iOS.Services;
+using Groundsman.Misc;
 using UIKit;
+using Xamarin.Forms;
 
 namespace Groundsman.iOS
 {
@@ -19,12 +23,23 @@ namespace Groundsman.iOS
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
         App mainForms;
+        LocationService locationService;
+        CLLocationManager locMgr = new CLLocationManager();
         public override bool FinishedLaunching(UIApplication uiApplication, NSDictionary launchOptions)
         {
             Xamarin.Forms.Forms.Init();
             Xamarin.FormsMaps.Init();
 
             mainForms = new App();
+
+            locationService = new LocationService();
+            UIApplication.SharedApplication.SetMinimumBackgroundFetchInterval(UIApplication.BackgroundFetchIntervalMinimum);
+
+            //Background Location Permissions
+            locMgr.RequestAlwaysAuthorization();
+            locMgr.PausesLocationUpdatesAutomatically = false;
+            locMgr.AllowsBackgroundLocationUpdates = true;
+            SetServiceMethods();
 
             // Get possible shortcut item
             if (launchOptions != null)
@@ -87,6 +102,31 @@ namespace Groundsman.iOS
         {
             // Perform action
             completionHandler(HandleShortcutItem(shortcutItem));
+        }
+
+        void SetServiceMethods()
+        {
+            MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", async message =>
+            {
+                await locationService.Start(message.Interval);
+            });
+
+            MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped", message =>
+            {
+                locationService.Stop();
+            });
+        }
+
+        public override void PerformFetch(UIApplication application, Action<UIBackgroundFetchResult> completionHandler)
+        {
+            try
+            {
+                completionHandler(UIBackgroundFetchResult.NewData);
+            }
+            catch (Exception)
+            {
+                completionHandler(UIBackgroundFetchResult.NoData);
+            }
         }
     }
 }

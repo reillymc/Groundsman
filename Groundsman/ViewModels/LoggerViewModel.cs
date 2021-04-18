@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Groundsman.Misc;
 using Groundsman.Models;
-using Groundsman.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -17,8 +15,6 @@ namespace Groundsman.ViewModels
 {
     public class LoggerViewModel : BaseViewModel
     {
-        private CancellationTokenSource cts;
-
         public ICommand ToggleButtonClickCommand { set; get; }
         public ICommand ClearButtonClickCommand { set; get; }
         public ICommand ShareButtonClickCommand { set; get; }
@@ -26,11 +22,11 @@ namespace Groundsman.ViewModels
         public ICommand OnDoneTappedCommand { get; set; }
 
         public Feature LogFeature;
+        public Feature OldLogFeature;
         public ObservableCollection<DisplayPosition> LogPositions { get; set; }
         private List<string> DateTimeList = new List<string>();
 
         public bool isLogging;
-
 
         private bool _ScrollEnabled = true;
         public bool ScrollEnabled
@@ -104,47 +100,7 @@ namespace Groundsman.ViewModels
                 }
             };
             InitCommands();
-        }
-
-        private void InitCommands()
-        {
-            ToggleButtonClickCommand = new Command(() => { ToggleLogging(); });
-            ClearButtonClickCommand = new Command(() => { LogPositions.Clear(); });
-            ShareButtonClickCommand = new Command<View>(async (view) => { await ShareLog(view); });
-            OnCancelTappedCommand = new Command(async () => await OnDismiss(true));
-            OnDoneTappedCommand = new Command(async () => await OnSaveUpdateActivated());
-        }
-
-        public void ToggleLogging()
-        {
-            if (isLogging)
-            {
-                ToggleButtonLabel = "Start";
-                cts.Cancel();
-                cts.Dispose();
-            }
-            else
-            {
-                ToggleButtonLabel = "Stop";
-                if (IntervalEntry < 1)
-                {
-                    IntervalEntry = 1;
-                }
-                switch (UnitEntry)
-                {
-                    case 0:
-                        StartLogging(IntervalEntry);
-                        break;
-                    case 1:
-                        StartLogging(IntervalEntry * 60);
-                        break;
-                    case 2:
-                        StartLogging(IntervalEntry * 3600);
-                        break;
-                }
-            }
-            isLogging = !isLogging;
-            ScrollEnabled = !isLogging;
+            HandleMessages();
         }
 
         public LoggerViewModel(Feature Log)
@@ -166,9 +122,56 @@ namespace Groundsman.ViewModels
                 LogPositions.Add(new DisplayPosition(datetimes[index], position));
                 index++;
             }
+
+            OldLogFeature = new Feature(Log.Geometry, Log.Properties);
             InitCommands();
+            HandleMessages();
         }
 
+        private void InitCommands()
+        {
+            ToggleButtonClickCommand = new Command(() => { ToggleLogging(); });
+            ClearButtonClickCommand = new Command(() => { LogPositions.Clear(); });
+            ShareButtonClickCommand = new Command<View>(async (view) => { await ShareLog(view); });
+            OnCancelTappedCommand = new Command(async () => await OnCancelActivated());
+            OnDoneTappedCommand = new Command(async () => await OnSaveUpdateActivated());
+        }
+
+        private Task OnCancelActivated()
+        {
+            SaveLog(true);
+            return OnDismiss(true);
+        }
+
+        public void ToggleLogging()
+        {
+            if (isLogging)
+            {
+                ToggleButtonLabel = "Start";
+                var message = new StopServiceMessage();
+                MessagingCenter.Send(message, "ServiceStopped");
+            }
+            else
+            {
+                if (IntervalEntry < 1)
+                {
+                    IntervalEntry = 1;
+                }
+                StartServiceMessage message = new StartServiceMessage
+                {
+                    Interval = UnitEntry switch
+                    {
+                        1 => IntervalEntry * 1000 * 60, // Minutes
+                        2 => IntervalEntry * 1000 * 3600, // Hours
+                        _ => IntervalEntry * 1000, // Seconds
+                    }
+                };
+                ToggleButtonLabel = "Stop";
+                MessagingCenter.Send(message, "ServiceStarted");
+            }
+            isLogging = !isLogging;
+            ScrollEnabled = !isLogging;
+        }
 
         private async Task OnSaveUpdateActivated()
         {
@@ -185,38 +188,7 @@ namespace Groundsman.ViewModels
             }
         }
 
-        public void StartLogging(int Interval)
-        {
-            cts = new CancellationTokenSource();
-            _ = UpdaterAsync(new TimeSpan(0, 0, Interval), cts.Token);
-        }
-
-        private async Task UpdaterAsync(TimeSpan interval, CancellationToken ct)
-        {
-            while (true)
-            {
-                await Task.Delay(interval, ct);
-                try
-                {
-                    Position location = await HelperServices.GetGeoLocation();
-                    DisplayPosition position = new DisplayPosition(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), location.Longitude.ToString(), location.Latitude.ToString(), location.Altitude.ToString());
-                    LogPositions.Add(position);
-                    DateTimeList.Add(position.Index);
-                }
-                catch
-                {
-                    await Application.Current.MainPage.DisplayAlert("Unable To Fetch Location", "Ensure Groundsman has access to your device's location.", "Ok");
-                    ToggleLogging();
-                }
-                try
-                {
-                    SaveLog();
-                }
-                catch { } // Ignore if cant auto save
-            }
-        }
-
-        private bool SaveLog()
+        private bool SaveLog(bool reset = false)
         {
             List<Position> posList = new List<Position>();
             foreach (DisplayPosition displayPosition in LogPositions)
@@ -229,10 +201,21 @@ namespace Groundsman.ViewModels
             LogFeature.Properties[Constants.NameProperty] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : "Log LineString";
             LogFeature.Properties[Constants.DateProperty] = DateTime.Now.ToShortDateString();
             LogFeature.Properties[Constants.AuthorProperty] = Preferences.Get(Constants.UserIDKey, "Groundsman");
+            if (reset)
+            {
+                if ((string)LogFeature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID)
+                {
+                    FeatureStore.AddItem(LogFeature);
+                }
+                else
+                {
+                    FeatureStore.UpdateItem(OldLogFeature);
+                }
+            }
             return (string)LogFeature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? FeatureStore.AddItem(LogFeature) : FeatureStore.UpdateItem(LogFeature);
         }
 
-        public async Task ShareLog(View element)
+        private async Task ShareLog(View element)
         {
             if (IsBusy) return;
 
@@ -264,6 +247,39 @@ namespace Groundsman.ViewModels
             }
 
             IsBusy = false;
+        }
+
+        void HandleMessages()
+        {
+            MessagingCenter.Subscribe<DisplayPosition>(this, "Location", message =>
+            {
+                LogPositions.Add(message);
+                DateTimeList.Add(message.Index);
+                try
+                {
+                    SaveLog();
+                }
+                catch { }
+            });
+
+            MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped", message => { ToggleButtonLabel = "Start"; });
+
+            MessagingCenter.Subscribe<LocationErrorMessage>(this, "LocationError", message =>
+            {
+                ToggleLogging();
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    await Application.Current.MainPage.DisplayAlert("Unable To Fetch Location", "Ensure Groundsman has access to your device's location.", "Ok");
+                });
+            });
+        }
+
+        public void Unsubscribe()
+        {
+            MessagingCenter.Unsubscribe<Position>(this, "Location");
+            MessagingCenter.Unsubscribe<StopServiceMessage>(this, "ServiceStopped");
+            MessagingCenter.Unsubscribe<StartServiceMessage>(this, "ServiceStarted");
+            MessagingCenter.Unsubscribe<LocationErrorMessage>(this, "LocationError");
         }
     }
 }

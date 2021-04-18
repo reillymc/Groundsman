@@ -33,9 +33,9 @@
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Groundsman uses your location to help you create features, display your position on the map and to record your movement path.</string>
+	<string>Groundsman uses your location to help you create features, display your position on the map and to record your movement path. When always allowed, Groundsman can create log lines in in the background.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Groundsman uses your location to help you create features, display your position on the map and to record your movement path.</string>
+	<string>Groundsman uses your location to help you create features, display your position on the map and to record your movement path. When always allowed, Groundsman can create log lines in in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Groundsman uses your location to help you create features and display your position on the map.</string>
 	<key>UIApplicationShortcutItems</key>
@@ -149,7 +149,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>9.0.11</string>
+	<string>9.0.12</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

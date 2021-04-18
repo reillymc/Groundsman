@@ -22,10 +22,12 @@ namespace Groundsman.Views
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
+            
             if (viewModel.isLogging)
             {
                 viewModel.ToggleLogging();
             }
+            viewModel.Unsubscribe();
         }
     }
 }

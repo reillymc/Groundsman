@@ -4,10 +4,10 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using Groundsman.Views;
 
-[assembly: ExportRenderer(typeof(WelcomeFormView), typeof(ModalPresentationRenderer))]
+[assembly: ExportRenderer(typeof(WelcomeFormView), typeof(WelcomeModalRenderer))]
 namespace Groundsman.iOS.Renderers
 {
-    public class ModalPresentationRenderer : PageRenderer
+    public class WelcomeModalRenderer : PageRenderer
     {
         public override void WillMoveToParentViewController(UIViewController parent)
         {
