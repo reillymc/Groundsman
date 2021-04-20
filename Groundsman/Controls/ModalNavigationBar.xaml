@@ -11,7 +11,7 @@
                             Android="{StaticResource greenPrimary}"
                             iOS="{StaticResource Foreground}" />
             </StackLayout.BackgroundColor>
-            <Grid Margin="15,7,15,0" ColumnDefinitions="*,Auto,*">
+            <Grid Margin="15,7,15,0" ColumnDefinitions="Auto,*,70">
                 <Button Grid.Column="0"
                         Command="{Binding OnCancelTappedCommand}"
                         HorizontalOptions="Start"
@@ -42,7 +42,8 @@
                        Text="{Binding Title}"
                        TextColor="{OnPlatform iOS={StaticResource Text},
                                               Android={StaticResource Foreground}}"
-                       VerticalOptions="Center" />
+                       VerticalOptions="Center" HorizontalOptions="{OnPlatform iOS=CenterAndExpand,
+                                                         Android=StartAndExpand}" />
                 <Button Grid.Column="2"
                         BindingContext="{x:Reference this}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:BaseViewModel}}, Path=OnDoneTappedCommand}"

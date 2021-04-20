@@ -61,7 +61,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
-    <CodesignKey>Apple Development: Reilly Mackenzie-Cree (ZH63974M2B)</CodesignKey>
+    <CodesignKey>Apple Distribution: Reilly Mackenzie-Cree (E4X6YMFEBV)</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>

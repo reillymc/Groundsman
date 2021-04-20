@@ -106,6 +106,15 @@
         <Setter Property="ClearButtonVisibility" Value="WhileEditing" />
     </Style>
 
+    <Style x:Key="PropertyPicker" TargetType="Picker">
+        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="FontSize" Value="Small" />
+        <Setter Property="Margin">
+            <OnPlatform x:TypeArguments="Thickness"
+                        Android="0"
+                        iOS="0,7" />
+        </Setter>
+    </Style>
 
 
     <Style x:Key="FrameButtonLabel" TargetType="Label">

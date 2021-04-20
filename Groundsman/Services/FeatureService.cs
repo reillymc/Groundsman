@@ -16,7 +16,7 @@ namespace Groundsman.Services
             if (ParseProperties(item))
             {
                 App.featureList.Add(item);
-                _ = SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
+                SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
                 return true;
             }
             return false;
@@ -33,7 +33,7 @@ namespace Groundsman.Services
                     successfulImport++;
                 }
             }
-            _ = SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
+            SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
             return successfulImport;
         }
 
@@ -42,7 +42,7 @@ namespace Groundsman.Services
         {
             SaveFeatureToFile(item, Constants.DELETED_FEATURE_FILE);
             bool deleteSuccessful = App.featureList.Remove(item);
-            _ = SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
+            SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
             return deleteSuccessful;
         }
 
@@ -53,7 +53,7 @@ namespace Groundsman.Services
         {
             App.featureList.Clear();
             ImportItems(Constants.GetTemplateFile());
-            _ = SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
+            SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
         }
 
         public bool UpdateItem(Feature item)
@@ -63,7 +63,7 @@ namespace Groundsman.Services
                 if (App.featureList[i].Properties[Constants.IdentifierProperty] == item.Properties[Constants.IdentifierProperty])
                 {
                     App.featureList[i] = item;
-                    _ = SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
+                    SaveFeaturesToFile(App.featureList, Constants.FEATURES_FILE);
                     return true;
                 }
             }
@@ -96,13 +96,15 @@ namespace Groundsman.Services
         private Task SaveFeatureToFile(Feature item, string FileName)
         {
             var json = JsonConvert.SerializeObject(item);
-            return File.WriteAllTextAsync(FileName, json);
+            using StreamWriter writer = new StreamWriter(File.Create(FileName));
+            return writer.WriteAsync(JsonConvert.SerializeObject(json));
         }
 
-        public Task SaveFeaturesToFile(IList<Feature> items, string FileName)
+        public void SaveFeaturesToFile(IList<Feature> items, string FileName)
         {
             FeatureCollection geoJSONObject = new FeatureCollection(items);
-            return File.WriteAllTextAsync(FileName, JsonConvert.SerializeObject(geoJSONObject));
+            using StreamWriter writer = new StreamWriter(File.Create(FileName));
+            writer.Write(JsonConvert.SerializeObject(geoJSONObject));
         }
 
         public ShareFileRequest ExportFeatures(IList<Feature> items)

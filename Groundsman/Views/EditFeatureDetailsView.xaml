@@ -110,7 +110,7 @@
                         </SwipeItems>
                     </SwipeView.RightItems>
                     <SwipeView.Content>
-                        <Grid IsEnabled="{Binding Path=BindingContext.GeolocationEntryEnabled, Source={x:Reference Name=EditFeatureDetailsViewPage}}" Style="{DynamicResource DetailCoordinateGrid}">
+                        <Grid Style="{DynamicResource DetailCoordinateGrid}">
                             <Label Grid.Row="1"
                                    Grid.Column="0"
                                    HorizontalOptions="Center"
@@ -228,7 +228,7 @@
                 </Grid>
                 <Frame Margin="10,10,10,350"
                        Padding="10,10,0,10"
-                       StyleClass="Base" HeightRequest="150">
+                       StyleClass="Base" HeightRequest="170">
                     <StackLayout>
                         <Label Style="{StaticResource LabelTitle}" Text="Properties" />
                         <CollectionView x:Name="PropertiesList"
@@ -236,10 +236,15 @@
                                         ItemsSource="{Binding Properties}"
                                         Margin="5,0,0,0"
                                         VerticalOptions="Start" 
-                                        Footer="{Binding .}"
-                                        ItemsLayout="HorizontalList"
+                                        Footer="{Binding .}" 
                                         FooterTemplate="{StaticResource PropertiesFooterTemplate}"
-                                        ItemsUpdatingScrollMode="KeepLastItemInView"/>
+                                        ItemsUpdatingScrollMode="KeepLastItemInView">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal"
+                                                   SnapPointsType="MandatorySingle"
+                                                   SnapPointsAlignment="Start" />
+                            </CollectionView.ItemsLayout>
+                        </CollectionView>
 
                     </StackLayout>
                 </Frame>
@@ -249,7 +254,7 @@
         <DataTemplate x:Key="PropertyItemTemplate" x:DataType="models:Property">
             <Grid Padding="10,0,10,0"
                   ColumnDefinitions="3*,*,15"
-                  RowDefinitions="0.5*,1*,0.5*,1*"
+                  RowDefinitions="*,2*,*,2*"
                   WidthRequest="280">
                 <Label Grid.Row="0"
                        Grid.Column="0"
@@ -269,10 +274,8 @@
                        VerticalOptions="End" />
                 <Picker Grid.Row="1"
                         Grid.Column="1"
-                        HeightRequest="30"
+                        Style="{StaticResource PropertyPicker}"
                         SelectedIndex="{Binding Type}"
-                        Style="{StaticResource DetailCoordinateEntry}"
-                        TextColor="{StaticResource greenPrimary}"
                         VerticalOptions="Start">
                     <Picker.ItemsSource>
                         <x:Array Type="{x:Type x:String}">
@@ -296,7 +299,7 @@
                        VerticalOptions="Start" />
                 <TemplatedView Grid.RowSpan="4"
                                Grid.Column="2"
-                               Margin="14,0,0,0"
+                               Margin="14,9,0,20"
                                ControlTemplate="{StaticResource BodySeperatorVertical}" />
             </Grid>
         </DataTemplate>
