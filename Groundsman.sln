@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Groundsman.Android", "Groun
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Groundsman.iOS", "Groundsman.iOS\Groundsman.iOS.csproj", "{55B2F743-D498-4193-B605-A8B6540A74D5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Groundsman", "Groundsman\Groundsman.csproj", "{B3D87493-1DCF-4840-A1AE-AE73CDB618B0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Groundsman", "Groundsman\Groundsman.csproj", "{B3D87493-1DCF-4840-A1AE-AE73CDB618B0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Groundsman.Tests", "Groundsman.Tests\Groundsman.Tests.csproj", "{A3C7BABA-5D76-425A-8A2A-5EBAA880A1DA}"
 EndProject

@@ -66,7 +66,10 @@
                         </Entry>
                     </StackLayout>
                 </Frame>
-                <Frame BackgroundColor="Transparent" HasShadow="False" Padding="0" MinimumHeightRequest="60">
+                <Frame Padding="0"
+                       BackgroundColor="Transparent"
+                       HasShadow="False"
+                       MinimumHeightRequest="60">
                     <Grid BackgroundColor="{DynamicResource Background}"
                           ColumnDefinitions="*,*"
                           RowDefinitions="*">

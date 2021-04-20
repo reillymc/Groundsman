@@ -37,13 +37,14 @@
                                                    Android=Bold}"
                        FontSize="{OnPlatform iOS=16,
                                              Android=20}"
+                       HorizontalOptions="{OnPlatform iOS=CenterAndExpand,
+                                                      Android=StartAndExpand}"
                        LineBreakMode="TailTruncation"
                        MaxLines="1"
                        Text="{Binding Title}"
                        TextColor="{OnPlatform iOS={StaticResource Text},
                                               Android={StaticResource Foreground}}"
-                       VerticalOptions="Center" HorizontalOptions="{OnPlatform iOS=CenterAndExpand,
-                                                         Android=StartAndExpand}" />
+                       VerticalOptions="Center" />
                 <Button Grid.Column="2"
                         BindingContext="{x:Reference this}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:BaseViewModel}}, Path=OnDoneTappedCommand}"

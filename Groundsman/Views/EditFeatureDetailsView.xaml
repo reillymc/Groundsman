@@ -12,7 +12,6 @@
              x:DataType="viewModels:FeatureDetailsViewModel"
              Style="{StaticResource PageTintedStyle}">
     <ContentPage.Resources>
-
         <DataTemplate x:Key="HeaderTemplate">
             <StackLayout>
                 <Frame Padding="10,10,0,10" StyleClass="Base, DefaultMargin">
@@ -228,7 +227,8 @@
                 </Grid>
                 <Frame Margin="10,10,10,350"
                        Padding="10,10,0,10"
-                       StyleClass="Base" HeightRequest="170">
+                       HeightRequest="170"
+                       StyleClass="Base">
                     <StackLayout>
                         <Label Style="{StaticResource LabelTitle}" Text="Properties" />
                         <CollectionView x:Name="PropertiesList"
@@ -241,8 +241,8 @@
                                         ItemsUpdatingScrollMode="KeepLastItemInView">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout Orientation="Horizontal"
-                                                   SnapPointsType="MandatorySingle"
-                                                   SnapPointsAlignment="Start" />
+                                                   SnapPointsAlignment="Start"
+                                                   SnapPointsType="MandatorySingle" />
                             </CollectionView.ItemsLayout>
                         </CollectionView>
 
@@ -274,8 +274,8 @@
                        VerticalOptions="End" />
                 <Picker Grid.Row="1"
                         Grid.Column="1"
-                        Style="{StaticResource PropertyPicker}"
                         SelectedIndex="{Binding Type}"
+                        Style="{StaticResource PropertyPicker}"
                         VerticalOptions="Start">
                     <Picker.ItemsSource>
                         <x:Array Type="{x:Type x:String}">
