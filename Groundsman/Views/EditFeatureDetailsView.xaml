@@ -231,14 +231,15 @@
                        StyleClass="Base">
                     <StackLayout>
                         <Label Style="{StaticResource LabelTitle}" Text="Properties" />
+                        <!-- ItemsSource has to be Above Footer or list will not display -->
                         <CollectionView x:Name="PropertiesList"
-                                        ItemTemplate="{StaticResource PropertyItemTemplate}"
-                                        ItemsSource="{Binding Properties}"
                                         Margin="5,0,0,0"
-                                        VerticalOptions="Start" 
-                                        Footer="{Binding .}" 
+                                        ItemsSource="{Binding Properties}" 
+                                        Footer="{Binding .}"
                                         FooterTemplate="{StaticResource PropertiesFooterTemplate}"
-                                        ItemsUpdatingScrollMode="KeepLastItemInView">
+                                        ItemTemplate="{StaticResource PropertyItemTemplate}"
+                                        ItemsUpdatingScrollMode="KeepLastItemInView"
+                                        VerticalOptions="Start">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout Orientation="Horizontal"
                                                    SnapPointsAlignment="Start"
