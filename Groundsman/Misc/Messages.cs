@@ -1,5 +1,4 @@
-﻿using System;
-namespace Groundsman.Misc
+﻿namespace Groundsman.Misc
 {
     public class LocationErrorMessage
     {

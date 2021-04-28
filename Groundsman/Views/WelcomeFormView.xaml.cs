@@ -5,7 +5,7 @@ namespace Groundsman.Views
 {
     public partial class WelcomeFormView : ContentPage
     {
-        WelcomeFormViewModel viewModel;
+        private readonly WelcomeFormViewModel viewModel;
 
         public WelcomeFormView()
         {
@@ -16,9 +16,6 @@ namespace Groundsman.Views
         }
 
         //Stop the user from leaving the ID Entry page.
-        protected override bool OnBackButtonPressed()
-        {
-            return true;
-        }
+        protected override bool OnBackButtonPressed() => true;
     }
 }

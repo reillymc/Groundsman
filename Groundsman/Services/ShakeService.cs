@@ -5,9 +5,10 @@ namespace Groundsman.Services
 {
     public class ShakeService
     {
-        App Current;
+        private readonly App Current;
+
         // Set speed delay for monitoring changes.
-        SensorSpeed speed = SensorSpeed.Game;
+        private readonly SensorSpeed speed = SensorSpeed.Game;
 
         public ShakeService(App app)
         {

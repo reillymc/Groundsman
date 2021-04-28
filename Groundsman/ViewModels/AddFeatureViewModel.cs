@@ -64,7 +64,7 @@ namespace Groundsman.ViewModels
         {
             try
             {
-                var customFileType =
+                FilePickerFileType customFileType =
                     new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
                     {
                             { DevicePlatform.iOS, new[] { "public.json", "com.apple.dt.document.geojson" } }, // or general UTType values
@@ -73,17 +73,17 @@ namespace Groundsman.ViewModels
                             { DevicePlatform.macOS, new[] { "json", "geojson" } }, // or general UTType values
                     });
 
-                var options = new PickOptions
+                PickOptions options = new PickOptions
                 {
                     PickerTitle = "Please select a CheckSafe template file",
                     FileTypes = customFileType,
                 };
-                var fileData = await FilePicker.PickAsync();
+                FileResult fileData = await FilePicker.PickAsync();
 
                 // If the user didn't cancel, import the contents of the file they selected.
                 if (fileData != null)
                 {
-                    var fileStream = await fileData.OpenReadAsync();
+                    Stream fileStream = await fileData.OpenReadAsync();
 
                     StreamReader reader = new StreamReader(fileStream);
                     string fileContents = reader.ReadToEnd();

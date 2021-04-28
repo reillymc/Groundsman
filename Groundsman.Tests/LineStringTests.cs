@@ -17,28 +17,19 @@ namespace Groundsman.Tests
         /// Try to create a LineString without giving coordinates
         /// </summary>
         [TestMethod]
-        public void CreateLineStringWithNull()
-        {
-            Assert.ThrowsException<ArgumentNullException>(() => { LineString lineString = new LineString(null); });
-        }
+        public void CreateLineStringWithNull() => Assert.ThrowsException<ArgumentNullException>(() => { LineString lineString = new LineString(null); });
 
         /// <summary>
         /// Try to create a LineString with an empty list of Positions
         /// </summary>
         [TestMethod]
-        public void CreateLineStringWithZeroPositions()
-        {
-            Assert.ThrowsException<ArgumentException>(() => { LineString lineString = new LineString(new List<Position>()); });
-        }
+        public void CreateLineStringWithZeroPositions() => Assert.ThrowsException<ArgumentException>(() => { LineString lineString = new LineString(new List<Position>()); });
 
         /// <summary>
         /// Try to create a LineString with a list of one Position
         /// </summary>
         [TestMethod]
-        public void CreateLineStringWithOnePosition()
-        {
-            Assert.ThrowsException<ArgumentException>(() => { LineString lineString = new LineString(new List<Position>() { { TestData.Position1 } }); });
-        }
+        public void CreateLineStringWithOnePosition() => Assert.ThrowsException<ArgumentException>(() => { LineString lineString = new LineString(new List<Position>() { { TestData.Position1 } }); });
 
         /// <summary>
         /// Try to create a regular LineString with a list of two positions

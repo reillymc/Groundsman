@@ -1,14 +1,14 @@
-﻿using Groundsman.Models;
+﻿using System;
+using Groundsman.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 
 namespace Groundsman.JSONConverters
 {
     /// <summary>
     /// JSON converter used to read JSON and determine the imported item's type based one the type property
     /// </summary>
-    class GeometryConverter : JsonConverter<Geometry>
+    internal class GeometryConverter : JsonConverter<Geometry>
     {
         public override bool CanRead => true;
         public override bool CanWrite => false;
@@ -27,7 +27,7 @@ namespace Groundsman.JSONConverters
                 throw new JsonReaderException("Invalid geojson geometry object, does not have 'type' field.");
             }
 
-            var tokenType = TypeToken.ToObject<GeoJSONType>(serializer);
+            GeoJSONType tokenType = TypeToken.ToObject<GeoJSONType>(serializer);
             Type actualType = tokenType switch
             {
                 GeoJSONType.Point => typeof(Point),

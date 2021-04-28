@@ -24,14 +24,14 @@ namespace Groundsman.ViewModels
         public Feature LogFeature;
         public Feature OldLogFeature;
         public ObservableCollection<DisplayPosition> LogPositions { get; set; }
-        private List<string> DateTimeList = new List<string>();
+        private readonly List<string> DateTimeList = new List<string>();
 
         public bool isLogging;
 
         private bool _ScrollEnabled = true;
         public bool ScrollEnabled
         {
-            get { return _ScrollEnabled; }
+            get => _ScrollEnabled;
             set
             {
                 _ScrollEnabled = value;
@@ -42,7 +42,7 @@ namespace Groundsman.ViewModels
         private List<string> _UnitItems = new List<string>() { "Seconds", "Minutes", "Hours" };
         public List<string> UnitItems
         {
-            get { return _UnitItems; }
+            get => _UnitItems;
             set
             {
                 _UnitItems = value;
@@ -53,7 +53,7 @@ namespace Groundsman.ViewModels
         private int _UnitEntry = 0;
         public int UnitEntry
         {
-            get { return _UnitEntry; }
+            get => _UnitEntry;
             set
             {
                 _UnitEntry = value;
@@ -64,7 +64,7 @@ namespace Groundsman.ViewModels
         private string _ToggleButtonLabel = "Start";
         public string ToggleButtonLabel
         {
-            get { return _ToggleButtonLabel; }
+            get => _ToggleButtonLabel;
             set
             {
                 _ToggleButtonLabel = value;
@@ -74,7 +74,7 @@ namespace Groundsman.ViewModels
         private int _intervalEntry = 1;
         public int IntervalEntry
         {
-            get { return _intervalEntry; }
+            get => _intervalEntry;
             set
             {
                 int temp = UnitEntry;
@@ -148,7 +148,7 @@ namespace Groundsman.ViewModels
             if (isLogging)
             {
                 ToggleButtonLabel = "Start";
-                var message = new StopServiceMessage();
+                StopServiceMessage message = new StopServiceMessage();
                 MessagingCenter.Send(message, "ServiceStopped");
             }
             else
@@ -221,7 +221,7 @@ namespace Groundsman.ViewModels
 
             IsBusy = true;
 
-            var bounds = element.GetAbsoluteBounds().ToSystemRectangle();
+            System.Drawing.Rectangle bounds = element.GetAbsoluteBounds().ToSystemRectangle();
 
             if (Preferences.Get(Constants.ShareLogAsGeoJSONKey, false))
             {
@@ -249,7 +249,7 @@ namespace Groundsman.ViewModels
             IsBusy = false;
         }
 
-        void HandleMessages()
+        private void HandleMessages()
         {
             MessagingCenter.Subscribe<DisplayPosition>(this, "Location", message =>
             {

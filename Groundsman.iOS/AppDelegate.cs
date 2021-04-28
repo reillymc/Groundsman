@@ -22,9 +22,9 @@ namespace Groundsman.iOS
         //
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
-        App mainForms;
-        LocationService locationService;
-        CLLocationManager locMgr = new CLLocationManager();
+        private App mainForms;
+        private LocationService locationService;
+        private readonly CLLocationManager locMgr = new CLLocationManager();
         public override bool FinishedLaunching(UIApplication uiApplication, NSDictionary launchOptions)
         {
             Xamarin.Forms.Forms.Init();
@@ -73,7 +73,7 @@ namespace Groundsman.iOS
 
         public bool HandleShortcutItem(UIApplicationShortcutItem shortcutItem)
         {
-            var handled = false;
+            bool handled = false;
 
             // Anything to process?
             if (shortcutItem == null) return false;
@@ -98,13 +98,9 @@ namespace Groundsman.iOS
             LaunchedShortcutItem = null;
         }
 
-        public override void PerformActionForShortcutItem(UIApplication application, UIApplicationShortcutItem shortcutItem, UIOperationHandler completionHandler)
-        {
-            // Perform action
-            completionHandler(HandleShortcutItem(shortcutItem));
-        }
+        public override void PerformActionForShortcutItem(UIApplication application, UIApplicationShortcutItem shortcutItem, UIOperationHandler completionHandler) => completionHandler(HandleShortcutItem(shortcutItem));
 
-        void SetServiceMethods()
+        private void SetServiceMethods()
         {
             MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", async message =>
             {

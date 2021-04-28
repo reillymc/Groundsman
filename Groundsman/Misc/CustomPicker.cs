@@ -2,7 +2,7 @@
 
 namespace Groundsman.Misc
 {
-    public class CustomPicker: Picker
+    public class CustomPicker : Picker
     {
     }
 }

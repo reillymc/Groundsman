@@ -19,7 +19,7 @@ namespace Groundsman.JSONConverters
         {
             writer.WriteStartObject();
 
-            foreach (var pair in value)
+            foreach (KeyValuePair<string, object> pair in value)
             {
                 if (pair.Key != "id")
                 {

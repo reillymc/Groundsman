@@ -10,8 +10,8 @@ namespace Groundsman.iOS.Services
 {
     public class LocationService
     {
-        nint _taskId;
-        CancellationTokenSource _cts;
+        private nint _taskId;
+        private CancellationTokenSource _cts;
 
         public async Task Start(int interval)
         {
@@ -19,7 +19,7 @@ namespace Groundsman.iOS.Services
             _taskId = UIApplication.SharedApplication.BeginBackgroundTask("com.qutgeodev.groundsman", OnExpiration);
             try
             {
-                var locShared = new LogService();
+                LogService locShared = new LogService();
                 await locShared.Run(_cts.Token, interval);
             }
             catch (OperationCanceledException) { }
@@ -27,26 +27,20 @@ namespace Groundsman.iOS.Services
             {
                 if (_cts.IsCancellationRequested)
                 {
-                    var message = new StopServiceMessage();
+                    StopServiceMessage message = new StopServiceMessage();
                     Device.BeginInvokeOnMainThread(
                         () => MessagingCenter.Send(message, "ServiceStopped")
                     );
                 }
             }
 
-            var time = UIApplication.SharedApplication.BackgroundTimeRemaining;
+            double time = UIApplication.SharedApplication.BackgroundTimeRemaining;
 
             UIApplication.SharedApplication.EndBackgroundTask(_taskId);
         }
 
-        public void Stop()
-        {
-            _cts.Cancel();
-        }
+        public void Stop() => _cts.Cancel();
 
-        void OnExpiration()
-        {
-            UIApplication.SharedApplication.EndBackgroundTask(_taskId);
-        }
+        private void OnExpiration() => UIApplication.SharedApplication.EndBackgroundTask(_taskId);
     }
 }

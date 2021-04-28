@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Groundsman.Misc;
@@ -10,7 +11,6 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using Point = Groundsman.Models.Point;
 using Position = Groundsman.Models.Position;
-using System.Linq;
 
 namespace Groundsman.ViewModels
 {
@@ -28,7 +28,7 @@ namespace Groundsman.ViewModels
         public ICommand OnCancelTappedCommand { get; set; }
         public ICommand ShareEntryCommand { get; set; }
 
-        private Feature Feature = new Feature { Type = GeoJSONType.Feature };
+        private readonly Feature Feature = new Feature { Type = GeoJSONType.Feature };
         public Dictionary<string, object> HiddenProperties = new Dictionary<string, object>();
 
         public ObservableCollection<DisplayPosition> Positions { get; set; } = new ObservableCollection<DisplayPosition>();
@@ -43,7 +43,7 @@ namespace Groundsman.ViewModels
         private int _NumPointFields;
         public int NumPointFields
         {
-            get { return _NumPointFields; }
+            get => _NumPointFields;
             set
             {
                 _NumPointFields = value;
@@ -177,7 +177,7 @@ namespace Groundsman.ViewModels
 
             if (await ValidateGeometry() && await ValidateProperties())
             {
-                var bounds = element.GetAbsoluteBounds().ToSystemRectangle();
+                System.Drawing.Rectangle bounds = element.GetAbsoluteBounds().ToSystemRectangle();
                 ShareFileRequest share = FeatureStore.ExportFeatures(new List<Feature>() { Feature });
                 share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
                 await Share.RequestAsync(share);
@@ -263,7 +263,7 @@ namespace Groundsman.ViewModels
         /// <summary>
         /// Saves a new or edited feature to the embedded file.
         /// </summary>
-        async Task OnSaveUpdateActivated()
+        private async Task OnSaveUpdateActivated()
         {
             if (IsBusy) return;
             IsBusy = true;

@@ -17,9 +17,6 @@ namespace Groundsman.Views
             }
         }
 
-        public HomePage()
-        {
-            InitializeComponent();
-        }
+        public HomePage() => InitializeComponent();
     }
 }

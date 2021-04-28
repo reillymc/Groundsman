@@ -11,10 +11,7 @@ namespace Groundsman.Tests
         /// Try to create a Point without giving coordinates
         /// </summary>
         [TestMethod]
-        public void CreatePointWithNull()
-        {
-            Assert.ThrowsException<ArgumentNullException>(() => { Point point = new Point(null); });
-        }
+        public void CreatePointWithNull() => Assert.ThrowsException<ArgumentNullException>(() => { Point point = new Point(null); });
 
         /// <summary>
         /// Try to create a regular Point

@@ -1,6 +1,6 @@
+using System;
 using Groundsman.Models;
 using Groundsman.ViewModels;
-using System;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration;
@@ -10,7 +10,7 @@ namespace Groundsman.Views
 {
     public partial class EditFeatureDetailsView : ContentPage
     {
-        FeatureDetailsViewModel viewModel;
+        private readonly FeatureDetailsViewModel viewModel;
         /// <summary>
         /// Detail form constructor for when a new entry is being added.
         /// </summary>
@@ -37,7 +37,7 @@ namespace Groundsman.Views
 
             if (DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Version < new Version(13, 0))
             {
-                var safeInsets = On<iOS>().SafeAreaInsets();
+                Thickness safeInsets = On<iOS>().SafeAreaInsets();
                 safeInsets.Bottom = 0;
                 Padding = safeInsets;
             }

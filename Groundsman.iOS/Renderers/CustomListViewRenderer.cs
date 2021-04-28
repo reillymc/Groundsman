@@ -13,7 +13,7 @@ namespace Groundsman.iOS.Renderers
             base.OnElementChanged(e);
             if (e.NewElement != null)
             {
-                var listView = Control as UITableView;
+                UITableView listView = Control;
                 listView.SeparatorInset = new UIEdgeInsets(0, 63, 0, 0);
             }
         }

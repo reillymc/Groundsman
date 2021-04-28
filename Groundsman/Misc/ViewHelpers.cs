@@ -8,8 +8,8 @@ namespace Groundsman.Misc
         {
             Element looper = element;
 
-            var absoluteX = element.X + element.Margin.Top;
-            var absoluteY = element.Y + element.Margin.Left;
+            double absoluteX = element.X + element.Margin.Top;
+            double absoluteY = element.Y + element.Margin.Left;
 
             // Add logic to handle titles, headers, or other non-view bars
 

@@ -1,9 +1,9 @@
+using System;
+using Groundsman.iOS.Renderers;
+using Groundsman.Styles;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
-using System;
-using Groundsman.Styles;
-using Groundsman.iOS.Renderers;
 
 [assembly: ExportRenderer(typeof(ContentPage), typeof(ExtendedPageRenderer))]
 namespace Groundsman.iOS.Renderers
@@ -56,7 +56,7 @@ namespace Groundsman.iOS.Renderers
             }
         }
 
-        void SetAppTheme()
+        private void SetAppTheme()
         {
             if (TraitCollection.UserInterfaceStyle == UIUserInterfaceStyle.Dark)
             {

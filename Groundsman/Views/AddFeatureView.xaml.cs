@@ -1,5 +1,5 @@
-﻿using Groundsman.ViewModels;
-using System;
+﻿using System;
+using Groundsman.ViewModels;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration;
@@ -9,7 +9,7 @@ namespace Groundsman.Views
 {
     public partial class AddFeatureView : ContentPage
     {
-        AddFeatureViewModel viewModel;
+        private readonly AddFeatureViewModel viewModel;
 
         public AddFeatureView()
         {
@@ -23,7 +23,7 @@ namespace Groundsman.Views
 
             if (DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Version < new Version(13, 0))
             {
-                var safeInsets = On<iOS>().SafeAreaInsets();
+                Thickness safeInsets = On<iOS>().SafeAreaInsets();
                 safeInsets.Bottom = 0;
                 Padding = safeInsets;
             }

@@ -1,13 +1,11 @@
-﻿using System;
-using Groundsman.ViewModels;
-using Xamarin.Essentials;
+﻿using Groundsman.ViewModels;
 using Xamarin.Forms;
 
 namespace Groundsman.Views
 {
     public partial class ProfileSettingsView : ContentPage
     {
-        ProfileSettingsViewModel viewModel;
+        private readonly ProfileSettingsViewModel viewModel;
 
         public ProfileSettingsView()
         {

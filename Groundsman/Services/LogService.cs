@@ -9,7 +9,7 @@ namespace Groundsman.Services
 {
     public class LogService
     {
-        readonly bool stopping = false;
+        private readonly bool stopping = false;
 
         public LogService() { }
 

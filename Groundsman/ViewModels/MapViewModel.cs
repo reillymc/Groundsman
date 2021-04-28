@@ -51,7 +51,7 @@ namespace Groundsman.ViewModels
             DrawFeatures();
 
             //SetShowingUser
-            var status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
+            PermissionStatus status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
             Map.IsShowingUser = status == PermissionStatus.Granted;
         }
 
@@ -171,7 +171,7 @@ namespace Groundsman.ViewModels
             });
         }
 
-        async Task DisplayFeatureActionMenuAsync(Feature feature)
+        private async Task DisplayFeatureActionMenuAsync(Feature feature)
         {
             string result = await NavigationService.GetCurrentPage().DisplayActionSheet((string)feature.Properties[Constants.NameProperty], "Dismiss", "Delete", "View");
 

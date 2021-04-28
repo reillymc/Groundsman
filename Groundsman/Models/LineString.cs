@@ -48,7 +48,7 @@ namespace Groundsman.Models
             double PB;
             double delta = 0.0001; // Delta determines line tap accuracy
 
-            var polyline = (List<Position>)Coordinates;
+            List<Position> polyline = (List<Position>)Coordinates;
 
             // Check for each individual line segment
             for (int i = 1; i < polyline.Count; i++)

@@ -19,19 +19,13 @@ namespace Groundsman.Tests
         /// Try to create a Polygon without giving coordinates
         /// </summary>
         [TestMethod]
-        public void CreatePolygonWithNull()
-        {
-            Assert.ThrowsException<ArgumentNullException>(() => { Polygon polygon = new Polygon(null); });
-        }
+        public void CreatePolygonWithNull() => Assert.ThrowsException<ArgumentNullException>(() => { Polygon polygon = new Polygon(null); });
 
         /// <summary>
         /// Try to create a Polygon with an empty list of LinearRings
         /// </summary>
         [TestMethod]
-        public void CreatePolygonWithZeroLinearRings()
-        {
-            Assert.ThrowsException<ArgumentException>(() => { Polygon polygon = new Polygon(new List<LinearRing>()); });
-        }
+        public void CreatePolygonWithZeroLinearRings() => Assert.ThrowsException<ArgumentException>(() => { Polygon polygon = new Polygon(new List<LinearRing>()); });
 
         /// <summary>
         /// Try to create a regular Polygon with a single linear ring

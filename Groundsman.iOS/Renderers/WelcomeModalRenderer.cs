@@ -1,8 +1,8 @@
 ﻿using Groundsman.iOS.Renderers;
+using Groundsman.Views;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
-using Groundsman.Views;
 
 [assembly: ExportRenderer(typeof(WelcomeFormView), typeof(WelcomeModalRenderer))]
 namespace Groundsman.iOS.Renderers

@@ -13,7 +13,7 @@ namespace Groundsman.ViewModels
         private string _IDEntry;
         public string IDEntry
         {
-            get { return _IDEntry; }
+            get => _IDEntry;
             set
             {
                 _IDEntry = value;
@@ -21,10 +21,7 @@ namespace Groundsman.ViewModels
             }
         }
 
-        public WelcomeFormViewModel()
-        {
-            IDSubmitCommand = new Command(async () => await SubmitIDEntry());
-        }
+        public WelcomeFormViewModel() => IDSubmitCommand = new Command(async () => await SubmitIDEntry());
 
         /// <summary>
         /// Submits the inputted ID entry from the user. If valid, the ID will be saved and the user continues to the main page.

@@ -1,14 +1,14 @@
-﻿using Groundsman.Models;
+﻿using System;
+using Groundsman.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 
 namespace Groundsman.JSONConverters
 {
     /// <summary>
     /// JSON converter used to read JSON and determine the imported items GeoJSONType
     /// </summary>
-    class GeoJSONObjectConverter : JsonConverter<GeoJSONObject>
+    internal class GeoJSONObjectConverter : JsonConverter<GeoJSONObject>
     {
         public override bool CanRead => true;
         public override bool CanWrite => false;
@@ -28,7 +28,7 @@ namespace Groundsman.JSONConverters
             }
 
             // Match GeoJSONType to actual type
-            var tokenType = TypeToken.ToObject<GeoJSONType>(serializer);
+            GeoJSONType tokenType = TypeToken.ToObject<GeoJSONType>(serializer);
             Type actualType = tokenType switch
             {
                 GeoJSONType.Point => typeof(Point),

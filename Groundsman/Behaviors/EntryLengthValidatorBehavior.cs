@@ -18,12 +18,12 @@ namespace Groundsman.Behaviors
             bindable.TextChanged -= OnEntryTextChanged;
         }
 
-        void OnEntryTextChanged(object sender, TextChangedEventArgs e)
+        private void OnEntryTextChanged(object sender, TextChangedEventArgs e)
         {
-            var entry = (Entry)sender;
+            Entry entry = (Entry)sender;
 
             // if Entry text is longer then valid length
-            if (entry.Text != null && entry.Text.Length > this.MaxLength)
+            if (entry.Text != null && entry.Text.Length > MaxLength)
             {
                 string entryText = entry.Text;
 

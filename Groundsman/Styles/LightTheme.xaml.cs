@@ -6,9 +6,6 @@ namespace Groundsman.Styles
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LightTheme : ResourceDictionary
     {
-        public LightTheme()
-        {
-            InitializeComponent();
-        }
+        public LightTheme() => InitializeComponent();
     }
 }

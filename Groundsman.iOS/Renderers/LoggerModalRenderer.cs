@@ -32,13 +32,13 @@ namespace Groundsman.iOS.Renderers
         /// Stops modal being dismissable when logger is active
         /// </summary>
         /// <param name="parent"></param>
-        void HandleReceivedMessages(UIViewController parent)
+        private void HandleReceivedMessages(UIViewController parent)
         {
             MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped", message => { parent.ModalInPresentation = false; });
             MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", message => { parent.ModalInPresentation = true; });
         }
 
-        void Unsubscribe()
+        private void Unsubscribe()
         {
             MessagingCenter.Unsubscribe<StopServiceMessage>(this, "ServiceStopped");
             MessagingCenter.Unsubscribe<StartServiceMessage>(this, "ServiceStarted");

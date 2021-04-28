@@ -1,12 +1,11 @@
-﻿using Android.App;
+﻿using System.Text;
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.Content.Res;
 using Android.OS;
-using Android.Views;
 using Groundsman.Styles;
 using Plugin.CurrentActivity;
-using System.Text;
 
 namespace Groundsman.Droid
 {
@@ -42,7 +41,7 @@ namespace Groundsman.Droid
                 }
             };
 
-            var mainForms = new App();
+            App mainForms = new App();
             LoadApplication(mainForms);
 
             SetAppTheme();
@@ -50,13 +49,13 @@ namespace Groundsman.Droid
             if (Intent.Action == Intent.ActionSend)
             {
                 // Get the info from ClipData 
-                var file = Intent.ClipData.GetItemAt(0);
+                ClipData.Item file = Intent.ClipData.GetItemAt(0);
 
                 // Open a stream from the URI 
-                var fileStream = ContentResolver.OpenInputStream(file.Uri);
+                System.IO.Stream fileStream = ContentResolver.OpenInputStream(file.Uri);
 
                 // Save it over 
-                var memOfFile = new System.IO.MemoryStream();
+                System.IO.MemoryStream memOfFile = new System.IO.MemoryStream();
 
                 fileStream.CopyTo(memOfFile);
                 string decoded = Encoding.UTF8.GetString(memOfFile.ToArray());
@@ -65,10 +64,7 @@ namespace Groundsman.Droid
             }
         }
 
-        protected override void OnResume()
-        {
-            base.OnResume();
-        }
+        protected override void OnResume() => base.OnResume();
 
         /// <summary>
         /// Handle runtime permissions
@@ -79,7 +75,7 @@ namespace Groundsman.Droid
         /// <param name="grantResults"></param>
 
 
-        void SetAppTheme()
+        private void SetAppTheme()
         {
             if (Resources.Configuration.UiMode.HasFlag(UiMode.NightYes))
                 SetTheme(App.Theme.Dark);
@@ -87,7 +83,7 @@ namespace Groundsman.Droid
                 SetTheme(App.Theme.Light);
         }
 
-        void SetTheme(App.Theme mode)
+        private void SetTheme(App.Theme mode)
         {
             if (mode == App.Theme.Dark)
             {

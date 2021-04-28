@@ -1,10 +1,10 @@
-﻿using Groundsman.Interfaces;
-using Groundsman.Models;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Groundsman.Interfaces;
+using Groundsman.Models;
+using Newtonsoft.Json;
 using Xamarin.Essentials;
 
 namespace Groundsman.Services
@@ -95,7 +95,7 @@ namespace Groundsman.Services
 
         private Task SaveFeatureToFile(Feature item, string FileName)
         {
-            var json = JsonConvert.SerializeObject(item);
+            string json = JsonConvert.SerializeObject(item);
             using StreamWriter writer = new StreamWriter(File.Create(FileName));
             return writer.WriteAsync(JsonConvert.SerializeObject(json));
         }

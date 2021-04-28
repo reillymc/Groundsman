@@ -1,5 +1,5 @@
-﻿using Groundsman.Models;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Groundsman.Models;
 using Xamarin.Forms;
 
 namespace Groundsman.Interfaces

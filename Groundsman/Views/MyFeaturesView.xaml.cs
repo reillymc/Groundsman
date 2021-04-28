@@ -1,14 +1,14 @@
-﻿using Xamarin.Forms;
-using Groundsman.ViewModels;
-using System;
+﻿using System;
 using Groundsman.Models;
+using Groundsman.ViewModels;
+using Xamarin.Forms;
 
 namespace Groundsman.Views
 {
     public partial class MyFeaturesView : ContentPage
     {
-        MyFeaturesViewModel viewModel;
-        ViewCell lastCell;
+        private readonly MyFeaturesViewModel viewModel;
+        private ViewCell lastCell;
 
         public MyFeaturesView()
         {
@@ -19,7 +19,7 @@ namespace Groundsman.Views
 
         public void DeselectItem(object sender, EventArgs e)
         {
-            var selected = ((ListView)sender).SelectedItem;
+            object selected = ((ListView)sender).SelectedItem;
             if (selected != null)
             {
                 viewModel.ItemTappedCommand.Execute((Feature)selected);

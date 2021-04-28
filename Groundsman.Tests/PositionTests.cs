@@ -14,19 +14,13 @@ namespace Groundsman.Tests
         /// Try to create a Position with no longitude
         /// </summary>
         [TestMethod]
-        public void CreatePositionWithNaNLongitude()
-        {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => { Position position = new Position(double.NaN, 10); });
-        }
+        public void CreatePositionWithNaNLongitude() => Assert.ThrowsException<ArgumentOutOfRangeException>(() => { Position position = new Position(double.NaN, 10); });
 
         /// <summary>
         /// Try to create a Position with no latitude
         /// </summary>
         [TestMethod]
-        public void CreatePositionWithNaNLatitude()
-        {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => { Position position = new Position(10, double.NaN); });
-        }
+        public void CreatePositionWithNaNLatitude() => Assert.ThrowsException<ArgumentOutOfRangeException>(() => { Position position = new Position(10, double.NaN); });
 
         /// <summary>
         /// Try to create a Position with no altitude
@@ -34,7 +28,7 @@ namespace Groundsman.Tests
         [TestMethod]
         public void CreatePositionWithNullAltitude()
         {
-             Position position = new Position(10, 10);
+            Position position = new Position(10, 10);
 
             Assert.AreEqual(position.Altitude, double.NaN);
         }
@@ -56,19 +50,13 @@ namespace Groundsman.Tests
         /// Try to create a Position without giving a DisplayPosition
         /// </summary>
         [TestMethod]
-        public void CreatePositionWithNull()
-        {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => { Position position = new Position(null); });
-        }
+        public void CreatePositionWithNull() => Assert.ThrowsException<ArgumentOutOfRangeException>(() => { Position position = new Position(null); });
 
         /// <summary>
         /// Try to create a Position with an invalid DisplayPosition
         /// </summary>
         [TestMethod]
-        public void CreatePositionWithInvalidDisplayPosition()
-        {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => { Position position = new Position(InvalidDisplayPosition); });
-        }
+        public void CreatePositionWithInvalidDisplayPosition() => Assert.ThrowsException<ArgumentOutOfRangeException>(() => { Position position = new Position(InvalidDisplayPosition); });
 
         /// <summary>
         /// Try to create a Position with a DisplayPosition

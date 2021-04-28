@@ -6,7 +6,7 @@ namespace Groundsman.Views
 {
     public partial class LoggerView : ContentPage
     {
-        LoggerViewModel viewModel;
+        private readonly LoggerViewModel viewModel;
         public LoggerView()
         {
             InitializeComponent();
@@ -22,7 +22,7 @@ namespace Groundsman.Views
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            
+
             if (viewModel.isLogging)
             {
                 viewModel.ToggleLogging();

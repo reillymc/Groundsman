@@ -5,7 +5,7 @@ namespace Groundsman.Views
 {
     public partial class MapView : ContentPage
     {
-        MapViewModel viewModel;
+        private readonly MapViewModel viewModel;
         public MapView()
         {
             NavigationPage.SetHasNavigationBar(this, false);

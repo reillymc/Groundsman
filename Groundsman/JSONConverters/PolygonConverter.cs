@@ -1,15 +1,15 @@
-﻿using Groundsman.Models;
+﻿using System;
+using System.Collections.Generic;
+using Groundsman.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 
 namespace Groundsman.JSONConverters
 {
     /// <summary>
     /// JSON converter used to handle the structuring and destructuring of polygons with LineStrings instead of nested list of positions
     /// </summary>
-    class PolygonConverter : JsonConverter<Polygon>
+    internal class PolygonConverter : JsonConverter<Polygon>
     {
         public override bool CanRead => true;
         public override bool CanWrite => true;
@@ -23,8 +23,8 @@ namespace Groundsman.JSONConverters
             // Take this array of arrays of arrays and create line strings
             // and use those to create create polygons
 
-            List<LinearRing> coordList =  new List<LinearRing>();
-            foreach(IEnumerable<Position> coordPos in coordinates)
+            List<LinearRing> coordList = new List<LinearRing>();
+            foreach (IEnumerable<Position> coordPos in coordinates)
             {
                 coordList.Add(new LinearRing(coordPos));
             }

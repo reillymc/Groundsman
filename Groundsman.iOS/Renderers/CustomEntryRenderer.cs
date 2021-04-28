@@ -1,9 +1,9 @@
+using System.Drawing;
+using CoreGraphics;
+using Groundsman.iOS.Renderers;
+using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
-using System.Drawing;
-using UIKit;
-using Groundsman.iOS.Renderers;
-using CoreGraphics;
 
 [assembly: ExportRenderer(typeof(Entry), typeof(CustomEntryRenderer))]
 namespace Groundsman.iOS.Renderers
@@ -29,9 +29,9 @@ namespace Groundsman.iOS.Renderers
             Element.HeightRequest = 30;
 
             // Check for only Numeric keyboard
-            if (this.Element.Keyboard == Keyboard.Numeric)
+            if (Element.Keyboard == Keyboard.Numeric)
             {
-                this.AddNumericToolbar();
+                AddNumericToolbar();
             }
         }
 
@@ -44,11 +44,11 @@ namespace Groundsman.iOS.Renderers
             {
                 Translucent = true,
             };
-            var doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done, delegate
+            UIBarButtonItem doneButton = new UIBarButtonItem(UIBarButtonSystemItem.Done, delegate
             {
                 Control.ResignFirstResponder();
             });
-            var negativeButton = new UIBarButtonItem("-", UIBarButtonItemStyle.Plain, delegate
+            UIBarButtonItem negativeButton = new UIBarButtonItem("-", UIBarButtonItemStyle.Plain, delegate
             {
                 Control.InsertText("-");
             });

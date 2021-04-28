@@ -12,9 +12,6 @@ namespace Groundsman.Controls
             set => SetValue(HasDoneButtonProperty, value);
         }
 
-        public ModalNavigationBar()
-        {
-            InitializeComponent();
-        }
+        public ModalNavigationBar() => InitializeComponent();
     }
 }

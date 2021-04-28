@@ -96,8 +96,8 @@ namespace Groundsman.iOS.Renderers
             UIBarButtonItem[] ButtonsArray = new UIBarButtonItem[] { flex, trackingButton, flex, addFeatureButtonItem, flex };
 
             // Toolbar and frame
-            var toolBarFrame = new CGRect(location: new CGPoint(x: 0, y: 0), size: new CGSize(width: 88, height: 44));
-            var toolbar = new UIToolbar(frame: toolBarFrame)
+            CGRect toolBarFrame = new CGRect(location: new CGPoint(x: 0, y: 0), size: new CGSize(width: 88, height: 44));
+            UIToolbar toolbar = new UIToolbar(frame: toolBarFrame)
             {
                 BarTintColor = UIColor.SystemBackgroundColor,
                 Translucent = true
@@ -105,7 +105,7 @@ namespace Groundsman.iOS.Renderers
             toolbar.SetItems(ButtonsArray, true);
 
             // Set toolbar position
-            var origin = new CGPoint(x: UIScreen.MainScreen.Bounds.Width - 75, y: 75);
+            CGPoint origin = new CGPoint(x: UIScreen.MainScreen.Bounds.Width - 75, y: 75);
 
             // Create base view for button
             UIView baseView = new UIView(frame: new CGRect(location: origin, size: new CGSize(width: 88, height: 44)))
