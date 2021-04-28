@@ -26,19 +26,18 @@ namespace Groundsman.Models
         {
             if (double.IsNaN(longitude) || double.IsInfinity(longitude))
             {
-                throw new ArgumentOutOfRangeException("Longitude", "Longitude must be a valid number.");
+                throw new ArgumentOutOfRangeException(nameof(longitude), "Longitude must be a valid number.");
             }
 
             if (double.IsNaN(latitude) || double.IsInfinity(latitude))
             {
-                throw new ArgumentOutOfRangeException("Latitude", "Longitude must be a valid number.");
+                throw new ArgumentOutOfRangeException(nameof(latitude), "Longitude must be a valid number.");
             }
 
             Longitude = longitude;
             Latitude = latitude;
             Altitude = double.IsInfinity(altitude) ? double.NaN : altitude;
         }
-
 
         public Position(DisplayPosition displayPosition)
         {
@@ -52,7 +51,7 @@ namespace Groundsman.Models
             }
             catch
             {
-                throw new ArgumentOutOfRangeException("Longitude", "Longitude must be a valid number.");
+                throw new ArgumentOutOfRangeException(nameof(displayPosition.Longitude), "Longitude must be a valid number.");
             }
             try
             {
@@ -64,7 +63,7 @@ namespace Groundsman.Models
             }
             catch
             {
-                throw new ArgumentOutOfRangeException("Latitude", "Latitude must be a valid number.");
+                throw new ArgumentOutOfRangeException(nameof(displayPosition.Latitude), "Longitude must be a valid number.");
             }
             try
             {
@@ -76,7 +75,7 @@ namespace Groundsman.Models
             }
             catch
             {
-                throw new ArgumentOutOfRangeException("Altitude", "Altitude must be a valid number or blank.");
+                throw new ArgumentOutOfRangeException(nameof(displayPosition.Altitude), "Altitude must be a valid number or blank.");
             }
         }
 

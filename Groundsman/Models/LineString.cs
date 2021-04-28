@@ -17,37 +17,18 @@ namespace Groundsman.Models
 
         public LineString(IEnumerable<Position> coordinates) : base(GeoJSONType.LineString)
         {
-            if (coordinates != null)
+            if (coordinates == null)
             {
-                if (coordinates.Count() >= 2)
-                {
-                    Coordinates = coordinates;
-                }
-                else
-                {
-                    throw new ArgumentException("A LineString must have two or more positions.", "Coordinates");
-                }
+                throw new ArgumentNullException(nameof(coordinates), "A LineString must have coordinates.");
             }
-            else
+
+            if (coordinates.Count() < 2)
             {
-                throw new ArgumentNullException("Coordinates", "A LineString must have coordinates.");
+                throw new ArgumentException("A LineString must have two or more positions.", nameof(coordinates));
             }
+
+            Coordinates = coordinates;
         }
-
-
-        /// <summary>
-        /// Import an individual LineString geometry
-        /// </summary>
-        /// <param name="json">GeJSON LineString geometry</param>
-        /// <returns>LineString object from GeoJSON</returns>
-        public static new LineString ImportGeoJSON(string json) => JsonConvert.DeserializeObject<LineString>(json);
-
-        /// <summary>
-        /// Export an individual LineString geometry
-        /// </summary>
-        /// <param name="json">GeoJSON LineString geometry</param>
-        /// <returns>A serialised GeoJSON string</returns>
-        public string ExportGeoJSON() => JsonConvert.SerializeObject(this);
 
         /// <summary>
         /// Checks if a given point lies on the LineString

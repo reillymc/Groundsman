@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Groundsman.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -6,12 +8,50 @@ namespace Groundsman.Tests
     [TestClass]
     public class LineStringTests
     {
-        private LineString GetLineString()
+        private LineString GetLineString() => new LineString(new List<Position> { TestData.Position1, TestData.Position3 });
+
+        private Position GetLiesOnLinePosition() => new Position(20, 15);
+        private Position GetNotLiesOnLinePosition() => new Position(15, 15); //TODOL List of different bad psotions?
+
+        /// <summary>
+        /// Try to create a LineString without giving coordinates
+        /// </summary>
+        [TestMethod]
+        public void CreateLineStringWithNull()
         {
-            return LineString.ImportGeoJSON("{\"type\":\"LineString\",\"coordinates\":[[153.03150415420532, -27.477759278724388],[153.0296802520752,-27.479339341068858]]}");
+            Assert.ThrowsException<ArgumentNullException>(() => { LineString lineString = new LineString(null); });
         }
 
-        private Position GetPosition(double lon, double lat) => new Position(lon, lat);
+        /// <summary>
+        /// Try to create a LineString with an empty list of Positions
+        /// </summary>
+        [TestMethod]
+        public void CreateLineStringWithZeroPositions()
+        {
+            Assert.ThrowsException<ArgumentException>(() => { LineString lineString = new LineString(new List<Position>()); });
+        }
+
+        /// <summary>
+        /// Try to create a LineString with a list of one Position
+        /// </summary>
+        [TestMethod]
+        public void CreateLineStringWithOnePosition()
+        {
+            Assert.ThrowsException<ArgumentException>(() => { LineString lineString = new LineString(new List<Position>() { { TestData.Position1 } }); });
+        }
+
+        /// <summary>
+        /// Try to create a regular LineString with a list of two positions
+        /// </summary>
+        [TestMethod]
+        public void CreateLineStringWithTwoPositions()
+        {
+            LineString lineString = GetLineString();
+
+            List<Position> coords = (List<Position>)lineString.Coordinates;
+
+            Assert.AreEqual(coords.Count, 2);
+        }
 
         /// <summary>
         /// A point lies on a LineString
@@ -21,7 +61,7 @@ namespace Groundsman.Tests
         {
             LineString lineString = GetLineString();
 
-            bool contains = lineString.ContainsPosition(GetPosition(153.030135557055, -27.4787212395597));
+            bool contains = lineString.ContainsPosition(GetLiesOnLinePosition());
 
             Assert.IsTrue(contains);
         }
@@ -34,10 +74,9 @@ namespace Groundsman.Tests
         {
             LineString lineString = GetLineString();
 
-            bool contains = lineString.ContainsPosition(GetPosition(154, -28));
+            bool contains = lineString.ContainsPosition(GetNotLiesOnLinePosition());
 
             Assert.IsFalse(contains);
         }
-
     }
 }

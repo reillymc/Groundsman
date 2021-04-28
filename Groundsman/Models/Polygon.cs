@@ -17,30 +17,18 @@ namespace Groundsman.Models
 
         public Polygon(IEnumerable<LinearRing> coordinates) : base(GeoJSONType.Polygon)
         {
-            if (coordinates != null)
+            if (coordinates == null)
             {
-                if (coordinates.Count() > 0)
-                {
-                    Coordinates = coordinates;
-                }
-                else
-                {
-                    throw new ArgumentException("A Polygon must have one or more linear rings.", "Coordinates");
-                }
+                throw new ArgumentNullException(nameof(coordinates), "A Polygon must have coordinates.");
             }
-            else
+
+            if (coordinates.Count() <= 0)
             {
-                throw new ArgumentNullException("Coordinates", "A Polygon must have coordinates.");
+                throw new ArgumentException("A Polygon must have one or more linear rings.", nameof(coordinates));
             }
+
+            Coordinates = coordinates;
         }
-
-        /// <summary>
-        /// Import an individual polygon geometry
-        /// </summary>
-        /// <param name="json">GeJSON polygon geometry</param>
-        /// <returns>Polygon object from GeoJSON</returns>
-        public static new Polygon ImportGeoJSON(string json) => JsonConvert.DeserializeObject<Polygon>(json);
-
 
         /// <summary>
         /// Check if a given position is contained within the polygon's area. With one LinearRing the point must simply be in the bounds, with multiple overlapping rings the point can be excluded from being in the polygon area by being inside a contained LinearRing 

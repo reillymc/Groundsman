@@ -23,21 +23,5 @@ namespace Groundsman.Models
             Geometry = geometry;
             Properties = properties ?? new Dictionary<string, object>();
         }
-
-
-        /// <summary>
-        /// Import an individual Feature geometry
-        /// </summary>
-        /// <param name="json">GeoJSON feature</param>
-        /// <returns>Feature object from GeoJSON</returns>
-        public static new Feature ImportGeoJSON(string json) => JsonConvert.DeserializeObject<Feature>(json);
-
-
-        /// <summary>
-        /// Import an individual Feature
-        /// </summary>
-        /// <param name="json">GeJSON LineString geometry</param>
-        /// <returns>A serialised GeoJSON string</returns>
-        public string ExportGeoJSON() => JsonConvert.SerializeObject(this);
     }
 }
