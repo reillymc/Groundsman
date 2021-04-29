@@ -178,7 +178,7 @@ namespace Groundsman.ViewModels
             if (await ValidateGeometry() && await ValidateProperties())
             {
                 System.Drawing.Rectangle bounds = element.GetAbsoluteBounds().ToSystemRectangle();
-                ShareFileRequest share = FeatureStore.ExportFeatures(new List<Feature>() { Feature });
+                ShareFileRequest share = FeatureStore.ExportFeature(Feature);
                 share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
                 await Share.RequestAsync(share);
             }

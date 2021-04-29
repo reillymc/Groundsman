@@ -225,7 +225,7 @@ namespace Groundsman.ViewModels
 
             if (Preferences.Get(Constants.ShareLogAsGeoJSONKey, false))
             {
-                ShareFileRequest share = FeatureStore.ExportFeatures(new List<Feature>() { LogFeature });
+                ShareFileRequest share = FeatureStore.ExportFeature(LogFeature);
                 share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
                 await Share.RequestAsync(share);
             }

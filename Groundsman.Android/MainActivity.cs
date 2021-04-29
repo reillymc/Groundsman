@@ -60,7 +60,7 @@ namespace Groundsman.Droid
                 fileStream.CopyTo(memOfFile);
                 string decoded = Encoding.UTF8.GetString(memOfFile.ToArray());
 
-                mainForms.ImportFileAsync(decoded);
+                _ = mainForms.ImportRawGeoJSON(decoded);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading.Tasks;
 using Groundsman.Interfaces;
 using Groundsman.Models;
 using Groundsman.Services;
@@ -26,7 +27,6 @@ namespace Groundsman
             shakeService = new ShakeService(this);
             DependencyService.Register<FeatureService>();
             DependencyService.Register<NavigationService>();
-            FeatureStore.ImportItems(Constants.FeaturesFileContents);
             MainPage = new NavigationPage(HomePage.Instance);
 
             // If the user ID hasn't been set yet, prompt the user to create one upon app launch.
@@ -34,6 +34,8 @@ namespace Groundsman
             {
                 _ = NavigationService.PushWelcomePage();
             }
+
+            _ = ImportFeatureList();
         }
 
         protected override void OnStart()
@@ -51,11 +53,32 @@ namespace Groundsman
             // Handle when your app resumes
         }
 
-        public async void ImportFileAsync(string fileContent)
+        public async Task ImportFeatureList()
         {
             try
             {
-                int successfulImports = FeatureStore.ImportItems(fileContent);
+                FeatureCollection featureCollection = (FeatureCollection)GeoJSONObject.ImportGeoJSON(Constants.FeaturesFileContents);
+                FeatureStore.ImportItems(featureCollection.Features);
+            }
+            catch
+            {
+                bool result = await NavigationService.ShowAlert("Feature List Error", "Groundsman was unable to load your saved features. Would you like to export the corrupted features?", true);
+                if (result)
+                {
+                    await Share.RequestAsync(new ShareFileRequest
+                    {
+                        Title = "Groundsman Feature List (Corrupted)",
+                        File = new ShareFile(Constants.FEATURES_FILE, "application/json"),
+                    });
+                }
+            }
+        }
+
+        public async Task ImportRawGeoJSON(string contents)
+        {
+            try
+            {
+                int successfulImports = FeatureStore.ImportRawContents(contents);
                 await NavigationService.ShowImportAlert(successfulImports);
             }
             catch (Exception ex)
@@ -69,15 +92,8 @@ namespace Groundsman
             bool result = await NavigationService.GetCurrentPage().DisplayAlert("Undo Delete", "", "Undo", "Cancel");
             if (result)
             {
-                try
-                {
-                    string contents = File.ReadAllText(Constants.DELETED_FEATURE_FILE);
-                    _ = FeatureStore.ImportItems(contents);
-                }
-                catch
-                {
-                    await NavigationService.ShowAlert("Sorry", "Groundsman was unable to recover the last deleted feature", false);
-                }
+                string contents = File.ReadAllText(Constants.DELETED_FEATURE_FILE);
+                _ = ImportRawGeoJSON(contents);
             }
         }
     }

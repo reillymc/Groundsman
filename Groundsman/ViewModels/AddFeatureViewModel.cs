@@ -35,7 +35,7 @@ namespace Groundsman.ViewModels
                     await NavigationService.NavigateToNewEditPage(GeoJSONType.Polygon);
                     break;
                 case "Clipboard":
-                    await ImportFeaturesFromClipboard();
+                    await ImportRawGeoJSON(await Clipboard.GetTextAsync());
                     break;
                 case "File":
                     await ImportFeaturesFromFile();
@@ -46,19 +46,6 @@ namespace Groundsman.ViewModels
             }
         }
 
-        public async Task ImportFeaturesFromClipboard()
-        {
-            string contents = await Clipboard.GetTextAsync();
-            try
-            {
-                int successfulImports = FeatureStore.ImportItems(contents);
-                await NavigationService.ShowImportAlert(successfulImports);
-            }
-            catch (Exception ex)
-            {
-                await NavigationService.ShowAlert("Import Error", ex.Message, false);
-            }
-        }
 
         public async Task ImportFeaturesFromFile()
         {
@@ -84,19 +71,9 @@ namespace Groundsman.ViewModels
                 if (fileData != null)
                 {
                     Stream fileStream = await fileData.OpenReadAsync();
-
                     StreamReader reader = new StreamReader(fileStream);
                     string fileContents = reader.ReadToEnd();
-
-                    try
-                    {
-                        int successfulImports = FeatureStore.ImportItems(fileContents);
-                        await NavigationService.ShowImportAlert(successfulImports);
-                    }
-                    catch (Exception ex)
-                    {
-                        await NavigationService.ShowAlert("Import Error", ex.Message, false);
-                    }
+                    await ImportRawGeoJSON(fileContents);
                 }
             }
             catch
@@ -104,5 +81,19 @@ namespace Groundsman.ViewModels
                 await NavigationService.ShowAlert("Import Error", $"Please allow Groundsman to access device storage.", false);
             }
         }
+
+        public async Task ImportRawGeoJSON(string contents)
+        {
+            try
+            {
+                int successfulImports = FeatureStore.ImportRawContents(contents);
+                await NavigationService.ShowImportAlert(successfulImports);
+            }
+            catch (Exception ex)
+            {
+                await NavigationService.ShowAlert("Import Error", ex.Message, false);
+            }
+        }
+
     }
 }

@@ -63,7 +63,7 @@ namespace Groundsman.iOS
                 using (StreamReader reader = new StreamReader(url.Path))
                 {
                     string filecontent = reader.ReadToEnd();
-                    mainForms.ImportFileAsync(filecontent);
+                    _ = mainForms.ImportRawGeoJSON(filecontent);
                 }
             }
             return true;
