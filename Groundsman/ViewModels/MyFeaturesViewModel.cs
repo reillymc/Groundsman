@@ -72,7 +72,7 @@ namespace Groundsman.ViewModels
         {
             if (IsBusy) return;
             IsBusy = true;
-            if (feature.Properties.ContainsKey("DateTimes"))
+            if (feature.Properties.ContainsKey(Constants.LogTimestampsProperty))
             {
                 await NavigationService.NavigateToLoggerPage(feature);
             }

@@ -11,10 +11,10 @@ namespace Groundsman.Models
     [JsonConverter(typeof(DummyConverter))]
     public class Feature : GeoJSONObject
     {
-        [JsonProperty(PropertyName = "geometry")]
+        [JsonProperty(PropertyName = "geometry", Order = 2)]
         public Geometry Geometry { get; set; }
 
-        [JsonProperty(PropertyName = "properties"), JsonConverter(typeof(PropertiesConverter<string, object>))]
+        [JsonProperty(PropertyName = "properties", Order = 3), JsonConverter(typeof(PropertiesConverter<string, object>))]
         public IDictionary<string, object> Properties { get; set; }
 
         [JsonConstructor]

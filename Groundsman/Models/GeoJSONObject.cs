@@ -10,7 +10,7 @@ namespace Groundsman.Models
     [JsonConverter(typeof(GeoJSONObjectConverter))]
     public class GeoJSONObject
     {
-        [JsonProperty(PropertyName = "type"), JsonConverter(typeof(StringEnumConverter))]
+        [JsonProperty(PropertyName = "type", Order = 1), JsonConverter(typeof(StringEnumConverter))]
         public GeoJSONType Type { get; set; }
 
         protected GeoJSONObject(GeoJSONType type) => Type = type;

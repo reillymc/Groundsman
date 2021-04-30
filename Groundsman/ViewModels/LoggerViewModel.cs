@@ -109,17 +109,17 @@ namespace Groundsman.ViewModels
 
             LogFeature = Log;
             LogPositions = new ObservableCollection<DisplayPosition>();
-            object test = Log.Properties[Constants.LogDateTimeListProperty];
-            string[] datetimes = ((IEnumerable)test).Cast<object>()
+            object test = Log.Properties[Constants.LogTimestampsProperty];
+            string[] timestamps = ((IEnumerable)test).Cast<object>()
                              .Select(x => x.ToString())
                              .ToArray();
-            //string[] datetimes = (string[])Log.Properties["DateTimes"];
+            //string[] datetimes = (string[])Log.Properties["Timestamp"];
             LineString line = (LineString)Log.Geometry;
             int index = 0;
             foreach (Position position in line.Coordinates)
             {
-                DateTimeList.Add(datetimes[index]);
-                LogPositions.Add(new DisplayPosition(datetimes[index], position));
+                DateTimeList.Add(timestamps[index]);
+                LogPositions.Add(new DisplayPosition(timestamps[index], position));
                 index++;
             }
 
@@ -197,7 +197,7 @@ namespace Groundsman.ViewModels
             }
 
             LogFeature.Geometry = new LineString(posList);
-            LogFeature.Properties[Constants.LogDateTimeListProperty] = DateTimeList.ToArray();
+            LogFeature.Properties[Constants.LogTimestampsProperty] = DateTimeList.ToArray();
             LogFeature.Properties[Constants.NameProperty] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : "Log LineString";
             LogFeature.Properties[Constants.DateProperty] = DateTime.Now.ToShortDateString();
             LogFeature.Properties[Constants.AuthorProperty] = Preferences.Get(Constants.UserIDKey, "Groundsman");

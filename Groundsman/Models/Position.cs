@@ -10,13 +10,13 @@ namespace Groundsman.Models
     [JsonConverter(typeof(PositionConverter))]
     public class Position
     {
-        [JsonProperty(PropertyName = "longitude")]
+        [JsonProperty(PropertyName = "longitude", Order = 2)]
         public double Longitude { get; set; }
 
-        [JsonProperty(PropertyName = "latitude")]
+        [JsonProperty(PropertyName = "latitude", Order = 2)]
         public double Latitude { get; set; }
 
-        [JsonProperty(PropertyName = "altitude")]
+        [JsonProperty(PropertyName = "altitude", Order = 2)]
         public double Altitude { get; set; }
 
         public Position(double longitude, double latitude) : this(longitude, latitude, double.NaN) { }

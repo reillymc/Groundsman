@@ -12,7 +12,7 @@ namespace Groundsman.Models
     [JsonConverter(typeof(DummyConverter))]
     public class LineString : Geometry
     {
-        [JsonProperty(PropertyName = "coordinates")]
+        [JsonProperty(PropertyName = "coordinates", Order = 2)]
         public IEnumerable<Position> Coordinates { get; set; }
 
         public LineString(IEnumerable<Position> coordinates) : base(GeoJSONType.LineString)

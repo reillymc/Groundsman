@@ -36,7 +36,7 @@ namespace Groundsman
         public const string NameProperty = "name";
         public const string DateProperty = "date";
         public const string AuthorProperty = "author";
-        public const string LogDateTimeListProperty = "DateTimes";
+        public const string LogTimestampsProperty = "timestamp";
 
         // Feature property values
         public const string NewFeatureID = "-1";

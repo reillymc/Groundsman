@@ -183,7 +183,7 @@ namespace Groundsman.ViewModels
                     RefreshMap();
                     break;
                 case "View":
-                    if (feature.Properties.ContainsKey(Constants.LogDateTimeListProperty))
+                    if (feature.Properties.ContainsKey(Constants.LogTimestampsProperty))
                     {
                         await NavigationService.NavigateToLoggerPage(feature);
                     }

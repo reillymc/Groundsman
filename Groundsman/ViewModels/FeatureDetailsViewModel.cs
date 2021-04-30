@@ -60,9 +60,9 @@ namespace Groundsman.ViewModels
 
             HiddenProperties.Add(Constants.IdentifierProperty, Constants.NewFeatureID);
 
-            Properties.Add(new Property("Default String Property", string.Empty, 0));
-            Properties.Add(new Property("Default Integer Property", null, 1));
-            Properties.Add(new Property("Default Float Property", null, 2));
+            Properties.Add(new Property("String Property", string.Empty, 0));
+            Properties.Add(new Property("Integer Property", null, 1));
+            Properties.Add(new Property("Float Property", null, 2));
 
             DateEntry = DateTime.Now.ToShortDateString();
 
@@ -142,7 +142,7 @@ namespace Groundsman.ViewModels
 
             foreach (KeyValuePair<string, object> property in feature.Properties)
             {
-                if (property.Key != Constants.AuthorProperty && property.Key != Constants.NameProperty && property.Key != Constants.IdentifierProperty && property.Key != Constants.DateProperty && property.Key != Constants.LogDateTimeListProperty)
+                if (property.Key != Constants.AuthorProperty && property.Key != Constants.NameProperty && property.Key != Constants.IdentifierProperty && property.Key != Constants.DateProperty && property.Key != Constants.LogTimestampsProperty)
                 {
                     Properties.Add(Property.FromObject(property.Key.ToString(), property.Value));
                 }

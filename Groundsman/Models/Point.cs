@@ -10,7 +10,7 @@ namespace Groundsman.Models
     [JsonConverter(typeof(DummyConverter))]
     public class Point : Geometry
     {
-        [JsonProperty(PropertyName = "coordinates")]
+        [JsonProperty(PropertyName = "coordinates", Order = 2)]
         public Position Coordinates { get; set; }
 
         [JsonConstructor]

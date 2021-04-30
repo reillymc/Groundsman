@@ -12,7 +12,7 @@ namespace Groundsman.Models
     [JsonConverter(typeof(PolygonConverter))]
     public class Polygon : Geometry
     {
-        [JsonProperty(PropertyName = "coordinates")]
+        [JsonProperty(PropertyName = "coordinates", Order = 2)]
         public IEnumerable<LinearRing> Coordinates { get; set; }
 
         public Polygon(IEnumerable<LinearRing> coordinates) : base(GeoJSONType.Polygon)
