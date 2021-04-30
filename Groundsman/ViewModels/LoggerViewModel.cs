@@ -137,10 +137,10 @@ namespace Groundsman.ViewModels
             OnDoneTappedCommand = new Command(async () => await OnSaveUpdateActivated());
         }
 
-        private Task OnCancelActivated()
+        private async Task OnCancelActivated()
         {
-            SaveLog(true);
-            return OnDismiss(true);
+            await SaveLog(true);
+            await OnDismiss(true);
         }
 
         public void ToggleLogging()
@@ -177,7 +177,7 @@ namespace Groundsman.ViewModels
         {
             try
             {
-                if (SaveLog())
+                if (await SaveLog())
                 {
                     await NavigationService.NavigateBack(true);
                 }
@@ -188,7 +188,7 @@ namespace Groundsman.ViewModels
             }
         }
 
-        private bool SaveLog(bool reset = false)
+        private async Task<bool> SaveLog(bool reset = false)
         {
             List<Position> posList = new List<Position>();
             foreach (DisplayPosition displayPosition in LogPositions)
@@ -205,14 +205,14 @@ namespace Groundsman.ViewModels
             {
                 if ((string)LogFeature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID)
                 {
-                    FeatureStore.AddItem(LogFeature);
+                    await FeatureStore.AddItem(LogFeature);
                 }
                 else
                 {
-                    FeatureStore.UpdateItem(OldLogFeature);
+                    await FeatureStore.UpdateItem(OldLogFeature);
                 }
             }
-            return (string)LogFeature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? FeatureStore.AddItem(LogFeature) : FeatureStore.UpdateItem(LogFeature);
+            return (string)LogFeature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? await FeatureStore.AddItem(LogFeature) : await FeatureStore.UpdateItem(LogFeature);
         }
 
         private async Task ShareLog(View element)
@@ -225,7 +225,11 @@ namespace Groundsman.ViewModels
 
             if (Preferences.Get(Constants.ShareLogAsGeoJSONKey, false))
             {
-                ShareFileRequest share = FeatureStore.ExportFeature(LogFeature);
+                ShareFileRequest share = new ShareFileRequest
+                {
+                    Title = "Share Feature",
+                    File = new ShareFile(await FeatureStore.ExportFeature(LogFeature), "application/json")
+                };
                 share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
                 await Share.RequestAsync(share);
             }

@@ -37,7 +37,11 @@ namespace Groundsman.ViewModels
             if (IsBusy) return;
             IsBusy = true;
 
-            ShareFileRequest share = FeatureStore.ExportFeatures(App.featureList);
+            ShareFileRequest share = new ShareFileRequest
+            {
+                Title = "Share Features",
+                File = new ShareFile(await FeatureStore.ExportFeatures(FeatureList), "application/json"),
+            };
             share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet
                     ? new System.Drawing.Rectangle((int)(DeviceDisplay.MainDisplayInfo.Width * .474), 80, 0, 0)
                     : System.Drawing.Rectangle.Empty;
@@ -84,13 +88,13 @@ namespace Groundsman.ViewModels
         /// </summary>
         /// <param name="feature">Feature to delete.</param>
         /// <returns></returns>
-        private void DeleteFeature(Feature feature)
+        private async Task DeleteFeature(Feature feature)
         {
             if (IsBusy) return;
             IsBusy = true;
 
             shakeService.Start();
-            _ = FeatureStore.DeleteItem(feature);
+            await FeatureStore.DeleteItem(feature);
 
             IsBusy = false;
         }

@@ -11,9 +11,9 @@ namespace Groundsman
         private static readonly string DATA_PATH = FileSystem.AppDataDirectory;
         private static readonly string CACHE_PATH = FileSystem.CacheDirectory;
 
-        private static readonly string FEATURES_FILENAME = "locations.json";
-        private static readonly string DELETED_FEATURE_FILENAME = "deleted.json";
-        private static readonly string EXPORT_LOG_FILENAME = "Groundsman Log.csv";
+        private const string FEATURES_FILENAME = "locations.json";
+        private const string DELETED_FEATURE_FILENAME = "deleted.json";
+        private const string EXPORT_LOG_FILENAME = "Groundsman Log.csv";
 
         public static readonly string FEATURES_FILE = Path.Combine(DATA_PATH, FEATURES_FILENAME);
         public static readonly string DELETED_FEATURE_FILE = Path.Combine(CACHE_PATH, DELETED_FEATURE_FILENAME);
@@ -21,28 +21,28 @@ namespace Groundsman
 
 
         // Preference keys
-        public static readonly string UserIDKey = "UserID";
-        public static readonly string GPSPrecisionKey = "GPSPrecision";
-        public static readonly string DecimalAccuracyKey = "DecimalAccuracy";
-        public static readonly string ShakeToUndoKey = "EnableShakeToUndo";
-        public static readonly string MapDrawPointsKey = "ShowPointsOnMap";
-        public static readonly string MapDrawLinesKey = "ShowLinesOnMap";
-        public static readonly string MapDrawPolygonsKey = "ShowPolygonsOnMap";
-        public static readonly string ShareLogAsGeoJSONKey = "ShareLogAsGeoJSONKey";
+        public const string UserIDKey = "UserID";
+        public const string GPSPrecisionKey = "GPSPrecision";
+        public const string DecimalAccuracyKey = "DecimalAccuracy";
+        public const string ShakeToUndoKey = "EnableShakeToUndo";
+        public const string MapDrawPointsKey = "ShowPointsOnMap";
+        public const string MapDrawLinesKey = "ShowLinesOnMap";
+        public const string MapDrawPolygonsKey = "ShowPolygonsOnMap";
+        public const string ShareLogAsGeoJSONKey = "ShareLogAsGeoJSONKey";
 
 
         // Hardcoded feature property keys
-        public static readonly string IdentifierProperty = "id";
-        public static readonly string NameProperty = "name";
-        public static readonly string DateProperty = "date";
-        public static readonly string AuthorProperty = "author";
-        public static readonly string LogDateTimeListProperty = "DateTimes";
+        public const string IdentifierProperty = "id";
+        public const string NameProperty = "name";
+        public const string DateProperty = "date";
+        public const string AuthorProperty = "author";
+        public const string LogDateTimeListProperty = "DateTimes";
 
         // Feature property values
-        public static readonly string NewFeatureID = "-1";
-        public static readonly string DefaultUserValue = "Groundsman";
-        public static readonly int DefaultGPSPrecisionValue = 2;
-        public static readonly int DefaultDecimalAccuracyValue = 6;
+        public const string NewFeatureID = "-1";
+        public const string DefaultUserValue = "Groundsman";
+        public const int DefaultGPSPrecisionValue = 2;
+        public const int DefaultDecimalAccuracyValue = 6;
 
         /// <summary>
         /// Fetches the local features list file if it exists, otherwise the default feature list

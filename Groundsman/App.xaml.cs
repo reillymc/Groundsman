@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using Groundsman.Interfaces;
@@ -18,7 +17,6 @@ namespace Groundsman
         public enum Theme { Light, Dark }
         public static Theme AppTheme { get; set; }
 
-        public static ObservableCollection<Feature> featureList = new ObservableCollection<Feature>();
         public static ShakeService shakeService;
 
         public App()
@@ -58,7 +56,7 @@ namespace Groundsman
             try
             {
                 FeatureCollection featureCollection = (FeatureCollection)GeoJSONObject.ImportGeoJSON(Constants.FeaturesFileContents);
-                FeatureStore.ImportItems(featureCollection.Features);
+                _ = await FeatureStore.ImportItems(featureCollection.Features);
             }
             catch
             {
@@ -71,6 +69,7 @@ namespace Groundsman
                         File = new ShareFile(Constants.FEATURES_FILE, "application/json"),
                     });
                 }
+                await FeatureStore.ResetItems();
             }
         }
 
@@ -78,7 +77,7 @@ namespace Groundsman
         {
             try
             {
-                int successfulImports = FeatureStore.ImportRawContents(contents);
+                int successfulImports = await FeatureStore.ImportRawContents(contents);
                 await NavigationService.ShowImportAlert(successfulImports);
             }
             catch (Exception ex)

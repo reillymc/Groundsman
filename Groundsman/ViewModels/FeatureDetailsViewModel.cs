@@ -178,7 +178,11 @@ namespace Groundsman.ViewModels
             if (await ValidateGeometry() && await ValidateProperties())
             {
                 System.Drawing.Rectangle bounds = element.GetAbsoluteBounds().ToSystemRectangle();
-                ShareFileRequest share = FeatureStore.ExportFeature(Feature);
+                ShareFileRequest share = new ShareFileRequest
+                {
+                    Title = "Share Feature",
+                    File = new ShareFile(await FeatureStore.ExportFeature(Feature), "application/json")
+                };
                 share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
                 await Share.RequestAsync(share);
             }
@@ -270,7 +274,8 @@ namespace Groundsman.ViewModels
 
             if (await ValidateGeometry() && await ValidateProperties())
             {
-                if (SaveFeature())
+                bool saveSuccess = (string)Feature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? await FeatureStore.AddItem(Feature) : await FeatureStore.UpdateItem(Feature);
+                if (saveSuccess)
                 {
                     await NavigationService.NavigateBack(true);
                 }
@@ -367,7 +372,5 @@ namespace Groundsman.ViewModels
             Feature.Properties = FinalProperties;
             return true;
         }
-
-        private bool SaveFeature() => (string)Feature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? FeatureStore.AddItem(Feature) : FeatureStore.UpdateItem(Feature);
     }
 }

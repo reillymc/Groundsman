@@ -1,18 +1,20 @@
 ﻿using System.Collections.Generic;
-using Xamarin.Essentials;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace Groundsman.Interfaces
 {
     public interface IDataService<T>
     {
-        bool AddItem(T item, bool save = true);
-        bool ImportItem(T item, bool save = true);
-        bool UpdateItem(T item);
-        bool DeleteItem(T item);
-        void ResetItems();
-        int ImportItems(IEnumerable<T> items);
-        int ImportRawContents(string contents);
-        ShareFileRequest ExportFeature(T item);
-        ShareFileRequest ExportFeatures(IEnumerable<T> items);
+        Task<bool> AddItem(T item, bool save = true);
+        Task<bool> ImportItem(T item, bool save = true);
+        Task<bool> UpdateItem(T item);
+        Task<bool> DeleteItem(T item);
+        Task ResetItems();
+        Task<int> ImportItems(IEnumerable<T> items);
+        Task<int> ImportRawContents(string contents);
+        Task<string> ExportFeature(T item);
+        Task<string> ExportFeatures(IEnumerable<T> items);
+        ObservableCollection<T> GetItems();
     }
 }

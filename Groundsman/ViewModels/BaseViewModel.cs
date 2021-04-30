@@ -16,7 +16,7 @@ namespace Groundsman.ViewModels
         public IDataService<Feature> FeatureStore => DependencyService.Get<IDataService<Feature>>();
         public INavigationService<Feature> NavigationService => DependencyService.Get<INavigationService<Feature>>();
         public static ShakeService shakeService = App.shakeService;
-        private ObservableCollection<Feature> featureList = App.featureList;
+        private ObservableCollection<Feature> featureList;
         public ObservableCollection<Feature> FeatureList
         {
             get => featureList;
@@ -41,6 +41,8 @@ namespace Groundsman.ViewModels
             get => title;
             set => SetProperty(ref title, value);
         }
+
+        public BaseViewModel() => featureList = FeatureStore.GetItems();
 
         protected bool SetProperty<T>(ref T backingStore, T value,
             [CallerMemberName] string propertyName = "",

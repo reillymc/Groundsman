@@ -179,7 +179,7 @@ namespace Groundsman.ViewModels
             {
                 case "Delete":
                     shakeService.Start();
-                    _ = FeatureStore.DeleteItem(feature);
+                    await FeatureStore.DeleteItem(feature);
                     RefreshMap();
                     break;
                 case "View":
