@@ -19,7 +19,7 @@
                         <Label Grid.Row="0"
                                Style="{StaticResource LabelTitle}"
                                Text="Details" />
-                        <StackLayout Grid.Row="1" Margin="8,0,0,0">
+                        <StackLayout Grid.Row="1" Margin="15,0,0,0">
                             <Entry FontSize="Small"
                                    Placeholder="Name"
                                    Style="{StaticResource EntryStyle}"
@@ -35,18 +35,17 @@
                                         Style="{StaticResource DateEntryStyle}"
                                         VerticalOptions="Start" />
                         </StackLayout>
-                        <StackLayout Grid.RowSpan="2"
+                        <ImageButton Grid.RowSpan="2"
                                      Grid.Column="1"
+                                     Margin="0,12,5,0"
+                                     BackgroundColor="Transparent"
+                                     Command="{Binding ShareEntryCommand}"
+                                     CommandParameter="{Binding Source={RelativeSource Self}}"
+                                     HeightRequest="26"
                                      HorizontalOptions="Center"
-                                     VerticalOptions="Center">
-                            <ImageButton Margin="0,12,5,0"
-                                         BackgroundColor="Transparent"
-                                         Command="{Binding ShareEntryCommand}"
-                                         CommandParameter="{Binding Source={RelativeSource Self}}"
-                                         HeightRequest="26"
-                                         Source="share_icon_color"
-                                         WidthRequest="26" />
-                        </StackLayout>
+                                     Source="share_icon_color"
+                                     VerticalOptions="Center"
+                                     WidthRequest="26" />
 
                     </Grid>
                 </Frame>
@@ -231,10 +230,10 @@
                        StyleClass="Base">
                     <StackLayout>
                         <Label Style="{StaticResource LabelTitle}" Text="Properties" />
-                        <!-- ItemsSource has to be Above Footer or list will not display -->
+                        <!--  ItemsSource has to be Above Footer or list will not display  -->
                         <CollectionView x:Name="PropertiesList"
                                         Margin="5,0,0,0"
-                                        ItemsSource="{Binding Properties}" 
+                                        ItemsSource="{Binding Properties}"
                                         Footer="{Binding .}"
                                         FooterTemplate="{StaticResource PropertiesFooterTemplate}"
                                         ItemTemplate="{StaticResource PropertyItemTemplate}"
@@ -337,12 +336,12 @@
         <StackLayout Spacing="0">
             <controls:ModalNavigationBar HasDoneButton="True" />
             <CollectionView x:Name="GeodataList"
+                            ItemsSource="{Binding Positions}"
                             Footer="{Binding .}"
                             FooterTemplate="{StaticResource FooterTemplate}"
                             Header="{Binding .}"
                             HeaderTemplate="{StaticResource HeaderTemplate}"
                             ItemTemplate="{StaticResource ItemTemplate}"
-                            ItemsSource="{Binding Positions}"
                             VerticalOptions="FillAndExpand" />
         </StackLayout>
     </ContentPage.Content>

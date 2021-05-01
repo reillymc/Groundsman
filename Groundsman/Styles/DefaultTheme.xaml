@@ -91,9 +91,9 @@
 
     <Style x:Key="DetailCoordinateGrid" TargetType="Grid">
         <Setter Property="BackgroundColor" Value="{DynamicResource Foreground}" />
-        <Setter Property="ColumnDefinitions" Value=".8*,5*,5*,3*,1.5*" />
-        <Setter Property="ColumnSpacing" Value="12" />
-        <Setter Property="Padding" Value="10,0,0,0" />
+        <Setter Property="ColumnDefinitions" Value=".8*,5*,5*,4*,1.5*" />
+        <Setter Property="ColumnSpacing" Value="10" />
+        <Setter Property="Padding" Value="20,0,0,0" />
         <Setter Property="RowDefinitions" Value="1,*" />
         <Setter Property="RowSpacing" Value="0" />
     </Style>

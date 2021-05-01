@@ -87,7 +87,7 @@
                             <Button Command="{Binding ToggleButtonClickCommand}"
                                     FontSize="{OnPlatform iOS='Default',
                                                           Android='Micro'}"
-                                    HorizontalOptions="Start"
+                                    HorizontalOptions="StartAndExpand"
                                     Style="{StaticResource GenericButton}"
                                     Text="{Binding ToggleButtonLabel}"
                                     WidthRequest="65" />
@@ -95,7 +95,7 @@
                                     Command="{Binding ClearButtonClickCommand}"
                                     FontSize="{OnPlatform iOS='Default',
                                                           Android='Micro'}"
-                                    HorizontalOptions="End"
+                                    HorizontalOptions="EndAndExpand"
                                     Style="{StaticResource GenericButton}"
                                     Text="Clear"
                                     WidthRequest="65" />

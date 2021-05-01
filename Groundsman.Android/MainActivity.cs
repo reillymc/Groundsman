@@ -4,8 +4,11 @@ using Android.Content;
 using Android.Content.PM;
 using Android.Content.Res;
 using Android.OS;
+using Groundsman.Droid.Services;
+using Groundsman.Misc;
 using Groundsman.Styles;
 using Plugin.CurrentActivity;
+using Xamarin.Forms;
 
 namespace Groundsman.Droid
 {
@@ -19,7 +22,7 @@ namespace Groundsman.Droid
     [IntentFilter(new[] { Intent.ActionSend }, Categories = new[] { Intent.CategoryDefault }, DataMimeType = @"application/json")]
     public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-
+        private Intent serviceIntent;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -43,6 +46,9 @@ namespace Groundsman.Droid
 
             App mainForms = new App();
             LoadApplication(mainForms);
+
+            serviceIntent = new Intent(this, typeof(AndroidLocationService));
+            SetServiceMethods();
 
             SetAppTheme();
 
@@ -74,6 +80,26 @@ namespace Groundsman.Droid
         /// <param name="permissions"></param>
         /// <param name="grantResults"></param>
 
+        private void SetServiceMethods()
+        {
+            MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", message =>
+            {
+                serviceIntent.PutExtra("Interval", message.Interval);
+                if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+                {
+                    StartForegroundService(serviceIntent);
+                }
+                else
+                {
+                    StartService(serviceIntent);
+                }
+            });
+
+            MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped", message =>
+            {
+                StopService(serviceIntent);
+            });
+        }
 
         private void SetAppTheme()
         {
