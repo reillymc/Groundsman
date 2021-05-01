@@ -113,7 +113,6 @@ namespace Groundsman.ViewModels
             string[] timestamps = ((IEnumerable)test).Cast<object>()
                              .Select(x => x.ToString())
                              .ToArray();
-            //string[] datetimes = (string[])Log.Properties["Timestamp"];
             LineString line = (LineString)Log.Geometry;
             int index = 0;
             foreach (Position position in line.Coordinates)

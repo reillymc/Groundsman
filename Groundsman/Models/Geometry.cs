@@ -7,7 +7,7 @@ namespace Groundsman.Models
     /// <summary>
     /// An abstract class inherited by all geometry types - essentially verifies they are correct types
     /// </summary>
-    public class Geometry : GeoJSONObject
+    public abstract class Geometry : GeoJSONObject
     {
         private readonly GeoJSONType[] ValidGeometries = { GeoJSONType.Point, GeoJSONType.LineString, GeoJSONType.Polygon }; // Should also support Multi-variants and GeometryCollection eventually
         [JsonConstructor]

@@ -29,10 +29,10 @@ namespace Groundsman.ViewModels
         public ICommand ShareEntryCommand { get; set; }
 
         private readonly Feature Feature = new Feature { Type = GeoJSONType.Feature };
-        public Dictionary<string, object> HiddenProperties = new Dictionary<string, object>();
-
+        private GeoJSONType GeometryType;
+        private Dictionary<string, object> HiddenProperties = new Dictionary<string, object>();
         public ObservableCollection<DisplayPosition> Positions { get; set; } = new ObservableCollection<DisplayPosition>();
-        public ObservableCollection<Property> Properties { get; set; } = new ObservableCollection<Property>();
+		public ObservableCollection<Property> Properties { get; set; } = new ObservableCollection<Property>();
 
         public string DateEntry { get; set; }
         public string NameEntry { get; set; }
@@ -54,9 +54,9 @@ namespace Groundsman.ViewModels
         /// <summary>
         /// View-model constructor for adding new entries.
         /// </summary>
-        public FeatureDetailsViewModel(GeoJSONType featureType)
+        public FeatureDetailsViewModel(GeoJSONType geometryType)
         {
-            Feature.Geometry = new Geometry(featureType);
+            GeometryType = geometryType;
 
             HiddenProperties.Add(Constants.IdentifierProperty, Constants.NewFeatureID);
 
@@ -66,7 +66,7 @@ namespace Groundsman.ViewModels
 
             DateEntry = DateTime.Now.ToShortDateString();
 
-            switch (featureType)
+            switch (geometryType)
             {
                 case GeoJSONType.Point:
                     Title = "New Point";
@@ -84,7 +84,7 @@ namespace Groundsman.ViewModels
                     AddPoint(3);
                     break;
                 default:
-                    throw new ArgumentException("Feature type not supported", featureType.ToString());
+                    throw new ArgumentException("Feature type not supported", geometryType.ToString());
             }
             NumPointFields = Positions.Count + 1;
 
@@ -99,7 +99,8 @@ namespace Groundsman.ViewModels
             Title = NameEntry = (string)feature.Properties[Constants.NameProperty];
             DateEntry = (string)feature.Properties[Constants.DateProperty];
 
-            Feature.Geometry = new Geometry(feature.Geometry.Type);
+            GeometryType = feature.Geometry.Type;
+
             int index = 1;
             switch (feature.Geometry.Type)
             {
@@ -293,7 +294,7 @@ namespace Groundsman.ViewModels
         {
             try
             {
-                switch (Feature.Geometry.Type)
+				switch (GeometryType)
                 {
                     case GeoJSONType.Point:
                         Feature.Geometry = new Point(new Position(Positions[0]));
