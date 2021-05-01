@@ -29,10 +29,10 @@ namespace Groundsman.ViewModels
         public ICommand ShareEntryCommand { get; set; }
 
         private readonly Feature Feature = new Feature { Type = GeoJSONType.Feature };
-        private GeoJSONType GeometryType;
-        private Dictionary<string, object> HiddenProperties = new Dictionary<string, object>();
+        private readonly GeoJSONType GeometryType;
+        private readonly Dictionary<string, object> HiddenProperties = new Dictionary<string, object>();
         public ObservableCollection<DisplayPosition> Positions { get; set; } = new ObservableCollection<DisplayPosition>();
-		public ObservableCollection<Property> Properties { get; set; } = new ObservableCollection<Property>();
+        public ObservableCollection<Property> Properties { get; set; } = new ObservableCollection<Property>();
 
         public string DateEntry { get; set; }
         public string NameEntry { get; set; }
@@ -121,6 +121,7 @@ namespace Groundsman.ViewModels
                     Polygon polygon = (Polygon)feature.Geometry;
                     foreach (LineString ls in polygon.Coordinates)
                     {
+                        // TODO: Display warning if more than one LR
                         foreach (Position pos in ls.Coordinates)
                         {
                             Positions.Add(new DisplayPosition(index.ToString(), pos));
@@ -294,7 +295,7 @@ namespace Groundsman.ViewModels
         {
             try
             {
-				switch (GeometryType)
+                switch (GeometryType)
                 {
                     case GeoJSONType.Point:
                         Feature.Geometry = new Point(new Position(Positions[0]));

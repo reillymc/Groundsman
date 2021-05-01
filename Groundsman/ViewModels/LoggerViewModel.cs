@@ -23,8 +23,9 @@ namespace Groundsman.ViewModels
 
         public Feature LogFeature;
         public Feature OldLogFeature;
-        public ObservableCollection<DisplayPosition> LogPositions { get; set; }
+        public ObservableCollection<DisplayPosition> Positions { get; set; }
         private readonly List<string> DateTimeList = new List<string>();
+        private List<DisplayPosition> OrderedPositions { get; set; }
 
         public bool isLogging;
 
@@ -90,7 +91,8 @@ namespace Groundsman.ViewModels
         public LoggerViewModel()
         {
             Title = "New Log Line";
-            LogPositions = new ObservableCollection<DisplayPosition>();
+            Positions = new ObservableCollection<DisplayPosition>();
+            OrderedPositions = new List<DisplayPosition>();
 
             LogFeature = new Feature
             {
@@ -108,7 +110,8 @@ namespace Groundsman.ViewModels
             Title = NameEntry = (string)Log.Properties[Constants.NameProperty];
 
             LogFeature = Log;
-            LogPositions = new ObservableCollection<DisplayPosition>();
+            Positions = new ObservableCollection<DisplayPosition>();
+            OrderedPositions = new List<DisplayPosition>();
             object test = Log.Properties[Constants.LogTimestampsProperty];
             string[] timestamps = ((IEnumerable)test).Cast<object>()
                              .Select(x => x.ToString())
@@ -118,7 +121,8 @@ namespace Groundsman.ViewModels
             foreach (Position position in line.Coordinates)
             {
                 DateTimeList.Add(timestamps[index]);
-                LogPositions.Add(new DisplayPosition(timestamps[index], position));
+                Positions.Insert(0, new DisplayPosition(timestamps[index], position));
+                OrderedPositions.Add(new DisplayPosition(timestamps[index], position));
                 index++;
             }
 
@@ -130,7 +134,7 @@ namespace Groundsman.ViewModels
         private void InitCommands()
         {
             ToggleButtonClickCommand = new Command(() => { ToggleLogging(); });
-            ClearButtonClickCommand = new Command(() => { LogPositions.Clear(); });
+            ClearButtonClickCommand = new Command(() => { Positions.Clear(); OrderedPositions.Clear(); });
             ShareButtonClickCommand = new Command<View>(async (view) => { await ShareLog(view); });
             OnCancelTappedCommand = new Command(async () => await OnCancelActivated());
             OnDoneTappedCommand = new Command(async () => await OnSaveUpdateActivated());
@@ -138,7 +142,12 @@ namespace Groundsman.ViewModels
 
         private async Task OnCancelActivated()
         {
-            await SaveLog(true);
+            try
+            {
+                await SaveLog(true);
+            }
+            catch { }
+
             await OnDismiss(true);
         }
 
@@ -189,8 +198,13 @@ namespace Groundsman.ViewModels
 
         private async Task<bool> SaveLog(bool reset = false)
         {
+            if (reset)
+            {
+                return OldLogFeature != null ? await FeatureStore.UpdateItem(OldLogFeature) : await FeatureStore.DeleteItem(LogFeature);
+            }
+
             List<Position> posList = new List<Position>();
-            foreach (DisplayPosition displayPosition in LogPositions)
+            foreach (DisplayPosition displayPosition in OrderedPositions)
             {
                 posList.Add(new Position(displayPosition));
             }
@@ -199,18 +213,8 @@ namespace Groundsman.ViewModels
             LogFeature.Properties[Constants.LogTimestampsProperty] = DateTimeList.ToArray();
             LogFeature.Properties[Constants.NameProperty] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : "Log LineString";
             LogFeature.Properties[Constants.DateProperty] = DateTime.Now.ToShortDateString();
-            LogFeature.Properties[Constants.AuthorProperty] = Preferences.Get(Constants.UserIDKey, "Groundsman");
-            if (reset)
-            {
-                if ((string)LogFeature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID)
-                {
-                    await FeatureStore.AddItem(LogFeature);
-                }
-                else
-                {
-                    await FeatureStore.UpdateItem(OldLogFeature);
-                }
-            }
+            LogFeature.Properties[Constants.AuthorProperty] = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
+
             return (string)LogFeature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? await FeatureStore.AddItem(LogFeature) : await FeatureStore.UpdateItem(LogFeature);
         }
 
@@ -220,35 +224,45 @@ namespace Groundsman.ViewModels
 
             IsBusy = true;
 
-            System.Drawing.Rectangle bounds = element.GetAbsoluteBounds().ToSystemRectangle();
+            try
+            {
+                if (await SaveLog())
+                {
+                    System.Drawing.Rectangle bounds = element.GetAbsoluteBounds().ToSystemRectangle();
 
-            if (Preferences.Get(Constants.ShareLogAsGeoJSONKey, false))
-            {
-                ShareFileRequest share = new ShareFileRequest
-                {
-                    Title = "Share Feature",
-                    File = new ShareFile(await FeatureStore.ExportFeature(LogFeature), "application/json")
-                };
-                share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
-                await Share.RequestAsync(share);
-            }
-            else
-            {
-                string LogString = "Time, Longitude, Latitude, Altitude\n";
-                foreach (DisplayPosition position in LogPositions)
-                {
-                    LogString += $"{position}\n";
+                    if (Preferences.Get(Constants.ShareLogAsGeoJSONKey, false))
+                    {
+                        ShareFileRequest share = new ShareFileRequest
+                        {
+                            Title = "Share Feature",
+                            File = new ShareFile(await FeatureStore.ExportFeature(LogFeature), "application/json")
+                        };
+                        share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
+                        await Share.RequestAsync(share);
+                    }
+                    else
+                    {
+                        string LogString = "Timestamp, Longitude, Latitude, Altitude\n";
+                        foreach (DisplayPosition position in OrderedPositions)
+                        {
+                            LogString += $"{position}\n";
+                        }
+
+                        File.WriteAllText(Constants.EXPORT_LOG_FILE, LogString);
+                        await Share.RequestAsync(new ShareFileRequest
+                        {
+                            Title = "Share Log",
+                            File = new ShareFile(Constants.EXPORT_LOG_FILE, "text/csv"),
+                            PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty
+                        });
+                    }
+
                 }
-
-                File.WriteAllText(Constants.EXPORT_LOG_FILE, LogString);
-                await Share.RequestAsync(new ShareFileRequest
-                {
-                    Title = "Groundsman Log",
-                    File = new ShareFile(Constants.EXPORT_LOG_FILE, "text/csv"),
-                    PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty
-                });
             }
-
+            catch (Exception e)
+            {
+                await Application.Current.MainPage.DisplayAlert("Unable To Share Log", $"{e.Message}.", "Ok");
+            }
             IsBusy = false;
         }
 
@@ -256,11 +270,12 @@ namespace Groundsman.ViewModels
         {
             MessagingCenter.Subscribe<DisplayPosition>(this, "Location", message =>
             {
-                LogPositions.Add(message);
+                Positions.Insert(0, message);
+                OrderedPositions.Add(message);
                 DateTimeList.Add(message.Index);
                 try
                 {
-                    SaveLog();
+                    _ = SaveLog();
                 }
                 catch { }
             });

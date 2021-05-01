@@ -205,10 +205,10 @@ namespace Groundsman.Services
         /// </summary>
         /// <param name="item">Feature to save</param>
         /// <param name="fileName">File name to save to</param>
-        private Task SaveFeatureToFile(Feature item, string fileName)
+        private async Task SaveFeatureToFile(Feature item, string fileName)
         {
             using StreamWriter writer = new StreamWriter(File.Create(fileName));
-            return writer.WriteAsync(JsonConvert.SerializeObject(item));
+            await writer.WriteAsync(JsonConvert.SerializeObject(item));
         }
 
         /// <summary>
