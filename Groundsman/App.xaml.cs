@@ -28,7 +28,7 @@ namespace Groundsman
             MainPage = new NavigationPage(HomePage.Instance);
 
             // If the user ID hasn't been set yet, prompt the user to create one upon app launch.
-            if (!Preferences.ContainsKey(Constants.UserIDKey))
+            if (Constants.FirstRun)
             {
                 _ = NavigationService.PushWelcomePage();
             }

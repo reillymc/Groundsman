@@ -33,6 +33,8 @@ namespace Groundsman.ViewModels
                 Preferences.Set(Constants.UserIDKey, IDEntry);
                 await Application.Current.SavePropertiesAsync();
                 await NavigationService.NavigateBack(true);
+                Constants.FirstRun = false;
+
             }
             else
             {

@@ -74,5 +74,11 @@ namespace Groundsman
             ExportType.CSV => Path.Combine(CACHE_PATH, fileName + ".csv"),
             _ => Path.Combine(CACHE_PATH, fileName),
         };
+
+        public static bool FirstRun
+        {
+            get => Preferences.Get(nameof(FirstRun), true);
+            set => Preferences.Set(nameof(FirstRun), value);
+        }
     }
 }
