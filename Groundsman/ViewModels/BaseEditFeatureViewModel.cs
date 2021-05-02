@@ -25,13 +25,15 @@ namespace Groundsman.ViewModels
         {
             OnDoneTappedCommand = new Command(async () => await SaveDismiss());
             ShareButtonClickCommand = new Command<View>(async (view) => await ShareFeature(view));
-            OnCancelTappedCommand = new Command(async () => await DiscardDismiss());
+            OnCancelTappedCommand = new Command(async () => await CancelDismiss());
         }
 
         public abstract Task ShareFeature(View view);
 
         public abstract Task SaveDismiss();
 
-        public abstract Task DiscardDismiss();
+        public abstract Task CancelDismiss();
+
+        public abstract Task AnyDismiss();
     }
 }

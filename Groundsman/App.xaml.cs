@@ -92,7 +92,14 @@ namespace Groundsman
             if (result)
             {
                 string contents = File.ReadAllText(Constants.DELETED_FEATURE_FILE);
-                _ = ImportRawGeoJSON(contents);
+                try
+                {
+                    _ = await FeatureStore.ImportRawContents(contents);
+                }
+                catch (Exception ex)
+                {
+                    await NavigationService.ShowAlert("Recovery Error", ex.Message, false);
+                }
             }
         }
     }

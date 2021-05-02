@@ -133,7 +133,7 @@ namespace Groundsman.ViewModels
             ClearButtonClickCommand = new Command(() => { Positions.Clear(); OrderedPositions.Clear(); });
         }
 
-        public override async Task DiscardDismiss()
+        public override async Task CancelDismiss()
         {
             try
             {
@@ -147,6 +147,15 @@ namespace Groundsman.ViewModels
             catch { }
 
             await OnDismiss(true);
+        }
+
+        public override async Task AnyDismiss()
+        {
+            if (isLogging)
+            {
+                ToggleLogging();
+            }
+            Unsubscribe();
         }
 
         public void ToggleLogging()

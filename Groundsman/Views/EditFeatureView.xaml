@@ -59,9 +59,9 @@
                       IsVisible="{Binding isLogLine}"
                       RowDefinitions="*">
                     <Frame Grid.Column="0"
-                           Padding="20,10"
+                           Padding="0,10"
                            StyleClass="Base">
-                        <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                        <StackLayout HorizontalOptions="CenterAndExpand" Orientation="Horizontal">
                             <Label FontSize="Small"
                                    Text="Interval:"
                                    TextColor="{DynamicResource Text}"
@@ -87,13 +87,13 @@
                         </StackLayout>
                     </Frame>
                     <Frame Grid.Column="1"
-                           Padding="20,10"
+                           Padding="0,10"
                            StyleClass="Base">
                         <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
                             <Button Command="{Binding ToggleButtonClickCommand}"
                                     FontSize="{OnPlatform iOS='Default',
                                                           Android='Micro'}"
-                                    HorizontalOptions="StartAndExpand"
+                                    HorizontalOptions="CenterAndExpand"
                                     Style="{StaticResource GenericButton}"
                                     Text="{Binding ToggleButtonLabel}"
                                     WidthRequest="65" />
@@ -101,7 +101,7 @@
                                     Command="{Binding ClearButtonClickCommand}"
                                     FontSize="{OnPlatform iOS='Default',
                                                           Android='Micro'}"
-                                    HorizontalOptions="EndAndExpand"
+                                    HorizontalOptions="CenterAndExpand"
                                     Style="{StaticResource GenericButton}"
                                     Text="Clear"
                                     WidthRequest="65" />

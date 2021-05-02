@@ -289,9 +289,14 @@ namespace Groundsman.ViewModels
             IsBusy = false;
         }
 
-        public override async Task DiscardDismiss()
+        public override async Task CancelDismiss()
         {
             await OnDismiss(true);
+        }
+
+        public override async Task AnyDismiss()
+        {
+            return;
         }
 
         private async Task<bool> ValidateGeometry()

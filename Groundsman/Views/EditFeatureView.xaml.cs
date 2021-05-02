@@ -42,7 +42,7 @@ namespace Groundsman.Views
         {
             base.OnDisappearing();
 
-            viewModel.DiscardDismiss();
+            viewModel.AnyDismiss();
         }
     }
 }

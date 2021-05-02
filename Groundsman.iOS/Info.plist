@@ -149,10 +149,11 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>9.0.12</string>
+	<string>9.0.14</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
+		<string>fetch</string>
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
