@@ -1,5 +1,4 @@
 using System;
-using Groundsman.Models;
 using Groundsman.ViewModels;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -10,25 +9,21 @@ namespace Groundsman.Views
 {
     public partial class EditFeatureDetailsView : ContentPage
     {
-        private readonly FeatureDetailsViewModel viewModel;
+        private readonly BaseFeatureDetailsViewModel viewModel;
         /// <summary>
         /// Detail form constructor for when a new entry is being added.
         /// </summary>
         /// <param name="type">The geoJSON geometry type being added.</param>
-        public EditFeatureDetailsView(GeoJSONType type)
+        public EditFeatureDetailsView(FeatureDetailsViewModel featureDetailsViewModel)
         {
             InitializeComponent();
-            BindingContext = viewModel = new FeatureDetailsViewModel(type);
+            BindingContext = viewModel = featureDetailsViewModel;
         }
 
-        /// <summary>
-        /// Detail form constructor for when an existing entry is being edited.
-        /// </summary>
-        /// <param name="data">The entry's data as represented by a feature object.</param>
-        public EditFeatureDetailsView(Feature data)
+        public EditFeatureDetailsView(LoggerViewModel loggerViewModel)
         {
             InitializeComponent();
-            BindingContext = viewModel = new FeatureDetailsViewModel(data);
+            BindingContext = viewModel = loggerViewModel;
         }
 
         protected override void OnAppearing()
@@ -41,7 +36,13 @@ namespace Groundsman.Views
                 safeInsets.Bottom = 0;
                 Padding = safeInsets;
             }
+        }
 
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+
+            viewModel.DiscardDismiss();
         }
     }
 }

@@ -9,11 +9,12 @@
              xmlns:viewModels="clr-namespace:Groundsman.ViewModels"
              x:Name="EditFeatureDetailsViewPage"
              ios:Page.ModalPresentationStyle="FormSheet"
-             x:DataType="viewModels:FeatureDetailsViewModel"
+             x:DataType="viewModels:BaseFeatureDetailsViewModel"
              Style="{StaticResource PageTintedStyle}">
     <ContentPage.Resources>
         <DataTemplate x:Key="HeaderTemplate">
             <StackLayout>
+                <!--  Details  -->
                 <Frame Padding="10,10,0,10" StyleClass="Base, DefaultMargin">
                     <Grid ColumnDefinitions="4*,*" RowDefinitions="*,Auto">
                         <Label Grid.Row="0"
@@ -39,7 +40,7 @@
                                      Grid.Column="1"
                                      Margin="0,12,5,0"
                                      BackgroundColor="Transparent"
-                                     Command="{Binding ShareEntryCommand}"
+                                     Command="{Binding ShareButtonClickCommand}"
                                      CommandParameter="{Binding Source={RelativeSource Self}}"
                                      HeightRequest="26"
                                      HorizontalOptions="Center"
@@ -49,6 +50,66 @@
 
                     </Grid>
                 </Frame>
+
+                <!--  Logger Controls  -->
+                <Grid Margin="10,0,10,10"
+                      BackgroundColor="{DynamicResource Background}"
+                      ColumnDefinitions="*,*"
+                      ColumnSpacing="10"
+                      IsVisible="{Binding isLogLine}"
+                      RowDefinitions="*">
+                    <Frame Grid.Column="0"
+                           Padding="20,10"
+                           StyleClass="Base">
+                        <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal">
+                            <Label FontSize="Small"
+                                   Text="Interval:"
+                                   TextColor="{DynamicResource Text}"
+                                   VerticalOptions="Center" />
+                            <Entry FontSize="Small"
+                                   HorizontalTextAlignment="Center"
+                                   Keyboard="Numeric"
+                                   Text="{Binding IntervalEntry}"
+                                   TextColor="{StaticResource greenPrimary}"
+                                   VerticalOptions="Center"
+                                   WidthRequest="20">
+                                <Entry.Behaviors>
+                                    <behaviors:EntryLengthValidatorBehavior MaxLength="3" />
+                                </Entry.Behaviors>
+                            </Entry>
+                            <Picker ItemsSource="{Binding UnitItems}"
+                                    FontSize="Small"
+                                    HorizontalOptions="Fill"
+                                    SelectedIndex="{Binding UnitEntry}"
+                                    TextColor="{StaticResource greenPrimary}"
+                                    TitleColor="Black"
+                                    VerticalOptions="Center" />
+                        </StackLayout>
+                    </Frame>
+                    <Frame Grid.Column="1"
+                           Padding="20,10"
+                           StyleClass="Base">
+                        <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                            <Button Command="{Binding ToggleButtonClickCommand}"
+                                    FontSize="{OnPlatform iOS='Default',
+                                                          Android='Micro'}"
+                                    HorizontalOptions="StartAndExpand"
+                                    Style="{StaticResource GenericButton}"
+                                    Text="{Binding ToggleButtonLabel}"
+                                    WidthRequest="65" />
+                            <Button Padding="0"
+                                    Command="{Binding ClearButtonClickCommand}"
+                                    FontSize="{OnPlatform iOS='Default',
+                                                          Android='Micro'}"
+                                    HorizontalOptions="EndAndExpand"
+                                    Style="{StaticResource GenericButton}"
+                                    Text="Clear"
+                                    WidthRequest="65" />
+                        </StackLayout>
+                    </Frame>
+                </Grid>
+
+                <!--  Collection Top Frame and Header  -->
                 <Grid Margin="10,0">
                     <Frame Margin="0,0,0,20"
                            BackgroundColor="{DynamicResource Foreground}"
@@ -67,7 +128,7 @@
                             <Label Margin="10,10,0,0"
                                    Style="{StaticResource LabelTitle}"
                                    Text="Coordinates" />
-                            <Grid Style="{DynamicResource DetailCoordinateGrid}">
+                            <Grid IsVisible="{Binding isRegularFeature}" Style="{DynamicResource DetailCoordinateGrid}">
                                 <Label Grid.Row="1"
                                        Grid.Column="0"
                                        Margin="0,9"
@@ -90,6 +151,10 @@
                                        Style="{StaticResource LabelHeader}"
                                        Text="Altitude" />
                             </Grid>
+                            <Label Margin="20,10,0,0"
+                                   IsVisible="{Binding isLogLine}"
+                                   Style="{StaticResource LabelHeader}"
+                                   Text="Timestamp,  Longitude,  Latitude,  Altitude" />
                         </StackLayout>
                     </ContentView>
                 </Grid>
@@ -98,59 +163,97 @@
 
         <DataTemplate x:Key="ItemTemplate" x:DataType="models:DisplayPosition">
             <Frame Style="{StaticResource CoordinateItemFrame}">
-                <SwipeView IsEnabled="{Binding Source={x:Reference Name=EditFeatureDetailsViewPage}, Path=BindingContext.ShowAddButton}">
-                    <SwipeView.RightItems>
-                        <SwipeItems Mode="Reveal">
-                            <SwipeItem BackgroundColor="{StaticResource Delete}"
-                                       Command="{Binding Source={x:Reference GeodataList}, Path=BindingContext.DeletePointCommand}"
-                                       CommandParameter="{Binding .}"
-                                       Text="Delete" />
-                        </SwipeItems>
-                    </SwipeView.RightItems>
-                    <SwipeView.Content>
-                        <Grid Style="{DynamicResource DetailCoordinateGrid}">
-                            <Label Grid.Row="1"
-                                   Grid.Column="0"
-                                   HorizontalOptions="Center"
-                                   Style="{StaticResource LabelHeader}"
-                                   Text="{Binding Index}"
-                                   VerticalOptions="Center" />
-                            <Entry Grid.Row="1"
-                                   Grid.Column="1"
-                                   Placeholder="0"
-                                   Style="{StaticResource DetailCoordinateEntry}"
-                                   Text="{Binding Longitude}" />
-                            <Entry Grid.Row="1"
-                                   Grid.Column="2"
-                                   Placeholder="0"
-                                   Style="{StaticResource DetailCoordinateEntry}"
-                                   Text="{Binding Latitude}" />
-                            <Entry Grid.Row="1"
-                                   Grid.Column="3"
-                                   Placeholder="0"
-                                   Style="{StaticResource DetailCoordinateEntry}"
-                                   Text="{Binding Altitude}" />
-                            <Grid Grid.Row="1"
-                                  Grid.Column="4"
-                                  Margin="0,0,8,0"
-                                  HeightRequest="20"
-                                  HorizontalOptions="StartAndExpand"
-                                  VerticalOptions="FillAndExpand"
-                                  WidthRequest="20">
-                                <Button BackgroundColor="Transparent"
-                                        Command="{Binding Path=BindingContext.GetFeatureCommand, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
-                                        CommandParameter="{Binding .}"
-                                        HeightRequest="20"
-                                        Image="current_location"
-                                        WidthRequest="20" />
+                <Grid Margin="0"
+                      Padding="0"
+                      BackgroundColor="BlanchedAlmond"
+                      HorizontalOptions="Fill"
+                      VerticalOptions="Fill">
+                    <SwipeView Grid.Row="0"
+                               Grid.Column="0"
+                               IsEnabled="{Binding Source={x:Reference Name=EditFeatureDetailsViewPage}, Path=BindingContext.ShowAddButton}"
+                               IsVisible="{Binding Source={x:Reference Name=EditFeatureDetailsViewPage}, Path=BindingContext.isRegularFeature}">
+                        <SwipeView.RightItems>
+                            <SwipeItems Mode="Reveal">
+                                <SwipeItem BackgroundColor="{StaticResource Delete}"
+                                           Command="{Binding Source={x:Reference GeodataList}, Path=BindingContext.DeletePointCommand}"
+                                           CommandParameter="{Binding .}"
+                                           Text="Delete" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <SwipeView.Content>
+                            <Grid Style="{DynamicResource DetailCoordinateGrid}">
+                                <Label Grid.Row="1"
+                                       Grid.Column="0"
+                                       HorizontalOptions="Center"
+                                       Style="{StaticResource LabelHeader}"
+                                       Text="{Binding Index}"
+                                       VerticalOptions="Center" />
+                                <Entry Grid.Row="1"
+                                       Grid.Column="1"
+                                       Placeholder="0"
+                                       Style="{StaticResource DetailCoordinateEntry}"
+                                       Text="{Binding Longitude}" />
+                                <Entry Grid.Row="1"
+                                       Grid.Column="2"
+                                       Placeholder="0"
+                                       Style="{StaticResource DetailCoordinateEntry}"
+                                       Text="{Binding Latitude}" />
+                                <Entry Grid.Row="1"
+                                       Grid.Column="3"
+                                       Placeholder="0"
+                                       Style="{StaticResource DetailCoordinateEntry}"
+                                       Text="{Binding Altitude}" />
+                                <Grid Grid.Row="1"
+                                      Grid.Column="4"
+                                      Margin="0,0,8,0"
+                                      HeightRequest="20"
+                                      HorizontalOptions="StartAndExpand"
+                                      VerticalOptions="FillAndExpand"
+                                      WidthRequest="20">
+                                    <Button BackgroundColor="Transparent"
+                                            Command="{Binding Path=BindingContext.GetFeatureCommand, Source={x:Reference Name=EditFeatureDetailsViewPage}}"
+                                            CommandParameter="{Binding .}"
+                                            HeightRequest="20"
+                                            Image="current_location"
+                                            WidthRequest="20" />
+                                </Grid>
+                                <TemplatedView Grid.Row="0"
+                                               Grid.Column="1"
+                                               Grid.ColumnSpan="4"
+                                               ControlTemplate="{StaticResource BodySeperator}" />
                             </Grid>
-                            <TemplatedView Grid.Row="0"
-                                           Grid.Column="1"
-                                           Grid.ColumnSpan="4"
-                                           ControlTemplate="{StaticResource BodySeperator}" />
-                        </Grid>
-                    </SwipeView.Content>
-                </SwipeView>
+                        </SwipeView.Content>
+                    </SwipeView>
+                    <Grid Grid.Row="0"
+                          Grid.Column="0"
+                          Padding="20,0,0,0"
+                          ColumnDefinitions="Auto,Auto,Auto,Auto"
+                          ColumnSpacing="5"
+                          HeightRequest="10"
+                          IsVisible="{Binding Source={x:Reference Name=EditFeatureDetailsViewPage}, Path=BindingContext.isLogLine}"
+                          Style="{DynamicResource DetailCoordinateGrid}">
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               FontSize="Micro"
+                               Text="{Binding Index, StringFormat='{0},'}"
+                               VerticalOptions="Center" />
+                        <Label Grid.Row="1"
+                               Grid.Column="1"
+                               FontSize="Micro"
+                               Text="{Binding Longitude, StringFormat='{0},'}"
+                               VerticalOptions="Center" />
+                        <Label Grid.Row="1"
+                               Grid.Column="2"
+                               FontSize="Micro"
+                               Text="{Binding Latitude, StringFormat='{0},'}"
+                               VerticalOptions="Center" />
+                        <Label Grid.Row="1"
+                               Grid.Column="3"
+                               FontSize="Micro"
+                               Text="{Binding Altitude, StringFormat='{0}'}"
+                               VerticalOptions="Center" />
+                    </Grid>
+                </Grid>
             </Frame>
         </DataTemplate>
 
@@ -227,6 +330,7 @@
                 <Frame Margin="10,10,10,350"
                        Padding="10,10,0,10"
                        HeightRequest="170"
+                       IsVisible="{Binding isRegularFeature}"
                        StyleClass="Base">
                     <StackLayout>
                         <Label Style="{StaticResource LabelTitle}" Text="Properties" />
@@ -342,6 +446,7 @@
                             Header="{Binding .}"
                             HeaderTemplate="{StaticResource HeaderTemplate}"
                             ItemTemplate="{StaticResource ItemTemplate}"
+                            ItemsUpdatingScrollMode="KeepScrollOffset"
                             VerticalOptions="FillAndExpand" />
         </StackLayout>
     </ContentPage.Content>

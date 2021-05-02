@@ -13,21 +13,21 @@ using Xamarin.Forms;
 
 namespace Groundsman.ViewModels
 {
-    public class LoggerViewModel : BaseViewModel
+    public class LoggerViewModel : BaseFeatureDetailsViewModel
     {
         public ICommand ToggleButtonClickCommand { set; get; }
         public ICommand ClearButtonClickCommand { set; get; }
-        public ICommand ShareButtonClickCommand { set; get; }
-        public ICommand OnCancelTappedCommand { get; set; }
-        public ICommand OnDoneTappedCommand { get; set; }
 
-        public Feature LogFeature;
         public Feature OldLogFeature;
-        public ObservableCollection<DisplayPosition> Positions { get; set; }
         private readonly List<string> DateTimeList = new List<string>();
-        private List<DisplayPosition> OrderedPositions { get; set; }
+        private List<DisplayPosition> OrderedPositions { get; set; } = new List<DisplayPosition>();
 
         public bool isLogging;
+
+        public bool isLogLine { get; set; } = true;
+        public bool isRegularFeature { get; set; } = false;
+        public bool ShowAddButton { get; set; } = false;
+        public bool ShowClosePolygon { get; set; } = false;
 
         private bool _ScrollEnabled = true;
         public bool ScrollEnabled
@@ -86,21 +86,17 @@ namespace Groundsman.ViewModels
             }
         }
 
-        public string NameEntry { get; set; }
+
 
         public LoggerViewModel()
         {
             Title = "New Log Line";
-            Positions = new ObservableCollection<DisplayPosition>();
-            OrderedPositions = new List<DisplayPosition>();
 
-            LogFeature = new Feature
+            Feature.Properties = new Dictionary<string, object>
             {
-                Properties = new Dictionary<string, object>
-                {
-                    [Constants.IdentifierProperty] = Constants.NewFeatureID
-                }
+                [Constants.IdentifierProperty] = Constants.NewFeatureID
             };
+
             InitCommands();
             HandleMessages();
         }
@@ -109,9 +105,9 @@ namespace Groundsman.ViewModels
         {
             Title = NameEntry = (string)Log.Properties[Constants.NameProperty];
 
-            LogFeature = Log;
-            Positions = new ObservableCollection<DisplayPosition>();
-            OrderedPositions = new List<DisplayPosition>();
+            Feature.Geometry = Log.Geometry;
+            Feature.Properties = Log.Properties;
+
             object test = Log.Properties[Constants.LogTimestampsProperty];
             string[] timestamps = ((IEnumerable)test).Cast<object>()
                              .Select(x => x.ToString())
@@ -135,15 +131,17 @@ namespace Groundsman.ViewModels
         {
             ToggleButtonClickCommand = new Command(() => { ToggleLogging(); });
             ClearButtonClickCommand = new Command(() => { Positions.Clear(); OrderedPositions.Clear(); });
-            ShareButtonClickCommand = new Command<View>(async (view) => { await ShareLog(view); });
-            OnCancelTappedCommand = new Command(async () => await OnCancelActivated());
-            OnDoneTappedCommand = new Command(async () => await OnSaveUpdateActivated());
         }
 
-        private async Task OnCancelActivated()
+        public override async Task DiscardDismiss()
         {
             try
             {
+                if (isLogging)
+                {
+                    ToggleLogging();
+                }
+                Unsubscribe();
                 await SaveLog(true);
             }
             catch { }
@@ -181,13 +179,18 @@ namespace Groundsman.ViewModels
             ScrollEnabled = !isLogging;
         }
 
-        private async Task OnSaveUpdateActivated()
+        public override async Task SaveDismiss()
         {
             try
             {
+                if (isLogging)
+                {
+                    ToggleLogging();
+                }
+                Unsubscribe();
                 if (await SaveLog())
                 {
-                    await NavigationService.NavigateBack(true);
+                    await OnDismiss(true);
                 }
             }
             catch (Exception e)
@@ -200,7 +203,7 @@ namespace Groundsman.ViewModels
         {
             if (reset)
             {
-                return OldLogFeature != null ? await FeatureStore.UpdateItem(OldLogFeature) : await FeatureStore.DeleteItem(LogFeature);
+                return OldLogFeature != null ? await FeatureStore.UpdateItem(OldLogFeature) : await FeatureStore.DeleteItem(Feature);
             }
 
             List<Position> posList = new List<Position>();
@@ -209,16 +212,16 @@ namespace Groundsman.ViewModels
                 posList.Add(new Position(displayPosition));
             }
 
-            LogFeature.Geometry = new LineString(posList);
-            LogFeature.Properties[Constants.LogTimestampsProperty] = DateTimeList.ToArray();
-            LogFeature.Properties[Constants.NameProperty] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : "Log LineString";
-            LogFeature.Properties[Constants.DateProperty] = DateTime.Now.ToShortDateString();
-            LogFeature.Properties[Constants.AuthorProperty] = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
+            Feature.Geometry = new LineString(posList);
+            Feature.Properties[Constants.LogTimestampsProperty] = DateTimeList.ToArray();
+            Feature.Properties[Constants.NameProperty] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : "Log LineString";
+            Feature.Properties[Constants.DateProperty] = DateTime.Now.ToShortDateString();
+            Feature.Properties[Constants.AuthorProperty] = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
 
-            return (string)LogFeature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? await FeatureStore.AddItem(LogFeature) : await FeatureStore.UpdateItem(LogFeature);
+            return (string)Feature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? await FeatureStore.AddItem(Feature) : await FeatureStore.UpdateItem(Feature);
         }
 
-        private async Task ShareLog(View element)
+        public override async Task ShareFeature(View element)
         {
             if (IsBusy) return;
 
@@ -235,7 +238,7 @@ namespace Groundsman.ViewModels
                         ShareFileRequest share = new ShareFileRequest
                         {
                             Title = "Share Feature",
-                            File = new ShareFile(await FeatureStore.ExportFeature(LogFeature), "application/json")
+                            File = new ShareFile(await FeatureStore.ExportFeature(Feature), "application/json")
                         };
                         share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
                         await Share.RequestAsync(share);

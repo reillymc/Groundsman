@@ -17,28 +17,28 @@ namespace Groundsman.ViewModels
     /// <summary>
     /// View-model for the page that shows a data entry's details in a form.
     /// </summary>
-    public class FeatureDetailsViewModel : BaseViewModel
+    public class FeatureDetailsViewModel : BaseFeatureDetailsViewModel
     {
         public ICommand GetFeatureCommand { get; set; }
         public ICommand AddPointCommand { get; set; }
         public ICommand DeletePointCommand { get; set; }
         public ICommand AddPropertyCommand { get; set; }
         public ICommand DeletePropertyCommand { get; set; }
-        public ICommand OnDoneTappedCommand { get; set; }
-        public ICommand OnCancelTappedCommand { get; set; }
-        public ICommand ShareEntryCommand { get; set; }
+        
 
-        private readonly Feature Feature = new Feature { Type = GeoJSONType.Feature };
+        
         private readonly GeoJSONType GeometryType;
         private readonly Dictionary<string, object> HiddenProperties = new Dictionary<string, object>();
-        public ObservableCollection<DisplayPosition> Positions { get; set; } = new ObservableCollection<DisplayPosition>();
+        
         public ObservableCollection<Property> Properties { get; set; } = new ObservableCollection<Property>();
 
-        public string DateEntry { get; set; }
-        public string NameEntry { get; set; }
+        
 
         public bool ShowAddButton { get; set; }
         public bool ShowClosePolygon { get; set; }
+
+        public bool isLogLine { get; set; } = false;
+        public bool isRegularFeature { get; set; } = true;
 
         private int _NumPointFields;
         public int NumPointFields
@@ -167,12 +167,10 @@ namespace Groundsman.ViewModels
             DeletePointCommand = new Command<DisplayPosition>((item) => DeletePoint(item));
             AddPropertyCommand = new Command(() => Properties.Add(new Property("", "")));
             DeletePropertyCommand = new Command<Property>((item) => Properties.Remove(item));
-            ShareEntryCommand = new Command<View>(async (view) => await ShareFeature(view));
-            OnDoneTappedCommand = new Command(async () => await OnSaveUpdateActivated());
-            OnCancelTappedCommand = new Command(async () => await OnDismiss(true));
+            
         }
 
-        private async Task ShareFeature(View element)
+        public override async Task ShareFeature(View element)
         {
             if (IsBusy) return;
             IsBusy = true;
@@ -269,7 +267,7 @@ namespace Groundsman.ViewModels
         /// <summary>
         /// Saves a new or edited feature to the embedded file.
         /// </summary>
-        private async Task OnSaveUpdateActivated()
+        public override async Task SaveDismiss()
         {
             if (IsBusy) return;
             IsBusy = true;
@@ -289,6 +287,11 @@ namespace Groundsman.ViewModels
                 return;
             }
             IsBusy = false;
+        }
+
+        public override async Task DiscardDismiss()
+        {
+            await OnDismiss(true);
         }
 
         private async Task<bool> ValidateGeometry()

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Groundsman.Interfaces;
 using Groundsman.Models;
+using Groundsman.ViewModels;
 using Groundsman.Views;
 using Xamarin.Forms;
 
@@ -13,28 +14,28 @@ namespace Groundsman.Services
         {
             Page currentPage = GetCurrentPage();
 
-            await currentPage.Navigation.PushModalAsync(new EditFeatureDetailsView(feature));
+            await currentPage.Navigation.PushModalAsync(new EditFeatureDetailsView(new FeatureDetailsViewModel(feature)));
         }
 
         public async Task NavigateToNewEditPage(GeoJSONType type)
         {
             Page currentPage = GetCurrentPage();
 
-            await currentPage.Navigation.PushModalAsync(new EditFeatureDetailsView(type));
+            await currentPage.Navigation.PushModalAsync(new EditFeatureDetailsView(new FeatureDetailsViewModel(type)));
         }
 
         public async Task NavigateToLoggerPage(Feature feature)
         {
             Page currentPage = GetCurrentPage();
 
-            await currentPage.Navigation.PushModalAsync(new LoggerView(feature));
+            await currentPage.Navigation.PushModalAsync(new EditFeatureDetailsView(new LoggerViewModel(feature)));
         }
 
         public async Task NavigateToNewLoggerPage()
         {
             Page currentPage = GetCurrentPage();
 
-            await currentPage.Navigation.PushModalAsync(new LoggerView());
+            await currentPage.Navigation.PushModalAsync(new EditFeatureDetailsView(new LoggerViewModel()));
         }
 
         public async Task PushAddFeaturePage()
