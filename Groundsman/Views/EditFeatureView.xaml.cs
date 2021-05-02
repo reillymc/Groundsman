@@ -7,20 +7,20 @@ using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 
 namespace Groundsman.Views
 {
-    public partial class EditFeatureDetailsView : ContentPage
+    public partial class EditFeatureView : ContentPage
     {
-        private readonly BaseFeatureDetailsViewModel viewModel;
+        private readonly BaseEditFeatureViewModel viewModel;
         /// <summary>
         /// Detail form constructor for when a new entry is being added.
         /// </summary>
         /// <param name="type">The geoJSON geometry type being added.</param>
-        public EditFeatureDetailsView(FeatureDetailsViewModel featureDetailsViewModel)
+        public EditFeatureView(EditFeatureViewModel featureDetailsViewModel)
         {
             InitializeComponent();
             BindingContext = viewModel = featureDetailsViewModel;
         }
 
-        public EditFeatureDetailsView(LoggerViewModel loggerViewModel)
+        public EditFeatureView(EditLogFeatureViewModel loggerViewModel)
         {
             InitializeComponent();
             BindingContext = viewModel = loggerViewModel;

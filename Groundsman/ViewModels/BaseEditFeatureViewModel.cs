@@ -9,7 +9,7 @@ using Xamarin.Forms;
 
 namespace Groundsman.ViewModels
 {
-    public abstract class BaseFeatureDetailsViewModel : BaseViewModel
+    public abstract class BaseEditFeatureViewModel : BaseViewModel
     {
         public ICommand OnDoneTappedCommand { get; set; }
         public ICommand OnCancelTappedCommand { get; set; }
@@ -21,7 +21,7 @@ namespace Groundsman.ViewModels
         public string NameEntry { get; set; }
         public string DateEntry { get; set; }
 
-        public BaseFeatureDetailsViewModel()
+        public BaseEditFeatureViewModel()
         {
             OnDoneTappedCommand = new Command(async () => await SaveDismiss());
             ShareButtonClickCommand = new Command<View>(async (view) => await ShareFeature(view));

@@ -13,7 +13,7 @@ using Xamarin.Forms;
 
 namespace Groundsman.ViewModels
 {
-    public class LoggerViewModel : BaseFeatureDetailsViewModel
+    public class EditLogFeatureViewModel : BaseEditFeatureViewModel
     {
         public ICommand ToggleButtonClickCommand { set; get; }
         public ICommand ClearButtonClickCommand { set; get; }
@@ -88,7 +88,7 @@ namespace Groundsman.ViewModels
 
 
 
-        public LoggerViewModel()
+        public EditLogFeatureViewModel()
         {
             Title = "New Log Line";
 
@@ -101,7 +101,7 @@ namespace Groundsman.ViewModels
             HandleMessages();
         }
 
-        public LoggerViewModel(Feature Log)
+        public EditLogFeatureViewModel(Feature Log)
         {
             Title = NameEntry = (string)Log.Properties[Constants.NameProperty];
 

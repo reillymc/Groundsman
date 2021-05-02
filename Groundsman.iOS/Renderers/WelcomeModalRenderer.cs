@@ -4,7 +4,7 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-[assembly: ExportRenderer(typeof(WelcomeFormView), typeof(WelcomeModalRenderer))]
+[assembly: ExportRenderer(typeof(WelcomeView), typeof(WelcomeModalRenderer))]
 namespace Groundsman.iOS.Renderers
 {
     public class WelcomeModalRenderer : PageRenderer

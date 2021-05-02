@@ -5,7 +5,7 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-[assembly: ExportRenderer(typeof(LoggerView), typeof(LoggerModalRenderer))]
+[assembly: ExportRenderer(typeof(EditFeatureView), typeof(LoggerModalRenderer))]
 namespace Groundsman.iOS.Renderers
 {
     public class LoggerModalRenderer : PageRenderer

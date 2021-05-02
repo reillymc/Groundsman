@@ -8,7 +8,7 @@ namespace Groundsman.ViewModels
     /// <summary>
     /// View-model for the page that shows the list of data entries.
     /// </summary>
-    public class MyFeaturesViewModel : BaseViewModel
+    public class FeatureListViewModel : BaseViewModel
     {
         public Command AddButtonTappedCommand { set; get; }
         public Command ShareButtonTappedCommand { set; get; }
@@ -18,7 +18,7 @@ namespace Groundsman.ViewModels
         /// <summary>
         /// View-model constructor.
         /// </summary>
-        public MyFeaturesViewModel()
+        public FeatureListViewModel()
         {
             AddButtonTappedCommand = new Command(async () => await AddButtonTapped());
             ShareButtonTappedCommand = new Command(async () => await ShowShareSheet());

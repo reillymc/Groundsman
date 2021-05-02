@@ -5,15 +5,15 @@ using Xamarin.Forms;
 
 namespace Groundsman.Views
 {
-    public partial class MyFeaturesView : ContentPage
+    public partial class FeatureListView : ContentPage
     {
-        private readonly MyFeaturesViewModel viewModel;
+        private readonly FeatureListViewModel viewModel;
         private ViewCell lastCell;
 
-        public MyFeaturesView()
+        public FeatureListView()
         {
             InitializeComponent();
-            BindingContext = viewModel = new MyFeaturesViewModel();
+            BindingContext = viewModel = new FeatureListViewModel();
         }
 
 

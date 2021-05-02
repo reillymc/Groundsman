@@ -4,7 +4,7 @@ using Xamarin.Forms;
 
 namespace Groundsman.ViewModels
 {
-    public class ProfileSettingsViewModel : BaseViewModel
+    public class SettingsViewModel : BaseViewModel
     {
         public Command DeleteAllFeatures { get; set; }
         public Command InfoButtonTappedCommand { get; set; }
@@ -64,7 +64,7 @@ namespace Groundsman.ViewModels
             set => Preferences.Set(Constants.MapDrawPolygonsKey, value);
         }
 
-        public ProfileSettingsViewModel()
+        public SettingsViewModel()
         {
             Title = "Settings";
             DeleteAllFeatures = new Command(async () => await ExecuteDeleteAllFeaturesCommand());

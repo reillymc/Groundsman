@@ -17,7 +17,7 @@ namespace Groundsman.ViewModels
     /// <summary>
     /// View-model for the page that shows a data entry's details in a form.
     /// </summary>
-    public class FeatureDetailsViewModel : BaseFeatureDetailsViewModel
+    public class EditFeatureViewModel : BaseEditFeatureViewModel
     {
         public ICommand GetFeatureCommand { get; set; }
         public ICommand AddPointCommand { get; set; }
@@ -54,7 +54,7 @@ namespace Groundsman.ViewModels
         /// <summary>
         /// View-model constructor for adding new entries.
         /// </summary>
-        public FeatureDetailsViewModel(GeoJSONType geometryType)
+        public EditFeatureViewModel(GeoJSONType geometryType)
         {
             GeometryType = geometryType;
 
@@ -94,7 +94,7 @@ namespace Groundsman.ViewModels
         /// <summary>
         /// View-model constructor for viewing/editing existing entries.
         /// </summary>
-        public FeatureDetailsViewModel(Feature feature)
+        public EditFeatureViewModel(Feature feature)
         {
             Title = NameEntry = (string)feature.Properties[Constants.NameProperty];
             DateEntry = (string)feature.Properties[Constants.DateProperty];

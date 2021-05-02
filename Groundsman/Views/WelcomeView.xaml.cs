@@ -3,14 +3,14 @@ using Xamarin.Forms;
 
 namespace Groundsman.Views
 {
-    public partial class WelcomeFormView : ContentPage
+    public partial class WelcomeView : ContentPage
     {
-        private readonly WelcomeFormViewModel viewModel;
+        private readonly WelcomeViewModel viewModel;
 
-        public WelcomeFormView()
+        public WelcomeView()
         {
             InitializeComponent();
-            BindingContext = viewModel = new WelcomeFormViewModel();
+            BindingContext = viewModel = new WelcomeViewModel();
 
             NavigationPage.SetHasBackButton(this, false);
         }

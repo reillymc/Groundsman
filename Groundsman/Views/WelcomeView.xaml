@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="Groundsman.Views.WelcomeFormView"
+<ContentPage x:Class="Groundsman.Views.WelcomeView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              xmlns:viewModels="clr-namespace:Groundsman.ViewModels"
              ios:Page.ModalPresentationStyle="FormSheet"
-             x:DataType="viewModels:WelcomeFormViewModel"
+             x:DataType="viewModels:WelcomeViewModel"
              Style="{StaticResource PageStyle}">
     <ContentPage.Content>
         <FlexLayout Direction="Column">

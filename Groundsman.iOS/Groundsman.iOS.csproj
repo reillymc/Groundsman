@@ -334,10 +334,18 @@
     <ImageAsset Include="Assets.xcassets\current_location.imageset\icons8-target-90%403x.png">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\customControlColor.colorset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\share_icon_color.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\share_icon_color.imageset\share_icon_color.png" />
-    <ImageAsset Include="Assets.xcassets\share_icon_color.imageset\share_icon_color-1.png" />
+    <ImageAsset Include="Assets.xcassets\customControlColor.colorset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\share_icon_color.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\share_icon_color.imageset\share_icon_color.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\share_icon_color.imageset\share_icon_color-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>

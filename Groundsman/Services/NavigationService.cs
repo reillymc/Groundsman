@@ -14,28 +14,28 @@ namespace Groundsman.Services
         {
             Page currentPage = GetCurrentPage();
 
-            await currentPage.Navigation.PushModalAsync(new EditFeatureDetailsView(new FeatureDetailsViewModel(feature)));
+            await currentPage.Navigation.PushModalAsync(new EditFeatureView(new EditFeatureViewModel(feature)));
         }
 
         public async Task NavigateToNewEditPage(GeoJSONType type)
         {
             Page currentPage = GetCurrentPage();
 
-            await currentPage.Navigation.PushModalAsync(new EditFeatureDetailsView(new FeatureDetailsViewModel(type)));
+            await currentPage.Navigation.PushModalAsync(new EditFeatureView(new EditFeatureViewModel(type)));
         }
 
         public async Task NavigateToLoggerPage(Feature feature)
         {
             Page currentPage = GetCurrentPage();
 
-            await currentPage.Navigation.PushModalAsync(new EditFeatureDetailsView(new LoggerViewModel(feature)));
+            await currentPage.Navigation.PushModalAsync(new EditFeatureView(new EditLogFeatureViewModel(feature)));
         }
 
         public async Task NavigateToNewLoggerPage()
         {
             Page currentPage = GetCurrentPage();
 
-            await currentPage.Navigation.PushModalAsync(new EditFeatureDetailsView(new LoggerViewModel()));
+            await currentPage.Navigation.PushModalAsync(new EditFeatureView(new EditLogFeatureViewModel()));
         }
 
         public async Task PushAddFeaturePage()
@@ -47,7 +47,7 @@ namespace Groundsman.Services
         public async Task PushWelcomePage()
         {
             Page currentPage = GetCurrentPage();
-            await currentPage.Navigation.PushModalAsync(new WelcomeFormView());
+            await currentPage.Navigation.PushModalAsync(new WelcomeView());
         }
 
         public async Task NavigateBack(bool modal)

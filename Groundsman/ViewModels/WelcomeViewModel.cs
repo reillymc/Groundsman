@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace Groundsman.ViewModels
 {
-    public class WelcomeFormViewModel : BaseViewModel
+    public class WelcomeViewModel : BaseViewModel
     {
 
         public ICommand IDSubmitCommand { get; set; }
@@ -21,7 +21,7 @@ namespace Groundsman.ViewModels
             }
         }
 
-        public WelcomeFormViewModel() => IDSubmitCommand = new Command(async () => await SubmitIDEntry());
+        public WelcomeViewModel() => IDSubmitCommand = new Command(async () => await SubmitIDEntry());
 
         /// <summary>
         /// Submits the inputted ID entry from the user. If valid, the ID will be saved and the user continues to the main page.
