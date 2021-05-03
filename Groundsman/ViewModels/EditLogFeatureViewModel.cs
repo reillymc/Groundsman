@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -137,11 +136,11 @@ namespace Groundsman.ViewModels
         {
             try
             {
+                Unsubscribe();
                 if (isLogging)
                 {
                     ToggleLogging();
                 }
-                Unsubscribe();
                 await SaveLog(true);
             }
             catch { }
@@ -151,11 +150,11 @@ namespace Groundsman.ViewModels
 
         public override void AnyDismiss()
         {
+            Unsubscribe();
             if (isLogging)
             {
                 ToggleLogging();
             }
-            Unsubscribe();
         }
 
         public void ToggleLogging()
@@ -192,11 +191,11 @@ namespace Groundsman.ViewModels
         {
             try
             {
+                Unsubscribe();
                 if (isLogging)
                 {
                     ToggleLogging();
                 }
-                Unsubscribe();
                 if (await SaveLog())
                 {
                     await OnDismiss(true);
