@@ -57,13 +57,8 @@
                         BackgroundColor="White"
                         Command="{Binding IDSubmitCommand}"
                         FontAttributes="Bold"
-                        Text="Submit">
-                    <Button.TextColor>
-                        <OnPlatform x:TypeArguments="Color"
-                                    Android="White"
-                                    iOS="{StaticResource greenPrimary}" />
-                    </Button.TextColor>
-                </Button>
+                        Text="Submit"
+                        TextColor="{StaticResource greenPrimary}" />
             </StackLayout>
         </FlexLayout>
     </ContentPage.Content>

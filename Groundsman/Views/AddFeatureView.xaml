@@ -80,7 +80,7 @@
                                Style="{StaticResource FrameButtonLabel}"
                                Text="Import from File" />
                         <Image HorizontalOptions="Center"
-                               Source="import"
+                               Source="fileImport"
                                VerticalOptions="EndAndExpand" />
                     </StackLayout>
                 </Frame>

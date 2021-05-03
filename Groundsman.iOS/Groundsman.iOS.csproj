@@ -115,100 +115,290 @@
     <BundleResource Include="Resources\.DS_Store" />
   </ItemGroup>
   <ItemGroup>
-    <ImageAsset Include="Resources\Assets.xcassets\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\splash_image.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\splash_image.imageset\SplashDark.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\splash_image.imageset\Splash.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\16.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\20.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\29.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\32.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\40.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\40.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\58.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\60.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\64.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\76.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\80.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\87.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\120.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\128.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\152.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\167.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\180.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\256.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\512.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\1024.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\line.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\line.imageset\Line1x.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\line.imageset\Line2x.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\line.imageset\Line3x.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\point.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\point.imageset\Point3x.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\point.imageset\Point2x.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\point.imageset\Point1x.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\polygon.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\polygon.imageset\Polygon2x.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\polygon.imageset\Polygon3x.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\polygon.imageset\Polygon1x.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\logo.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\logo.imageset\Logo2x.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\logo.imageset\Logo3x.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\logo.imageset\Logo1x.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\list.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\list.imageset\List3x.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\customControlColor.colorset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\list.imageset\List1x.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\list.imageset\List2x.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\gear.symbolset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\gear.symbolset\gear.svg" />
-    <ImageAsset Include="Resources\Assets.xcassets\import.symbolset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\import.symbolset\square.and.arrow.down.svg" />
-    <ImageAsset Include="Resources\Assets.xcassets\Symbol.symbolset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\Symbol.symbolset\doc.on.clipboard.svg" />
-    <ImageAsset Include="Resources\Assets.xcassets\share.symbolset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\paste.symbolset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\paste.symbolset\doc.on.clipboard.svg" />
-    <ImageAsset Include="Resources\Assets.xcassets\add.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\add.imageset\Add128.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\add.imageset\Add64.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\plus.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\plus.imageset\Add128.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\plus.imageset\Add64.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\plus.imageset\Add96.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\info.symbolset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\map.symbolset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\info.symbolset\info.circle.svg" />
-    <ImageAsset Include="Resources\Assets.xcassets\map.symbolset\map.fill.svg" />
-    <ImageAsset Include="Resources\Assets.xcassets\share.symbolset\test.svg" />
-    <ImageAsset Include="Resources\Assets.xcassets\AddColor.imageset\AddColor64.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AddColor.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\AddColor.imageset\AddColor128.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AddColor.imageset\AddColor32.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\plusColor.imageset\AddColor64.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\plusColor.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\plusColor.imageset\AddColor128.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\plusColor.imageset\AddColor32.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\logLine.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\logLine.imageset\LogLine256.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\logLine.imageset\LogLine64.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\logLine.imageset\LogLine128.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\location.symbolset\Contents.json" />
-    <ImageAsset Include="Resources\Assets.xcassets\location.symbolset\location.svg" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\60.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\87.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\add.imageset\Add128-1.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\120-1.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\512-1.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\32-1.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\1024-1.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\256-1.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\40-1.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\80-1.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\40-2.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\58-1.png" />
-    <ImageAsset Include="Resources\Assets.xcassets\.DS_Store" />
-    <ImageAsset Include="Resources\Assets.xcassets\logo.imageset\.DS_Store" />
+    <ImageAsset Include="Resources\Assets.xcassets\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\splash_image.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\splash_image.imageset\SplashDark.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\splash_image.imageset\Splash.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\16.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\20.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\29.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\32.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\40.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\40.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\58.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\60.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\64.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\76.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\80.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\87.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\120.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\128.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\152.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\167.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\180.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\256.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\512.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\1024.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\line.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\line.imageset\Line1x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\line.imageset\Line2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\line.imageset\Line3x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\point.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\point.imageset\Point3x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\point.imageset\Point2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\point.imageset\Point1x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\polygon.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\polygon.imageset\Polygon2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\polygon.imageset\Polygon3x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\polygon.imageset\Polygon1x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\logo.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\logo.imageset\Logo2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\logo.imageset\Logo3x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\logo.imageset\Logo1x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\list.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\list.imageset\List3x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\customControlColor.colorset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\list.imageset\List1x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\list.imageset\List2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\gear.symbolset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\gear.symbolset\gear.svg">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\import.symbolset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\import.symbolset\square.and.arrow.down.svg">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\Symbol.symbolset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\Symbol.symbolset\doc.on.clipboard.svg">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\share.symbolset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\paste.symbolset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\paste.symbolset\doc.on.clipboard.svg">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\add.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\add.imageset\Add128.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\add.imageset\Add64.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\plus.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\plus.imageset\Add128.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\plus.imageset\Add64.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\plus.imageset\Add96.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\info.symbolset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\map.symbolset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\info.symbolset\info.circle.svg">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\map.symbolset\map.fill.svg">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\share.symbolset\test.svg">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AddColor.imageset\AddColor64.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AddColor.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AddColor.imageset\AddColor128.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AddColor.imageset\AddColor32.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\plusColor.imageset\AddColor64.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\plusColor.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\plusColor.imageset\AddColor128.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\plusColor.imageset\AddColor32.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\logLine.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\logLine.imageset\LogLine256.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\logLine.imageset\LogLine64.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\logLine.imageset\LogLine128.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\location.symbolset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\location.symbolset\location.svg">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\60.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\87.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\add.imageset\Add128-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\120-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\512-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\32-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\1024-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\256-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\40-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\80-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\40-2.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\58-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\.DS_Store">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\logo.imageset\.DS_Store">
+      <Visible>false</Visible>
+    </ImageAsset>
   </ItemGroup>
 </Project>
