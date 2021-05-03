@@ -20,7 +20,7 @@
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Point" />
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical">
-                        <Image Source="point_icon" Style="{StaticResource FrameButtonImage}" />
+                        <Image Source="point" Style="{StaticResource FrameButtonImage}" />
                         <Label Style="{StaticResource FrameButtonLabel}" Text="Point" />
                     </StackLayout>
                 </Frame>
@@ -31,7 +31,7 @@
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="LineString" />
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical">
-                        <Image Source="line_icon" Style="{StaticResource FrameButtonImage}" />
+                        <Image Source="line" Style="{StaticResource FrameButtonImage}" />
                         <Label Style="{StaticResource FrameButtonLabel}" Text="Line" />
                     </StackLayout>
                 </Frame>
@@ -42,7 +42,7 @@
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Polygon" />
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical">
-                        <Image Source="area_icon" Style="{StaticResource FrameButtonImage}" />
+                        <Image Source="polygon" Style="{StaticResource FrameButtonImage}" />
                         <Label Style="{StaticResource FrameButtonLabel}" Text="Polygon" />
                     </StackLayout>
                 </Frame>
@@ -62,7 +62,7 @@
                                Style="{StaticResource FrameButtonLabel}"
                                Text="Logger Line" />
                         <Image HorizontalOptions="Center"
-                               Source="line_icon"
+                               Source="logLine"
                                VerticalOptions="EndAndExpand" />
                     </StackLayout>
                 </Frame>
@@ -80,7 +80,7 @@
                                Style="{StaticResource FrameButtonLabel}"
                                Text="Import from File" />
                         <Image HorizontalOptions="Center"
-                               Source="import_icon"
+                               Source="import"
                                VerticalOptions="EndAndExpand" />
                     </StackLayout>
                 </Frame>
@@ -98,7 +98,7 @@
                                Style="{StaticResource FrameButtonLabel}"
                                Text="Paste from Clipboard" />
                         <Image HorizontalOptions="Center"
-                               Source="paste_icon"
+                               Source="paste"
                                VerticalOptions="EndAndExpand" />
                     </StackLayout>
                 </Frame>

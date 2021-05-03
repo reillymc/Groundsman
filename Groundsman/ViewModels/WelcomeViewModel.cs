@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -8,7 +7,7 @@ namespace Groundsman.ViewModels
     public class WelcomeViewModel : BaseViewModel
     {
 
-        public ICommand IDSubmitCommand { get; set; }
+        public Command IDSubmitCommand { get; set; }
 
         private string _IDEntry;
         public string IDEntry
@@ -17,11 +16,12 @@ namespace Groundsman.ViewModels
             set
             {
                 _IDEntry = value;
+                IDSubmitCommand.ChangeCanExecute();
                 OnPropertyChanged();
             }
         }
 
-        public WelcomeViewModel() => IDSubmitCommand = new Command(async () => await SubmitIDEntry());
+        public WelcomeViewModel() => IDSubmitCommand = new Command(async () => await SubmitIDEntry(), () => !string.IsNullOrWhiteSpace(IDEntry));
 
         /// <summary>
         /// Submits the inputted ID entry from the user. If valid, the ID will be saved and the user continues to the main page.
@@ -34,11 +34,6 @@ namespace Groundsman.ViewModels
                 await Application.Current.SavePropertiesAsync();
                 await NavigationService.NavigateBack(true);
                 Constants.FirstRun = false;
-
-            }
-            else
-            {
-                await NavigationService.ShowAlert("Invalid ID", "Your user ID cannot be empty.", false);
             }
         }
     }

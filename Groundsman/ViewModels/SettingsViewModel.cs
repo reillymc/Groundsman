@@ -68,7 +68,7 @@ namespace Groundsman.ViewModels
         {
             Title = "Settings";
             DeleteAllFeatures = new Command(async () => await ExecuteDeleteAllFeaturesCommand());
-            InfoButtonTappedCommand = new Command(async () => await NavigationService.ShowAlert("Credits", "Development:\nReilly MacKenzie-Cree\nGeorge Delosa\nAri Luangamath\n\nIcons by Icons8\nhttps://icons8.com", false));
+            InfoButtonTappedCommand = new Command(async () => await NavigationService.ShowAlert("Credits", "Development:\nReilly MacKenzie-Cree\nGeorge Delosa\nAri Luangamath", false));
         }
 
         private async Task ExecuteDeleteAllFeaturesCommand()

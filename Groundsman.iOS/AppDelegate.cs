@@ -48,7 +48,7 @@ namespace Groundsman.iOS
             }
 
             // Set app-wide tint colour and visual effects
-            UIColor GroundsmanGreen = new UIColor(red: 0.30f, green: 0.75f, blue: 0.30f, alpha: 1.00f);
+            UIColor GroundsmanGreen = new UIColor(red: 0.08f, green: 0.72f, blue: 0.05f, alpha: 1.00f);
             UIView.Appearance.TintColor = GroundsmanGreen;
             UINavigationBar.Appearance.Translucent = true;
 

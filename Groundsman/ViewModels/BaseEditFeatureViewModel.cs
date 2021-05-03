@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Groundsman.Models;
@@ -14,6 +11,7 @@ namespace Groundsman.ViewModels
         public ICommand OnDoneTappedCommand { get; set; }
         public ICommand OnCancelTappedCommand { get; set; }
         public ICommand ShareButtonClickCommand { get; set; }
+        public ICommand GetFeatureCommand { get; set; }
 
         public readonly Feature Feature = new Feature { Type = GeoJSONType.Feature };
         public ObservableCollection<DisplayPosition> Positions { get; set; } = new ObservableCollection<DisplayPosition>();
@@ -34,6 +32,6 @@ namespace Groundsman.ViewModels
 
         public abstract Task CancelDismiss();
 
-        public abstract Task AnyDismiss();
+        public abstract void AnyDismiss();
     }
 }

@@ -7,9 +7,7 @@
              x:DataType="viewModels:FeatureListViewModel"
              Style="{DynamicResource PageStyle}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem AutomationId="id_icon"
-                     Command="{Binding ShareButtonTappedCommand}"
-                     Icon="share_icon" />
+        <ToolbarItem Command="{Binding ShareButtonTappedCommand}" Icon="share" />
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -32,17 +30,17 @@
                                 <DataTrigger Binding="{Binding Geometry.Type}"
                                              TargetType="Image"
                                              Value="Point">
-                                    <Setter Property="Source" Value="point_icon.png" />
+                                    <Setter Property="Source" Value="point.png" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Geometry.Type}"
                                              TargetType="Image"
                                              Value="LineString">
-                                    <Setter Property="Source" Value="line_icon.png" />
+                                    <Setter Property="Source" Value="line.png" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Geometry.Type}"
                                              TargetType="Image"
                                              Value="Polygon">
-                                    <Setter Property="Source" Value="area_icon.png" />
+                                    <Setter Property="Source" Value="polygon.png" />
                                 </DataTrigger>
                             </Image.Triggers>
                         </Image>
@@ -72,10 +70,10 @@
 
     <AbsoluteLayout x:Name="absLayout">
         <ListView x:Name="listView"
+                  ItemsSource="{Binding FeatureList}"
                   HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}"
                   ItemSelected="DeselectItem"
                   ItemTemplate="{StaticResource ListTemplate}"
-                  ItemsSource="{Binding FeatureList}"
                   RowHeight="56"
                   SeparatorColor="{DynamicResource Seperator}">
             <ListView.Footer>
@@ -88,12 +86,18 @@
         <Button Margin="16"
                 AbsoluteLayout.LayoutBounds="1.0,1.0,-1,-1"
                 AbsoluteLayout.LayoutFlags="PositionProportional"
-                BackgroundColor="{StaticResource greenPrimary}"
                 BorderRadius="30"
                 Command="{Binding AddButtonTappedCommand}"
                 HeightRequest="60"
-                ImageSource="add_icon"
-                WidthRequest="60" />
+                ImageSource="plus"
+                WidthRequest="60">
+            <Button.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Offset="0.1" Color="#20D916" />
+                    <GradientStop Offset="1.0" Color="#0A9903" />
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
     </AbsoluteLayout>
 
 </ContentPage>

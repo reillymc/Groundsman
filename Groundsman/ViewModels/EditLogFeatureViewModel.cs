@@ -149,7 +149,7 @@ namespace Groundsman.ViewModels
             await OnDismiss(true);
         }
 
-        public override async Task AnyDismiss()
+        public override void AnyDismiss()
         {
             if (isLogging)
             {

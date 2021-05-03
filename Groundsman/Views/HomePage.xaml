@@ -11,19 +11,19 @@
             UnselectedTabColor="{DynamicResource TextSecondary}">
     <TabbedPage.Children>
 
-        <NavigationPage Title="My Features" Icon="data_icon">
+        <NavigationPage Title="My Features" Icon="list">
             <x:Arguments>
                 <views:FeatureListView />
             </x:Arguments>
         </NavigationPage>
 
-        <NavigationPage Title="Map" Icon="map_icon">
+        <NavigationPage Title="Map" Icon="map">
             <x:Arguments>
                 <views:MapView />
             </x:Arguments>
         </NavigationPage>
 
-        <NavigationPage Title="Settings" Icon="settings_icon">
+        <NavigationPage Title="Settings" Icon="gear">
             <x:Arguments>
                 <views:SettingsView />
             </x:Arguments>

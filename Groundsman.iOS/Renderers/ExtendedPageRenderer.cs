@@ -38,10 +38,7 @@ namespace Groundsman.iOS.Renderers
             {
                 SetAppTheme();
             }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"\t\t\tERROR: {ex.Message}");
-            }
+            catch { }
         }
 
         public override void TraitCollectionDidChange(UITraitCollection previousTraitCollection)

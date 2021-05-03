@@ -19,7 +19,6 @@ namespace Groundsman.ViewModels
     /// </summary>
     public class EditFeatureViewModel : BaseEditFeatureViewModel
     {
-        public ICommand GetFeatureCommand { get; set; }
         public ICommand AddPointCommand { get; set; }
         public ICommand DeletePointCommand { get; set; }
         public ICommand AddPropertyCommand { get; set; }
@@ -162,7 +161,7 @@ namespace Groundsman.ViewModels
         /// </summary>
         private void InitCommandBindings()
         {
-            GetFeatureCommand = new Command<DisplayPosition>(async (point) => { await GetDataPoint(point); }, (point) => { return !IsBusy; });
+            GetFeatureCommand = new Command<DisplayPosition>(async (point) => { await GetDataPoint(point); });
             AddPointCommand = new Command(() => AddPoint(1));
             DeletePointCommand = new Command<DisplayPosition>((item) => DeletePoint(item));
             AddPropertyCommand = new Command(() => Properties.Add(new Property("", "")));
@@ -294,7 +293,7 @@ namespace Groundsman.ViewModels
             await OnDismiss(true);
         }
 
-        public override async Task AnyDismiss()
+        public override void AnyDismiss()
         {
             return;
         }

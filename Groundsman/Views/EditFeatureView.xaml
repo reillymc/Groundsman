@@ -36,18 +36,17 @@
                                         Style="{StaticResource DateEntryStyle}"
                                         VerticalOptions="Start" />
                         </StackLayout>
-                        <ImageButton Grid.RowSpan="2"
+                        <Button Grid.RowSpan="2"
                                      Grid.Column="1"
                                      Margin="0,12,5,0"
                                      BackgroundColor="Transparent"
                                      Command="{Binding ShareButtonClickCommand}"
                                      CommandParameter="{Binding Source={RelativeSource Self}}"
-                                     HeightRequest="26"
+                                     HeightRequest="36"
                                      HorizontalOptions="Center"
-                                     Source="share_icon_color"
+                                     ImageSource="share"
                                      VerticalOptions="Center"
-                                     WidthRequest="26" />
-
+                                     WidthRequest="36" />
                     </Grid>
                 </Frame>
 
@@ -211,7 +210,7 @@
                                             Command="{Binding Path=BindingContext.GetFeatureCommand, Source={x:Reference Name=EditFeaturePage}}"
                                             CommandParameter="{Binding .}"
                                             HeightRequest="20"
-                                            Image="current_location"
+                                            Image="location"
                                             WidthRequest="20" />
                                 </Grid>
                                 <TemplatedView Grid.Row="0"
@@ -312,7 +311,7 @@
                             </Frame.GestureRecognizers>
                             <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                                 <Image HorizontalOptions="Center"
-                                       Source="add_icon_color"
+                                       Source="plusColor"
                                        VerticalOptions="Center" />
                                 <Label FontSize="16"
                                        HorizontalOptions="Center"
@@ -418,7 +417,7 @@
                     <StackLayout Orientation="Vertical" VerticalOptions="Center">
                         <Image HeightRequest="20"
                                HorizontalOptions="Center"
-                               Source="add_icon_color"
+                               Source="plusColor"
                                VerticalOptions="Center" />
                         <Label FontSize="16"
                                HorizontalOptions="Center"

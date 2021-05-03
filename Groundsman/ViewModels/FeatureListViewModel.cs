@@ -23,7 +23,7 @@ namespace Groundsman.ViewModels
             AddButtonTappedCommand = new Command(async () => await AddButtonTapped());
             ShareButtonTappedCommand = new Command(async () => await ShowShareSheet());
             ItemTappedCommand = new Command<Feature>(async (feature) => await ShowFeatureDetailsPage(feature));
-            DeleteEntryCommand = new Command<Feature>((feature) => DeleteFeature(feature));
+            DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
 
             Title = "My Features";
         }

@@ -8,7 +8,7 @@
              x:DataType="viewModels:SettingsViewModel"
              Style="{StaticResource PageStyle}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Command="{Binding InfoButtonTappedCommand}" Icon="info_icon" />
+        <ToolbarItem Command="{Binding InfoButtonTappedCommand}" Icon="info" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <TableView BackgroundColor="{DynamicResource Background}" Intent="Settings">
@@ -84,6 +84,7 @@
                                 <Label Text="Enable Shake to Undo Delete" VerticalOptions="Center" />
                                 <Switch HorizontalOptions="EndAndExpand"
                                         IsToggled="{Binding EnableShakeToUndo}"
+                                        OnColor="{StaticResource greenPrimary}"
                                         VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
@@ -94,6 +95,7 @@
                                 <Label Text="Share Logs as GeoJSON" VerticalOptions="Center" />
                                 <Switch HorizontalOptions="EndAndExpand"
                                         IsToggled="{Binding ShareLogAsGeoJSON}"
+                                        OnColor="{StaticResource greenPrimary}"
                                         VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
@@ -121,6 +123,7 @@
                                 <Label Text="Draw Points" VerticalOptions="Center" />
                                 <Switch HorizontalOptions="EndAndExpand"
                                         IsToggled="{Binding ShowPointsOnMap}"
+                                        OnColor="{StaticResource greenPrimary}"
                                         VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
@@ -131,6 +134,7 @@
                                 <Label Text="Draw Lines" VerticalOptions="Center" />
                                 <Switch HorizontalOptions="EndAndExpand"
                                         IsToggled="{Binding ShowLinesOnMap}"
+                                        OnColor="{StaticResource greenPrimary}"
                                         VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
@@ -140,6 +144,7 @@
                             <StackLayout Padding="20,0" Orientation="Horizontal">
                                 <Label Text="Draw Polygons" VerticalOptions="Center" />
                                 <Switch HorizontalOptions="EndAndExpand"
+                                        OnColor="{StaticResource greenPrimary}"
                                         IsToggled="{Binding ShowPolygonsOnMap}"
                                         VerticalOptions="Center" />
                             </StackLayout>
