@@ -29,42 +29,24 @@
 	<key>CFBundleName</key>
 	<string>Groundsman</string>
 	<key>CFBundleShortVersionString</key>
-	<string>7.6.0</string>
+	<string>9.0.1</string>
 	<key>XSAppIconAssets</key>
-	<string>Assets.xcassets/AppIcon.appiconset</string>
+	<string>Resources/Assets.xcassets/AppIcon.appiconset</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Location permissions are needed to record and display data based on your location.</string>
+	<string>Groundsman uses your location to help you create features, display your position on the map and to record your movement path. When always allowed, Groundsman can create log lines in in the background.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Location permissions are needed to record and display data based on your location.</string>
+	<string>Groundsman uses your location to help you create features, display your position on the map and to record your movement path. When always allowed, Groundsman can create log lines in in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Location permissions are needed to record and display data based on your location.</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>Groundsman uses APIs that request access to your calendar for app functionality</string>
+	<string>Groundsman uses your location to help you create features and display your position on the map.</string>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>
 			<key>UIApplicationShortcutItemIconType</key>
 			<string>UIApplicationShortcutIconTypeAdd</string>
 			<key>UIApplicationShortcutItemTitle</key>
-			<string>Add a Point</string>
+			<string>Add New Feature</string>
 			<key>UIApplicationShortcutItemType</key>
 			<string>com.geoapplads.Groundsman.000</string>
-		</dict>
-		<dict>
-			<key>UIApplicationShortcutItemIconType</key>
-			<string>UIApplicationShortcutIconTypeAdd</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>Add a Line</string>
-			<key>UIApplicationShortcutItemType</key>
-			<string>com.geoapplads.Groundsman.001</string>
-		</dict>
-		<dict>
-			<key>UIApplicationShortcutItemIconType</key>
-			<string>UIApplicationShortcutIconTypeAdd</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>Add a Polygon</string>
-			<key>UIApplicationShortcutItemType</key>
-			<string>com.geoapplads.Groundsman.002</string>
 		</dict>
 	</array>
 	<key>CFBundleDocumentTypes</key>
@@ -85,7 +67,7 @@
 		</dict>
 		<dict>
 			<key>LSHandlerRank</key>
-			<string>Alternate</string>
+			<string>Default</string>
 			<key>CFBundleTypeName</key>
 			<string>JSON</string>
 			<key>LSItemContentTypes</key>
@@ -99,7 +81,7 @@
 		</dict>
 		<dict>
 			<key>LSHandlerRank</key>
-			<string>Alternate</string>
+			<string>Default</string>
 			<key>CFBundleTypeName</key>
 			<string>Text</string>
 			<key>LSItemContentTypes</key>
@@ -113,7 +95,7 @@
 		</dict>
 		<dict>
 			<key>LSHandlerRank</key>
-			<string>Alternate</string>
+			<string>Default</string>
 			<key>CFBundleTypeName</key>
 			<string>Content</string>
 			<key>LSItemContentTypes</key>
@@ -167,10 +149,13 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>7.6.0</string>
+	<string>9.0.17</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
+		<string>fetch</string>
 	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

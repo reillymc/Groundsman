@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Groundsman.Views.WelcomeView"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:Groundsman.Behaviors;assembly=Groundsman"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             xmlns:viewModels="clr-namespace:Groundsman.ViewModels"
+             ios:Page.ModalPresentationStyle="FormSheet"
+             x:DataType="viewModels:WelcomeViewModel"
+             Style="{StaticResource PageStyle}">
+    <ContentPage.Content>
+        <FlexLayout Direction="Column">
+            <FlexLayout.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Offset="0.1" Color="#20D916" />
+                    <GradientStop Offset="1.0" Color="#0A9903" />
+                </LinearGradientBrush>
+            </FlexLayout.Background>
+            <StackLayout HeightRequest="200" Orientation="Horizontal">
+                <Image Aspect="AspectFit"
+                       Source="logo.png"
+                       WidthRequest="140" />
+                <StackLayout VerticalOptions="Center">
+                    <Label FontSize="26"
+                           Text="Welcome to"
+                           TextColor="White"
+                           VerticalOptions="Start" />
+                    <Label FontAttributes="Bold"
+                           FontSize="34"
+                           Text="Groundsman"
+                           TextColor="White"
+                           VerticalOptions="Start" />
+                </StackLayout>
+            </StackLayout>
+            <StackLayout Margin="32" HeightRequest="350">
+                <Label FontAttributes="Bold"
+                       FontSize="15"
+                       HorizontalOptions="Center"
+                       Text="Please enter a name to identify your data"
+                       TextColor="White" />
+                <Frame Margin="0,20"
+                       Padding="20,14"
+                       BackgroundColor="White"
+                       HasShadow="False">
+                    <Entry FontAttributes="Bold"
+                           HorizontalTextAlignment="Center"
+                           ReturnCommand="{Binding IDSubmitCommand}"
+                           Text="{Binding IDEntry}"
+                           TextColor="Gray">
+                        <Entry.Behaviors>
+                            <behaviors:EntryLengthValidatorBehavior MaxLength="30" />
+                        </Entry.Behaviors>
+                    </Entry>
+                </Frame>
+
+                <Button AutomationId="IDSubmit"
+                        BackgroundColor="White"
+                        Command="{Binding IDSubmitCommand}"
+                        FontAttributes="Bold"
+                        Text="Submit"
+                        TextColor="{StaticResource greenPrimary}" />
+            </StackLayout>
+        </FlexLayout>
+    </ContentPage.Content>
+</ContentPage>

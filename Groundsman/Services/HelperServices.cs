@@ -1,55 +1,32 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
+using Position = Groundsman.Models.Position;
 
 namespace Groundsman.Services
 {
     public class HelperServices
     {
-        private static GeolocationAccuracy geolocationAccuracy;
-        private static Point point;
-        private static int decimalAccuracy;
-
         /// <summary>
         /// Queries the current location of the device
         /// </summary>
         /// <returns>A point object containing the device's current location</returns>
-        public static async Task<Point> GetGeoLocation()
+        public static async Task<Position> GetGeoLocation()
         {
-            geolocationAccuracy = Preferences.Get("GPSPrecision", 2) switch
+            GeolocationAccuracy geolocationAccuracy = Preferences.Get(Constants.GPSPrecisionKey, Constants.DefaultGPSPrecisionValue) switch
             {
                 0 => GeolocationAccuracy.Best,
                 1 => GeolocationAccuracy.High,
                 3 => GeolocationAccuracy.Low,
                 _ => GeolocationAccuracy.Medium,
             };
-            decimalAccuracy = Preferences.Get("DataDecimalAccuracy", 8);
-            try
+            Location location = await Geolocation.GetLocationAsync(new GeolocationRequest(geolocationAccuracy));
+            if (location != null)
             {
-                var status = await CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
-                if (status == PermissionStatus.Granted)
-                {
-                    // Gets current location of device (MORE ACCURATE, but slower)
-                    var request = new GeolocationRequest(geolocationAccuracy);
-                    var location = await Geolocation.GetLocationAsync(request);
-                    if (location != null)
-                    {
-                        point = new Point(Math.Round(location.Latitude, decimalAccuracy), Math.Round(location.Longitude, decimalAccuracy), Math.Round(location.Altitude ?? 0.0, decimalAccuracy));
-                        return point;
-                    }
-                }
-                else
-                {
-                    await HomePage.Instance.DisplayAlert("Permissions Error", "Location permissions for Groundsman must be enabled to fetch location.", "Ok");
-                    return null;
-                }
+                int decimalAccuracy = Preferences.Get(Constants.DecimalAccuracyKey, Constants.DefaultDecimalAccuracyValue);
+                return new Position(Math.Round(location.Longitude, decimalAccuracy), Math.Round(location.Latitude, decimalAccuracy), Math.Round(location.Altitude ?? 0.0, decimalAccuracy));
             }
-            catch (Exception)
-            {
-                await HomePage.Instance.DisplayAlert("Geolocation Error", "Location permissions for Groundsman must be enabled to fetch location", "Ok");
-                throw new Exception();
-            }
-            return null;
+            throw new ArgumentNullException(nameof(location), "Fetched location was empty");
         }
 
         /// <summary>
@@ -61,7 +38,7 @@ namespace Groundsman.Services
         public static async Task<PermissionStatus> CheckAndRequestPermissionAsync<T>(T permission)
             where T : Permissions.BasePermission
         {
-            var status = await permission.CheckStatusAsync();
+            PermissionStatus status = await permission.CheckStatusAsync();
             if (status != PermissionStatus.Granted)
             {
                 status = await permission.RequestAsync();

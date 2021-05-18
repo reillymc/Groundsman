@@ -1,7 +1,11 @@
-﻿using Foundation;
-using Groundsman.Services;
+﻿using System;
 using System.IO;
+using CoreLocation;
+using Foundation;
+using Groundsman.iOS.Services;
+using Groundsman.Misc;
 using UIKit;
+using Xamarin.Forms;
 
 namespace Groundsman.iOS
 {
@@ -18,10 +22,9 @@ namespace Groundsman.iOS
         //
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
-
-        App mainForms;
-        NavigationService navigationService;
-
+        private App mainForms;
+        private LocationService locationService;
+        private readonly CLLocationManager locMgr = new CLLocationManager();
         public override bool FinishedLaunching(UIApplication uiApplication, NSDictionary launchOptions)
         {
             Xamarin.Forms.Forms.Init();
@@ -29,13 +32,24 @@ namespace Groundsman.iOS
 
             mainForms = new App();
 
+            locationService = new LocationService();
+            UIApplication.SharedApplication.SetMinimumBackgroundFetchInterval(UIApplication.BackgroundFetchIntervalMinimum);
+
+            //Background Location Permissions
+            locMgr.RequestAlwaysAuthorization();
+            locMgr.PausesLocationUpdatesAutomatically = false;
+            locMgr.AllowsBackgroundLocationUpdates = true;
+            SetServiceMethods();
+
             // Get possible shortcut item
             if (launchOptions != null)
             {
                 LaunchedShortcutItem = launchOptions[UIApplication.LaunchOptionsShortcutItemKey] as UIApplicationShortcutItem;
             }
-            UIColor tintColor = UIColor.FromRGB(76, 175, 80);
-            UINavigationBar.Appearance.TintColor = tintColor;
+
+            // Set app-wide tint colour and visual effects
+            UIColor GroundsmanGreen = new UIColor(red: 0.08f, green: 0.72f, blue: 0.05f, alpha: 1.00f);
+            UIView.Appearance.TintColor = GroundsmanGreen;
             UINavigationBar.Appearance.Translucent = true;
 
             LoadApplication(mainForms);
@@ -49,7 +63,7 @@ namespace Groundsman.iOS
                 using (StreamReader reader = new StreamReader(url.Path))
                 {
                     string filecontent = reader.ReadToEnd();
-                    mainForms.FeatureStore.ImportFeaturesAsync(filecontent, true);
+                    _ = mainForms.ImportRawGeoJSON(filecontent);
                 }
             }
             return true;
@@ -59,28 +73,18 @@ namespace Groundsman.iOS
 
         public bool HandleShortcutItem(UIApplicationShortcutItem shortcutItem)
         {
-            var handled = false;
+            bool handled = false;
 
             // Anything to process?
             if (shortcutItem == null) return false;
-            navigationService = new NavigationService();
             // Take action based on the shortcut type
             switch (shortcutItem.Type)
             {
-                case ShortcutIdentifier.First:
-                    navigationService.NavigateToNewEditPage("Point");
-                    handled = true;
-                    break;
-                case ShortcutIdentifier.Second:
-                    navigationService.NavigateToNewEditPage("LineString");
-                    handled = true;
-                    break;
-                case ShortcutIdentifier.Third:
-                    navigationService.NavigateToNewEditPage("Polygon");
+                case "com.geoapplads.Groundsman.000":
+                    _ = mainForms.NavigationService.PushAddFeaturePage();
                     handled = true;
                     break;
             }
-
             // Return results
             return handled;
         }
@@ -94,10 +98,31 @@ namespace Groundsman.iOS
             LaunchedShortcutItem = null;
         }
 
-        public override void PerformActionForShortcutItem(UIApplication application, UIApplicationShortcutItem shortcutItem, UIOperationHandler completionHandler)
+        public override void PerformActionForShortcutItem(UIApplication application, UIApplicationShortcutItem shortcutItem, UIOperationHandler completionHandler) => completionHandler(HandleShortcutItem(shortcutItem));
+
+        private void SetServiceMethods()
         {
-            // Perform action
-            completionHandler(HandleShortcutItem(shortcutItem));
+            MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", async message =>
+            {
+                await locationService.Start(message.Interval);
+            });
+
+            MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped", message =>
+            {
+                locationService.Stop();
+            });
+        }
+
+        public override void PerformFetch(UIApplication application, Action<UIBackgroundFetchResult> completionHandler)
+        {
+            try
+            {
+                completionHandler(UIBackgroundFetchResult.NewData);
+            }
+            catch (Exception)
+            {
+                completionHandler(UIBackgroundFetchResult.NoData);
+            }
         }
     }
 }

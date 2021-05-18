@@ -1,12 +1,14 @@
-﻿using Android.App;
+﻿using System.Text;
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.Content.Res;
 using Android.OS;
-using Android.Views;
+using Groundsman.Droid.Services;
+using Groundsman.Misc;
 using Groundsman.Styles;
 using Plugin.CurrentActivity;
-using System.Text;
+using Xamarin.Forms;
 
 namespace Groundsman.Droid
 {
@@ -20,7 +22,7 @@ namespace Groundsman.Droid
     [IntentFilter(new[] { Intent.ActionSend }, Categories = new[] { Intent.CategoryDefault }, DataMimeType = @"application/json")]
     public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-
+        private Intent serviceIntent;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -42,33 +44,33 @@ namespace Groundsman.Droid
                 }
             };
 
-            var mainForms = new App();
+            App mainForms = new App();
             LoadApplication(mainForms);
+
+            serviceIntent = new Intent(this, typeof(AndroidLocationService));
+            SetServiceMethods();
 
             SetAppTheme();
 
             if (Intent.Action == Intent.ActionSend)
             {
                 // Get the info from ClipData 
-                var file = Intent.ClipData.GetItemAt(0);
+                ClipData.Item file = Intent.ClipData.GetItemAt(0);
 
                 // Open a stream from the URI 
-                var fileStream = ContentResolver.OpenInputStream(file.Uri);
+                System.IO.Stream fileStream = ContentResolver.OpenInputStream(file.Uri);
 
                 // Save it over 
-                var memOfFile = new System.IO.MemoryStream();
+                System.IO.MemoryStream memOfFile = new System.IO.MemoryStream();
 
                 fileStream.CopyTo(memOfFile);
                 string decoded = Encoding.UTF8.GetString(memOfFile.ToArray());
 
-                mainForms.FeatureStore.ImportFeaturesAsync(decoded, true);
+                _ = mainForms.ImportRawGeoJSON(decoded);
             }
         }
 
-        protected override void OnResume()
-        {
-            base.OnResume();
-        }
+        protected override void OnResume() => base.OnResume();
 
         /// <summary>
         /// Handle runtime permissions
@@ -78,19 +80,28 @@ namespace Groundsman.Droid
         /// <param name="permissions"></param>
         /// <param name="grantResults"></param>
 
-        public override bool OnOptionsItemSelected(IMenuItem item)
+        private void SetServiceMethods()
         {
-            // Check if the selected toolbar button's id equals the back button id.
-            if (item.ItemId == Android.Resource.Id.Home)
+            MessagingCenter.Subscribe<StartServiceMessage>(this, "ServiceStarted", message =>
             {
-                // If so, override it so it always takes the user straight back to the main page.
-                HomePage.Instance.Navigation.PopToRootAsync();
-                return false;
-            }
-            return base.OnOptionsItemSelected(item);
+                serviceIntent.PutExtra("Interval", message.Interval);
+                if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+                {
+                    StartForegroundService(serviceIntent);
+                }
+                else
+                {
+                    StartService(serviceIntent);
+                }
+            });
+
+            MessagingCenter.Subscribe<StopServiceMessage>(this, "ServiceStopped", message =>
+            {
+                StopService(serviceIntent);
+            });
         }
 
-        void SetAppTheme()
+        private void SetAppTheme()
         {
             if (Resources.Configuration.UiMode.HasFlag(UiMode.NightYes))
                 SetTheme(App.Theme.Dark);
@@ -98,7 +109,7 @@ namespace Groundsman.Droid
                 SetTheme(App.Theme.Light);
         }
 
-        void SetTheme(App.Theme mode)
+        private void SetTheme(App.Theme mode)
         {
             if (mode == App.Theme.Dark)
             {

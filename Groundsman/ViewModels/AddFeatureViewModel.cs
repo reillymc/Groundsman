@@ -1,8 +1,8 @@
-﻿using Groundsman.Services;
-using Plugin.FilePicker;
-using Plugin.FilePicker.Abstractions;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using Groundsman.Models;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -11,79 +11,89 @@ namespace Groundsman.ViewModels
     public class AddFeatureViewModel : BaseViewModel
     {
         public Command AddFeatureCommand { set; get; }
+        public Command OnCancelTappedCommand { get; set; }
 
-        private bool modal;
-
-        public AddFeatureViewModel(bool modal)
+        public AddFeatureViewModel()
         {
-            this.modal = modal;
             AddFeatureCommand = new Command<string>(async (id) => await AddFeatureAsync(id));
+            OnCancelTappedCommand = new Command(async () => await OnDismiss(true));
+            Title = "Add Features";
         }
 
         private async Task AddFeatureAsync(string id)
         {
+            await NavigationService.NavigateBack(true);
             switch (id)
             {
                 case "Point":
-                    await navigationService.NavigateBack(modal);
-                    await navigationService.NavigateToNewEditPage("Point");
+                    await NavigationService.NavigateToNewEditPage(GeoJSONType.Point);
                     break;
-
                 case "LineString":
-                    await navigationService.NavigateBack(modal);
-                    await navigationService.NavigateToNewEditPage("LineString");
+                    await NavigationService.NavigateToNewEditPage(GeoJSONType.LineString);
                     break;
-
                 case "Polygon":
-                    await navigationService.NavigateBack(modal);
-                    await navigationService.NavigateToNewEditPage("Polygon");
+                    await NavigationService.NavigateToNewEditPage(GeoJSONType.Polygon);
                     break;
-
                 case "Clipboard":
-                    string contents = await Clipboard.GetTextAsync();
-                    await featureStore.ImportFeaturesAsync(contents, true);
-                    await navigationService.NavigateBack(modal);
+                    await ImportRawGeoJSON(await Clipboard.GetTextAsync());
                     break;
-
                 case "File":
                     await ImportFeaturesFromFile();
-                    await navigationService.NavigateBack(modal);
                     break;
-                default:
-                    await navigationService.NavigateBack(modal);
+                case "Log":
+                    await NavigationService.NavigateToNewLoggerPage();
                     break;
             }
-
         }
+
 
         public async Task ImportFeaturesFromFile()
         {
-            //TODO: exception handling - 
             try
             {
-                var status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.StorageRead());
-
-                // If permissions allowed, prompt the user to pick a file.
-                if (status == PermissionStatus.Granted)
-                {
-                    FileData fileData = await CrossFilePicker.Current.PickFile();
-
-                    // If the user didn't cancel, import the contents of the file they selected.
-                    if (fileData != null)
+                FilePickerFileType customFileType =
+                    new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
                     {
-                        string contents = System.Text.Encoding.UTF8.GetString(fileData.DataArray);
-                        await featureStore.ImportFeaturesAsync(contents, true);
-                    }
-                }
-                else
+                            { DevicePlatform.iOS, new[] { "public.json", "com.apple.dt.document.geojson" } }, // or general UTType values
+                            { DevicePlatform.Android, new[] { "application/json", "application/geo+json" } },
+                            { DevicePlatform.UWP, new[] { ".json", ".geojson" } },
+                            { DevicePlatform.macOS, new[] { "json", "geojson" } }, // or general UTType values
+                    });
+
+                PickOptions options = new PickOptions
                 {
-                    await HomePage.Instance.DisplayAlert("Permissions Error", "Storage permissions for Groundsman must be enabled to utilise this feature.", "OK");
+                    PickerTitle = "Please select a CheckSafe template file",
+                    FileTypes = customFileType,
+                };
+                FileResult fileData = await FilePicker.PickAsync();
+
+                // If the user didn't cancel, import the contents of the file they selected.
+                if (fileData != null)
+                {
+                    Stream fileStream = await fileData.OpenReadAsync();
+                    StreamReader reader = new StreamReader(fileStream);
+                    string fileContents = reader.ReadToEnd();
+                    await ImportRawGeoJSON(fileContents);
                 }
+            }
+            catch
+            {
+                await NavigationService.ShowAlert("Import Error", $"Please allow Groundsman to access device storage.", false);
+            }
+        }
+
+        public async Task ImportRawGeoJSON(string contents)
+        {
+            try
+            {
+                int successfulImports = await FeatureStore.ImportRawContents(contents);
+                await NavigationService.ShowImportAlert(successfulImports);
             }
             catch (Exception ex)
             {
-                await HomePage.Instance.DisplayAlert("Import Error", $"File must contain valid GeoJSON and be accessible to Groundsman. {ex}", "OK");
+                await NavigationService.ShowAlert("Import Error", ex.Message, false);
             }
         }
+
     }
 }

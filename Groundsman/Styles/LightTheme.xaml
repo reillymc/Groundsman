@@ -5,14 +5,13 @@
                     xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
                     Source="DefaultTheme.xaml">
 
-    <Color x:Key="bgPrimary">#FFFFFF</Color>
-    <Color x:Key="bgSecondary">#f5f6f6</Color>
-    <Color x:Key="bgTertiary">#c0c0c2</Color>
+    <Color x:Key="Background">#f2f7f3</Color>
+    <Color x:Key="Foreground">#ffffff</Color>
+    <Color x:Key="Absolute">#ffffff</Color>
+    <Color x:Key="Seperator">#c8c8c8</Color>
+    <Color x:Key="Text">#000000</Color>
+    <Color x:Key="TextSecondary">#606060</Color>
 
-    <Color x:Key="textPrimary">#000000</Color>
-    <Color x:Key="textSecondary">#606060</Color>
-    <Color x:Key="textTertiary">#909090</Color>
-
-    <ios:BlurEffectStyle x:Key="blurEffect">ExtraLight</ios:BlurEffectStyle>
+    <ios:BlurEffectStyle x:Key="BlurEffect">ExtraLight</ios:BlurEffectStyle>
 
 </ResourceDictionary>

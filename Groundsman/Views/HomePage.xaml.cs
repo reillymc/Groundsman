@@ -1,6 +1,6 @@
 ﻿using Xamarin.Forms;
 
-namespace Groundsman
+namespace Groundsman.Views
 {
     public partial class HomePage : TabbedPage
     {
@@ -17,9 +17,6 @@ namespace Groundsman
             }
         }
 
-        public HomePage()
-        {
-            InitializeComponent();
-        }
+        public HomePage() => InitializeComponent();
     }
 }

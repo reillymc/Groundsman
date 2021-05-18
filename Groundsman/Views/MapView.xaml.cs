@@ -1,13 +1,11 @@
-﻿using Xamarin.Forms;
-using System.Threading;
-using Groundsman.ViewModels;
+﻿using Groundsman.ViewModels;
+using Xamarin.Forms;
 
-namespace Groundsman
+namespace Groundsman.Views
 {
     public partial class MapView : ContentPage
     {
-        private CancellationTokenSource cts;
-        MapViewModel viewModel;
+        private readonly MapViewModel viewModel;
         public MapView()
         {
             NavigationPage.SetHasNavigationBar(this, false);
@@ -19,12 +17,6 @@ namespace Groundsman
         {
             base.OnAppearing();
             viewModel.RefreshMap();
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-            viewModel.CleanupLog();
         }
     }
 }

@@ -1,22 +1,26 @@
-﻿using Groundsman.Services;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Groundsman.Models;
+using Groundsman.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Maps;
+using Point = Groundsman.Models.Point;
+using Polygon = Groundsman.Models.Polygon;
+using Position = Groundsman.Models.Position;
+using XFMPolygon = Xamarin.Forms.Maps.Polygon;
+using XFMPosition = Xamarin.Forms.Maps.Position;
 
 namespace Groundsman.ViewModels
 {
     /// <summary>
     /// ViewModel for maps page
+    /// Notes Xamarin Forms Maps Position Long/Lat is inverted to Lat/Long
     /// </summary>
     public class MapViewModel : BaseViewModel
     {
-        private CancellationTokenSource cts;
+        public CustomMap Map { get; private set; }
+
         public MapViewModel()
         {
             Map = new CustomMap();
@@ -24,252 +28,173 @@ namespace Groundsman.ViewModels
             Map.MapClicked += OnMapClicked;
         }
 
-        public CustomMap Map { get; private set; }
-
-        // Only center map on user if location permissions are granted
+        // Only center map on user if location permissions are granted otherwise center on Brisbane
         private async void CenterMapOnUser()
         {
-            var status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
-            if (status != PermissionStatus.Granted)
+            try
             {
-                Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(-27.47004901089882, 153.021072), Distance.FromMiles(1.0)));
-                return;
+                Position location = await HelperServices.GetGeoLocation();
+                Map.MoveToRegion(MapSpan.FromCenterAndRadius(new XFMPosition(location.Latitude, location.Longitude), Distance.FromMiles(1.0)));
             }
-            else
+            catch
             {
-                Point location = await HelperServices.GetGeoLocation();
-                Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(location.Latitude, location.Longitude), Distance.FromMiles(1.0)));
+                Map.MoveToRegion(MapSpan.FromCenterAndRadius(new XFMPosition(-27.47, 153.021), Distance.FromMiles(1.0)));
             }
-        }
-
-        public void CleanFeatures()
-        {
-            Map.MapElements.Clear();
-            Map.Pins.Clear();
-        }
-
-        public void DrawFeatures()
-        {
-            // Using CurrentFeature to draw the geodata on the map
-            FeatureList.ForEach((Feature feature) =>
-            {
-                var points = feature.properties.xamarincoordinates;
-                if (feature.geometry.type.Equals("Point") && Preferences.Get("ShowPointsOnMap", true))
-                {
-                    Pin pin = new Pin
-                    {
-                        Label = feature.properties.name,
-                        Address = string.Format("{0}, {1}, {2}", points[0].Latitude, points[0].Longitude, points[0].Altitude),
-                        Type = PinType.Place,
-                        Position = new Position(points[0].Latitude, points[0].Longitude),
-                    };
-                    pin.MarkerClicked += async (sender, e) =>
-                    {
-                        await DisplayFeatureActionMenuAsync(feature);
-                    };
-                    Map.Pins.Add(pin);
-                }
-                else if (feature.geometry.type.Equals("LineString") && Preferences.Get("ShowLinesOnMap", true))
-                {
-                    Polyline polyline = new Polyline
-                    {
-                        StrokeColor = Color.OrangeRed,
-                        StrokeWidth = 5,
-                    };
-                    points.ForEach((Point point) =>
-                    {
-                        polyline.Geopath.Add(new Position(point.Latitude, point.Longitude));
-                    });
-                    Map.MapElements.Add(polyline);
-                }
-                else if (feature.geometry.type.Equals("Polygon") && Preferences.Get("ShowPolygonsOnMap", true))
-                {
-                    Polygon polygon = new Polygon
-                    {
-                        StrokeWidth = 4,
-                        StrokeColor = Color.OrangeRed,
-                        FillColor = Color.FromHex("#85cb5748"),
-                    };
-                    points.ForEach((Point point) =>
-                    {
-                        polygon.Geopath.Add(new Position(point.Latitude, point.Longitude));
-                    });
-                    Map.MapElements.Add(polygon);
-                }
-            });
         }
 
         public async void RefreshMap()
         {
-            GetFeatures();
-            CleanFeatures();
+            // Clear Features
+            Map.MapElements.Clear();
+            Map.Pins.Clear();
+
             DrawFeatures();
 
-            if (Preferences.Get("ShowLogPathOnMap", true))
-            {
-                //Setup log
-                cts = new CancellationTokenSource();
-                _ = MapLogUpdaterAsync(new TimeSpan(0, 0, 1), cts.Token);
-            }
             //SetShowingUser
-            var status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
-            if (status == PermissionStatus.Granted)
-            {
-                Map.IsShowingUser = true;
-            }
-            else
-            {
-                Map.IsShowingUser = false;
-            }
+            PermissionStatus status = await HelperServices.CheckAndRequestPermissionAsync(new Permissions.LocationWhenInUse());
+            Map.IsShowingUser = status == PermissionStatus.Granted;
         }
 
-        private async Task MapLogUpdaterAsync(TimeSpan interval, CancellationToken ct)
+        /// <summary>
+        /// Iterates through all features in the feature list and calls the apropriate draw method baysed on feature type
+        /// </summary>
+        public void DrawFeatures()
         {
-            while (true)
+            FeatureList.ForEach((Feature feature) =>
             {
-                await Task.Delay(interval, ct);
-                List<Point> logFile = App.LogStore.GetLogFileObject();
-                Polyline logPolyline = new Polyline
+                switch (feature.Geometry.Type)
                 {
-                    StrokeColor = Color.DarkOrange,
-                    StrokeWidth = 3,
-                };
-                logFile.ForEach((Point point) =>
-                {
-                    logPolyline.Geopath.Add(new Position(point.Latitude, point.Longitude));
-                });
-                Map.MapElements.Add(logPolyline);
-            }
-        }
-
-        public void CleanupLog()
-        {
-            if (cts != null)
-            {
-                cts.Cancel();
-            }
-        }
-
-        void OnMapClicked(object sender, MapClickedEventArgs e)
-        {
-            FeatureList.ForEach(async (Feature feature) =>
-            {
-                bool ItemHit = false;
-                Point[] points = feature.properties.xamarincoordinates.ToArray();
-                if (feature.geometry.type.Equals("Polygon"))
-                {
-                    ItemHit |= IsPointInPolygon(new Point(e.Position.Latitude, e.Position.Longitude, 0), points);
-                }
-                else if (feature.geometry.type.Equals("LineString"))
-                {
-                    ItemHit |= IsPointOnLine(new Point(e.Position.Latitude, e.Position.Longitude, 0), points);
-                }
-
-                if (ItemHit)
-                {
-                    await DisplayFeatureActionMenuAsync(feature);
+                    case GeoJSONType.Point:
+                        DrawPoint(feature);
+                        break;
+                    case GeoJSONType.LineString:
+                        DrawLineString(feature);
+                        break;
+                    case GeoJSONType.Polygon:
+                        DrawPolygon(feature);
+                        break;
                 }
             });
         }
 
-        async Task DisplayFeatureActionMenuAsync(Feature feature)
+        private void DrawPoint(Feature feature)
         {
-            string result = await navigationService.GetCurrentPage().DisplayActionSheet(feature.properties.name, "Dismiss", "Delete", "View", "Edit");
+            if (Preferences.Get(Constants.MapDrawPointsKey, true))
+            {
+                Point point = (Point)feature.Geometry;
+                string address = double.IsNaN(point.Coordinates.Altitude)
+                    ? $"{point.Coordinates.Longitude}, {point.Coordinates.Latitude}"
+                    : $"{point.Coordinates.Longitude}, {point.Coordinates.Latitude}, {point.Coordinates.Altitude}";
+                Pin pin = new Pin
+                {
+                    Label = (string)feature.Properties["name"],
+                    Address = address,
+                    Type = PinType.Place,
+                    Position = new XFMPosition(point.Coordinates.Latitude, point.Coordinates.Longitude),
+                };
+                pin.InfoWindowClicked += async (sender, e) =>
+                {
+                    await DisplayFeatureActionMenuAsync(feature);
+                    e.HideInfoWindow = true;
+                };
+                Map.Pins.Add(pin);
+            }
+        }
+
+        private void DrawLineString(Feature feature)
+        {
+            if (Preferences.Get(Constants.MapDrawLinesKey, true))
+            {
+                Polyline polyline = new Polyline
+                {
+                    StrokeColor = Color.OrangeRed,
+                    StrokeWidth = 5,
+                };
+                LineString lineString = (LineString)feature.Geometry;
+                lineString.Coordinates.ForEach((Position point) =>
+                {
+                    polyline.Geopath.Add(new XFMPosition(point.Latitude, point.Longitude));
+                });
+                Map.MapElements.Add(polyline);
+            }
+        }
+
+        private void DrawPolygon(Feature feature)
+        {
+            if (Preferences.Get(Constants.MapDrawPolygonsKey, true))
+            {
+                XFMPolygon xfmpolygon = new XFMPolygon
+                {
+                    StrokeWidth = 4,
+                    StrokeColor = Color.OrangeRed,
+                    FillColor = Color.OrangeRed.AddLuminosity(.1).MultiplyAlpha(0.6),
+                };
+
+                Polygon polygon = (Polygon)feature.Geometry;
+                foreach (LineString lineString in polygon.Coordinates)
+                {
+                    foreach (Position pos in lineString.Coordinates)
+                    {
+                        xfmpolygon.Geopath.Add(new XFMPosition(pos.Latitude, pos.Longitude));
+                    }
+                }
+                Map.MapElements.Add(xfmpolygon);
+            }
+        }
+
+        /// <summary>
+        /// When map is clicked, iterates through all features in the feature list and shows the feature info menu if feature has been tapped
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMapClicked(object sender, MapClickedEventArgs e)
+        {
+            FeatureList.ForEach((Feature feature) =>
+            {
+                bool ItemHit = false;
+
+                if (feature.Geometry.Type == GeoJSONType.Polygon && Preferences.Get(Constants.MapDrawPolygonsKey, true))
+                {
+                    Polygon polygon = (Polygon)feature.Geometry;
+                    ItemHit |= polygon.ContainsPosition(new Position(e.Position.Longitude, e.Position.Latitude));
+                }
+                else if (feature.Geometry.Type == GeoJSONType.LineString && Preferences.Get(Constants.MapDrawLinesKey, true))
+                {
+                    LineString lineString = (LineString)feature.Geometry;
+                    ItemHit |= lineString.ContainsPosition(new Position(e.Position.Longitude, e.Position.Latitude, 0));
+                }
+
+                if (ItemHit)
+                {
+                    _ = DisplayFeatureActionMenuAsync(feature);
+                }
+            });
+        }
+
+        private async Task DisplayFeatureActionMenuAsync(Feature feature)
+        {
+            string result = await NavigationService.GetCurrentPage().DisplayActionSheet((string)feature.Properties[Constants.NameProperty], "Dismiss", "Delete", "View");
 
             switch (result)
             {
                 case "Delete":
-                    bool yesResponse = await navigationService.GetCurrentPage().DisplayAlert("Delete Feature", "Are you sure you want to delete this feature?", "Yes", "No");
-                    if (yesResponse)
-                    {
-                        await featureStore.DeleteItemAsync(feature);
-                        RefreshMap();
-                    }
+                    shakeService.Start();
+                    await FeatureStore.DeleteItem(feature);
+                    RefreshMap();
                     break;
                 case "View":
-                    await navigationService.NavigateToDetailPage(feature);
-                    break;
-                case "Edit":
-                    await navigationService.NavigateToEditPage(feature);
+                    if (feature.Properties.ContainsKey(Constants.LogTimestampsProperty))
+                    {
+                        await NavigationService.NavigateToLoggerPage(feature);
+                    }
+                    else
+                    {
+                        await NavigationService.NavigateToEditPage(feature);
+                    }
                     break;
                 default:
                     break;
             }
-        }
-
-        public bool IsPointInPolygon(Point p, Point[] polygon)
-        {
-            double minX = polygon[0].Longitude;
-            double maxX = polygon[0].Longitude;
-            double minY = polygon[0].Latitude;
-            double maxY = polygon[0].Latitude;
-            for (int i = 1; i < polygon.Length; i++)
-            {
-                Point q = polygon[i];
-                minX = Math.Min(q.Longitude, minX);
-                maxX = Math.Max(q.Longitude, maxX);
-                minY = Math.Min(q.Latitude, minY);
-                maxY = Math.Max(q.Latitude, maxY);
-            }
-
-            if (p.Longitude < minX || p.Longitude > maxX || p.Latitude < minY || p.Latitude > maxY)
-            {
-                return false;
-            }
-
-            // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
-            bool inside = false;
-            for (int i = 0, j = polygon.Length - 1; i < polygon.Length; j = i++)
-            {
-                if ((polygon[i].Latitude > p.Latitude) != (polygon[j].Latitude > p.Latitude) &&
-                     p.Longitude < (polygon[j].Longitude - polygon[i].Longitude) * (p.Latitude - polygon[i].Latitude) / (polygon[j].Latitude - polygon[i].Latitude) + polygon[i].Longitude)
-                {
-                    inside = !inside;
-                }
-            }
-            return inside;
-        }
-
-        //currently only works on line vertices
-        public bool IsPointOnLine(Point LocationTapped, Point[] polyline)
-        {
-            double Lat1;
-            double Lat2;
-            double Lon1;
-            double Lon2;
-            double PointLat;
-            double PointLon;
-            double AB;
-            double AP;
-            double PB;
-            double delta = 0.0001; // delta determines line tap accuracy
-
-            for (int i = 1; i < polyline.Length; i++)
-            {
-                Lat1 = polyline[i - 1].Latitude;
-                Lat2 = polyline[i].Latitude;
-
-                Lon1 = polyline[i - 1].Longitude;
-                Lon2 = polyline[i].Longitude;
-
-                PointLat = LocationTapped.Latitude;
-                PointLon = LocationTapped.Longitude;
-
-                AB = Math.Sqrt((Lat2 - Lat1) * (Lat2 - Lat1) + (Lon2 - Lon1) * (Lon2 - Lon1));
-                AP = Math.Sqrt((PointLat - Lat1) * (PointLat - Lat1) + (PointLon - Lon1) * (PointLon - Lon1));
-                PB = Math.Sqrt((Lat2 - PointLat) * (Lat2 - PointLat) + (Lon2 - PointLon) * (Lon2 - PointLon));
-
-                // Check if position is between two points of a line within distance of delta from the line
-                if (Math.Abs(AB - (AP + PB)) < delta)
-                    return true;
-            }
-            return false;
-        }
-
-        private async void GetFeatures()
-        {
-            ObservableCollection<Feature> updates = await featureStore.GetItemsAsync();
-            FeatureList.ReplaceRange(updates);
         }
     }
 }

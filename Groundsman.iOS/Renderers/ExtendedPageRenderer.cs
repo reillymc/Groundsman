@@ -1,9 +1,9 @@
+using System;
+using Groundsman.iOS.Renderers;
+using Groundsman.Styles;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
-using System;
-using Groundsman.Styles;
-using Groundsman.iOS.Renderers;
 
 [assembly: ExportRenderer(typeof(ContentPage), typeof(ExtendedPageRenderer))]
 namespace Groundsman.iOS.Renderers
@@ -18,7 +18,9 @@ namespace Groundsman.iOS.Renderers
                 if (UIDevice.CurrentDevice.CheckSystemVersion(13, 0))
                 {
                     NavigationController.NavigationBar.PrefersLargeTitles = true;
+                    NavigationController.ExtendedLayoutIncludesOpaqueBars = true;
                     NavigationItem.LargeTitleDisplayMode = UINavigationItemLargeTitleDisplayMode.Automatic;
+                    NavigationController.NavigationBar.SizeToFit();
                 }
             }
         }
@@ -36,10 +38,7 @@ namespace Groundsman.iOS.Renderers
             {
                 SetAppTheme();
             }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"\t\t\tERROR: {ex.Message}");
-            }
+            catch { }
         }
 
         public override void TraitCollectionDidChange(UITraitCollection previousTraitCollection)
@@ -54,7 +53,7 @@ namespace Groundsman.iOS.Renderers
             }
         }
 
-        void SetAppTheme()
+        private void SetAppTheme()
         {
             if (TraitCollection.UserInterfaceStyle == UIUserInterfaceStyle.Dark)
             {

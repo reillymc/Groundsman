@@ -1,152 +1,108 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
-<ContentPage x:Class="Groundsman.AddFeatureView"
+<ContentPage x:Class="Groundsman.Views.AddFeatureView"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Groundsman.Controls"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             xmlns:viewModels="clr-namespace:Groundsman.ViewModels"
              ios:Page.ModalPresentationStyle="FormSheet"
-             NavigationPage.HasNavigationBar="False">
+             x:DataType="viewModels:AddFeatureViewModel"
+             NavigationPage.HasNavigationBar="False"
+             Style="{StaticResource PageTintedStyle}">
     <ContentPage.Content>
-        <StackLayout BackgroundColor="{DynamicResource bgSecondary}">
-            <StackLayout BackgroundColor="{DynamicResource bgPrimary}">
-                <Grid Margin="15,7,15,0" BackgroundColor="{DynamicResource bg}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Label Grid.Row="0"
-                           Grid.Column="1"
-                           FontAttributes="Bold"
-                           FontSize="16"
-                           HorizontalOptions="Center"
-                           Text="Add New Feature"
-                           TextColor="{DynamicResource textPrimary}"
-                           VerticalOptions="Center" />
-                    <Button x:Name="dismissButton"
-                            Grid.Row="0"
-                            Grid.Column="2"
-                            Clicked="OnDismissButtonClicked"
-                            FontAttributes="Bold"
-                            FontSize="16"
-                            HorizontalOptions="End"
-                            Text="Cancel">
-                        <Button.TextColor>
-                            <OnPlatform x:TypeArguments="Color"
-                                        Android="{StaticResource textSecondary}"
-                                        iOS="{StaticResource greenPrimary}" />
-                        </Button.TextColor>
-                        <Button.BackgroundColor>
-                            <OnPlatform x:TypeArguments="Color" Android="{StaticResource bgSecondary}" />
-                        </Button.BackgroundColor>
-                    </Button>
-                </Grid>
-                <BoxView HeightRequest="0.3" Color="{DynamicResource bgTertiary}" />
-            </StackLayout>
-
+        <StackLayout>
+            <controls:ModalNavigationBar HasDoneButton="False" />
             <Grid Padding="20">
-                <Frame x:Name="pointFrame"
-                       Grid.Row="0"
+                <Frame Grid.Row="0"
                        Grid.Column="0"
-                       Padding="10"
-                       BackgroundColor="{DynamicResource bgPrimary}"
-                       HasShadow="False">
+                       StyleClass="Base, Button">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Point" />
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical">
-                        <Image HorizontalOptions="Center"
-                               Source="point_icon"
-                               VerticalOptions="CenterAndExpand"
-                               WidthRequest="30" />
-                        <Label HorizontalOptions="Center"
-                               Text="Point"
-                               TextColor="Green"
-                               VerticalOptions="End" />
+                        <Image Source="point" Style="{StaticResource FrameButtonImage}" />
+                        <Label Style="{StaticResource FrameButtonLabel}" Text="Point" />
                     </StackLayout>
                 </Frame>
-                <Frame x:Name="lineFrame"
-                       Grid.Row="0"
+                <Frame Grid.Row="0"
                        Grid.Column="1"
-                       Padding="10"
-                       BackgroundColor="{DynamicResource bgPrimary}"
-                       HasShadow="False">
+                       StyleClass="Base, Button">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="LineString" />
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical">
-                        <Image HorizontalOptions="Center"
-                               Source="line_icon"
-                               VerticalOptions="CenterAndExpand"
-                               WidthRequest="30" />
-                        <Label HorizontalOptions="Center"
-                               Text="Line"
-                               TextColor="Green"
-                               VerticalOptions="End" />
+                        <Image Source="line" Style="{StaticResource FrameButtonImage}" />
+                        <Label Style="{StaticResource FrameButtonLabel}" Text="Line" />
                     </StackLayout>
                 </Frame>
-                <Frame x:Name="polygonFrame"
-                       Grid.Row="0"
+                <Frame Grid.Row="0"
                        Grid.Column="2"
-                       Padding="10"
-                       BackgroundColor="{DynamicResource bgPrimary}"
-                       HasShadow="False">
+                       StyleClass="Base, Button">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Polygon" />
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical">
-                        <Image HorizontalOptions="Center"
-                               Source="area_icon"
-                               VerticalOptions="CenterAndExpand"
-                               WidthRequest="30" />
-                        <Label HorizontalOptions="Center"
-                               Text="Polygon"
-                               TextColor="Green"
-                               VerticalOptions="End" />
+                        <Image Source="polygon" Style="{StaticResource FrameButtonImage}" />
+                        <Label Style="{StaticResource FrameButtonLabel}" Text="Polygon" />
                     </StackLayout>
                 </Frame>
             </Grid>
             <Grid Padding="20,0">
-                <Frame x:Name="importFrame"
-                       Grid.Row="0"
+                <Frame Grid.Row="0"
                        Grid.Column="0"
-                       BackgroundColor="{DynamicResource bgPrimary}"
+                       Margin="0,0,0,20"
+                       BackgroundColor="{DynamicResource Foreground}"
                        HasShadow="False"
-                       HeightRequest="16">
+                       HeightRequest="18">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Log" />
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                        <Label HorizontalOptions="StartAndExpand"
+                               Style="{StaticResource FrameButtonLabel}"
+                               Text="Logger Line" />
+                        <Image HorizontalOptions="Center"
+                               Source="logLine"
+                               VerticalOptions="EndAndExpand" />
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Row="1"
+                       Grid.Column="0"
+                       Margin="0,20,0,0"
+                       BackgroundColor="{DynamicResource Foreground}"
+                       HasShadow="False"
+                       HeightRequest="18">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="File" />
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                         <Label HorizontalOptions="StartAndExpand"
-                               Text="Import from File"
-                               TextColor="Green"
-                               VerticalOptions="End" />
+                               Style="{StaticResource FrameButtonLabel}"
+                               Text="Import from File" />
                         <Image HorizontalOptions="Center"
-                               Source="import_icon"
+                               Source="fileImport"
                                VerticalOptions="EndAndExpand" />
                     </StackLayout>
                 </Frame>
-                <Frame x:Name="pasteFrame"
-                       Grid.Row="1"
+                <Frame Grid.Row="2"
                        Grid.Column="0"
-                       BackgroundColor="{DynamicResource bgPrimary}"
+                       Margin="0,0,0,20"
+                       BackgroundColor="{DynamicResource Foreground}"
                        HasShadow="False"
-                       HeightRequest="16">
+                       HeightRequest="18">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Clipboard" />
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                         <Label HorizontalOptions="StartAndExpand"
-                               Text="Paste from Clipboard"
-                               TextColor="Green"
-                               VerticalOptions="End" />
+                               Style="{StaticResource FrameButtonLabel}"
+                               Text="Paste from Clipboard" />
                         <Image HorizontalOptions="Center"
-                               Source="paste_icon"
+                               Source="paste"
                                VerticalOptions="EndAndExpand" />
                     </StackLayout>
                 </Frame>
             </Grid>
-
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
