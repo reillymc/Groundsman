@@ -259,10 +259,10 @@
     <ImageAsset Include="Resources\Assets.xcassets\gear.symbolset\gear.svg">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Resources\Assets.xcassets\import.symbolset\Contents.json">
+    <ImageAsset Include="Resources\Assets.xcassets\fileImport.symbolset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Resources\Assets.xcassets\import.symbolset\square.and.arrow.down.svg">
+    <ImageAsset Include="Resources\Assets.xcassets\fileImport.symbolset\square.and.arrow.down.svg">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Resources\Assets.xcassets\Symbol.symbolset\Contents.json">
