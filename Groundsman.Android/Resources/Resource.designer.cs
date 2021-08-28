@@ -153,6 +153,7 @@ namespace Groundsman.Droid
 			global::Xamarin.Essentials.Resource.Id.text2 = global::Groundsman.Droid.Resource.Id.text2;
 			global::Xamarin.Essentials.Resource.Id.time = global::Groundsman.Droid.Resource.Id.time;
 			global::Xamarin.Essentials.Resource.Id.title = global::Groundsman.Droid.Resource.Id.title;
+			global::Xamarin.Essentials.Resource.Id.view_tree_lifecycle_owner = global::Groundsman.Droid.Resource.Id.view_tree_lifecycle_owner;
 			global::Xamarin.Essentials.Resource.Integer.status_bar_notification_info_maxnum = global::Groundsman.Droid.Resource.Integer.status_bar_notification_info_maxnum;
 			global::Xamarin.Essentials.Resource.Layout.browser_actions_context_menu_page = global::Groundsman.Droid.Resource.Layout.browser_actions_context_menu_page;
 			global::Xamarin.Essentials.Resource.Layout.browser_actions_context_menu_row = global::Groundsman.Droid.Resource.Layout.browser_actions_context_menu_row;
@@ -247,13 +248,7 @@ namespace Groundsman.Droid
 			global::Xamarin.Forms.Maps.Android.Resource.Animation.EnterFromRight = global::Groundsman.Droid.Resource.Animation.EnterFromRight;
 			global::Xamarin.Forms.Maps.Android.Resource.Animation.ExitToLeft = global::Groundsman.Droid.Resource.Animation.ExitToLeft;
 			global::Xamarin.Forms.Maps.Android.Resource.Animation.ExitToRight = global::Groundsman.Droid.Resource.Animation.ExitToRight;
-			global::Xamarin.Forms.Maps.Android.Resource.Animation.fragment_close_enter = global::Groundsman.Droid.Resource.Animation.fragment_close_enter;
-			global::Xamarin.Forms.Maps.Android.Resource.Animation.fragment_close_exit = global::Groundsman.Droid.Resource.Animation.fragment_close_exit;
-			global::Xamarin.Forms.Maps.Android.Resource.Animation.fragment_fade_enter = global::Groundsman.Droid.Resource.Animation.fragment_fade_enter;
-			global::Xamarin.Forms.Maps.Android.Resource.Animation.fragment_fade_exit = global::Groundsman.Droid.Resource.Animation.fragment_fade_exit;
 			global::Xamarin.Forms.Maps.Android.Resource.Animation.fragment_fast_out_extra_slow_in = global::Groundsman.Droid.Resource.Animation.fragment_fast_out_extra_slow_in;
-			global::Xamarin.Forms.Maps.Android.Resource.Animation.fragment_open_enter = global::Groundsman.Droid.Resource.Animation.fragment_open_enter;
-			global::Xamarin.Forms.Maps.Android.Resource.Animation.fragment_open_exit = global::Groundsman.Droid.Resource.Animation.fragment_open_exit;
 			global::Xamarin.Forms.Maps.Android.Resource.Animation.mtrl_bottom_sheet_slide_in = global::Groundsman.Droid.Resource.Animation.mtrl_bottom_sheet_slide_in;
 			global::Xamarin.Forms.Maps.Android.Resource.Animation.mtrl_bottom_sheet_slide_out = global::Groundsman.Droid.Resource.Animation.mtrl_bottom_sheet_slide_out;
 			global::Xamarin.Forms.Maps.Android.Resource.Animation.mtrl_card_lowers_interpolator = global::Groundsman.Droid.Resource.Animation.mtrl_card_lowers_interpolator;
@@ -1994,7 +1989,9 @@ namespace Groundsman.Droid
 			global::Xamarin.Forms.Maps.Android.Resource.Id.up = global::Groundsman.Droid.Resource.Id.up;
 			global::Xamarin.Forms.Maps.Android.Resource.Id.useLogo = global::Groundsman.Droid.Resource.Id.useLogo;
 			global::Xamarin.Forms.Maps.Android.Resource.Id.view_offset_helper = global::Groundsman.Droid.Resource.Id.view_offset_helper;
+			global::Xamarin.Forms.Maps.Android.Resource.Id.view_tree_lifecycle_owner = global::Groundsman.Droid.Resource.Id.view_tree_lifecycle_owner;
 			global::Xamarin.Forms.Maps.Android.Resource.Id.view_tree_saved_state_registry_owner = global::Groundsman.Droid.Resource.Id.view_tree_saved_state_registry_owner;
+			global::Xamarin.Forms.Maps.Android.Resource.Id.view_tree_view_model_store_owner = global::Groundsman.Droid.Resource.Id.view_tree_view_model_store_owner;
 			global::Xamarin.Forms.Maps.Android.Resource.Id.visible = global::Groundsman.Droid.Resource.Id.visible;
 			global::Xamarin.Forms.Maps.Android.Resource.Id.visible_removing_fragment_view_tag = global::Groundsman.Droid.Resource.Id.visible_removing_fragment_view_tag;
 			global::Xamarin.Forms.Maps.Android.Resource.Id.wide = global::Groundsman.Droid.Resource.Id.wide;
