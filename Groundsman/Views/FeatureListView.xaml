@@ -46,7 +46,7 @@
                         </Image>
                         <StackLayout Padding="5,0" Orientation="Vertical">
                             <Label Style="{StaticResource ListLabelStyle}"
-                                   Text="{Binding Path=Properties[name]}"
+                                   Text="{Binding Name}"
                                    VerticalOptions="EndAndExpand" />
                             <Label FontSize="Small"
                                    HorizontalTextAlignment="Start"
@@ -55,9 +55,9 @@
                                    VerticalOptions="StartAndExpand">
                                 <Label.FormattedText>
                                     <FormattedString>
-                                        <Span Text="{Binding Properties[date], StringFormat='{0:d/M/yy}'}" />
+                                        <Span Text="{Binding Date, StringFormat='{0:d/M/yy}'}" />
                                         <Span Text=" · " />
-                                        <Span Text="{Binding Properties[author]}" />
+                                        <Span Text="{Binding Author}" />
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
@@ -73,6 +73,7 @@
                   ItemsSource="{Binding FeatureList}"
                   HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}"
                   ItemSelected="DeselectItem"
+                  
                   ItemTemplate="{StaticResource ListTemplate}"
                   RowHeight="56"
                   SeparatorColor="{DynamicResource Seperator}">

@@ -76,7 +76,8 @@ namespace Groundsman.ViewModels
             bool yesResponse = await NavigationService.ShowAlert("Reset Feature List?", "This will permanently erase all saved features. Do you wish to continue?", true);
             if (yesResponse)
             {
-                await FeatureStore.ResetItems();
+                await FeatureStore.ClearItems();
+                _ = await FeatureStore.GetItemsAsync();
             }
         }
     }

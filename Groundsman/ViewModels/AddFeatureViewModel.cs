@@ -87,6 +87,7 @@ namespace Groundsman.ViewModels
             try
             {
                 int successfulImports = await FeatureStore.ImportRawContents(contents);
+                _ = await FeatureStore.GetItemsAsync();
                 await NavigationService.ShowImportAlert(successfulImports);
             }
             catch (Exception ex)

@@ -48,7 +48,7 @@ namespace Groundsman
         /// Fetches the local features list file if it exists, otherwise the default feature list
         /// </summary>
         /// <returns>Contents of file (serialised GeoJSON)</returns>
-        public static string FeaturesFileContents => File.Exists(FEATURES_FILE) ? File.ReadAllText(FEATURES_FILE) : GetTemplateFile();
+        public static string FeaturesFileContents => File.Exists(FEATURES_FILE) ? File.ReadAllText(FEATURES_FILE) : null;
 
         /// <summary>
         /// Gets the default features list

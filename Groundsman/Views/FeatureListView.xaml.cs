@@ -16,6 +16,12 @@ namespace Groundsman.Views
             BindingContext = viewModel = new FeatureListViewModel();
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            //_ = viewModel.LoadFeatures();
+        }
+
 
         public void DeselectItem(object sender, EventArgs e)
         {

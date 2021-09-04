@@ -95,6 +95,7 @@ namespace Groundsman.ViewModels
             {
                 [Constants.IdentifierProperty] = Constants.NewFeatureID
             };
+            DateEntry = DateTime.Now.ToShortDateString();
 
             InitCommands();
             HandleMessages();
@@ -102,10 +103,12 @@ namespace Groundsman.ViewModels
 
         public EditLogFeatureViewModel(Feature Log)
         {
-            Title = NameEntry = (string)Log.Properties[Constants.NameProperty];
-
             Feature.Geometry = Log.Geometry;
             Feature.Properties = Log.Properties;
+            Title = NameEntry = Log.Name;
+            DateEntry = Log.Date;
+            Feature.Id = Log.Id;
+
 
             object test = Log.Properties[Constants.LogTimestampsProperty];
             string[] timestamps = ((IEnumerable)test).Cast<object>()
@@ -196,8 +199,10 @@ namespace Groundsman.ViewModels
                 {
                     ToggleLogging();
                 }
-                if (await SaveLog())
+                if (await SaveLog() > 0)
                 {
+                    // Run in parallel?
+                    _ = await FeatureStore.GetItemsAsync();
                     await OnDismiss(true);
                 }
             }
@@ -207,11 +212,11 @@ namespace Groundsman.ViewModels
             }
         }
 
-        private async Task<bool> SaveLog(bool reset = false)
+        private async Task<int> SaveLog(bool reset = false)
         {
             if (reset)
             {
-                return OldLogFeature != null ? await FeatureStore.UpdateItem(OldLogFeature) : await FeatureStore.DeleteItem(Feature);
+                return OldLogFeature != null ? await FeatureStore.SaveItem(OldLogFeature) : await FeatureStore.DeleteItem(Feature);
             }
 
             List<Position> posList = new List<Position>();
@@ -221,12 +226,17 @@ namespace Groundsman.ViewModels
             }
 
             Feature.Geometry = new LineString(posList);
-            Feature.Properties[Constants.LogTimestampsProperty] = DateTimeList.ToArray();
-            Feature.Properties[Constants.NameProperty] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : "Log LineString";
-            Feature.Properties[Constants.DateProperty] = DateTime.Now.ToShortDateString();
-            Feature.Properties[Constants.AuthorProperty] = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
+            Feature.Name = NameEntry ?? "Log LineString";
+            Feature.Date = DateTime.Parse(DateEntry).ToShortDateString();
+            Feature.Author = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
 
-            return (string)Feature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? await FeatureStore.AddItem(Feature) : await FeatureStore.UpdateItem(Feature);
+            if (Feature.Id == null)
+            {
+                Feature.Id = Guid.NewGuid().ToString();
+            }
+            Feature.Properties[Constants.LogTimestampsProperty] = DateTimeList.ToArray();
+
+            return await FeatureStore.SaveItem(Feature);
         }
 
         public override async Task ShareFeature(View element)
@@ -237,7 +247,7 @@ namespace Groundsman.ViewModels
 
             try
             {
-                if (await SaveLog())
+                if (await SaveLog() > 0)
                 {
                     System.Drawing.Rectangle bounds = element.GetAbsoluteBounds().ToSystemRectangle();
 
@@ -246,7 +256,7 @@ namespace Groundsman.ViewModels
                         ShareFileRequest share = new ShareFileRequest
                         {
                             Title = "Share Feature",
-                            File = new ShareFile(await FeatureStore.ExportFeature(Feature), "application/json")
+                            File = new ShareFile(await FeatureHelper.ExportFeatures(Feature), "application/json")
                         };
                         share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
                         await Share.RequestAsync(share);

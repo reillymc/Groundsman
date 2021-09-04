@@ -87,7 +87,7 @@ namespace Groundsman.ViewModels
                     : $"{point.Coordinates.Longitude}, {point.Coordinates.Latitude}, {point.Coordinates.Altitude}";
                 Pin pin = new Pin
                 {
-                    Label = (string)feature.Properties["name"],
+                    Label = feature.Name,
                     Address = address,
                     Type = PinType.Place,
                     Position = new XFMPosition(point.Coordinates.Latitude, point.Coordinates.Longitude),
@@ -173,7 +173,7 @@ namespace Groundsman.ViewModels
 
         private async Task DisplayFeatureActionMenuAsync(Feature feature)
         {
-            string result = await NavigationService.GetCurrentPage().DisplayActionSheet((string)feature.Properties[Constants.NameProperty], "Dismiss", "Delete", "View");
+            string result = await NavigationService.GetCurrentPage().DisplayActionSheet(feature.Name, "Dismiss", "Delete", "View");
 
             switch (result)
             {

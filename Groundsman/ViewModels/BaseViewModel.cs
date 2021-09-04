@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Groundsman.Interfaces;
@@ -16,17 +17,8 @@ namespace Groundsman.ViewModels
         public IDataService<Feature> FeatureStore => DependencyService.Get<IDataService<Feature>>();
         public INavigationService<Feature> NavigationService => DependencyService.Get<INavigationService<Feature>>();
         public static ShakeService shakeService = App.shakeService;
-        private ObservableCollection<Feature> featureList;
-        public ObservableCollection<Feature> FeatureList
-        {
-            get => featureList;
-            set
-            {
-                if (featureList == value)
-                    return;
-                featureList = value;
-            }
-        }
+
+        public ObservableCollection<Feature> FeatureList { get; set; }
 
         private bool isBusy = false;
         public bool IsBusy
@@ -42,7 +34,11 @@ namespace Groundsman.ViewModels
             set => SetProperty(ref title, value);
         }
 
-        public BaseViewModel() => featureList = FeatureStore.GetItems();
+        public BaseViewModel()
+        {
+            FeatureList = FeatureStore.FeatureList;
+        }
+
 
         protected bool SetProperty<T>(ref T backingStore, T value,
             [CallerMemberName] string propertyName = "",

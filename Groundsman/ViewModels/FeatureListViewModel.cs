@@ -1,4 +1,7 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Groundsman.Misc;
 using Groundsman.Models;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -25,8 +28,11 @@ namespace Groundsman.ViewModels
             ItemTappedCommand = new Command<Feature>(async (feature) => await ShowFeatureDetailsPage(feature));
             DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
 
+
             Title = "My Features";
         }
+
+
 
         /// <summary>
         /// Shows native share sheet that exports all features.
@@ -40,7 +46,7 @@ namespace Groundsman.ViewModels
             ShareFileRequest share = new ShareFileRequest
             {
                 Title = "Share Features",
-                File = new ShareFile(await FeatureStore.ExportFeatures(FeatureList), "application/json"),
+                File = new ShareFile(await FeatureHelper.ExportFeatures(FeatureList), "application/json"),
             };
             share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet
                     ? new System.Drawing.Rectangle((int)(DeviceDisplay.MainDisplayInfo.Width * .474), 80, 0, 0)
@@ -95,6 +101,7 @@ namespace Groundsman.ViewModels
 
             shakeService.Start();
             await FeatureStore.DeleteItem(feature);
+            FeatureList.Remove(feature);
 
             IsBusy = false;
         }
