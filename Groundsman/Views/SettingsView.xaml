@@ -80,6 +80,32 @@
                 <TableSection Title="Feature List and Editor">
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
+                            <StackLayout Padding="20,0"
+                                         HorizontalOptions="FillAndExpand"
+                                         Orientation="Horizontal"
+                                         VerticalOptions="CenterAndExpand">
+                                <Label Text="List Ordering"
+                                       TextColor="{DynamicResource Text}"
+                                       VerticalOptions="Center" />
+                                <misc:CustomPicker Title="List Ordering"
+                                                   HorizontalOptions="EndAndExpand"
+                                                   HorizontalTextAlignment="Center"
+                                                   SelectedIndex="{Binding ListOrdering}"
+                                                   TextColor="{DynamicResource greenPrimary}"
+                                                   WidthRequest="95">
+                                    <Picker.ItemsSource>
+                                        <x:Array Type="{x:Type x:String}">
+                                            <x:String>Name</x:String>
+                                            <x:String>Date Asc.</x:String>
+                                            <x:String>Date Desc.</x:String>
+                                        </x:Array>
+                                    </Picker.ItemsSource>
+                                </misc:CustomPicker>
+                            </StackLayout>
+                        </Frame>
+                    </ViewCell>
+                    <ViewCell>
+                        <Frame Style="{StaticResource FrameViewCell}">
                             <StackLayout Padding="20,0" Orientation="Horizontal">
                                 <Label Text="Enable Shake to Undo Delete" VerticalOptions="Center" />
                                 <Switch HorizontalOptions="EndAndExpand"
@@ -91,15 +117,30 @@
                     </ViewCell>
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
-                            <StackLayout Padding="20,0" Orientation="Horizontal">
-                                <Label Text="Share Logs as GeoJSON" VerticalOptions="Center" />
-                                <Switch HorizontalOptions="EndAndExpand"
-                                        IsToggled="{Binding ShareLogAsGeoJSON}"
-                                        OnColor="{StaticResource greenPrimary}"
-                                        VerticalOptions="Center" />
+                            <StackLayout Padding="20,0"
+                                         HorizontalOptions="FillAndExpand"
+                                         Orientation="Horizontal"
+                                         VerticalOptions="CenterAndExpand">
+                                <Label Text="Logger Export Format"
+                                       TextColor="{DynamicResource Text}"
+                                       VerticalOptions="Center" />
+                                <misc:CustomPicker Title="Logger Export Format"
+                                                   HorizontalOptions="EndAndExpand"
+                                                   HorizontalTextAlignment="Center"
+                                                   SelectedIndex="{Binding LoggerExportFormat}"
+                                                   TextColor="{DynamicResource greenPrimary}"
+                                                   WidthRequest="95">
+                                    <Picker.ItemsSource>
+                                        <x:Array Type="{x:Type x:String}">
+                                            <x:String>CSV</x:String>
+                                            <x:String>GeoJSON</x:String>
+                                        </x:Array>
+                                    </Picker.ItemsSource>
+                                </misc:CustomPicker>
                             </StackLayout>
                         </Frame>
                     </ViewCell>
+
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
                             <StackLayout Padding="20,0"

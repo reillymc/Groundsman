@@ -36,16 +36,22 @@ namespace Groundsman.ViewModels
             set => Preferences.Set(Constants.GPSPrecisionKey, value);
         }
 
+        public int ListOrdering
+        {
+            get => Preferences.Get(Constants.ListOrderingKey, Constants.DefaultListOrderingValue);
+            set => Preferences.Set(Constants.ListOrderingKey, value);
+        }
+
         public bool EnableShakeToUndo
         {
             get => Preferences.Get(Constants.ShakeToUndoKey, true);
             set => Preferences.Set(Constants.ShakeToUndoKey, value);
         }
 
-        public bool ShareLogAsGeoJSON
+        public int LoggerExportFormat
         {
-            get => Preferences.Get(Constants.ShareLogAsGeoJSONKey, false);
-            set => Preferences.Set(Constants.ShareLogAsGeoJSONKey, value);
+            get => Preferences.Get(Constants.LoggerExportFormatKey, Constants.LoggerExportFormatDefaultValue);
+            set => Preferences.Set(Constants.LoggerExportFormatKey, value);
         }
 
         public bool ShowPointsOnMap

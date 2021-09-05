@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace Groundsman.Services
 {
@@ -65,8 +66,14 @@ namespace Groundsman.Services
             }
             else
             {
+                int ordering = Preferences.Get(Constants.ListOrderingKey, 0);
+                var orderedFeatures = ordering switch
+                {
+                    1 => newFeatures.OrderBy(feature => feature.Date).ToList(),
+                    2 => newFeatures.OrderByDescending(feature => feature.Date).ToList(),
+                    _ => newFeatures.OrderBy(feature => feature.Name).ToList(),
+                };
 
-                var orderedFeatures = newFeatures.OrderBy(feature => feature.Name).ToList();
                 FeatureList.Clear();
                 foreach (var newFeature in orderedFeatures)
                 {

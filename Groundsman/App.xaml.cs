@@ -14,6 +14,8 @@ namespace Groundsman
     {
         private IDataService<Feature> FeatureStore => DependencyService.Get<IDataService<Feature>>();
         public INavigationService<Feature> NavigationService => DependencyService.Get<INavigationService<Feature>>();
+
+       // public ObservableCollection<Feature> FetaureList = new ObservableCollection<Feature>();
         public enum Theme { Light, Dark }
         public static Theme AppTheme { get; set; }
 

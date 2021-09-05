@@ -19,16 +19,16 @@ namespace Groundsman
         public static readonly string DELETED_FEATURE_FILE = Path.Combine(CACHE_PATH, DELETED_FEATURE_FILENAME);
         public static readonly string EXPORT_LOG_FILE = Path.Combine(CACHE_PATH, EXPORT_LOG_FILENAME);
 
-
         // Preference keys
         public const string UserIDKey = "UserID";
         public const string GPSPrecisionKey = "GPSPrecision";
         public const string DecimalAccuracyKey = "DecimalAccuracy";
+        public const string ListOrderingKey = "ListOrdering";
         public const string ShakeToUndoKey = "EnableShakeToUndo";
         public const string MapDrawPointsKey = "ShowPointsOnMap";
         public const string MapDrawLinesKey = "ShowLinesOnMap";
         public const string MapDrawPolygonsKey = "ShowPolygonsOnMap";
-        public const string ShareLogAsGeoJSONKey = "ShareLogAsGeoJSONKey";
+        public const string LoggerExportFormatKey = "LoggerExportFormat";
 
 
         // Hardcoded feature property keys
@@ -43,6 +43,8 @@ namespace Groundsman
         public const string DefaultUserValue = "Groundsman";
         public const int DefaultGPSPrecisionValue = 2;
         public const int DefaultDecimalAccuracyValue = 6;
+        public const int DefaultListOrderingValue = 1;
+        public const int LoggerExportFormatDefaultValue = 0;
 
         /// <summary>
         /// Fetches the local features list file if it exists, otherwise the default feature list

@@ -251,7 +251,7 @@ namespace Groundsman.ViewModels
                 {
                     System.Drawing.Rectangle bounds = element.GetAbsoluteBounds().ToSystemRectangle();
 
-                    if (Preferences.Get(Constants.ShareLogAsGeoJSONKey, false))
+                    if (Preferences.Get(Constants.LoggerExportFormatKey, 0) == 1)
                     {
                         ShareFileRequest share = new ShareFileRequest
                         {
