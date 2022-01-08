@@ -12,9 +12,12 @@ namespace Groundsman.ViewModels
         public ICommand OnCancelTappedCommand { get; set; }
         public ICommand ShareButtonClickCommand { get; set; }
         public ICommand GetFeatureCommand { get; set; }
+        public ICommand DeleteFeatureCommand { get; set; }
 
         public readonly Feature Feature = new Feature { Type = GeoJSONType.Feature };
         public ObservableCollection<DisplayPosition> Positions { get; set; } = new ObservableCollection<DisplayPosition>();
+
+        public bool IsExistingFeature { get; set; } = false;
 
         public string NameEntry { get; set; }
         public string DateEntry { get; set; }
@@ -24,6 +27,7 @@ namespace Groundsman.ViewModels
             OnDoneTappedCommand = new Command(async () => await SaveDismiss());
             ShareButtonClickCommand = new Command<View>(async (view) => await ShareFeature(view));
             OnCancelTappedCommand = new Command(async () => await CancelDismiss());
+            DeleteFeatureCommand = new Command(async () => await DeleteDismiss());
         }
 
         public abstract Task ShareFeature(View view);
@@ -33,5 +37,6 @@ namespace Groundsman.ViewModels
         public abstract Task CancelDismiss();
 
         public abstract void AnyDismiss();
+        public abstract Task DeleteDismiss();
     }
 }

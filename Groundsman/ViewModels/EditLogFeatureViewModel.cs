@@ -109,6 +109,8 @@ namespace Groundsman.ViewModels
             DateEntry = Log.Date;
             Feature.Id = Log.Id;
 
+            IsExistingFeature = true;
+
 
             object test = Log.Properties[Constants.LogTimestampsProperty];
             string[] timestamps = ((IEnumerable)test).Cast<object>()
@@ -210,6 +212,14 @@ namespace Groundsman.ViewModels
             {
                 await Application.Current.MainPage.DisplayAlert("Unable To Save Log", $"{e.Message}.", "Ok");
             }
+        }
+
+        public override async Task DeleteDismiss()
+        {
+            shakeService.Start();
+            await NavigationService.NavigateBack(true);
+            await FeatureStore.DeleteItem(Feature);
+            await FeatureStore.GetItemsAsync();
         }
 
         private async Task<int> SaveLog(bool reset = false)

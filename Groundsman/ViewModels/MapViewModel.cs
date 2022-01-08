@@ -48,6 +48,7 @@ namespace Groundsman.ViewModels
             Map.MapElements.Clear();
             Map.Pins.Clear();
 
+            await FeatureStore.GetItemsAsync();
             DrawFeatures();
 
             //SetShowingUser

@@ -97,6 +97,8 @@ namespace Groundsman.ViewModels
 
             GeometryType = feature.Geometry.Type;
 
+            IsExistingFeature = true;
+
             int index = 1;
             switch (feature.Geometry.Type)
             {
@@ -164,6 +166,14 @@ namespace Groundsman.ViewModels
             AddPropertyCommand = new Command(() => Properties.Add(new Property("", "")));
             DeletePropertyCommand = new Command<Property>((item) => Properties.Remove(item));
 
+        }
+
+        public override async Task DeleteDismiss()
+        {
+            shakeService.Start();
+            await NavigationService.NavigateBack(true);
+            await FeatureStore.DeleteItem(Feature);
+            await FeatureStore.GetItemsAsync();
         }
 
         public override async Task ShareFeature(View element)

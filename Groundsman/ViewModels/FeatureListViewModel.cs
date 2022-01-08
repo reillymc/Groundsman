@@ -101,7 +101,7 @@ namespace Groundsman.ViewModels
 
             shakeService.Start();
             await FeatureStore.DeleteItem(feature);
-            FeatureList.Remove(feature);
+            await FeatureStore.GetItemsAsync();
 
             IsBusy = false;
         }

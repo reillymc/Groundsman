@@ -322,7 +322,7 @@
                         </Frame>
                     </StackLayout>
                 </Grid>
-                <Frame Margin="10,10,10,350"
+                <Frame Margin="10,10,10,10"
                        Padding="10,10,0,10"
                        HeightRequest="170"
                        IsVisible="{Binding isRegularFeature}"
@@ -346,6 +346,21 @@
                         </CollectionView>
 
                     </StackLayout>
+                </Frame>
+                <Frame Margin="10,10,10,350"
+                       BackgroundColor="{DynamicResource Foreground}"
+                       HasShadow="False"
+                       HeightRequest="24"
+                       StyleClass="Base, Button"
+                       IsVisible="{Binding IsExistingFeature}">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding DeleteFeatureCommand}"/>
+                    </Frame.GestureRecognizers>
+                    <Label HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Style="{StaticResource FrameButtonLabel}"
+                           Text="Delete"
+                           TextColor="{StaticResource Delete}"/>
                 </Frame>
             </StackLayout>
         </DataTemplate>
