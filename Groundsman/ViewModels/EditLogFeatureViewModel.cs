@@ -101,6 +101,7 @@ namespace Groundsman.ViewModels
 
             InitCommands();
             HandleMessages();
+            UpdateMap();
         }
 
         public EditLogFeatureViewModel(Feature Log)
@@ -132,6 +133,7 @@ namespace Groundsman.ViewModels
             OldLogFeature = new Feature(Log.Geometry, Log.Properties);
             InitCommands();
             HandleMessages();
+            UpdateMap();
         }
 
         private void InitCommands()

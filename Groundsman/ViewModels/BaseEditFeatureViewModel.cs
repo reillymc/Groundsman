@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Groundsman.Misc;
 using Groundsman.Models;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using Point = Groundsman.Models.Point;
@@ -30,11 +31,12 @@ namespace Groundsman.ViewModels
         public ObservableCollection<DisplayPosition> Positions { get; set; } = new ObservableCollection<DisplayPosition>();
 
         public bool IsExistingFeature { get; set; } = false;
+        public bool ShowMapPreview { get; set; } = true;
 
         public string NameEntry { get; set; }
         public string DateEntry { get; set; }
 
-        public CustomMap Map { get; private set; }
+        public PreviewMap Map { get; private set; }
 
         public BaseEditFeatureViewModel()
         {
@@ -43,11 +45,16 @@ namespace Groundsman.ViewModels
             OnCancelTappedCommand = new Command(async () => await CancelDismiss());
             DeleteFeatureCommand = new Command(async () => await DeleteDismiss());
 
-            Map = new CustomMap
+            Map = new PreviewMap
             {
                 InputTransparent = true,
-                
+
             };
+
+            if (!Preferences.Get(Constants.MapPreviewKey, true))
+            {
+                ShowMapPreview = false;
+            }
 
             Positions.CollectionChanged += Positions_CollectionChanged;
         }
@@ -85,14 +92,16 @@ namespace Groundsman.ViewModels
 
         public void UpdateMap()
         {
+            if (!Preferences.Get(Constants.MapPreviewKey, true)) return;
+
             Map.MapElements.Clear();
             Map.Pins.Clear();
 
+            Position centerPosition = new Position(0, 0);
+            Position spanPosition = new Position(0.01, 0.01);
+
             if (Positions.Count > 0)
             {
-                Position centerPosition = new Position(0, 0);
-                Position spanPosition = new Position(0.01, 0.01);
-
                 try
                 {
                     switch (GeometryType)
@@ -121,8 +130,8 @@ namespace Groundsman.ViewModels
                 catch (Exception ex)
                 {
                 }
-                CenterMap(centerPosition, spanPosition);
             }
+            CenterMap(centerPosition, spanPosition);
         }
 
         public abstract Task ShareFeature(View view);

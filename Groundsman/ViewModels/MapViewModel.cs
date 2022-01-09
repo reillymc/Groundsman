@@ -138,7 +138,7 @@ namespace Groundsman.ViewModels
 
         private async Task DisplayFeatureActionMenuAsync(Feature feature)
         {
-            string result = await NavigationService.GetCurrentPage().DisplayActionSheet(feature.Name, "Dismiss", "Delete", "View");
+            string result = await NavigationService.GetCurrentPage().DisplayActionSheet(feature.Name, "Dismiss", "Delete", "View", "Share");
 
             switch (result)
             {
@@ -157,9 +157,23 @@ namespace Groundsman.ViewModels
                         await NavigationService.NavigateToEditPage(feature);
                     }
                     break;
+                case "Share":
+                    await ShareFeature(feature);
+                    break;
                 default:
                     break;
             }
+        }
+
+        public async Task ShareFeature(Feature feature)
+        {
+            ShareFileRequest share = new ShareFileRequest
+            {
+                Title = "Share Feature",
+                File = new ShareFile(await FeatureHelper.ExportFeatures(feature), "application/json")
+            };
+            share.PresentationSourceBounds = Xamarin.Essentials.DeviceInfo.Platform == DevicePlatform.iOS && Xamarin.Essentials.DeviceInfo.Idiom == DeviceIdiom.Tablet ? new System.Drawing.Rectangle(0, 20, 0, 0) : System.Drawing.Rectangle.Empty;
+            await Share.RequestAsync(share);
         }
     }
 }

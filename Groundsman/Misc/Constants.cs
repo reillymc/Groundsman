@@ -24,7 +24,8 @@ namespace Groundsman
         public const string GPSPrecisionKey = "GPSPrecision";
         public const string DecimalAccuracyKey = "DecimalAccuracy";
         public const string ListOrderingKey = "ListOrdering";
-        public const string ShakeToUndoKey = "EnableShakeToUndo";
+        public const string ShakeToUndoKey = "EnableShakeToUndo"; 
+        public const string MapPreviewKey = "MapPreview";
         public const string MapDrawPointsKey = "ShowPointsOnMap";
         public const string MapDrawLinesKey = "ShowLinesOnMap";
         public const string MapDrawPolygonsKey = "ShowPolygonsOnMap";
