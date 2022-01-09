@@ -73,5 +73,56 @@ namespace Groundsman.Models
             }
             return inside;
         }
+
+        public Position GetCenterPosition()
+        {
+            double minLng = 180;
+            double maxLng = -180;
+            double minLat = 90;
+            double maxLat = -90;
+
+            foreach (LinearRing linearRing in Coordinates)
+            {
+                List<Position> coords = (List<Position>)linearRing.Coordinates;
+
+                // Get the absolute max bounds
+                foreach (Position positison in linearRing.Coordinates)
+                {
+                    minLng = Math.Min(positison.Longitude, minLng);
+                    maxLng = Math.Max(positison.Longitude, maxLng);
+                    minLat = Math.Min(positison.Latitude, minLat);
+                    maxLat = Math.Max(positison.Latitude, maxLat);
+                }
+            }
+
+            Position centerPosition = new Position((maxLng + minLng) / 2, (maxLat + minLat) / 2);
+            return centerPosition;
+        }
+
+        public Position GetSpan()
+        {
+            double minLng = 180;
+            double maxLng = -180;
+            double minLat = 90;
+            double maxLat = -90;
+
+            foreach (LinearRing linearRing in Coordinates)
+            {
+                List<Position> coords = (List<Position>)linearRing.Coordinates;
+
+                // Get the absolute max bounds
+                foreach (Position positison in linearRing.Coordinates)
+                {
+                    minLng = Math.Min(positison.Longitude, minLng);
+                    maxLng = Math.Max(positison.Longitude, maxLng);
+                    minLat = Math.Min(positison.Latitude, minLat);
+                    maxLat = Math.Max(positison.Latitude, maxLat);
+                }
+            }
+
+            Position spanPosition = new Position((maxLng - minLng) * 1.6, (maxLat - minLat) * 1.6);
+
+            return spanPosition;
+        }
     }
 }

@@ -29,6 +29,7 @@ namespace Groundsman.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            viewModel.OnAppear();
 
             if (DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Version < new Version(13, 0))
             {
@@ -42,7 +43,7 @@ namespace Groundsman.Views
         {
             base.OnDisappearing();
 
-            viewModel.AnyDismiss();
+            viewModel.OnDisappear();
         }
     }
 }

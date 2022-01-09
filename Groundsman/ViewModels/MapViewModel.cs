@@ -1,14 +1,13 @@
 ﻿using System.Threading.Tasks;
+using Groundsman.Misc;
 using Groundsman.Models;
 using Groundsman.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Maps;
-using Point = Groundsman.Models.Point;
 using Polygon = Groundsman.Models.Polygon;
 using Position = Groundsman.Models.Position;
-using XFMPolygon = Xamarin.Forms.Maps.Polygon;
 using XFMPosition = Xamarin.Forms.Maps.Position;
 
 namespace Groundsman.ViewModels
@@ -48,6 +47,7 @@ namespace Groundsman.ViewModels
             Map.MapElements.Clear();
             Map.Pins.Clear();
 
+            await FeatureStore.GetItemsAsync();
             DrawFeatures();
 
             //SetShowingUser
@@ -81,17 +81,7 @@ namespace Groundsman.ViewModels
         {
             if (Preferences.Get(Constants.MapDrawPointsKey, true))
             {
-                Point point = (Point)feature.Geometry;
-                string address = double.IsNaN(point.Coordinates.Altitude)
-                    ? $"{point.Coordinates.Longitude}, {point.Coordinates.Latitude}"
-                    : $"{point.Coordinates.Longitude}, {point.Coordinates.Latitude}, {point.Coordinates.Altitude}";
-                Pin pin = new Pin
-                {
-                    Label = (string)feature.Properties["name"],
-                    Address = address,
-                    Type = PinType.Place,
-                    Position = new XFMPosition(point.Coordinates.Latitude, point.Coordinates.Longitude),
-                };
+                var pin = MapHelper.GeneratePin(feature);
                 pin.InfoWindowClicked += async (sender, e) =>
                 {
                     await DisplayFeatureActionMenuAsync(feature);
@@ -105,17 +95,7 @@ namespace Groundsman.ViewModels
         {
             if (Preferences.Get(Constants.MapDrawLinesKey, true))
             {
-                Polyline polyline = new Polyline
-                {
-                    StrokeColor = Color.OrangeRed,
-                    StrokeWidth = 5,
-                };
-                LineString lineString = (LineString)feature.Geometry;
-                lineString.Coordinates.ForEach((Position point) =>
-                {
-                    polyline.Geopath.Add(new XFMPosition(point.Latitude, point.Longitude));
-                });
-                Map.MapElements.Add(polyline);
+                Map.MapElements.Add(MapHelper.GenerateLine(feature));
             }
         }
 
@@ -123,22 +103,7 @@ namespace Groundsman.ViewModels
         {
             if (Preferences.Get(Constants.MapDrawPolygonsKey, true))
             {
-                XFMPolygon xfmpolygon = new XFMPolygon
-                {
-                    StrokeWidth = 4,
-                    StrokeColor = Color.OrangeRed,
-                    FillColor = Color.OrangeRed.AddLuminosity(.1).MultiplyAlpha(0.6),
-                };
-
-                Polygon polygon = (Polygon)feature.Geometry;
-                foreach (LineString lineString in polygon.Coordinates)
-                {
-                    foreach (Position pos in lineString.Coordinates)
-                    {
-                        xfmpolygon.Geopath.Add(new XFMPosition(pos.Latitude, pos.Longitude));
-                    }
-                }
-                Map.MapElements.Add(xfmpolygon);
+                Map.MapElements.Add(MapHelper.GeneratePolygon(feature));
             }
         }
 
@@ -173,13 +138,14 @@ namespace Groundsman.ViewModels
 
         private async Task DisplayFeatureActionMenuAsync(Feature feature)
         {
-            string result = await NavigationService.GetCurrentPage().DisplayActionSheet((string)feature.Properties[Constants.NameProperty], "Dismiss", "Delete", "View");
+            string result = await NavigationService.GetCurrentPage().DisplayActionSheet(feature.Name, "Dismiss", "Delete", "View", "Share");
 
             switch (result)
             {
                 case "Delete":
                     shakeService.Start();
-                    await FeatureStore.DeleteItem(feature);
+                    _ = await FeatureStore.DeleteItem(feature);
+                    _ = await FeatureStore.GetItemsAsync();
                     RefreshMap();
                     break;
                 case "View":
@@ -192,9 +158,23 @@ namespace Groundsman.ViewModels
                         await NavigationService.NavigateToEditPage(feature);
                     }
                     break;
+                case "Share":
+                    await ShareFeature(feature);
+                    break;
                 default:
                     break;
             }
+        }
+
+        public async Task ShareFeature(Feature feature)
+        {
+            ShareFileRequest share = new ShareFileRequest
+            {
+                Title = "Share Feature",
+                File = new ShareFile(await FeatureHelper.ExportFeatures(feature), "application/json")
+            };
+            share.PresentationSourceBounds = Xamarin.Essentials.DeviceInfo.Platform == DevicePlatform.iOS && Xamarin.Essentials.DeviceInfo.Idiom == DeviceIdiom.Tablet ? new System.Drawing.Rectangle(0, 20, 0, 0) : System.Drawing.Rectangle.Empty;
+            await Share.RequestAsync(share);
         }
     }
 }

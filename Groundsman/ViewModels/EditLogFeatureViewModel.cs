@@ -95,17 +95,25 @@ namespace Groundsman.ViewModels
             {
                 [Constants.IdentifierProperty] = Constants.NewFeatureID
             };
+            DateEntry = DateTime.Now.ToShortDateString();
+
+            GeometryType = GeoJSONType.LineString;
 
             InitCommands();
-            HandleMessages();
+            UpdateMap();
         }
 
         public EditLogFeatureViewModel(Feature Log)
         {
-            Title = NameEntry = (string)Log.Properties[Constants.NameProperty];
-
             Feature.Geometry = Log.Geometry;
             Feature.Properties = Log.Properties;
+            Title = NameEntry = Log.Name;
+            DateEntry = Log.Date;
+            Feature.Id = Log.Id;
+
+            GeometryType = GeoJSONType.LineString;
+            IsExistingFeature = true;
+
 
             object test = Log.Properties[Constants.LogTimestampsProperty];
             string[] timestamps = ((IEnumerable)test).Cast<object>()
@@ -123,20 +131,26 @@ namespace Groundsman.ViewModels
 
             OldLogFeature = new Feature(Log.Geometry, Log.Properties);
             InitCommands();
-            HandleMessages();
+            UpdateMap();
         }
 
         private void InitCommands()
         {
-            ToggleButtonClickCommand = new Command(() => { ToggleLogging(); });
-            ClearButtonClickCommand = new Command(() => { Positions.Clear(); OrderedPositions.Clear(); });
+            ToggleButtonClickCommand = new Command(() => ToggleLogging());
+            ClearButtonClickCommand = new Command(() =>  ClearLog());
+        }
+
+        public void ClearLog()
+        {
+            Positions.Clear();
+            OrderedPositions.Clear();
+            UpdateMap();
         }
 
         public override async Task CancelDismiss()
         {
             try
             {
-                Unsubscribe();
                 if (isLogging)
                 {
                     ToggleLogging();
@@ -148,13 +162,18 @@ namespace Groundsman.ViewModels
             await OnDismiss(true);
         }
 
-        public override void AnyDismiss()
+        public override void OnDisappear()
         {
             Unsubscribe();
             if (isLogging)
             {
                 ToggleLogging();
             }
+        }
+
+        public override void OnAppear()
+        {
+            Subscribe();
         }
 
         public void ToggleLogging()
@@ -191,13 +210,14 @@ namespace Groundsman.ViewModels
         {
             try
             {
-                Unsubscribe();
                 if (isLogging)
                 {
                     ToggleLogging();
                 }
-                if (await SaveLog())
+                if (await SaveLog() > 0)
                 {
+                    // Run in parallel?
+                    _ = await FeatureStore.GetItemsAsync();
                     await OnDismiss(true);
                 }
             }
@@ -207,11 +227,19 @@ namespace Groundsman.ViewModels
             }
         }
 
-        private async Task<bool> SaveLog(bool reset = false)
+        public override async Task DeleteDismiss()
+        {
+            shakeService.Start();
+            await NavigationService.NavigateBack(true);
+            await FeatureStore.DeleteItem(Feature);
+            await FeatureStore.GetItemsAsync();
+        }
+
+        private async Task<int> SaveLog(bool reset = false)
         {
             if (reset)
             {
-                return OldLogFeature != null ? await FeatureStore.UpdateItem(OldLogFeature) : await FeatureStore.DeleteItem(Feature);
+                return OldLogFeature != null ? await FeatureStore.SaveItem(OldLogFeature) : await FeatureStore.DeleteItem(Feature);
             }
 
             List<Position> posList = new List<Position>();
@@ -221,12 +249,17 @@ namespace Groundsman.ViewModels
             }
 
             Feature.Geometry = new LineString(posList);
-            Feature.Properties[Constants.LogTimestampsProperty] = DateTimeList.ToArray();
-            Feature.Properties[Constants.NameProperty] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : "Log LineString";
-            Feature.Properties[Constants.DateProperty] = DateTime.Now.ToShortDateString();
-            Feature.Properties[Constants.AuthorProperty] = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
+            Feature.Name = NameEntry ?? "Log LineString";
+            Feature.Date = DateTime.Parse(DateEntry).ToShortDateString();
+            Feature.Author = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
 
-            return (string)Feature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? await FeatureStore.AddItem(Feature) : await FeatureStore.UpdateItem(Feature);
+            if (Feature.Id == null)
+            {
+                Feature.Id = Guid.NewGuid().ToString();
+            }
+            Feature.Properties[Constants.LogTimestampsProperty] = DateTimeList.ToArray();
+
+            return await FeatureStore.SaveItem(Feature);
         }
 
         public override async Task ShareFeature(View element)
@@ -237,16 +270,16 @@ namespace Groundsman.ViewModels
 
             try
             {
-                if (await SaveLog())
+                if (await SaveLog() > 0)
                 {
                     System.Drawing.Rectangle bounds = element.GetAbsoluteBounds().ToSystemRectangle();
 
-                    if (Preferences.Get(Constants.ShareLogAsGeoJSONKey, false))
+                    if (Preferences.Get(Constants.LoggerExportFormatKey, 0) == 1)
                     {
                         ShareFileRequest share = new ShareFileRequest
                         {
                             Title = "Share Feature",
-                            File = new ShareFile(await FeatureStore.ExportFeature(Feature), "application/json")
+                            File = new ShareFile(await FeatureHelper.ExportFeatures(Feature), "application/json")
                         };
                         share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
                         await Share.RequestAsync(share);
@@ -277,7 +310,7 @@ namespace Groundsman.ViewModels
             IsBusy = false;
         }
 
-        private void HandleMessages()
+        private void Subscribe()
         {
             MessagingCenter.Subscribe<DisplayPosition>(this, "Location", message =>
             {
@@ -305,7 +338,7 @@ namespace Groundsman.ViewModels
 
         public void Unsubscribe()
         {
-            MessagingCenter.Unsubscribe<Position>(this, "Location");
+            MessagingCenter.Unsubscribe<DisplayPosition>(this, "Location");
             MessagingCenter.Unsubscribe<StopServiceMessage>(this, "ServiceStopped");
             MessagingCenter.Unsubscribe<StartServiceMessage>(this, "ServiceStarted");
             MessagingCenter.Unsubscribe<LocationErrorMessage>(this, "LocationError");

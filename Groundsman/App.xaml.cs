@@ -12,12 +12,26 @@ namespace Groundsman
 {
     public partial class App : Application
     {
-        public IDataService<Feature> FeatureStore => DependencyService.Get<IDataService<Feature>>();
+        private IDataService<Feature> FeatureStore => DependencyService.Get<IDataService<Feature>>();
         public INavigationService<Feature> NavigationService => DependencyService.Get<INavigationService<Feature>>();
+
         public enum Theme { Light, Dark }
         public static Theme AppTheme { get; set; }
 
         public static ShakeService shakeService;
+
+        private static Database database;
+        public static Database Database
+        {
+            get
+            {
+                if (database == null)
+                {
+                    database = new Database(Path.Combine(FileSystem.AppDataDirectory, "groundsman.db"));
+                }
+                return database;
+            }
+        }
 
         public App()
         {
@@ -30,10 +44,10 @@ namespace Groundsman
             // If the user ID hasn't been set yet, prompt the user to create one upon app launch.
             if (Constants.FirstRun)
             {
-                _ = NavigationService.PushWelcomePage();
+                _ = FirstRun();
             }
 
-            _ = ImportFeatureList();
+            _ = ImportLegacyFeatureList();
         }
 
         protected override void OnStart()
@@ -51,14 +65,17 @@ namespace Groundsman
             // Handle when your app resumes
         }
 
-        public async Task ImportFeatureList()
+        public async Task ImportLegacyFeatureList()
         {
+            var legacyFeatureList = Constants.FeaturesFileContents;
+            if (legacyFeatureList == null) return;
             try
             {
-                FeatureCollection featureCollection = (FeatureCollection)GeoJSONObject.ImportGeoJSON(Constants.FeaturesFileContents);
-                _ = await FeatureStore.ImportItems(featureCollection.Features);
+                _ = await FeatureStore.ImportRawContents(legacyFeatureList);
+                _ = await FeatureStore.GetItemsAsync();
+                File.Delete(Constants.FEATURES_FILE);
             }
-            catch
+            catch (Exception ex)
             {
                 bool result = await NavigationService.ShowAlert("Feature List Error", "Groundsman was unable to load your saved features. Would you like to export the corrupted features?", true);
                 if (result)
@@ -69,8 +86,8 @@ namespace Groundsman
                         File = new ShareFile(Constants.FEATURES_FILE, "application/json"),
                     });
                 }
-                await FeatureStore.ResetItems();
             }
+
         }
 
         public async Task ImportRawGeoJSON(string contents)
@@ -78,6 +95,7 @@ namespace Groundsman
             try
             {
                 int successfulImports = await FeatureStore.ImportRawContents(contents);
+                _ = await FeatureStore.GetItemsAsync();
                 await NavigationService.ShowImportAlert(successfulImports);
             }
             catch (Exception ex)
@@ -95,12 +113,20 @@ namespace Groundsman
                 try
                 {
                     _ = await FeatureStore.ImportRawContents(contents);
+                    _ = await FeatureStore.GetItemsAsync();
                 }
                 catch (Exception ex)
                 {
                     await NavigationService.ShowAlert("Recovery Error", ex.Message, false);
                 }
             }
+        }
+
+        public async Task FirstRun()
+        {
+            await NavigationService.PushWelcomePage();
+            _ = await FeatureStore.SaveItems(Constants.DefaultFeatures);
+            _ = await FeatureStore.GetItemsAsync();
         }
     }
 }

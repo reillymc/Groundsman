@@ -36,16 +36,31 @@ namespace Groundsman.ViewModels
             set => Preferences.Set(Constants.GPSPrecisionKey, value);
         }
 
+        public int ListOrdering
+        {
+            get => Preferences.Get(Constants.ListOrderingKey, Constants.DefaultListOrderingValue);
+            set {
+                Preferences.Set(Constants.ListOrderingKey, value);
+                _ = FeatureStore.GetItemsAsync();
+                }
+        }
+
         public bool EnableShakeToUndo
         {
             get => Preferences.Get(Constants.ShakeToUndoKey, true);
             set => Preferences.Set(Constants.ShakeToUndoKey, value);
         }
 
-        public bool ShareLogAsGeoJSON
+        public bool EnableMapPreview
         {
-            get => Preferences.Get(Constants.ShareLogAsGeoJSONKey, false);
-            set => Preferences.Set(Constants.ShareLogAsGeoJSONKey, value);
+            get => Preferences.Get(Constants.MapPreviewKey, true);
+            set => Preferences.Set(Constants.MapPreviewKey, value);
+        }
+
+        public int LoggerExportFormat
+        {
+            get => Preferences.Get(Constants.LoggerExportFormatKey, Constants.LoggerExportFormatDefaultValue);
+            set => Preferences.Set(Constants.LoggerExportFormatKey, value);
         }
 
         public bool ShowPointsOnMap
@@ -76,7 +91,8 @@ namespace Groundsman.ViewModels
             bool yesResponse = await NavigationService.ShowAlert("Reset Feature List?", "This will permanently erase all saved features. Do you wish to continue?", true);
             if (yesResponse)
             {
-                await FeatureStore.ResetItems();
+                await FeatureStore.ClearItems();
+                _ = await FeatureStore.GetItemsAsync();
             }
         }
     }

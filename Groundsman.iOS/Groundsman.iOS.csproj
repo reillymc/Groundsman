@@ -50,7 +50,8 @@
     <CodesignKey>Apple Development: Reilly Mackenzie-Cree (ZH63974M2B)</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <CodesignProvision>iOS Team Provisioning Profile: *</CodesignProvision>
+    <CodesignProvision>
+    </CodesignProvision>
     <MtouchLink>None</MtouchLink>
     <MtouchInterpreter>-all</MtouchInterpreter>
   </PropertyGroup>
@@ -64,6 +65,9 @@
     <CodesignKey>Apple Distribution: Reilly Mackenzie-Cree (E4X6YMFEBV)</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchLink>SdkOnly</MtouchLink>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <AppExtensionDebugBundleId />
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -94,8 +98,8 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2291" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -104,15 +108,10 @@
       <Name>Groundsman</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ITunesArtwork Include="Resources\iTunesArtwork%402x" />
     <ITunesArtwork Include="Resources\iTunesArtwork" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\.DS_Store" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Resources\Assets.xcassets\Contents.json">
@@ -401,4 +400,9 @@
       <Visible>false</Visible>
     </ImageAsset>
   </ItemGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties XamarinHotReloadDebuggerTimeoutExceptionGroundsmaniOSHideInfoBar="True" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

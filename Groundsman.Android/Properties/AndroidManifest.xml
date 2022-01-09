@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.Groundsman.GeoApp" android:versionName="9.0.1" android:installLocation="auto" android:versionCode="12">
-	<uses-sdk android:minSdkVersion="24" android:targetSdkVersion="29" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.Groundsman.GeoApp" android:versionName="9.1" android:installLocation="auto" android:versionCode="13">
+	<uses-sdk android:minSdkVersion="24" android:targetSdkVersion="30" />
 	<application android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:label="Groundsman">
 		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyDaeurrZExaOrUGhn5Q9_g447PSC7DOfHM" />
 		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />

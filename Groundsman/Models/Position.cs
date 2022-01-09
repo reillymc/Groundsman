@@ -43,7 +43,7 @@ namespace Groundsman.Models
         {
             try
             {
-                Longitude = string.IsNullOrEmpty(displayPosition.Longitude) ? 0 : Convert.ToDouble(displayPosition.Longitude);
+                Longitude = (string.IsNullOrEmpty(displayPosition.Longitude) || displayPosition.Longitude == "-") ? 0 : Convert.ToDouble(displayPosition.Longitude);
                 if (double.IsInfinity(Longitude))
                 {
                     throw new ArgumentOutOfRangeException();
@@ -55,7 +55,7 @@ namespace Groundsman.Models
             }
             try
             {
-                Latitude = string.IsNullOrEmpty(displayPosition.Latitude) ? 0 : Convert.ToDouble(displayPosition.Latitude);
+                Latitude = (string.IsNullOrEmpty(displayPosition.Latitude) || displayPosition.Latitude == "-") ? 0 : Convert.ToDouble(displayPosition.Latitude);
                 if (double.IsInfinity(Longitude))
                 {
                     throw new ArgumentOutOfRangeException();

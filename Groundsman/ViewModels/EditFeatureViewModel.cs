@@ -23,15 +23,10 @@ namespace Groundsman.ViewModels
         public ICommand DeletePointCommand { get; set; }
         public ICommand AddPropertyCommand { get; set; }
         public ICommand DeletePropertyCommand { get; set; }
-        
 
-        
-        private readonly GeoJSONType GeometryType;
         private readonly Dictionary<string, object> HiddenProperties = new Dictionary<string, object>();
-        
-        public ObservableCollection<Property> Properties { get; set; } = new ObservableCollection<Property>();
 
-        
+        public ObservableCollection<Property> Properties { get; set; } = new ObservableCollection<Property>();
 
         public bool ShowAddButton { get; set; }
         public bool ShowClosePolygon { get; set; }
@@ -95,10 +90,13 @@ namespace Groundsman.ViewModels
         /// </summary>
         public EditFeatureViewModel(Feature feature)
         {
-            Title = NameEntry = (string)feature.Properties[Constants.NameProperty];
-            DateEntry = (string)feature.Properties[Constants.DateProperty];
+            Title = NameEntry = feature.Name;
+            DateEntry = (string)feature.Date;
+            Feature.Id = feature.Id;
 
             GeometryType = feature.Geometry.Type;
+
+            IsExistingFeature = true;
 
             int index = 1;
             switch (feature.Geometry.Type)
@@ -154,6 +152,7 @@ namespace Groundsman.ViewModels
             }
 
             InitCommandBindings();
+            UpdateMap();
         }
 
         /// <summary>
@@ -166,7 +165,15 @@ namespace Groundsman.ViewModels
             DeletePointCommand = new Command<DisplayPosition>((item) => DeletePoint(item));
             AddPropertyCommand = new Command(() => Properties.Add(new Property("", "")));
             DeletePropertyCommand = new Command<Property>((item) => Properties.Remove(item));
-            
+
+        }
+
+        public override async Task DeleteDismiss()
+        {
+            shakeService.Start();
+            await NavigationService.NavigateBack(true);
+            await FeatureStore.DeleteItem(Feature);
+            await FeatureStore.GetItemsAsync();
         }
 
         public override async Task ShareFeature(View element)
@@ -180,7 +187,7 @@ namespace Groundsman.ViewModels
                 ShareFileRequest share = new ShareFileRequest
                 {
                     Title = "Share Feature",
-                    File = new ShareFile(await FeatureStore.ExportFeature(Feature), "application/json")
+                    File = new ShareFile(await FeatureHelper.ExportFeatures(Feature), "application/json")
                 };
                 share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
                 await Share.RequestAsync(share);
@@ -206,7 +213,7 @@ namespace Groundsman.ViewModels
             }
             catch
             {
-                await Application.Current.MainPage.DisplayAlert("Unable To Fetch Location", "Ensure Groundsman has access to your device's location.", "Ok");
+                await NavigationService.ShowAlert("Unable To Fetch Location", "Ensure Groundsman has access to your device's location.", false);
             }
             finally
             {
@@ -227,6 +234,7 @@ namespace Groundsman.ViewModels
                 Positions.Add(new DisplayPosition((Positions.Count + 1).ToString(), "", "", ""));
                 NumPointFields++;
             }
+            UpdateMap();
             IsBusy = false;
         }
 
@@ -260,6 +268,7 @@ namespace Groundsman.ViewModels
                 Positions[i].Index = (i + 1).ToString();
             }
             NumPointFields--;
+            UpdateMap();
             IsBusy = false;
         }
 
@@ -273,14 +282,23 @@ namespace Groundsman.ViewModels
 
             if (await ValidateGeometry() && await ValidateProperties())
             {
-                bool saveSuccess = (string)Feature.Properties[Constants.IdentifierProperty] == Constants.NewFeatureID ? await FeatureStore.AddItem(Feature) : await FeatureStore.UpdateItem(Feature);
-                if (saveSuccess)
+                Feature.Name = !string.IsNullOrEmpty(NameEntry) ? NameEntry : Feature.Geometry.Type.ToString();
+                Feature.Date = DateTime.Parse(DateEntry).ToShortDateString();
+                Feature.Author = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
+
+                if (Feature.Id == null)
                 {
+                    Feature.Id = Guid.NewGuid().ToString();
+                }
+                int saveSuccess = await FeatureStore.SaveItem(Feature);
+                if (saveSuccess > 0)
+                {
+                    _ = await FeatureStore.GetItemsAsync();
                     await NavigationService.NavigateBack(true);
                 }
                 else
                 {
-                    await NavigationService.ShowAlert("Save Failed", "Please check all of your entried are valid", false);
+                    await NavigationService.ShowAlert("Save Failed", "Please check all of your entries are valid", false);
                 }
                 IsBusy = false;
                 return;
@@ -293,7 +311,12 @@ namespace Groundsman.ViewModels
             await OnDismiss(true);
         }
 
-        public override void AnyDismiss()
+        public override void OnDisappear()
+        {
+            return;
+        }
+
+        public override void OnAppear()
         {
             return;
         }
@@ -302,24 +325,7 @@ namespace Groundsman.ViewModels
         {
             try
             {
-                switch (GeometryType)
-                {
-                    case GeoJSONType.Point:
-                        Feature.Geometry = new Point(new Position(Positions[0]));
-                        break;
-                    case GeoJSONType.LineString:
-                        Feature.Geometry = new LineString(Positions.Select(pointValue => new Position(pointValue)).ToList());
-                        break;
-                    case GeoJSONType.Polygon:
-                        // This method does not allow for creating a polygon with multiple LinearRings
-                        List<Position> positions = Positions.Select(pointValue => new Position(pointValue)).ToList();
-                        // Close polygon with duplicated first feature
-                        positions.Add(positions[0]);
-                        Feature.Geometry = new Polygon(new List<LinearRing>() { new LinearRing(positions) });
-                        break;
-                    default:
-                        throw new ArgumentException($"Could not save unsupported feature of type {Feature.Geometry.Type}", Feature.Geometry.Type.ToString());
-                }
+                Feature.Geometry = FeatureHelper.GetValidatedGeometry(Positions, GeometryType);
             }
             catch (Exception ex)
             {
@@ -331,54 +337,15 @@ namespace Groundsman.ViewModels
 
         private async Task<bool> ValidateProperties()
         {
-            Dictionary<string, object> FinalProperties = new Dictionary<string, object>(HiddenProperties);
-            //IEnumerable<Property> OrderedFeatureProperties = FeatureProperties.OrderBy(property => property.Key); can allow for ordering later
-            foreach (Property property in Properties)
+            try
             {
-                if (!string.IsNullOrEmpty(property.Key.ToString()))
-                {
-                    try
-                    {
-                        switch (property.Type)
-                        {
-                            case 0:
-                                FinalProperties[property.Key] = property.Value;
-                                break;
-                            case 1:
-                                int intValue = Convert.ToInt16(property.Value);
-                                FinalProperties[property.Key] = intValue;
-                                break;
-                            case 2:
-                                float floatValue = Convert.ToSingle(property.Value);
-                                FinalProperties[property.Key] = floatValue;
-                                break;
-                            case 3:
-                                bool boolValue = Convert.ToBoolean(property.Value);
-                                FinalProperties[property.Key] = boolValue;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-
-                    catch
-                    {
-                        await NavigationService.ShowAlert("Invalid Feature Property", $"{property.Key} '{property.Value}' is incorrectly formatted.", false);
-                        return false;
-                    }
-
-                }
-                else
-                {
-                    Feature.Properties.Remove(property.Key);
-                }
+                Feature.Properties = FeatureHelper.GetValidatedProperties(Properties, HiddenProperties);
             }
-
-            FinalProperties[Constants.NameProperty] = !string.IsNullOrEmpty(NameEntry) ? NameEntry : Feature.Geometry.Type.ToString();
-            FinalProperties[Constants.DateProperty] = DateTime.Parse(DateEntry).ToShortDateString();
-            FinalProperties[Constants.AuthorProperty] = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
-
-            Feature.Properties = FinalProperties;
+            catch (Exception ex)
+            {
+                await NavigationService.ShowAlert("Invalid Feature Properties", $"{ex.Message}", false);
+                return false;
+            }
             return true;
         }
     }
