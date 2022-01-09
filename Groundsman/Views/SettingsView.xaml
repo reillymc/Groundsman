@@ -117,6 +117,17 @@
                     </ViewCell>
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
+                            <StackLayout Padding="20,0" Orientation="Horizontal">
+                                <Label Text="Show Map Preview in Editor" VerticalOptions="Center" />
+                                <Switch HorizontalOptions="EndAndExpand"
+                                        IsToggled="{Binding EnableMapPreview}"
+                                        OnColor="{StaticResource greenPrimary}"
+                                        VerticalOptions="Center" />
+                            </StackLayout>
+                        </Frame>
+                    </ViewCell>
+                    <ViewCell>
+                        <Frame Style="{StaticResource FrameViewCell}">
                             <StackLayout Padding="20,0"
                                          HorizontalOptions="FillAndExpand"
                                          Orientation="Horizontal"

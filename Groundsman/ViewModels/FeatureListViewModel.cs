@@ -17,6 +17,7 @@ namespace Groundsman.ViewModels
         public Command ShareButtonTappedCommand { set; get; }
         public Command ItemTappedCommand { set; get; }
         public Command DeleteEntryCommand { get; set; }
+        public Command ShareEntryCommand { get; set; }
 
         /// <summary>
         /// View-model constructor.
@@ -27,12 +28,21 @@ namespace Groundsman.ViewModels
             ShareButtonTappedCommand = new Command(async () => await ShowShareSheet());
             ItemTappedCommand = new Command<Feature>(async (feature) => await ShowFeatureDetailsPage(feature));
             DeleteEntryCommand = new Command<Feature>(async (feature) => await DeleteFeature(feature));
-
+            ShareEntryCommand = new Command<Feature>(async (feature) => await ShareFeature(feature));
 
             Title = "My Features";
         }
 
-
+        public async Task ShareFeature(Feature feature)
+        {
+            ShareFileRequest share = new ShareFileRequest
+            {
+                Title = "Share Feature",
+                File = new ShareFile(await FeatureHelper.ExportFeatures(feature), "application/json")
+            };
+            share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? new System.Drawing.Rectangle(0, 20, 0, 0) : System.Drawing.Rectangle.Empty;
+            await Share.RequestAsync(share);
+        }
 
         /// <summary>
         /// Shows native share sheet that exports all features.
@@ -101,7 +111,7 @@ namespace Groundsman.ViewModels
 
             shakeService.Start();
             await FeatureStore.DeleteItem(feature);
-            FeatureList.Remove(feature);
+            await FeatureStore.GetItemsAsync();
 
             IsBusy = false;
         }

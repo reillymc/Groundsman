@@ -24,7 +24,6 @@ namespace Groundsman.ViewModels
         public ICommand AddPropertyCommand { get; set; }
         public ICommand DeletePropertyCommand { get; set; }
 
-        private readonly GeoJSONType GeometryType;
         private readonly Dictionary<string, object> HiddenProperties = new Dictionary<string, object>();
 
         public ObservableCollection<Property> Properties { get; set; } = new ObservableCollection<Property>();
@@ -97,6 +96,8 @@ namespace Groundsman.ViewModels
 
             GeometryType = feature.Geometry.Type;
 
+            IsExistingFeature = true;
+
             int index = 1;
             switch (feature.Geometry.Type)
             {
@@ -151,6 +152,7 @@ namespace Groundsman.ViewModels
             }
 
             InitCommandBindings();
+            UpdateMap();
         }
 
         /// <summary>
@@ -164,6 +166,14 @@ namespace Groundsman.ViewModels
             AddPropertyCommand = new Command(() => Properties.Add(new Property("", "")));
             DeletePropertyCommand = new Command<Property>((item) => Properties.Remove(item));
 
+        }
+
+        public override async Task DeleteDismiss()
+        {
+            shakeService.Start();
+            await NavigationService.NavigateBack(true);
+            await FeatureStore.DeleteItem(Feature);
+            await FeatureStore.GetItemsAsync();
         }
 
         public override async Task ShareFeature(View element)
@@ -224,6 +234,7 @@ namespace Groundsman.ViewModels
                 Positions.Add(new DisplayPosition((Positions.Count + 1).ToString(), "", "", ""));
                 NumPointFields++;
             }
+            UpdateMap();
             IsBusy = false;
         }
 
@@ -257,6 +268,7 @@ namespace Groundsman.ViewModels
                 Positions[i].Index = (i + 1).ToString();
             }
             NumPointFields--;
+            UpdateMap();
             IsBusy = false;
         }
 

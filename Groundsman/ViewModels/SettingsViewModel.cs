@@ -51,6 +51,12 @@ namespace Groundsman.ViewModels
             set => Preferences.Set(Constants.ShakeToUndoKey, value);
         }
 
+        public bool EnableMapPreview
+        {
+            get => Preferences.Get(Constants.MapPreviewKey, true);
+            set => Preferences.Set(Constants.MapPreviewKey, value);
+        }
+
         public int LoggerExportFormat
         {
             get => Preferences.Get(Constants.LoggerExportFormatKey, Constants.LoggerExportFormatDefaultValue);

@@ -97,8 +97,11 @@ namespace Groundsman.ViewModels
             };
             DateEntry = DateTime.Now.ToShortDateString();
 
+            GeometryType = GeoJSONType.LineString;
+
             InitCommands();
             HandleMessages();
+            UpdateMap();
         }
 
         public EditLogFeatureViewModel(Feature Log)
@@ -108,6 +111,9 @@ namespace Groundsman.ViewModels
             Title = NameEntry = Log.Name;
             DateEntry = Log.Date;
             Feature.Id = Log.Id;
+
+            GeometryType = GeoJSONType.LineString;
+            IsExistingFeature = true;
 
 
             object test = Log.Properties[Constants.LogTimestampsProperty];
@@ -127,6 +133,7 @@ namespace Groundsman.ViewModels
             OldLogFeature = new Feature(Log.Geometry, Log.Properties);
             InitCommands();
             HandleMessages();
+            UpdateMap();
         }
 
         private void InitCommands()
@@ -210,6 +217,14 @@ namespace Groundsman.ViewModels
             {
                 await Application.Current.MainPage.DisplayAlert("Unable To Save Log", $"{e.Message}.", "Ok");
             }
+        }
+
+        public override async Task DeleteDismiss()
+        {
+            shakeService.Start();
+            await NavigationService.NavigateBack(true);
+            await FeatureStore.DeleteItem(Feature);
+            await FeatureStore.GetItemsAsync();
         }
 
         private async Task<int> SaveLog(bool reset = false)
