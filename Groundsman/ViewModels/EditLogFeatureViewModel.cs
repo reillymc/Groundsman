@@ -97,6 +97,8 @@ namespace Groundsman.ViewModels
             };
             DateEntry = DateTime.Now.ToShortDateString();
 
+            GeometryType = GeoJSONType.LineString;
+
             InitCommands();
             HandleMessages();
         }
@@ -109,6 +111,7 @@ namespace Groundsman.ViewModels
             DateEntry = Log.Date;
             Feature.Id = Log.Id;
 
+            GeometryType = GeoJSONType.LineString;
             IsExistingFeature = true;
 
 

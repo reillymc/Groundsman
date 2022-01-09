@@ -72,5 +72,54 @@ namespace Groundsman.Models
             }
             return false;
         }
+
+        public Position GetCenterPosition()
+        {
+            List<Position> polyline = (List<Position>)Coordinates;
+            Position centerPosition = new Position(0, 0);
+
+            if (polyline.Count > 0)
+            {
+                double avgLat = 0;
+                double avgLng = 0;
+
+                foreach (var point in polyline)
+                {
+                    avgLat += point.Latitude;
+                    avgLng += point.Longitude;
+                }
+
+                avgLat /= polyline.Count();
+                avgLng /= polyline.Count();
+
+                centerPosition = new Position(avgLng, avgLat);
+            }
+            return centerPosition;
+        }
+
+        public Position GetSpan()
+        {
+            List<Position> polyline = (List<Position>)Coordinates;
+            Position spanPosition = new Position(0, 0);
+
+            if (polyline.Count > 0)
+            {
+                double minLng = 180;
+                double maxLng = -180;
+                double minLat = 90;
+                double maxLat = -90;
+
+                foreach (var point in polyline)
+                {
+                    minLng = Math.Min(point.Longitude, minLng);
+                    maxLng = Math.Max(point.Longitude, maxLng);
+                    minLat = Math.Min(point.Latitude, minLat);
+                    maxLat = Math.Max(point.Latitude, maxLat);
+                }
+
+                spanPosition = new Position((maxLng - minLng) * 1.6, (maxLat - minLat) * 1.6);
+            }
+            return spanPosition;
+        }
     }
 }
