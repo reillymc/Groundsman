@@ -14,16 +14,9 @@
 		<PackageReference Include="Xamarin.Forms.Maps" Version="5.0.0.2291" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Remove="log.csv" />
-		<None Remove="locations_empty.json" />
-	</ItemGroup>
-	<ItemGroup>
 		<Folder Include="Behaviors\" />
 		<Folder Include="JSONConverters\" />
 		<Folder Include="Controls\" />
-	</ItemGroup>
-	<ItemGroup>
-		<Compile Remove="ViewModels\GoogleMapViewModel.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="Views\EditFeatureView.xaml.cs">

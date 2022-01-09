@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Groundsman.Misc;
 using Groundsman.Models;
+using Groundsman.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -48,7 +49,6 @@ namespace Groundsman.ViewModels
             Map = new PreviewMap
             {
                 InputTransparent = true,
-
             };
 
             if (!Preferences.Get(Constants.MapPreviewKey, true))
@@ -87,17 +87,29 @@ namespace Groundsman.ViewModels
 
         public void CenterMap(Position position, Position span)
         {
+            if (position == null || span == null) return;
             Map.MoveToRegion(new MapSpan(new XFMPosition(position.Latitude, position.Longitude), span.Latitude, span.Longitude));
         }
 
-        public void UpdateMap()
+        public async void UpdateMap()
         {
             if (!Preferences.Get(Constants.MapPreviewKey, true)) return;
 
             Map.MapElements.Clear();
             Map.Pins.Clear();
 
-            Position centerPosition = new Position(0, 0);
+            Position centerPosition;
+
+            try
+            {
+                centerPosition = await HelperServices.GetGeoLocation();
+            }
+            catch
+            {
+                centerPosition = new Position(0, 0);
+            }
+
+
             Position spanPosition = new Position(0.01, 0.01);
 
             if (Positions.Count > 0)
@@ -131,6 +143,7 @@ namespace Groundsman.ViewModels
                 {
                 }
             }
+
             CenterMap(centerPosition, spanPosition);
         }
 
@@ -140,7 +153,8 @@ namespace Groundsman.ViewModels
 
         public abstract Task CancelDismiss();
 
-        public abstract void AnyDismiss();
+        public abstract void OnAppear();
+        public abstract void OnDisappear();
         public abstract Task DeleteDismiss();
     }
 }

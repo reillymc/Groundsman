@@ -100,7 +100,6 @@ namespace Groundsman.ViewModels
             GeometryType = GeoJSONType.LineString;
 
             InitCommands();
-            HandleMessages();
             UpdateMap();
         }
 
@@ -132,21 +131,26 @@ namespace Groundsman.ViewModels
 
             OldLogFeature = new Feature(Log.Geometry, Log.Properties);
             InitCommands();
-            HandleMessages();
             UpdateMap();
         }
 
         private void InitCommands()
         {
-            ToggleButtonClickCommand = new Command(() => { ToggleLogging(); });
-            ClearButtonClickCommand = new Command(() => { Positions.Clear(); OrderedPositions.Clear(); });
+            ToggleButtonClickCommand = new Command(() => ToggleLogging());
+            ClearButtonClickCommand = new Command(() =>  ClearLog());
+        }
+
+        public void ClearLog()
+        {
+            Positions.Clear();
+            OrderedPositions.Clear();
+            UpdateMap();
         }
 
         public override async Task CancelDismiss()
         {
             try
             {
-                Unsubscribe();
                 if (isLogging)
                 {
                     ToggleLogging();
@@ -158,13 +162,18 @@ namespace Groundsman.ViewModels
             await OnDismiss(true);
         }
 
-        public override void AnyDismiss()
+        public override void OnDisappear()
         {
             Unsubscribe();
             if (isLogging)
             {
                 ToggleLogging();
             }
+        }
+
+        public override void OnAppear()
+        {
+            Subscribe();
         }
 
         public void ToggleLogging()
@@ -201,7 +210,6 @@ namespace Groundsman.ViewModels
         {
             try
             {
-                Unsubscribe();
                 if (isLogging)
                 {
                     ToggleLogging();
@@ -302,7 +310,7 @@ namespace Groundsman.ViewModels
             IsBusy = false;
         }
 
-        private void HandleMessages()
+        private void Subscribe()
         {
             MessagingCenter.Subscribe<DisplayPosition>(this, "Location", message =>
             {
@@ -330,7 +338,7 @@ namespace Groundsman.ViewModels
 
         public void Unsubscribe()
         {
-            MessagingCenter.Unsubscribe<Position>(this, "Location");
+            MessagingCenter.Unsubscribe<DisplayPosition>(this, "Location");
             MessagingCenter.Unsubscribe<StopServiceMessage>(this, "ServiceStopped");
             MessagingCenter.Unsubscribe<StartServiceMessage>(this, "ServiceStarted");
             MessagingCenter.Unsubscribe<LocationErrorMessage>(this, "LocationError");

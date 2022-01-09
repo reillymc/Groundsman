@@ -311,7 +311,12 @@ namespace Groundsman.ViewModels
             await OnDismiss(true);
         }
 
-        public override void AnyDismiss()
+        public override void OnDisappear()
+        {
+            return;
+        }
+
+        public override void OnAppear()
         {
             return;
         }
