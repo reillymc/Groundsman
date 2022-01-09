@@ -10,6 +10,7 @@ namespace Groundsman.Interfaces
         ObservableCollection<Feature> FeatureList { get; }
 
         Task<int> SaveItem(T item);
+        Task<int> SaveItems(IEnumerable<T> item);
         Task<int> DeleteItem(T item);
         Task<int> ClearItems();
         Task<int> ImportRawContents(string contents);

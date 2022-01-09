@@ -281,7 +281,7 @@ namespace Groundsman.ViewModels
                 int saveSuccess = await FeatureStore.SaveItem(Feature);
                 if (saveSuccess > 0)
                 {
-                    await FeatureStore.GetItemsAsync();
+                    _ = await FeatureStore.GetItemsAsync();
                     await NavigationService.NavigateBack(true);
                 }
                 else

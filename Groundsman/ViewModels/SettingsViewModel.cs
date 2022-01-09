@@ -39,7 +39,10 @@ namespace Groundsman.ViewModels
         public int ListOrdering
         {
             get => Preferences.Get(Constants.ListOrderingKey, Constants.DefaultListOrderingValue);
-            set => Preferences.Set(Constants.ListOrderingKey, value);
+            set {
+                Preferences.Set(Constants.ListOrderingKey, value);
+                _ = FeatureStore.GetItemsAsync();
+                }
         }
 
         public bool EnableShakeToUndo

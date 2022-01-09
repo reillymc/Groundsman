@@ -45,7 +45,7 @@ namespace Groundsman
             // If the user ID hasn't been set yet, prompt the user to create one upon app launch.
             if (Constants.FirstRun)
             {
-                _ = NavigationService.PushWelcomePage();
+                _ = FirstRun();
             }
 
             _ = ImportLegacyFeatureList();
@@ -121,6 +121,13 @@ namespace Groundsman
                     await NavigationService.ShowAlert("Recovery Error", ex.Message, false);
                 }
             }
+        }
+
+        public async Task FirstRun()
+        {
+            await NavigationService.PushWelcomePage();
+            _ = await FeatureStore.SaveItems(Constants.DefaultFeatures);
+            _ = await FeatureStore.GetItemsAsync();
         }
     }
 }

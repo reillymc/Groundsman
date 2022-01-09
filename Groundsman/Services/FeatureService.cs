@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -49,6 +50,8 @@ namespace Groundsman.Services
         /// <returns>Number of items deleted</returns>
         public Task<int> DeleteItem(Feature feature)
         {
+            using StreamWriter writer = new StreamWriter(File.Create(Constants.DELETED_FEATURE_FILE));
+            writer.Write(JsonConvert.SerializeObject(feature));
             return App.Database.DeleteFeature(feature.Id);
         }
 
