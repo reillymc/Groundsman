@@ -9,7 +9,7 @@
             <StackLayout.BackgroundColor>
                 <OnPlatform x:TypeArguments="Color"
                             Android="{StaticResource greenPrimary}"
-                            iOS="{StaticResource Foreground}" />
+                            iOS="{StaticResource Background}" />
             </StackLayout.BackgroundColor>
             <Grid Margin="15,7,15,0" ColumnDefinitions="Auto,*,70">
                 <Button Grid.Column="0"
@@ -63,7 +63,6 @@
                     </Button.Text>
                 </Button>
             </Grid>
-            <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
         </StackLayout>
     </ContentView.Content>
 </ContentView>
