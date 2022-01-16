@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -25,17 +24,21 @@ namespace Groundsman.ViewModels
         public ICommand ShareButtonClickCommand { get; set; }
         public ICommand GetFeatureCommand { get; set; }
         public ICommand DeleteFeatureCommand { get; set; }
+        public ICommand AddPropertyCommand { get; set; }
+        public ICommand DeletePropertyCommand { get; set; }
 
-        public GeoJSONType GeometryType;
+        public GeoJSONType GeometryType { get; set; }
 
         public readonly Feature Feature = new Feature { Type = GeoJSONType.Feature };
         public ObservableCollection<DisplayPosition> Positions { get; set; } = new ObservableCollection<DisplayPosition>();
+        public ObservableCollection<Property> Properties { get; set; } = new ObservableCollection<Property>();
 
         public bool IsExistingFeature { get; set; } = false;
+        public bool ShowLogEditor { get; set; } = false;
         public bool ShowMapPreview { get; set; } = true;
 
         public string NameEntry { get; set; }
-        public string DateEntry { get; set; }
+        public DateTime DateEntry { get; set; }
 
         public PreviewMap Map { get; private set; }
 
@@ -45,6 +48,8 @@ namespace Groundsman.ViewModels
             ShareButtonClickCommand = new Command<View>(async (view) => await ShareFeature(view));
             OnCancelTappedCommand = new Command(async () => await CancelDismiss());
             DeleteFeatureCommand = new Command(async () => await DeleteDismiss());
+            AddPropertyCommand = new Command(() => Properties.Add(new Property("", "")));
+            DeletePropertyCommand = new Command<Property>((item) => Properties.Remove(item));
 
             Map = new PreviewMap
             {

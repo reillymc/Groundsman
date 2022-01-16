@@ -1,5 +1,4 @@
 ﻿using Groundsman.Models;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,7 +42,7 @@ namespace Groundsman.Misc
         private static async Task SaveFeaturesToFile(Feature item, string fileName)
         {
             using StreamWriter writer = new StreamWriter(File.Create(fileName));
-            await writer.WriteAsync(JsonConvert.SerializeObject(item));
+            await writer.WriteAsync(GeoJSONObject.ExportGeoJSON(item, true));
         }
 
         /// <summary>
@@ -55,7 +54,7 @@ namespace Groundsman.Misc
         {
             FeatureCollection geoJSONObject = new FeatureCollection(items);
             using StreamWriter writer = new StreamWriter(File.Create(FileName));
-            await writer.WriteAsync(JsonConvert.SerializeObject(geoJSONObject));
+            await writer.WriteAsync(GeoJSONObject.ExportGeoJSON(geoJSONObject));
         }
 
 
@@ -76,48 +75,6 @@ namespace Groundsman.Misc
                 default:
                     throw new ArgumentException($"Could not save unsupported feature of type {GeometryType}", GeometryType.ToString());
             }
-        }
-
-        public static Dictionary<string, object> GetValidatedProperties(IList<Property> Properties, Dictionary<string, object> HiddenProperties)
-        {
-            Dictionary<string, object> FinalProperties = new Dictionary<string, object>(HiddenProperties);
-            //IEnumerable<Property> OrderedFeatureProperties = FeatureProperties.OrderBy(property => property.Key); can allow for ordering later
-            foreach (Property property in Properties)
-            {
-                if (!string.IsNullOrEmpty(property.Key.ToString()))
-                {
-                    try
-                    {
-                        switch (property.Type)
-                        {
-                            case 0:
-                                FinalProperties[property.Key] = property.Value;
-                                break;
-                            case 1:
-                                int intValue = Convert.ToInt16(property.Value);
-                                FinalProperties[property.Key] = intValue;
-                                break;
-                            case 2:
-                                float floatValue = Convert.ToSingle(property.Value);
-                                FinalProperties[property.Key] = floatValue;
-                                break;
-                            case 3:
-                                bool boolValue = Convert.ToBoolean(property.Value);
-                                FinalProperties[property.Key] = boolValue;
-                                break;
-                            default:
-                                throw new ArgumentException($"Could not save unsupported property '{property.Key}' of type {property.Type}", property.Type.ToString());
-                        }
-                    }
-
-                    catch
-                    {
-                        throw new ArgumentException($"{property.Key} '{property.Value}' is incorrectly formatted.", property.Key);
-                    }
-
-                }
-            }
-            return FinalProperties;
         }
     }
 }

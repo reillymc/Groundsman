@@ -1,0 +1,18 @@
+﻿    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          153.02830696105957,
+          -27.477188166276989
+        ]
+      },
+      "properties": {
+        "author": "Groundsman",
+        "Default String Property": "This is a sample point",
+        "Default Integer Property": 3,
+        "Default Float Property": 3.3,
+        "favourite": true,
+        "name": "Sample Point"
+      }
+    }

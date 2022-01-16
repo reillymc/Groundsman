@@ -51,7 +51,7 @@ namespace Groundsman.Services
         public Task<int> DeleteItem(Feature feature)
         {
             using StreamWriter writer = new StreamWriter(File.Create(Constants.DELETED_FEATURE_FILE));
-            writer.Write(JsonConvert.SerializeObject(feature));
+            writer.Write(GeoJSONObject.ExportGeoJSON(feature));
             return App.Database.DeleteFeature(feature.Id);
         }
 

@@ -23,11 +23,6 @@ namespace Groundsman.ViewModels
 
         public bool isLogging;
 
-        public bool isLogLine { get; set; } = true;
-        public bool isRegularFeature { get; set; } = false;
-        public bool ShowAddButton { get; set; } = false;
-        public bool ShowClosePolygon { get; set; } = false;
-
         private bool _ScrollEnabled = true;
         public bool ScrollEnabled
         {
@@ -91,13 +86,17 @@ namespace Groundsman.ViewModels
         {
             Title = "New Log Line";
 
-            Feature.Properties = new Dictionary<string, object>
-            {
-                [Constants.IdentifierProperty] = Constants.NewFeatureID
-            };
-            DateEntry = DateTime.Now.ToShortDateString();
+            Feature.Properties = new Dictionary<string, object>();
+
+            Properties.Add(new Property("String Property", string.Empty, 0));
+            Properties.Add(new Property("Integer Property", null, 1));
+            Properties.Add(new Property("Float Property", null, 2));
+
+            DateEntry = DateTime.Now;
 
             GeometryType = GeoJSONType.LineString;
+
+            ShowLogEditor = true;
 
             InitCommands();
             UpdateMap();
@@ -105,13 +104,12 @@ namespace Groundsman.ViewModels
 
         public EditLogFeatureViewModel(Feature Log)
         {
-            Feature.Geometry = Log.Geometry;
-            Feature.Properties = Log.Properties;
             Title = NameEntry = Log.Name;
             DateEntry = Log.Date;
             Feature.Id = Log.Id;
 
             GeometryType = GeoJSONType.LineString;
+
             IsExistingFeature = true;
 
 
@@ -129,7 +127,18 @@ namespace Groundsman.ViewModels
                 index++;
             }
 
+            foreach (KeyValuePair<string, object> property in Log.Properties)
+            {
+                if (!Constants.GroundsmanProperties.Contains(property.Key))
+                {
+                    Properties.Add(Property.FromObject(property.Key.ToString(), property.Value));
+                }
+            }
+
             OldLogFeature = new Feature(Log.Geometry, Log.Properties);
+
+            ShowLogEditor = true;
+
             InitCommands();
             UpdateMap();
         }
@@ -137,7 +146,7 @@ namespace Groundsman.ViewModels
         private void InitCommands()
         {
             ToggleButtonClickCommand = new Command(() => ToggleLogging());
-            ClearButtonClickCommand = new Command(() =>  ClearLog());
+            ClearButtonClickCommand = new Command(() => ClearLog());
         }
 
         public void ClearLog()
@@ -248,15 +257,13 @@ namespace Groundsman.ViewModels
                 posList.Add(new Position(displayPosition));
             }
 
-            Feature.Geometry = new LineString(posList);
-            Feature.Name = NameEntry ?? "Log LineString";
-            Feature.Date = DateTime.Parse(DateEntry).ToShortDateString();
-            Feature.Author = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
+            var id = Feature.Id;
 
-            if (Feature.Id == null)
-            {
-                Feature.Id = Guid.NewGuid().ToString();
-            }
+            Feature.Id = id ?? Guid.NewGuid().ToString();
+            Feature.Geometry = new LineString(posList);
+            Feature.Date = DateEntry;
+            Feature.Author = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
+            Feature.Name = NameEntry ?? "Log LineString";
             Feature.Properties[Constants.LogTimestampsProperty] = DateTimeList.ToArray();
 
             return await FeatureStore.SaveItem(Feature);

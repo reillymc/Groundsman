@@ -21,5 +21,15 @@ namespace Groundsman.Models
         /// <param name="json">GeoJSON to import</param>
         /// <returns>A valid GeoJSONObject</returns>
         public static GeoJSONObject ImportGeoJSON(string json) => JsonConvert.DeserializeObject<GeoJSONObject>(json);
+
+        /// <summary>
+        /// Export a GeoJSON object to serialised string.
+        /// </summary>
+        /// <param name="geoJSONObject">GeoJSON object to export</param>
+        /// <returns>A serialised string</returns>
+        public static string ExportGeoJSON(GeoJSONObject geoJSONObject, bool stripBlobbedObjects = false) => stripBlobbedObjects
+            ? JsonConvert.SerializeObject(geoJSONObject, new JsonSerializerSettings { ContractResolver = new DynamicContractResolver("PropertiesBlobbed", "GeometryBlobbed") })
+            : JsonConvert.SerializeObject(geoJSONObject);
+
     }
 }

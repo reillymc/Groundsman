@@ -15,5 +15,22 @@ namespace Groundsman.Models
 
         [JsonConstructor]
         public Point(Position coordinates) : base(GeoJSONType.Point) => Coordinates = coordinates ?? throw new ArgumentNullException(nameof(coordinates), "A Point must have coordinates.");
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if ((obj == null) || !GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                Point comparePoint = (Point)obj;
+                return Coordinates.Equals(comparePoint.Coordinates);
+            }
+        }
     }
 }

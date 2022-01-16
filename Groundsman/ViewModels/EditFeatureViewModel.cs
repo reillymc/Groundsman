@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -21,18 +20,6 @@ namespace Groundsman.ViewModels
     {
         public ICommand AddPointCommand { get; set; }
         public ICommand DeletePointCommand { get; set; }
-        public ICommand AddPropertyCommand { get; set; }
-        public ICommand DeletePropertyCommand { get; set; }
-
-        private readonly Dictionary<string, object> HiddenProperties = new Dictionary<string, object>();
-
-        public ObservableCollection<Property> Properties { get; set; } = new ObservableCollection<Property>();
-
-        public bool ShowAddButton { get; set; }
-        public bool ShowClosePolygon { get; set; }
-
-        public bool isLogLine { get; set; } = false;
-        public bool isRegularFeature { get; set; } = true;
 
         private int _NumPointFields;
         public int NumPointFields
@@ -52,29 +39,23 @@ namespace Groundsman.ViewModels
         {
             GeometryType = geometryType;
 
-            HiddenProperties.Add(Constants.IdentifierProperty, Constants.NewFeatureID);
+            Title = $"New {geometryType}";
 
             Properties.Add(new Property("String Property", string.Empty, 0));
             Properties.Add(new Property("Integer Property", null, 1));
             Properties.Add(new Property("Float Property", null, 2));
 
-            DateEntry = DateTime.Now.ToShortDateString();
+            DateEntry = DateTime.Now;
 
             switch (geometryType)
             {
                 case GeoJSONType.Point:
-                    Title = "New Point";
                     AddPoint(1);
                     break;
                 case GeoJSONType.LineString:
-                    Title = "New Line";
-                    ShowAddButton = true;
                     AddPoint(2);
                     break;
                 case GeoJSONType.Polygon:
-                    Title = "New Polygon";
-                    ShowAddButton = true;
-                    ShowClosePolygon = true;
                     AddPoint(3);
                     break;
                 default:
@@ -91,7 +72,7 @@ namespace Groundsman.ViewModels
         public EditFeatureViewModel(Feature feature)
         {
             Title = NameEntry = feature.Name;
-            DateEntry = (string)feature.Date;
+            DateEntry = feature.Date;
             Feature.Id = feature.Id;
 
             GeometryType = feature.Geometry.Type;
@@ -112,7 +93,6 @@ namespace Groundsman.ViewModels
                         Positions.Add(new DisplayPosition(index.ToString(), pos));
                         index++;
                     }
-                    ShowAddButton = true;
                     break;
                 case GeoJSONType.Polygon:
                     Polygon polygon = (Polygon)feature.Geometry;
@@ -130,8 +110,6 @@ namespace Groundsman.ViewModels
                     {
                         Positions.RemoveAt(Positions.Count - 1);
                     }
-                    ShowAddButton = true;
-                    ShowClosePolygon = true;
                     break;
                 default:
                     throw new ArgumentException("Feature type not supported", feature.Type.ToString());
@@ -141,13 +119,9 @@ namespace Groundsman.ViewModels
 
             foreach (KeyValuePair<string, object> property in feature.Properties)
             {
-                if (property.Key != Constants.AuthorProperty && property.Key != Constants.NameProperty && property.Key != Constants.IdentifierProperty && property.Key != Constants.DateProperty && property.Key != Constants.LogTimestampsProperty)
+                if (!Constants.GroundsmanProperties.Contains(property.Key))
                 {
                     Properties.Add(Property.FromObject(property.Key.ToString(), property.Value));
-                }
-                else
-                {
-                    HiddenProperties.Add(property.Key, property.Value);
                 }
             }
 
@@ -163,9 +137,6 @@ namespace Groundsman.ViewModels
             GetFeatureCommand = new Command<DisplayPosition>(async (point) => { await GetDataPoint(point); });
             AddPointCommand = new Command(() => AddPoint(1));
             DeletePointCommand = new Command<DisplayPosition>((item) => DeletePoint(item));
-            AddPropertyCommand = new Command(() => Properties.Add(new Property("", "")));
-            DeletePropertyCommand = new Command<Property>((item) => Properties.Remove(item));
-
         }
 
         public override async Task DeleteDismiss()
@@ -280,16 +251,15 @@ namespace Groundsman.ViewModels
             if (IsBusy) return;
             IsBusy = true;
 
-            if (await ValidateGeometry() && await ValidateProperties())
+            var id = Feature.Id;
+
+            if (await ValidateGeometry())
             {
+                Feature.Id = id ?? Guid.NewGuid().ToString();
                 Feature.Name = !string.IsNullOrEmpty(NameEntry) ? NameEntry : Feature.Geometry.Type.ToString();
-                Feature.Date = DateTime.Parse(DateEntry).ToShortDateString();
+                Feature.Date = DateEntry;
                 Feature.Author = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
 
-                if (Feature.Id == null)
-                {
-                    Feature.Id = Guid.NewGuid().ToString();
-                }
                 int saveSuccess = await FeatureStore.SaveItem(Feature);
                 if (saveSuccess > 0)
                 {
@@ -298,7 +268,7 @@ namespace Groundsman.ViewModels
                 }
                 else
                 {
-                    await NavigationService.ShowAlert("Save Failed", "Please check all of your entries are valid", false);
+                    await NavigationService.ShowAlert("Save Failed", $"Please check all of your entries are valid", false); // TODO catch property errors
                 }
                 IsBusy = false;
                 return;
@@ -330,20 +300,6 @@ namespace Groundsman.ViewModels
             catch (Exception ex)
             {
                 await NavigationService.ShowAlert("Invalid Feature Geometry", $"{ex.Message}", false);
-                return false;
-            }
-            return true;
-        }
-
-        private async Task<bool> ValidateProperties()
-        {
-            try
-            {
-                Feature.Properties = FeatureHelper.GetValidatedProperties(Properties, HiddenProperties);
-            }
-            catch (Exception ex)
-            {
-                await NavigationService.ShowAlert("Invalid Feature Properties", $"{ex.Message}", false);
                 return false;
             }
             return true;

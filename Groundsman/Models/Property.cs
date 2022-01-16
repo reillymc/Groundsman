@@ -4,14 +4,14 @@ namespace Groundsman.Models
 {
     public enum PropertyType
     {
-        String, Integer, Float, Bool
+        String, Integer, Float, Boolean
     }
 
     public class Property
     {
         public string Key { get; set; }
+        public int Type { get; set; } // TODO: use or remove propertytype
         public object Value { get; set; }
-        public int Type { get; set; }
 
         public Property(string key, object value, int type = 0)
         {
@@ -42,5 +42,4 @@ namespace Groundsman.Models
             }
         }
     }
-
 }

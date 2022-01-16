@@ -25,7 +25,7 @@ namespace Groundsman
         public const string GPSPrecisionKey = "GPSPrecision";
         public const string DecimalAccuracyKey = "DecimalAccuracy";
         public const string ListOrderingKey = "ListOrdering";
-        public const string ShakeToUndoKey = "EnableShakeToUndo"; 
+        public const string ShakeToUndoKey = "EnableShakeToUndo";
         public const string MapPreviewKey = "MapPreview";
         public const string MapDrawPointsKey = "ShowPointsOnMap";
         public const string MapDrawLinesKey = "ShowLinesOnMap";
@@ -40,8 +40,9 @@ namespace Groundsman
         public const string AuthorProperty = "author";
         public const string LogTimestampsProperty = "timestamps";
 
+        public static string[] GroundsmanProperties = new string[] { IdentifierProperty, NameProperty, DateProperty, AuthorProperty, LogTimestampsProperty };
+
         // Feature property values
-        public const string NewFeatureID = "-1";
         public const string DefaultUserValue = "Groundsman";
         public const int DefaultGPSPrecisionValue = 2;
         public const int DefaultDecimalAccuracyValue = 6;
@@ -129,7 +130,9 @@ namespace Groundsman
                      },
                  }
              ),
-             new Feature(new Point(new Position(153.028307, -27.477188)), new Dictionary <string, object> () {
+             new Feature(
+                 new Point(new Position(153.028307, -27.477188)),
+                 new Dictionary <string, object> () {
                  {
                      "name",
                      "Sample Point"

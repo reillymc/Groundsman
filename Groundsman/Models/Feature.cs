@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Groundsman.JSONConverters;
 using Newtonsoft.Json;
@@ -15,84 +16,149 @@ namespace Groundsman.Models
     [JsonConverter(typeof(DummyConverter))]
     public class Feature : GeoJSONObject
     {
+        // Safe property accessors for feature properties used directly by Groundsman.
+        // TODO: move validation checks to these properties
         [PrimaryKey]
         [JsonIgnore]
-        public string Id { get; set; }
+        public string Id
+        {
+            get
+            {
+                if (Properties.TryGetValue(Constants.IdentifierProperty, out object value)) return (string)value;
+                var newId = Guid.NewGuid().ToString();
+                Properties[Constants.IdentifierProperty] = newId;
+                return newId;
+            }
+            set => Properties[Constants.IdentifierProperty] = value;
+        }
 
         [JsonIgnore]
-        public string Name { get; set; }
+        public string Name
+        {
+            get
+            {
+                if (Properties.TryGetValue(Constants.NameProperty, out object value)) return (string)value;
+                if (Geometry != null) return Geometry.Type.ToString();
+                return "Feature";
+            }
+            set => Properties[Constants.NameProperty] = value;
+        }
 
         [JsonIgnore]
-        public string Date { get; set; }
+        public DateTime Date
+        {
+            get
+            {
+                if (Properties.TryGetValue(Constants.DateProperty, out object value) && DateTime.TryParseExact((string)value, "d/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date)) return date;
+                return DateTime.Now;
+            }
+            set
+            {
+                Properties[Constants.DateProperty] = value.ToShortDateString();
+            }
+        }
 
         [JsonIgnore]
-        public string Author { get; set; }
+        public string Author
+        {
+            get => Properties.TryGetValue(Constants.AuthorProperty, out object value) ? (string)value : Constants.DefaultUserValue;
+            set
+            {
+                if (value.Length > 30)
+                {
+                    Properties[Constants.AuthorProperty] = value.Substring(0, 30);
+                }
+                else
+                {
+                    Properties[Constants.AuthorProperty] = value;
+                }
+            }
+        }
 
+        // Feature geomtery data. Stored as blobbed JSON internally by Groundsman but converted to Geometry object when read in.
         [TextBlob(nameof(GeometryBlobbed))]
         [JsonProperty(PropertyName = "geometry", Order = 2)]
         public Geometry Geometry { get; set; }
-        public string GeometryBlobbed { get; set; } // serialized Geometry
+        public string GeometryBlobbed { get; set; }
 
+        // Feature properties data. Stored as blobbed JSON internally by Groundsman but converted to Geometry object when read in.
         [TextBlob(nameof(PropertiesBlobbed))]
         [JsonProperty(PropertyName = "properties", Order = 3), JsonConverter(typeof(PropertiesConverter<string, object>))]
         public IDictionary<string, object> Properties { get; set; }
         public string PropertiesBlobbed { get; set; } // serialized Properties
 
+
         [JsonConstructor]
         public Feature(Geometry geometry = null, IDictionary<string, object> properties = null) : base(GeoJSONType.Feature)
         {
-            Id = Guid.NewGuid().ToString();
 
             Geometry = geometry;
 
-            Date = DateTime.Now.ToShortDateString();
+            Properties = new Dictionary<string, object>();
 
-            Properties = properties ?? new Dictionary<string, object>();
-
-            // If author ID hasn't been set on the feature, default it to the user's ID.
-            string author = "Unknown";
-            if (Properties.ContainsKey(Constants.AuthorProperty))
+            foreach (var property in properties)
             {
-                author = (string)Properties[Constants.AuthorProperty];
-                if (author.Length > 30)
-                {
-                    author = author.Substring(0, 30);
-                }
-            }
-            Author = author;
+                if (string.IsNullOrEmpty(property.Key.ToString())) break;
 
-            // Add default name if empty
-            string name = Geometry.Type.ToString();
-            if (Properties.ContainsKey(Constants.NameProperty))
-            {
-                name = (string)Properties[Constants.NameProperty];
-                if (name.Length > 30)
+                try
                 {
-                    name = name.Substring(0, 30);
-                    foreach (char c in Path.GetInvalidFileNameChars())
+                    if (property.Key == Constants.IdentifierProperty) continue;
+
+                    if (property.Key == Constants.NameProperty)
                     {
-                        name = name.Replace(c, '-');
+                        string value = (string)property.Value;
+                        value = value.Length >= 20 ? value.Substring(0, 20) : value;
+                        foreach (char c in Path.GetInvalidFileNameChars())
+                        {
+                            value = value.Replace(c, '-');
+                        }
+                        Name = value;
+                        continue;
+                    }
+
+                    if (property.Key == Constants.DateProperty)
+                    {
+                        DateTime date = DateTime.Now;
+                        DateTime.TryParse((string)property.Value, out date);
+                        Date = date;
+                        continue;
+                    }
+
+                    var propertyType = property.Value.GetType();
+
+                    if (propertyType == typeof(string))
+                    {
+                        string value = (string)property.Value;
+                        Properties[property.Key] = value.Length >= 400 ? value.Substring(0, 400) : value;
+                    }
+                    else if (propertyType == typeof(int) || propertyType == typeof(long))
+                    {
+                        Properties[property.Key] = property.Value;
+                    }
+                    else if (propertyType == typeof(float) || propertyType == typeof(double))
+                    {
+                        Properties[property.Key] = property.Value;
+                    }
+                    else if (propertyType == typeof(bool))
+                    {
+                        Properties[property.Key] = property.Value;
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Could not save unsupported property '{property.Key}'");
                     }
                 }
-            }
-            Name = name;
 
-            // If the date field is missing or invalid, convert it into DateTime.Now.
-            DateTime date = DateTime.Now;
-            if (Properties.ContainsKey(Constants.DateProperty))
-            {
-                DateTime.TryParse((string)Properties[Constants.DateProperty], out date);
-            }
-            Date = date.ToShortDateString();
-
-            if (Id == null)
-            {
-                Id = Guid.NewGuid().ToString();
+                catch
+                {
+                    throw new ArgumentException($"{property.Key} '{property.Value}' is incorrectly formatted.", property.Key);
+                }
             }
         }
 
         public Feature() : base(GeoJSONType.Feature)
         {
+            Properties = new Dictionary<string, object>();
             Id = Guid.NewGuid().ToString();
         }
     }

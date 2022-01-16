@@ -31,7 +31,7 @@
                                 </Entry.Behaviors>
                             </Entry>
                             <TemplatedView ControlTemplate="{StaticResource BodySeperator}" />
-                            <DatePicker Date="{Binding DateEntry, StringFormat='{0:dd/MM/yyyy}'}"
+                            <DatePicker Date="{Binding DateEntry}"
                                         FontSize="Small"
                                         Style="{StaticResource DateEntryStyle}"
                                         VerticalOptions="Start" />
@@ -75,8 +75,15 @@
                       BackgroundColor="{DynamicResource Background}"
                       ColumnDefinitions="*,*"
                       ColumnSpacing="10"
-                      IsVisible="{Binding isLogLine}"
                       RowDefinitions="*">
+                    <Grid.Triggers>
+                          <DataTrigger TargetType="Grid" Binding="{Binding ShowLogEditor}" Value="True">
+                                  <Setter Property="IsVisible" Value="True"/>
+                          </DataTrigger>
+                          <DataTrigger TargetType="Grid" Binding="{Binding ShowLogEditor}" Value="False">
+                                  <Setter Property="IsVisible" Value="False"/>
+                          </DataTrigger>
+                    </Grid.Triggers>
                     <Frame Grid.Column="0"
                            Padding="0,10"
                            StyleClass="Base">
@@ -147,7 +154,15 @@
                             <Label Margin="10,10,0,0"
                                    Style="{StaticResource LabelTitle}"
                                    Text="Coordinates" />
-                            <Grid IsVisible="{Binding isRegularFeature}" Style="{DynamicResource DetailCoordinateGrid}">
+                            <Grid Style="{DynamicResource DetailCoordinateGrid}">
+                                <Grid.Triggers>
+                                    <DataTrigger TargetType="Grid" Binding="{Binding ShowLogEditor}" Value="True">
+                                        <Setter Property="IsVisible" Value="False"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Grid" Binding="{Binding ShowLogEditor}" Value="False">
+                                        <Setter Property="IsVisible" Value="True"/>
+                                    </DataTrigger>
+                                </Grid.Triggers>
                                 <Label Grid.Row="1"
                                        Grid.Column="0"
                                        Margin="0,9"
@@ -170,9 +185,17 @@
                                        Text="Altitude" />
                             </Grid>
                             <Label Margin="20,10,0,0"
-                                   IsVisible="{Binding isLogLine}"
                                    Style="{StaticResource LabelHeader}"
-                                   Text="Timestamp,  Longitude,  Latitude,  Altitude" />
+                                   Text="Timestamp,  Longitude,  Latitude,  Altitude">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding ShowLogEditor}" Value="True">
+                                        <Setter Property="IsVisible" Value="True"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Label" Binding="{Binding ShowLogEditor}" Value="False">
+                                        <Setter Property="IsVisible" Value="False"/>
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </StackLayout>
                     </ContentView>
                 </Grid>
@@ -187,8 +210,15 @@
                       VerticalOptions="Fill">
                     <SwipeView Grid.Row="0"
                                Grid.Column="0"
-                               IsEnabled="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.ShowAddButton}"
-                               IsVisible="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.isRegularFeature}">
+                               IsEnabled="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.ShowAddButton}">
+                        <SwipeView.Triggers>
+                            <DataTrigger TargetType="SwipeView" Binding="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.ShowLogEditor}" Value="True">
+                                <Setter Property="IsVisible" Value="False"/>
+                            </DataTrigger>
+                            <DataTrigger TargetType="SwipeView" Binding="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.ShowLogEditor}" Value="False">
+                                <Setter Property="IsVisible" Value="True"/>
+                            </DataTrigger>
+                        </SwipeView.Triggers>
                         <SwipeView.RightItems>
                             <SwipeItems Mode="Reveal">
                                 <SwipeItem BackgroundColor="{StaticResource Delete}"
@@ -246,8 +276,15 @@
                           ColumnDefinitions="Auto,Auto,Auto,Auto"
                           ColumnSpacing="5"
                           HeightRequest="10"
-                          IsVisible="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.isLogLine}"
                           Style="{DynamicResource DetailCoordinateGrid}">
+                        <Grid.Triggers>
+                            <DataTrigger TargetType="Grid" Binding="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.ShowLogEditor}" Value="True">
+                                <Setter Property="IsVisible" Value="True"/>
+                            </DataTrigger>
+                            <DataTrigger TargetType="Grid" Binding="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.ShowLogEditor}" Value="False">
+                                <Setter Property="IsVisible" Value="False"/>
+                            </DataTrigger>
+                        </Grid.Triggers>
                         <Label Grid.Row="1"
                                Grid.Column="0"
                                FontSize="Micro"
@@ -283,14 +320,25 @@
                            HasShadow="False"
                            HorizontalOptions="Fill"
                            VerticalOptions="Fill" />
-                    <Frame Margin="0,0,0,10"
+                    <Frame Margin="0,-1,0,10"
                            BackgroundColor="{DynamicResource Foreground}"
                            CornerRadius="0"
                            HasShadow="False"
                            HorizontalOptions="Fill"
-                           VerticalOptions="Fill" />
+                           VerticalOptions="FillAndExpand" />
                     <StackLayout Margin="0" Padding="0">
-                        <Grid IsVisible="{Binding ShowClosePolygon}" Style="{DynamicResource DetailCoordinateGrid}">
+                        <Grid Style="{DynamicResource DetailCoordinateGrid}">
+                            <Grid.Triggers>
+                                <DataTrigger TargetType="Grid" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.Polygon}">
+                                     <Setter Property="IsVisible" Value="True"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="Grid" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.LineString}">
+                                     <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="Grid" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.Point}">
+                                     <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </Grid.Triggers>
                             <Label Grid.Row="1"
                                    Grid.Column="0"
                                    FontSize="Small"
@@ -324,8 +372,21 @@
                                BackgroundColor="Transparent"
                                HasShadow="False"
                                HeightRequest="20"
-                               HorizontalOptions="CenterAndExpand"
-                               IsVisible="{Binding ShowAddButton}">
+                               HorizontalOptions="CenterAndExpand">
+                            <Frame.Triggers>
+                                <DataTrigger TargetType="Frame" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.Polygon}">
+                                     <Setter Property="IsVisible" Value="True"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="Frame" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.LineString}">
+                                     <Setter Property="IsVisible" Value="True"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="Frame" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.Point}">
+                                     <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="Frame" Binding="{Binding ShowLogEditor}" Value="True">
+                                     <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </Frame.Triggers>
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding AddPointCommand}" />
                             </Frame.GestureRecognizers>
@@ -345,7 +406,6 @@
                 <Frame Margin="10,10,10,10"
                        Padding="10,10,0,10"
                        HeightRequest="170"
-                       IsVisible="{Binding isRegularFeature}"
                        StyleClass="Base">
                     <StackLayout>
                         <Label Style="{StaticResource LabelTitle}" Text="Properties" />
@@ -357,6 +417,7 @@
                                         FooterTemplate="{StaticResource PropertiesFooterTemplate}"
                                         ItemTemplate="{StaticResource PropertyItemTemplate}"
                                         ItemsUpdatingScrollMode="KeepLastItemInView"
+                                        HorizontalScrollBarVisibility="Never"
                                         VerticalOptions="Start">
                             <CollectionView.ItemsLayout>
                                 <LinearItemsLayout Orientation="Horizontal"
@@ -367,7 +428,7 @@
 
                     </StackLayout>
                 </Frame>
-                <Frame Margin="10,10,10,400"
+                <Frame Margin="10"
                        BackgroundColor="{DynamicResource Foreground}"
                        HasShadow="False"
                        HeightRequest="24"
@@ -381,6 +442,17 @@
                            Style="{StaticResource FrameButtonLabel}"
                            Text="Delete"
                            TextColor="{StaticResource Delete}"/>
+                </Frame>
+                <!--Hacky fix to help avoid Xamarin's CollectionView scroll issue-->
+                <Frame HasShadow="False" BackgroundColor="Transparent"> 
+                    <Frame.Triggers>
+                          <DataTrigger TargetType="Frame" Binding="{Binding IsExistingFeature}" Value="True">
+                               <Setter Property="Margin" Value="10,10,10,320"/>
+                          </DataTrigger>
+                        <DataTrigger TargetType="Frame" Binding="{Binding IsExistingFeature}" Value="False">
+                               <Setter Property="Margin" Value="10,10,10,340"/>
+                          </DataTrigger>
+                    </Frame.Triggers>
                 </Frame>
             </StackLayout>
         </DataTemplate>
