@@ -77,7 +77,7 @@ namespace Groundsman
             }
             catch (Exception ex)
             {
-                bool result = await NavigationService.ShowAlert("Feature List Error", "Groundsman was unable to load your saved features. Would you like to export the corrupted features?", true);
+                bool result = await NavigationService.ShowAlert("Feature List Error", $"Groundsman was unable to load your saved features. ({ex.Message}) Would you like to export the corrupted features?", true);
                 if (result)
                 {
                     await Share.RequestAsync(new ShareFileRequest

@@ -23,14 +23,33 @@ namespace Groundsman.Misc
         }
 
         /// <summary>
-        /// Exports a feature to a sharefile request
+        /// Exports a feature
         /// </summary>
         /// <param name="item">Feature to export</param>
         /// <returns>Export file path</returns>
         public static async Task<string> ExportFeatures(Feature item)
         {
             string fileName = Constants.GetExportFile(item.Name, ExportType.GeoJSON);
-            await SaveFeaturesToFile(item, fileName);
+            await SaveFeaturesToFile(GeoJSONObject.ExportGeoJSON(item), fileName);
+            return fileName;
+        }
+
+        /// <summary>
+        /// Exports a log feature
+        /// </summary>
+        /// <param name="item">Feature to export</param>
+        /// <returns>Export file path</returns>
+        public static async Task<string> ExportLog(Feature item)
+        {
+            var log = (LineString)item.Geometry;
+            string logString = "Timestamp, Longitude, Latitude, Altitude\n";
+            foreach (Position position in log.Coordinates.Reverse())
+            {
+                logString += $"{position}\n";
+            }
+
+            string fileName = Constants.GetExportFile(item.Name, ExportType.CSV);
+            await SaveFeaturesToFile(logString, fileName);
             return fileName;
         }
 
@@ -39,10 +58,10 @@ namespace Groundsman.Misc
         /// </summary>
         /// <param name="item">Feature to save</param>
         /// <param name="fileName">File name to save to</param>
-        private static async Task SaveFeaturesToFile(Feature item, string fileName)
+        private static async Task SaveFeaturesToFile(string contents, string fileName)
         {
             using StreamWriter writer = new StreamWriter(File.Create(fileName));
-            await writer.WriteAsync(GeoJSONObject.ExportGeoJSON(item, true));
+            await writer.WriteAsync(contents);
         }
 
         /// <summary>
@@ -58,7 +77,7 @@ namespace Groundsman.Misc
         }
 
 
-        public static Geometry GetValidatedGeometry(IList<DisplayPosition> Positions, GeoJSONType GeometryType)
+        public static Geometry GetGeometry(IList<DisplayPosition> Positions, GeoJSONType GeometryType)
         {
             switch (GeometryType)
             {
@@ -75,6 +94,48 @@ namespace Groundsman.Misc
                 default:
                     throw new ArgumentException($"Could not save unsupported feature of type {GeometryType}", GeometryType.ToString());
             }
+        }
+
+        public static Dictionary<string, object> GetProperties(IList<Property> Properties)
+        {
+            Dictionary<string, object> FinalProperties = new Dictionary<string, object>();
+            //IEnumerable<Property> OrderedFeatureProperties = FeatureProperties.OrderBy(property => property.Key); can allow for ordering later
+            foreach (Property property in Properties)
+            {
+                if (!string.IsNullOrEmpty(property.Key.ToString()))
+                {
+                    try
+                    {
+                        switch (property.Type)
+                        {
+                            case 0:
+                                FinalProperties[property.Key] = property.Value;
+                                break;
+                            case 1:
+                                int intValue = Convert.ToInt16(property.Value);
+                                FinalProperties[property.Key] = intValue;
+                                break;
+                            case 2:
+                                float floatValue = Convert.ToSingle(property.Value);
+                                FinalProperties[property.Key] = floatValue;
+                                break;
+                            case 3:
+                                bool boolValue = Convert.ToBoolean(property.Value);
+                                FinalProperties[property.Key] = boolValue;
+                                break;
+                            default:
+                                throw new ArgumentException($"Could not save unsupported property '{property.Key}' of type {property.Type}", property.Type.ToString());
+                        }
+                    }
+
+                    catch
+                    {
+                        throw new ArgumentException($"{property.Key} '{property.Value}' is incorrectly formatted.", property.Key);
+                    }
+
+                }
+            }
+            return FinalProperties;
         }
     }
 }

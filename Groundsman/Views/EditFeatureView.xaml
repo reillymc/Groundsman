@@ -15,7 +15,7 @@
         <DataTemplate x:Key="HeaderTemplate">
             <StackLayout>
                 <!--  Details  -->
-                <Frame Padding="10,10,0,10" StyleClass="Base, DefaultMargin" Margin="10,80,10,10">
+                <Frame Padding="10,10,0,10" StyleClass="Base, DefaultMargin" Margin="10,20,10,10">
                     <Grid ColumnDefinitions="4*,*" RowDefinitions="*,Auto">
                         <Label Grid.Row="0"
                                Style="{StaticResource LabelTitle}"
@@ -77,12 +77,12 @@
                       ColumnSpacing="10"
                       RowDefinitions="*">
                     <Grid.Triggers>
-                          <DataTrigger TargetType="Grid" Binding="{Binding ShowLogEditor}" Value="True">
-                                  <Setter Property="IsVisible" Value="True"/>
-                          </DataTrigger>
-                          <DataTrigger TargetType="Grid" Binding="{Binding ShowLogEditor}" Value="False">
-                                  <Setter Property="IsVisible" Value="False"/>
-                          </DataTrigger>
+                        <DataTrigger TargetType="Grid" Binding="{Binding ShowLogEditor}" Value="True">
+                            <Setter Property="IsVisible" Value="True"/>
+                        </DataTrigger>
+                        <DataTrigger TargetType="Grid" Binding="{Binding ShowLogEditor}" Value="False">
+                            <Setter Property="IsVisible" Value="False"/>
+                        </DataTrigger>
                     </Grid.Triggers>
                     <Frame Grid.Column="0"
                            Padding="0,10"
@@ -327,18 +327,19 @@
                            HorizontalOptions="Fill"
                            VerticalOptions="FillAndExpand" />
                     <StackLayout Margin="0" Padding="0">
-                        <Grid Style="{DynamicResource DetailCoordinateGrid}">
+                        <Grid Style="{DynamicResource DetailCoordinateGrid}" RowSpacing="8">
                             <Grid.Triggers>
                                 <DataTrigger TargetType="Grid" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.Polygon}">
-                                     <Setter Property="IsVisible" Value="True"/>
+                                    <Setter Property="IsVisible" Value="True"/>
                                 </DataTrigger>
                                 <DataTrigger TargetType="Grid" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.LineString}">
-                                     <Setter Property="IsVisible" Value="False"/>
+                                    <Setter Property="IsVisible" Value="False"/>
                                 </DataTrigger>
                                 <DataTrigger TargetType="Grid" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.Point}">
-                                     <Setter Property="IsVisible" Value="False"/>
+                                    <Setter Property="IsVisible" Value="False"/>
                                 </DataTrigger>
                             </Grid.Triggers>
+                            <TemplatedView Grid.Row="0" Grid.ColumnSpan="5" ControlTemplate="{StaticResource BodySeperator}" />
                             <Label Grid.Row="1"
                                    Grid.Column="0"
                                    FontSize="Small"
@@ -375,16 +376,16 @@
                                HorizontalOptions="CenterAndExpand">
                             <Frame.Triggers>
                                 <DataTrigger TargetType="Frame" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.Polygon}">
-                                     <Setter Property="IsVisible" Value="True"/>
+                                    <Setter Property="IsVisible" Value="True"/>
                                 </DataTrigger>
                                 <DataTrigger TargetType="Frame" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.LineString}">
-                                     <Setter Property="IsVisible" Value="True"/>
+                                    <Setter Property="IsVisible" Value="True"/>
                                 </DataTrigger>
                                 <DataTrigger TargetType="Frame" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.Point}">
-                                     <Setter Property="IsVisible" Value="False"/>
+                                    <Setter Property="IsVisible" Value="False"/>
                                 </DataTrigger>
                                 <DataTrigger TargetType="Frame" Binding="{Binding ShowLogEditor}" Value="True">
-                                     <Setter Property="IsVisible" Value="False"/>
+                                    <Setter Property="IsVisible" Value="False"/>
                                 </DataTrigger>
                             </Frame.Triggers>
                             <Frame.GestureRecognizers>
@@ -444,14 +445,14 @@
                            TextColor="{StaticResource Delete}"/>
                 </Frame>
                 <!--Hacky fix to help avoid Xamarin's CollectionView scroll issue-->
-                <Frame HasShadow="False" BackgroundColor="Transparent"> 
+                <Frame HasShadow="False" BackgroundColor="Transparent">
                     <Frame.Triggers>
-                          <DataTrigger TargetType="Frame" Binding="{Binding IsExistingFeature}" Value="True">
-                               <Setter Property="Margin" Value="10,10,10,320"/>
-                          </DataTrigger>
+                        <DataTrigger TargetType="Frame" Binding="{Binding IsExistingFeature}" Value="True">
+                            <Setter Property="Margin" Value="10,10,10,320"/>
+                        </DataTrigger>
                         <DataTrigger TargetType="Frame" Binding="{Binding IsExistingFeature}" Value="False">
-                               <Setter Property="Margin" Value="10,10,10,340"/>
-                          </DataTrigger>
+                            <Setter Property="Margin" Value="10,10,10,340"/>
+                        </DataTrigger>
                     </Frame.Triggers>
                 </Frame>
             </StackLayout>

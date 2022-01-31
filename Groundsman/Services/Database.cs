@@ -1,12 +1,29 @@
-﻿using Groundsman.Models;
+﻿using FeatureItem = Groundsman.Models.Feature;
 using SQLite;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Groundsman.Models;
 
 namespace Groundsman.Services
 {
     public class Database
     {
+        private class Feature
+        {
+            [PrimaryKey]
+            public string Id { get; set; }
+
+            public string SerialisedFeature { get; set; }
+
+            public Feature() { }
+
+            public Feature(string id, string serialisedFeature)
+            {
+                Id = id;
+                SerialisedFeature = serialisedFeature;
+            }
+        }
+
         private readonly SQLiteAsyncConnection _db;
 
 
@@ -16,21 +33,35 @@ namespace Groundsman.Services
             _db.CreateTableAsync<Feature>();
         }
 
-        public Task<List<Feature>> GetFeaturesAsync()
+        public async Task<List<FeatureItem>> GetFeaturesAsync()
         {
-            var results = _db.Table<Feature>().ToListAsync();
+            var results = await _db.Table<Feature>().ToListAsync();
+            List<FeatureItem> features = new List<FeatureItem>();
+            foreach (var result in results)
+            {
+                if (result == null || result.SerialisedFeature == null) continue;
+                FeatureItem feature = (FeatureItem)GeoJSONObject.ImportGeoJSON(result.SerialisedFeature);
+                feature.Properties[Constants.IdentifierProperty] = result.Id;
+                features.Add(feature);
+            }
+            return features;
+        }
+
+        public Task<int> AddFeatures(FeatureItem feature)
+        {
+            Feature serialisedFeature = new Feature(feature.Id, GeoJSONObject.ExportGeoJSON(feature));
+            var results = _db.InsertOrReplaceAsync(serialisedFeature);
             return results;
         }
 
-        public Task<int> AddFeatures(Feature feature)
+        public Task<int> AddFeatures(IEnumerable<FeatureItem> features)
         {
-            var results = _db.InsertOrReplaceAsync(feature);
-            return results;
-        }
-
-        public Task<int> AddFeatures(IEnumerable<Feature> features)
-        {
-            var results = _db.InsertAllAsync(features);
+            List<Feature> serialisedFeatures = new List<Feature>();
+            foreach (var feature in features)
+            {
+                serialisedFeatures.Add(new Feature(feature.Id, GeoJSONObject.ExportGeoJSON(feature)));
+            }
+            var results = _db.InsertAllAsync(serialisedFeatures);
             return results;
         }
 

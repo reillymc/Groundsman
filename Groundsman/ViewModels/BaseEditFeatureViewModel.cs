@@ -29,14 +29,14 @@ namespace Groundsman.ViewModels
 
         public GeoJSONType GeometryType { get; set; }
 
-        public readonly Feature Feature = new Feature { Type = GeoJSONType.Feature };
         public ObservableCollection<DisplayPosition> Positions { get; set; } = new ObservableCollection<DisplayPosition>();
         public ObservableCollection<Property> Properties { get; set; } = new ObservableCollection<Property>();
 
         public bool IsExistingFeature { get; set; } = false;
         public bool ShowLogEditor { get; set; } = false;
-        public bool ShowMapPreview { get; set; } = true;
+        public bool ShowMapPreview { get; set; } = false;
 
+        public string Id;
         public string NameEntry { get; set; }
         public DateTime DateEntry { get; set; }
 
@@ -56,9 +56,10 @@ namespace Groundsman.ViewModels
                 InputTransparent = true,
             };
 
-            if (!Preferences.Get(Constants.MapPreviewKey, true))
+            if (Preferences.Get(Constants.MapPreviewKey, false))
             {
-                ShowMapPreview = false;
+                ShowMapPreview = true;
+                _ = CenterMapOnUser();
             }
 
             Positions.CollectionChanged += Positions_CollectionChanged;
@@ -90,66 +91,67 @@ namespace Groundsman.ViewModels
             }
         }
 
-        public void CenterMap(Position position, Position span)
-        {
-            if (position == null || span == null) return;
-            Map.MoveToRegion(new MapSpan(new XFMPosition(position.Latitude, position.Longitude), span.Latitude, span.Longitude));
-        }
-
-        public async void UpdateMap()
+        public void UpdateMap()
         {
             if (!Preferences.Get(Constants.MapPreviewKey, true)) return;
 
-            Map.MapElements.Clear();
-            Map.Pins.Clear();
-
-            Position centerPosition;
-
-            try
+            if (Positions.Count > 0 && Positions.All<DisplayPosition>(position => !position.HasBlankCoordinate()))
             {
-                centerPosition = await HelperServices.GetGeoLocation();
-            }
-            catch
-            {
-                centerPosition = new Position(0, 0);
-            }
+                Map.MapElements.Clear();
+                Map.Pins.Clear();
 
+                Position centerPosition;
+                Position spanPosition;
 
-            Position spanPosition = new Position(0.01, 0.01);
-
-            if (Positions.Count > 0)
-            {
                 try
                 {
                     switch (GeometryType)
                     {
                         case GeoJSONType.Point:
-                            var point = (Point)FeatureHelper.GetValidatedGeometry(Positions, GeoJSONType.Point);
+                            var pin = MapHelper.GeneratePin(new Feature(FeatureHelper.GetGeometry(Positions, GeoJSONType.Point)));
+                            Map.Pins.Add(pin);
+                            var point = (Point)FeatureHelper.GetGeometry(Positions, GeoJSONType.Point);
                             centerPosition = new Position(point.Coordinates.Longitude, point.Coordinates.Latitude);
-                            Map.Pins.Add(MapHelper.GeneratePin(new Feature(FeatureHelper.GetValidatedGeometry(Positions, GeoJSONType.Point))));
+                            Map.MoveToRegion(MapSpan.FromCenterAndRadius(new XFMPosition(centerPosition.Latitude, centerPosition.Longitude), Distance.FromMiles(0.3)));
                             break;
                         case GeoJSONType.LineString:
-                            var line = (LineString)FeatureHelper.GetValidatedGeometry(Positions, GeoJSONType.LineString);
+                            Map.MapElements.Add(MapHelper.GenerateLine(new Feature(FeatureHelper.GetGeometry(Positions, GeoJSONType.LineString))));
+                            var line = (LineString)FeatureHelper.GetGeometry(Positions, GeoJSONType.LineString);
                             centerPosition = line.GetCenterPosition();
                             spanPosition = line.GetSpan();
-                            Map.MapElements.Add(MapHelper.GenerateLine(new Feature(FeatureHelper.GetValidatedGeometry(Positions, GeoJSONType.LineString))));
+                            Map.MoveToRegion(new MapSpan(new XFMPosition(centerPosition.Latitude, centerPosition.Longitude), spanPosition.Latitude, spanPosition.Longitude));
                             break;
                         case GeoJSONType.Polygon:
-                            var closedPositions = Positions.ToList();
-                            var polygon = (Polygon)FeatureHelper.GetValidatedGeometry(Positions, GeoJSONType.Polygon);
-                            closedPositions.Add(Positions[0]);
+                            Map.MapElements.Add(MapHelper.GeneratePolygon(new Feature(FeatureHelper.GetGeometry(Positions, GeoJSONType.Polygon))));
+                            var polygon = (Polygon)FeatureHelper.GetGeometry(Positions, GeoJSONType.Polygon);
                             centerPosition = polygon.GetCenterPosition();
                             spanPosition = polygon.GetSpan();
-                            Map.MapElements.Add(MapHelper.GeneratePolygon(new Feature(FeatureHelper.GetValidatedGeometry(Positions, GeoJSONType.Polygon))));
+                            Map.MoveToRegion(new MapSpan(new XFMPosition(centerPosition.Latitude, centerPosition.Longitude), spanPosition.Latitude, spanPosition.Longitude));
                             break;
                     }
                 }
-                catch (Exception ex)
+                catch // Silently fail to render
                 {
                 }
             }
+        }
 
-            CenterMap(centerPosition, spanPosition);
+        private async Task CenterMapOnUser()
+        {
+            var location = await HelperServices.GetGeoLocation();
+            Map.MoveToRegion(MapSpan.FromCenterAndRadius(new XFMPosition(location.Latitude, location.Longitude), Distance.FromMiles(0.3)));
+
+        }
+
+        public Feature GetValidatedFeature()
+        {
+            var saveFeature = new Feature(FeatureHelper.GetGeometry(Positions, GeometryType), FeatureHelper.GetProperties(Properties));
+            saveFeature.Id = Id;
+            saveFeature.Name = !string.IsNullOrEmpty(NameEntry) ? NameEntry : GeometryType.ToString();
+            saveFeature.Date = DateEntry;
+            saveFeature.Author = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
+
+            return saveFeature;
         }
 
         public abstract Task ShareFeature(View view);

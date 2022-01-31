@@ -1,6 +1,5 @@
 ﻿using Groundsman.Interfaces;
 using Groundsman.Models;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,46 +12,29 @@ namespace Groundsman.Services
 {
     public class FeatureService : IDataService<Feature>
     {
-        public ObservableCollection<Feature> FeatureList { get; set; }
+        public ICollection<Feature> FeatureList { get; } = new ObservableCollection<Feature>();
 
-        public FeatureService()
-        {
-            FeatureList = new ObservableCollection<Feature>();
-            _ = GetItemsAsync();
-        }
+        public FeatureService() => _ = GetItemsAsync();
 
         /// <summary>
         /// Add or update a feature
         /// </summary>
         /// <param name="feature">Feature to add</param>
         /// <returns>Number of items saved</returns>
-        public Task<int> SaveItem(Feature feature)
-        {
-            feature.GeometryBlobbed = JsonConvert.SerializeObject(feature.Geometry);
-            feature.PropertiesBlobbed = JsonConvert.SerializeObject(feature.Properties);
-            return App.Database.AddFeatures(feature);
-        }
+        public Task<int> SaveItem(Feature feature) => App.Database.AddFeatures(feature);
 
-        public Task<int> SaveItems(IEnumerable<Feature> features)
-        {
-            foreach (var feature in features)
-            {
-                feature.GeometryBlobbed = JsonConvert.SerializeObject(feature.Geometry);
-                feature.PropertiesBlobbed = JsonConvert.SerializeObject(feature.Properties);
-            }
-            return App.Database.AddFeatures(features);
-        }
+        public Task<int> SaveItems(IEnumerable<Feature> features) => App.Database.AddFeatures(features);
 
         /// <summary>
         /// Delete a feature
         /// </summary>
         /// <param name="feature">Feature to delete</param>
         /// <returns>Number of items deleted</returns>
-        public Task<int> DeleteItem(Feature feature)
+        public Task<int> DeleteItem(string featureId)
         {
             using StreamWriter writer = new StreamWriter(File.Create(Constants.DELETED_FEATURE_FILE));
-            writer.Write(GeoJSONObject.ExportGeoJSON(feature));
-            return App.Database.DeleteFeature(feature.Id);
+            writer.Write(GeoJSONObject.ExportGeoJSON(FeatureList.Where(feature => feature.Id == featureId).First()));
+            return App.Database.DeleteFeature(featureId);
         }
 
         /// <summary>
@@ -81,11 +63,9 @@ namespace Groundsman.Services
                 foreach (var newFeature in orderedFeatures)
                 {
                     try {
-                        newFeature.Geometry = JsonConvert.DeserializeObject<Geometry>(newFeature.GeometryBlobbed);
-                        newFeature.Properties = JsonConvert.DeserializeObject<Dictionary<string, object>>(newFeature.PropertiesBlobbed);
                         FeatureList.Add(newFeature);
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         //handle error - warning / prompt for export
                     }
@@ -154,9 +134,6 @@ namespace Groundsman.Services
         /// <summary>
         /// Clears the feature list
         /// </summary>
-        public Task<int> ClearItems()
-        {
-            return App.Database.DeleteAllFeatures();
-        }
+        public Task<int> ClearItems() => App.Database.DeleteAllFeatures();
     }
 }

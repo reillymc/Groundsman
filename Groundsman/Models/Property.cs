@@ -36,9 +36,13 @@ namespace Groundsman.Models
             {
                 return new Property(name, Convert.ToInt32(value), 1);
             }
-            else
+            if (propertyType == typeof(string))
             {
                 return new Property(name, value.ToString(), 0);
+            }
+            else
+            {
+                return new Property(name, "", 0);
             }
         }
     }

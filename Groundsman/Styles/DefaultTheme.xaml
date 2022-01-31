@@ -73,9 +73,10 @@
     </Style>
 
     <Style x:Key="LabelBody" TargetType="Label">
-        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="TextColor" Value="{DynamicResource Text}" />
         <Setter Property="FontSize" Value="Small" />
         <Setter Property="Padding" Value="0,2" />
+        <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="VerticalTextAlignment" Value="Center" />
     </Style>
 

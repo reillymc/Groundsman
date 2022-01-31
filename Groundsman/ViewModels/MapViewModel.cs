@@ -144,7 +144,7 @@ namespace Groundsman.ViewModels
             {
                 case "Delete":
                     shakeService.Start();
-                    _ = await FeatureStore.DeleteItem(feature);
+                    _ = await FeatureStore.DeleteItem(feature.Id);
                     _ = await FeatureStore.GetItemsAsync();
                     RefreshMap();
                     break;

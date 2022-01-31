@@ -37,15 +37,16 @@ namespace Groundsman.ViewModels
         /// </summary>
         public EditFeatureViewModel(GeoJSONType geometryType)
         {
-            GeometryType = geometryType;
-
             Title = $"New {geometryType}";
+            DateEntry = DateTime.Now;
+
+            Id = Guid.NewGuid().ToString();
+            GeometryType = geometryType;
 
             Properties.Add(new Property("String Property", string.Empty, 0));
             Properties.Add(new Property("Integer Property", null, 1));
             Properties.Add(new Property("Float Property", null, 2));
 
-            DateEntry = DateTime.Now;
 
             switch (geometryType)
             {
@@ -73,8 +74,8 @@ namespace Groundsman.ViewModels
         {
             Title = NameEntry = feature.Name;
             DateEntry = feature.Date;
-            Feature.Id = feature.Id;
 
+            Id = feature.Id;
             GeometryType = feature.Geometry.Type;
 
             IsExistingFeature = true;
@@ -143,7 +144,7 @@ namespace Groundsman.ViewModels
         {
             shakeService.Start();
             await NavigationService.NavigateBack(true);
-            await FeatureStore.DeleteItem(Feature);
+            await FeatureStore.DeleteItem(Id);
             await FeatureStore.GetItemsAsync();
         }
 
@@ -152,16 +153,22 @@ namespace Groundsman.ViewModels
             if (IsBusy) return;
             IsBusy = true;
 
-            if (await ValidateGeometry() && await ValidateProperties())
+            try
             {
+                Feature saveFeature = GetValidatedFeature();
                 System.Drawing.Rectangle bounds = element.GetAbsoluteBounds().ToSystemRectangle();
                 ShareFileRequest share = new ShareFileRequest
                 {
                     Title = "Share Feature",
-                    File = new ShareFile(await FeatureHelper.ExportFeatures(Feature), "application/json")
+                    File = new ShareFile(await FeatureHelper.ExportFeatures(saveFeature), "application/json")
                 };
                 share.PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty;
                 await Share.RequestAsync(share);
+            }
+            catch (Exception ex)
+            {
+                await NavigationService.ShowAlert("Invalid Feature Data", $"{ex.Message}", false);
+
             }
             IsBusy = false;
         }
@@ -176,11 +183,9 @@ namespace Groundsman.ViewModels
             IsBusy = true;
             try
             {
+                var index = Positions.IndexOf(point);
                 Position location = await HelperServices.GetGeoLocation();
-                DisplayPosition convertedPoint = new DisplayPosition("0", location);
-                point.Latitude = convertedPoint.Latitude;
-                point.Longitude = convertedPoint.Longitude;
-                point.Altitude = convertedPoint.Altitude;
+                Positions[index] = new DisplayPosition((index + 1).ToString(), location);
             }
             catch
             {
@@ -251,16 +256,10 @@ namespace Groundsman.ViewModels
             if (IsBusy) return;
             IsBusy = true;
 
-            var id = Feature.Id;
-
-            if (await ValidateGeometry())
+            try
             {
-                Feature.Id = id ?? Guid.NewGuid().ToString();
-                Feature.Name = !string.IsNullOrEmpty(NameEntry) ? NameEntry : Feature.Geometry.Type.ToString();
-                Feature.Date = DateEntry;
-                Feature.Author = Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
-
-                int saveSuccess = await FeatureStore.SaveItem(Feature);
+                Feature saveFeature = GetValidatedFeature();
+                int saveSuccess = await FeatureStore.SaveItem(saveFeature);
                 if (saveSuccess > 0)
                 {
                     _ = await FeatureStore.GetItemsAsync();
@@ -268,10 +267,13 @@ namespace Groundsman.ViewModels
                 }
                 else
                 {
-                    await NavigationService.ShowAlert("Save Failed", $"Please check all of your entries are valid", false); // TODO catch property errors
+                    await NavigationService.ShowAlert("Save Failed", $"Please check all of your entries are valid", false);
                 }
-                IsBusy = false;
-                return;
+            }
+            catch (Exception ex)
+            {
+                await NavigationService.ShowAlert("Invalid Feature Data", $"{ex.Message}, {ex.Source} {ex.StackTrace}", false);
+
             }
             IsBusy = false;
         }
@@ -289,20 +291,6 @@ namespace Groundsman.ViewModels
         public override void OnAppear()
         {
             return;
-        }
-
-        private async Task<bool> ValidateGeometry()
-        {
-            try
-            {
-                Feature.Geometry = FeatureHelper.GetValidatedGeometry(Positions, GeometryType);
-            }
-            catch (Exception ex)
-            {
-                await NavigationService.ShowAlert("Invalid Feature Geometry", $"{ex.Message}", false);
-                return false;
-            }
-            return true;
         }
     }
 }

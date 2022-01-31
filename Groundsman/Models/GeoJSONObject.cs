@@ -27,9 +27,7 @@ namespace Groundsman.Models
         /// </summary>
         /// <param name="geoJSONObject">GeoJSON object to export</param>
         /// <returns>A serialised string</returns>
-        public static string ExportGeoJSON(GeoJSONObject geoJSONObject, bool stripBlobbedObjects = false) => stripBlobbedObjects
-            ? JsonConvert.SerializeObject(geoJSONObject, new JsonSerializerSettings { ContractResolver = new DynamicContractResolver("PropertiesBlobbed", "GeometryBlobbed") })
-            : JsonConvert.SerializeObject(geoJSONObject);
+        public static string ExportGeoJSON(GeoJSONObject geoJSONObject) => JsonConvert.SerializeObject(geoJSONObject);
 
     }
 }

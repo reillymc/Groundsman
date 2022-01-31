@@ -70,6 +70,10 @@ namespace Groundsman.Models
             Index = index;
         }
 
+        public bool IsBlank() => Latitude == "" && Longitude == "";
+
+        public bool HasBlankCoordinate() => Latitude == "" && Longitude == "";
+
         public override string ToString() => $"{Index}, {Longitude}, {Latitude}, {Altitude}";
 
         public bool Equals(DisplayPosition comparePosition)

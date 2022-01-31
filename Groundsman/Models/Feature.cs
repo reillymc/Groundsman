@@ -4,8 +4,6 @@ using System.Globalization;
 using System.IO;
 using Groundsman.JSONConverters;
 using Newtonsoft.Json;
-using SQLite;
-using SQLiteNetExtensions.Attributes;
 
 namespace Groundsman.Models
 {
@@ -17,8 +15,6 @@ namespace Groundsman.Models
     public class Feature : GeoJSONObject
     {
         // Safe property accessors for feature properties used directly by Groundsman.
-        // TODO: move validation checks to these properties
-        [PrimaryKey]
         [JsonIgnore]
         public string Id
         {
@@ -75,26 +71,20 @@ namespace Groundsman.Models
             }
         }
 
-        // Feature geomtery data. Stored as blobbed JSON internally by Groundsman but converted to Geometry object when read in.
-        [TextBlob(nameof(GeometryBlobbed))]
         [JsonProperty(PropertyName = "geometry", Order = 2)]
         public Geometry Geometry { get; set; }
-        public string GeometryBlobbed { get; set; }
 
-        // Feature properties data. Stored as blobbed JSON internally by Groundsman but converted to Geometry object when read in.
-        [TextBlob(nameof(PropertiesBlobbed))]
         [JsonProperty(PropertyName = "properties", Order = 3), JsonConverter(typeof(PropertiesConverter<string, object>))]
         public IDictionary<string, object> Properties { get; set; }
-        public string PropertiesBlobbed { get; set; } // serialized Properties
-
 
         [JsonConstructor]
         public Feature(Geometry geometry = null, IDictionary<string, object> properties = null) : base(GeoJSONType.Feature)
         {
-
             Geometry = geometry;
 
             Properties = new Dictionary<string, object>();
+
+            if (properties == null) return;
 
             foreach (var property in properties)
             {
@@ -102,7 +92,10 @@ namespace Groundsman.Models
 
                 try
                 {
-                    if (property.Key == Constants.IdentifierProperty) continue;
+                    if (property.Key == Constants.IdentifierProperty)
+                    {
+                        if (Guid.TryParse((string)property.Value, out Guid id)) Id = id.ToString();
+                    }
 
                     if (property.Key == Constants.NameProperty)
                     {
@@ -121,6 +114,12 @@ namespace Groundsman.Models
                         DateTime date = DateTime.Now;
                         DateTime.TryParse((string)property.Value, out date);
                         Date = date;
+                        continue;
+                    }
+
+                    if (property.Key == Constants.LogTimestampsProperty)
+                    {
+                        Properties[Constants.LogTimestampsProperty] = property.Value;
                         continue;
                     }
 

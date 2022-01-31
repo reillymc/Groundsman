@@ -1,4 +1,3 @@
-using System;
 using Groundsman.iOS.Renderers;
 using Groundsman.Styles;
 using UIKit;

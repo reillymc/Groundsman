@@ -32,5 +32,10 @@ namespace Groundsman.Models
                 return Coordinates.Equals(comparePoint.Coordinates);
             }
         }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Coordinates);
+        }
     }
 }

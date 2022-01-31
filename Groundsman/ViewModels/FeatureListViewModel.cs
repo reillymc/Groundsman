@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Groundsman.Misc;
 using Groundsman.Models;
@@ -110,7 +108,7 @@ namespace Groundsman.ViewModels
             IsBusy = true;
 
             shakeService.Start();
-            await FeatureStore.DeleteItem(feature);
+            await FeatureStore.DeleteItem(feature.Id);
             await FeatureStore.GetItemsAsync();
 
             IsBusy = false;
