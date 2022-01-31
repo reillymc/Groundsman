@@ -11,12 +11,16 @@
     <ContentPage.Content>
         <FlexLayout Direction="Column">
             <FlexLayout.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Offset="0.1" Color="#20D916" />
-                    <GradientStop Offset="1.0" Color="#0A9903" />
+                <LinearGradientBrush StartPoint="0,0"
+                                     EndPoint="1,1">
+                    <GradientStop Offset="0.1"
+                                  Color="#20D916" />
+                    <GradientStop Offset="1.0"
+                                  Color="#0A9903" />
                 </LinearGradientBrush>
             </FlexLayout.Background>
-            <StackLayout HeightRequest="200" Orientation="Horizontal">
+            <StackLayout HeightRequest="200"
+                         Orientation="Horizontal">
                 <Image Aspect="AspectFit"
                        Source="logo.png"
                        WidthRequest="140" />
@@ -32,7 +36,8 @@
                            VerticalOptions="Start" />
                 </StackLayout>
             </StackLayout>
-            <StackLayout Margin="32" HeightRequest="350">
+            <StackLayout Margin="32"
+                         HeightRequest="350">
                 <Label FontAttributes="Bold"
                        FontSize="15"
                        HorizontalOptions="Center"

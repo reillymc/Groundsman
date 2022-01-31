@@ -8,10 +8,12 @@
              x:DataType="viewModels:SettingsViewModel"
              Style="{StaticResource PageStyle}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Command="{Binding InfoButtonTappedCommand}" Icon="info" />
+        <ToolbarItem Command="{Binding InfoButtonTappedCommand}"
+                     Icon="info" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <TableView BackgroundColor="{DynamicResource Background}" Intent="Settings">
+        <TableView BackgroundColor="{DynamicResource Background}"
+                   Intent="Settings">
             <TableRoot>
                 <TableSection Title="Profile">
                     <ViewCell>
@@ -106,8 +108,10 @@
                     </ViewCell>
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
-                            <StackLayout Padding="20,0" Orientation="Horizontal">
-                                <Label Text="Enable Shake to Undo Delete" VerticalOptions="Center" />
+                            <StackLayout Padding="20,0"
+                                         Orientation="Horizontal">
+                                <Label Text="Enable Shake to Undo Delete"
+                                       VerticalOptions="Center" />
                                 <Switch HorizontalOptions="EndAndExpand"
                                         IsToggled="{Binding EnableShakeToUndo}"
                                         OnColor="{StaticResource greenPrimary}"
@@ -117,8 +121,10 @@
                     </ViewCell>
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
-                            <StackLayout Padding="20,0" Orientation="Horizontal">
-                                <Label Text="Show Map Preview in Editor" VerticalOptions="Center" />
+                            <StackLayout Padding="20,0"
+                                         Orientation="Horizontal">
+                                <Label Text="Show Map Preview in Editor"
+                                       VerticalOptions="Center" />
                                 <Switch HorizontalOptions="EndAndExpand"
                                         IsToggled="{Binding EnableMapPreview}"
                                         OnColor="{StaticResource greenPrimary}"
@@ -171,8 +177,10 @@
                 <TableSection Title="Map">
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
-                            <StackLayout Padding="20,0" Orientation="Horizontal">
-                                <Label Text="Draw Points" VerticalOptions="Center" />
+                            <StackLayout Padding="20,0"
+                                         Orientation="Horizontal">
+                                <Label Text="Draw Points"
+                                       VerticalOptions="Center" />
                                 <Switch HorizontalOptions="EndAndExpand"
                                         IsToggled="{Binding ShowPointsOnMap}"
                                         OnColor="{StaticResource greenPrimary}"
@@ -182,8 +190,10 @@
                     </ViewCell>
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
-                            <StackLayout Padding="20,0" Orientation="Horizontal">
-                                <Label Text="Draw Lines" VerticalOptions="Center" />
+                            <StackLayout Padding="20,0"
+                                         Orientation="Horizontal">
+                                <Label Text="Draw Lines"
+                                       VerticalOptions="Center" />
                                 <Switch HorizontalOptions="EndAndExpand"
                                         IsToggled="{Binding ShowLinesOnMap}"
                                         OnColor="{StaticResource greenPrimary}"
@@ -193,8 +203,10 @@
                     </ViewCell>
                     <ViewCell>
                         <Frame Style="{StaticResource FrameViewCell}">
-                            <StackLayout Padding="20,0" Orientation="Horizontal">
-                                <Label Text="Draw Polygons" VerticalOptions="Center" />
+                            <StackLayout Padding="20,0"
+                                         Orientation="Horizontal">
+                                <Label Text="Draw Polygons"
+                                       VerticalOptions="Center" />
                                 <Switch HorizontalOptions="EndAndExpand"
                                         OnColor="{StaticResource greenPrimary}"
                                         IsToggled="{Binding ShowPolygonsOnMap}"

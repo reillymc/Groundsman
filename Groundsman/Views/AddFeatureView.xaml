@@ -17,33 +17,42 @@
                        Grid.Column="0"
                        StyleClass="Base, Button">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Point" />
+                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}"
+                                              CommandParameter="Point" />
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical">
-                        <Image Source="point" Style="{StaticResource FrameButtonImage}" />
-                        <Label Style="{StaticResource FrameButtonLabel}" Text="Point" />
+                        <Image Source="point"
+                               Style="{StaticResource FrameButtonImage}" />
+                        <Label Style="{StaticResource FrameButtonLabel}"
+                               Text="Point" />
                     </StackLayout>
                 </Frame>
                 <Frame Grid.Row="0"
                        Grid.Column="1"
                        StyleClass="Base, Button">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="LineString" />
+                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}"
+                                              CommandParameter="LineString" />
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical">
-                        <Image Source="line" Style="{StaticResource FrameButtonImage}" />
-                        <Label Style="{StaticResource FrameButtonLabel}" Text="Line" />
+                        <Image Source="line"
+                               Style="{StaticResource FrameButtonImage}" />
+                        <Label Style="{StaticResource FrameButtonLabel}"
+                               Text="Line" />
                     </StackLayout>
                 </Frame>
                 <Frame Grid.Row="0"
                        Grid.Column="2"
                        StyleClass="Base, Button">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Polygon" />
+                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}"
+                                              CommandParameter="Polygon" />
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical">
-                        <Image Source="polygon" Style="{StaticResource FrameButtonImage}" />
-                        <Label Style="{StaticResource FrameButtonLabel}" Text="Polygon" />
+                        <Image Source="polygon"
+                               Style="{StaticResource FrameButtonImage}" />
+                        <Label Style="{StaticResource FrameButtonLabel}"
+                               Text="Polygon" />
                     </StackLayout>
                 </Frame>
             </Grid>
@@ -56,9 +65,11 @@
                        HeightRequest="30"
                        StyleClass="Base, Button">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Log" />
+                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}"
+                                              CommandParameter="Log" />
                     </Frame.GestureRecognizers>
-                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                    <StackLayout Orientation="Horizontal"
+                                 VerticalOptions="Center">
                         <Label HorizontalOptions="StartAndExpand"
                                VerticalOptions="Center"
                                Style="{StaticResource FrameButtonLabel}"
@@ -76,9 +87,11 @@
                        HeightRequest="30"
                        StyleClass="Base, Button">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="File" />
+                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}"
+                                              CommandParameter="File" />
                     </Frame.GestureRecognizers>
-                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                    <StackLayout Orientation="Horizontal"
+                                 VerticalOptions="Center">
                         <Label HorizontalOptions="StartAndExpand"
                                VerticalOptions="Center"
                                Style="{StaticResource FrameButtonLabel}"
@@ -96,9 +109,11 @@
                        HeightRequest="30"
                        StyleClass="Base, Button">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}" CommandParameter="Clipboard" />
+                        <TapGestureRecognizer Command="{Binding AddFeatureCommand}"
+                                              CommandParameter="Clipboard" />
                     </Frame.GestureRecognizers>
-                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                    <StackLayout Orientation="Horizontal"
+                                 VerticalOptions="Center">
                         <Label HorizontalOptions="StartAndExpand"
                                VerticalOptions="Center"
                                Style="{StaticResource FrameButtonLabel}"

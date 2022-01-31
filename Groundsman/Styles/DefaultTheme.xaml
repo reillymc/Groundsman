@@ -9,183 +9,237 @@
 
     <!--  New Styles  -->
 
-    <Style x:Key="PageStyle" TargetType="ContentPage">
-        <Setter Property="BackgroundColor" Value="{DynamicResource Foreground}" />
-        <Setter Property="Title" Value="{Binding Title}" />
+    <Style x:Key="PageStyle"
+           TargetType="ContentPage">
+        <Setter Property="BackgroundColor"
+                Value="{DynamicResource Foreground}" />
+        <Setter Property="Title"
+                Value="{Binding Title}" />
     </Style>
 
-    <Style x:Key="PageTintedStyle" TargetType="ContentPage">
-        <Setter Property="BackgroundColor" Value="{DynamicResource Background}" />
-        <Setter Property="Title" Value="{Binding Title}" />
+    <Style x:Key="PageTintedStyle"
+           TargetType="ContentPage">
+        <Setter Property="BackgroundColor"
+                Value="{DynamicResource Background}" />
+        <Setter Property="Title"
+                Value="{Binding Title}" />
     </Style>
 
-    <Style Class="Base" TargetType="Frame">
-        <Setter Property="HasShadow" Value="false" />
-        <Setter Property="CornerRadius" Value="10" />
-        <Setter Property="BackgroundColor" Value="{DynamicResource Foreground}" />
+    <Style Class="Base"
+           TargetType="Frame">
+        <Setter Property="HasShadow"
+                Value="false" />
+        <Setter Property="CornerRadius"
+                Value="10" />
+        <Setter Property="BackgroundColor"
+                Value="{DynamicResource Foreground}" />
     </Style>
 
-    <Style Class="DefaultMargin" TargetType="Frame">
-        <Setter Property="Margin" Value="10" />
+    <Style Class="DefaultMargin"
+           TargetType="Frame">
+        <Setter Property="Margin"
+                Value="10" />
     </Style>
 
-    <Style Class="Button" TargetType="Frame">
-        <Setter Property="Padding" Value="20,10" />
+    <Style Class="Button"
+           TargetType="Frame">
+        <Setter Property="Padding"
+                Value="20,10" />
     </Style>
 
-    <Style x:Key="CoordinateItemFrame" TargetType="Frame">
-        <Setter Property="Margin" Value="0,6" />
-        <Setter Property="Padding">
-            <OnPlatform x:TypeArguments="Thickness"
-                        Android="10,0"
-                        iOS="11,0,9,0" />
-        </Setter>
-        <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="CornerRadius" Value="0" />
-        <Setter Property="HasShadow" Value="False" />
-        <Setter Property="IsClippedToBounds" Value="True" />
+    <Style x:Key="CoordinateItemFrame"
+           TargetType="Frame">
+        <Setter Property="Margin"
+                Value="0,6" />
+        <Setter Property="Padding"
+                Value="{OnPlatform iOS='11,0,9,0', Android='10,0'}" />
+        <Setter Property="BackgroundColor"
+                Value="Transparent" />
+        <Setter Property="CornerRadius"
+                Value="0" />
+        <Setter Property="HasShadow"
+                Value="False" />
+        <Setter Property="IsClippedToBounds"
+                Value="True" />
     </Style>
 
-    <Style x:Key="FrameViewCell" TargetType="Frame">
-        <Setter Property="HasShadow" Value="false" />
-        <Setter Property="CornerRadius" Value="0" />
-        <Setter Property="Padding" Value="0" />
-        <Setter Property="BackgroundColor" Value="{DynamicResource Foreground}" />
+    <Style x:Key="FrameViewCell"
+           TargetType="Frame">
+        <Setter Property="HasShadow"
+                Value="false" />
+        <Setter Property="CornerRadius"
+                Value="0" />
+        <Setter Property="Padding"
+                Value="0" />
+        <Setter Property="BackgroundColor"
+                Value="{DynamicResource Foreground}" />
     </Style>
 
-    <Style x:Key="ListLabelStyle" TargetType="Label">
-        <Setter Property="TextColor" Value="{DynamicResource Text}" />
-        <Setter Property="FontSize" Value="Medium" />
-        <Setter Property="HorizontalTextAlignment" Value="Start" />
-        <Setter Property="LineBreakMode" Value="TailTruncation" />
+    <Style x:Key="ListLabelStyle"
+           TargetType="Label">
+        <Setter Property="TextColor"
+                Value="{DynamicResource Text}" />
+        <Setter Property="FontSize"
+                Value="Medium" />
+        <Setter Property="HorizontalTextAlignment"
+                Value="Start" />
+        <Setter Property="LineBreakMode"
+                Value="TailTruncation" />
     </Style>
 
-    <Style x:Key="LabelTitle" TargetType="Label">
-        <Setter Property="TextColor" Value="{DynamicResource Text}" />
-        <Setter Property="FontAttributes" Value="Bold" />
-        <Setter Property="FontSize" Value="Default" />
+    <Style x:Key="LabelTitle"
+           TargetType="Label">
+        <Setter Property="TextColor"
+                Value="{DynamicResource Text}" />
+        <Setter Property="FontAttributes"
+                Value="Bold" />
+        <Setter Property="FontSize"
+                Value="Default" />
     </Style>
 
-    <Style x:Key="LabelHeader" TargetType="Label">
-        <Setter Property="TextColor" Value="{DynamicResource Text}" />
-        <Setter Property="FontAttributes" Value="Bold" />
-        <Setter Property="FontSize" Value="Small" />
+    <Style x:Key="LabelHeader"
+           TargetType="Label">
+        <Setter Property="TextColor"
+                Value="{DynamicResource Text}" />
+        <Setter Property="FontAttributes"
+                Value="Bold" />
+        <Setter Property="FontSize"
+                Value="Small" />
     </Style>
 
-    <Style x:Key="LabelBody" TargetType="Label">
-        <Setter Property="TextColor" Value="{DynamicResource Text}" />
-        <Setter Property="FontSize" Value="Small" />
-        <Setter Property="Padding" Value="0,2" />
-        <Setter Property="FontAttributes" Value="Bold" />
-        <Setter Property="VerticalTextAlignment" Value="Center" />
+    <Style x:Key="LabelBody"
+           TargetType="Label">
+        <Setter Property="TextColor"
+                Value="{DynamicResource Text}" />
+        <Setter Property="FontSize"
+                Value="Small" />
+        <Setter Property="Padding"
+                Value="0,2" />
+        <Setter Property="FontAttributes"
+                Value="Bold" />
+        <Setter Property="VerticalTextAlignment"
+                Value="Center" />
     </Style>
 
-    <Style x:Key="EntryStyle" TargetType="Entry">
-        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
-        <Setter Property="FontSize" Value="Small" />
-        <Setter Property="ClearButtonVisibility" Value="WhileEditing" />
+    <Style x:Key="EntryStyle"
+           TargetType="Entry">
+        <Setter Property="TextColor"
+                Value="{DynamicResource TextSecondary}" />
+        <Setter Property="FontSize"
+                Value="Small" />
+        <Setter Property="ClearButtonVisibility"
+                Value="WhileEditing" />
     </Style>
 
-    <Style x:Key="DateEntryStyle" TargetType="DatePicker">
-        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
+    <Style x:Key="DateEntryStyle"
+           TargetType="DatePicker">
+        <Setter Property="TextColor"
+                Value="{DynamicResource TextSecondary}" />
     </Style>
 
-    <Style x:Key="DetailCoordinateGrid" TargetType="Grid">
-        <Setter Property="BackgroundColor" Value="{DynamicResource Foreground}" />
-        <Setter Property="ColumnDefinitions" Value=".8*,5*,5*,4*,1.5*" />
-        <Setter Property="ColumnSpacing" Value="10" />
-        <Setter Property="Padding" Value="20,0,0,0" />
-        <Setter Property="RowDefinitions" Value="1,*" />
-        <Setter Property="RowSpacing" Value="0" />
+    <Style x:Key="DetailCoordinateGrid"
+           TargetType="Grid">
+        <Setter Property="BackgroundColor"
+                Value="{DynamicResource Foreground}" />
+        <Setter Property="ColumnDefinitions"
+                Value=".8*,5*,5*,4*,1.5*" />
+        <Setter Property="ColumnSpacing"
+                Value="10" />
+        <Setter Property="Padding"
+                Value="20,0,0,0" />
+        <Setter Property="RowDefinitions"
+                Value="1,*" />
+        <Setter Property="RowSpacing"
+                Value="0" />
     </Style>
 
-    <Style x:Key="DetailCoordinateEntry" TargetType="Entry">
-        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
-        <Setter Property="FontSize" Value="Small" />
-        <Setter Property="Keyboard" Value="Numeric" />
-        <Setter Property="behaviors:EntryNumLengthValidatorBehavior.AttachBehavior" Value="true" />
-        <Setter Property="ClearButtonVisibility" Value="WhileEditing" />
+    <Style x:Key="DetailCoordinateEntry"
+           TargetType="Entry">
+        <Setter Property="TextColor"
+                Value="{DynamicResource TextSecondary}" />
+        <Setter Property="FontSize"
+                Value="Small" />
+        <Setter Property="Keyboard"
+                Value="Numeric" />
+        <Setter Property="behaviors:EntryNumLengthValidatorBehavior.AttachBehavior"
+                Value="true" />
+        <Setter Property="ClearButtonVisibility"
+                Value="WhileEditing" />
     </Style>
 
-    <Style x:Key="PropertyPicker" TargetType="Picker">
-        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
-        <Setter Property="FontSize" Value="Small" />
-        <Setter Property="Margin">
-            <OnPlatform x:TypeArguments="Thickness"
-                        Android="0"
-                        iOS="0,7" />
-        </Setter>
+    <Style x:Key="PropertyPicker"
+           TargetType="Picker">
+        <Setter Property="TextColor"
+                Value="{DynamicResource TextSecondary}" />
+        <Setter Property="FontSize"
+                Value="Small" />
+        <Setter Property="Margin"
+                Value="{OnPlatform iOS='0,7', Android='0'}" />
     </Style>
 
 
-    <Style x:Key="FrameButtonLabel" TargetType="Label">
-        <Setter Property="HorizontalOptions" Value="Center" />
-        <Setter Property="TextColor" Value="{StaticResource greenPrimary}" />
-        <Setter Property="VerticalOptions" Value="End" />
+    <Style x:Key="FrameButtonLabel"
+           TargetType="Label">
+        <Setter Property="HorizontalOptions"
+                Value="Center" />
+        <Setter Property="TextColor"
+                Value="{StaticResource greenPrimary}" />
+        <Setter Property="VerticalOptions"
+                Value="End" />
     </Style>
 
-    <Style x:Key="FrameButtonImage" TargetType="Image">
-        <Setter Property="HorizontalOptions" Value="Center" />
-        <Setter Property="WidthRequest" Value="30" />
-        <Setter Property="HeightRequest" Value="30" />
-        <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+    <Style x:Key="FrameButtonImage"
+           TargetType="Image">
+        <Setter Property="HorizontalOptions"
+                Value="Center" />
+        <Setter Property="WidthRequest"
+                Value="30" />
+        <Setter Property="HeightRequest"
+                Value="30" />
+        <Setter Property="VerticalOptions"
+                Value="CenterAndExpand" />
     </Style>
 
-    <Style x:Key="ModalButton" TargetType="Button">
-        <Setter Property="HorizontalOptions" Value="Start" />
-        <Setter Property="VerticalOptions" Value="Center" />
-        <Setter Property="FontSize" Value="16" />
-        <Setter Property="BackgroundColor">
-            <OnPlatform x:TypeArguments="Color"
-                        Android="{StaticResource greenPrimary}"
-                        iOS="Transparent" />
-        </Setter>
-        <Setter Property="TextColor">
-            <OnPlatform x:TypeArguments="Color"
-                        Android="White"
-                        iOS="{StaticResource greenPrimary}" />
-        </Setter>
+    <Style x:Key="ModalButton"
+           TargetType="Button">
+        <Setter Property="HorizontalOptions"
+                Value="Start" />
+        <Setter Property="VerticalOptions"
+                Value="Center" />
+        <Setter Property="FontSize"
+                Value="16" />
+        <Setter Property="BackgroundColor"
+                Value="{OnPlatform iOS='Transparent', Android={StaticResource greenPrimary}}" />
+        <Setter Property="TextColor"
+                Value="{OnPlatform iOS={StaticResource greenPrimary}, Android='White'}" />
     </Style>
 
-    <Style x:Key="GenericButton" TargetType="Button">
-        <Setter Property="HorizontalOptions" Value="Start" />
-        <Setter Property="VerticalOptions" Value="Center" />
-        <Setter Property="BackgroundColor">
-            <OnPlatform x:TypeArguments="Color"
-                        Android="{StaticResource greenPrimary}"
-                        iOS="Transparent" />
-        </Setter>
-        <Setter Property="TextColor">
-            <OnPlatform x:TypeArguments="Color"
-                        Android="White"
-                        iOS="{StaticResource greenPrimary}" />
-        </Setter>
+    <Style x:Key="GenericButton"
+           TargetType="Button">
+        <Setter Property="HorizontalOptions"
+                Value="Start" />
+        <Setter Property="VerticalOptions"
+                Value="Center" />
+        <Setter Property="BackgroundColor"
+                Value="{OnPlatform iOS='Transparent', Android={StaticResource greenPrimary}}" />
+        <Setter Property="TextColor"
+                Value="{OnPlatform iOS={StaticResource greenPrimary}, Android='White'}" />
     </Style>
 
     <ControlTemplate x:Key="BodySeperator">
         <BoxView Margin="0"
                  BackgroundColor="{DynamicResource Seperator}"
                  HeightRequest="1"
-                 VerticalOptions="End">
-            <BoxView.IsVisible>
-                <OnPlatform x:TypeArguments="x:Boolean"
-                            Android="False"
-                            iOS="True" />
-            </BoxView.IsVisible>
-        </BoxView>
+                 VerticalOptions="End"
+                 IsVisible="{OnPlatform iOS='True', Android='False'}" />
     </ControlTemplate>
 
     <ControlTemplate x:Key="BodySeperatorVertical">
         <BoxView Margin="0"
                  BackgroundColor="{DynamicResource Seperator}"
                  HorizontalOptions="End"
-                 WidthRequest="1">
-            <BoxView.IsVisible>
-                <OnPlatform x:TypeArguments="x:Boolean"
-                            Android="False"
-                            iOS="True" />
-            </BoxView.IsVisible>
-        </BoxView>
+                 WidthRequest="1"
+                 IsVisible="{OnPlatform iOS='True', Android='False'}" />
     </ControlTemplate>
 
 

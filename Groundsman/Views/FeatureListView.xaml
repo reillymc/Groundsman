@@ -7,11 +7,13 @@
              x:DataType="viewModels:FeatureListViewModel"
              Style="{DynamicResource PageStyle}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Command="{Binding ShareButtonTappedCommand}" Icon="share" />
+        <ToolbarItem Command="{Binding ShareButtonTappedCommand}"
+                     Icon="share" />
     </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <ResourceDictionary>
-            <DataTemplate x:Key="ListTemplate" x:DataType="models:Feature">
+            <DataTemplate x:Key="ListTemplate"
+                          x:DataType="models:Feature">
                 <ViewCell Tapped="ViewCell_Tapped">
                     <ViewCell.ContextActions>
                         <MenuItem Command="{Binding Path=BindingContext.ShareEntryCommand, Source={x:Reference listView}}"
@@ -34,21 +36,25 @@
                                 <DataTrigger Binding="{Binding Geometry.Type}"
                                              TargetType="Image"
                                              Value="Point">
-                                    <Setter Property="Source" Value="point.png" />
+                                    <Setter Property="Source"
+                                            Value="point.png" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Geometry.Type}"
                                              TargetType="Image"
                                              Value="LineString">
-                                    <Setter Property="Source" Value="line.png" />
+                                    <Setter Property="Source"
+                                            Value="line.png" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Geometry.Type}"
                                              TargetType="Image"
                                              Value="Polygon">
-                                    <Setter Property="Source" Value="polygon.png" />
+                                    <Setter Property="Source"
+                                            Value="polygon.png" />
                                 </DataTrigger>
                             </Image.Triggers>
                         </Image>
-                        <StackLayout Padding="5,0" Orientation="Vertical">
+                        <StackLayout Padding="5,0"
+                                     Orientation="Vertical">
                             <Label Style="{StaticResource ListLabelStyle}"
                                    Text="{Binding Name}"
                                    VerticalOptions="EndAndExpand" />
@@ -77,7 +83,6 @@
                   ItemsSource="{Binding FeatureList}"
                   HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}"
                   ItemSelected="DeselectItem"
-                  
                   ItemTemplate="{StaticResource ListTemplate}"
                   RowHeight="56"
                   SeparatorColor="{DynamicResource Seperator}">
@@ -97,9 +102,12 @@
                 ImageSource="plus"
                 WidthRequest="60">
             <Button.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Offset="0.1" Color="#20D916" />
-                    <GradientStop Offset="1.0" Color="#0A9903" />
+                <LinearGradientBrush StartPoint="0,0"
+                                     EndPoint="1,1">
+                    <GradientStop Offset="0.1"
+                                  Color="#20D916" />
+                    <GradientStop Offset="1.0"
+                                  Color="#0A9903" />
                 </LinearGradientBrush>
             </Button.Background>
         </Button>

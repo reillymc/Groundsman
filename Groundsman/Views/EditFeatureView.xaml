@@ -15,12 +15,16 @@
         <DataTemplate x:Key="HeaderTemplate">
             <StackLayout>
                 <!--  Details  -->
-                <Frame Padding="10,10,0,10" StyleClass="Base, DefaultMargin" Margin="10,20,10,10">
-                    <Grid ColumnDefinitions="4*,*" RowDefinitions="*,Auto">
+                <Frame Padding="10,10,0,10"
+                       StyleClass="Base, DefaultMargin"
+                       Margin="10,20,10,10">
+                    <Grid ColumnDefinitions="4*,*"
+                          RowDefinitions="*,Auto">
                         <Label Grid.Row="0"
                                Style="{StaticResource LabelTitle}"
                                Text="Details" />
-                        <StackLayout Grid.Row="1" Margin="10,0,0,0">
+                        <StackLayout Grid.Row="1"
+                                     Margin="10,0,0,0">
                             <Entry FontSize="Small"
                                    Placeholder="Name"
                                    Style="{StaticResource EntryStyle}"
@@ -37,16 +41,16 @@
                                         VerticalOptions="Start" />
                         </StackLayout>
                         <Button Grid.RowSpan="2"
-                                     Grid.Column="1"
-                                     Margin="0,12,5,0"
-                                     BackgroundColor="Transparent"
-                                     Command="{Binding ShareButtonClickCommand}"
-                                     CommandParameter="{Binding Source={RelativeSource Self}}"
-                                     HeightRequest="36"
-                                     HorizontalOptions="Center"
-                                     ImageSource="share"
-                                     VerticalOptions="Center"
-                                     WidthRequest="36" />
+                                Grid.Column="1"
+                                Margin="0,12,5,0"
+                                BackgroundColor="Transparent"
+                                Command="{Binding ShareButtonClickCommand}"
+                                CommandParameter="{Binding Source={RelativeSource Self}}"
+                                HeightRequest="36"
+                                HorizontalOptions="Center"
+                                ImageSource="share"
+                                VerticalOptions="Center"
+                                WidthRequest="36" />
                     </Grid>
                 </Frame>
 
@@ -56,7 +60,8 @@
                        Margin="10,0,10,10"
                        IsVisible="{Binding ShowMapPreview}"
                        StyleClass="Base">
-                    <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                    <StackLayout VerticalOptions="FillAndExpand"
+                                 HorizontalOptions="FillAndExpand">
                         <Label Style="{StaticResource LabelTitle}"
                                Text="Preview" />
                         <Frame Margin="0,10,10,0"
@@ -66,7 +71,7 @@
                                IsClippedToBounds="True"
                                Content="{Binding Map}"
                                VerticalOptions="FillAndExpand"
-                               HorizontalOptions="FillAndExpand"/>
+                               HorizontalOptions="FillAndExpand" />
                     </StackLayout>
                 </Frame>
 
@@ -77,17 +82,24 @@
                       ColumnSpacing="10"
                       RowDefinitions="*">
                     <Grid.Triggers>
-                        <DataTrigger TargetType="Grid" Binding="{Binding ShowLogEditor}" Value="True">
-                            <Setter Property="IsVisible" Value="True"/>
+                        <DataTrigger TargetType="Grid"
+                                     Binding="{Binding ShowLogEditor}"
+                                     Value="True">
+                            <Setter Property="IsVisible"
+                                    Value="True" />
                         </DataTrigger>
-                        <DataTrigger TargetType="Grid" Binding="{Binding ShowLogEditor}" Value="False">
-                            <Setter Property="IsVisible" Value="False"/>
+                        <DataTrigger TargetType="Grid"
+                                     Binding="{Binding ShowLogEditor}"
+                                     Value="False">
+                            <Setter Property="IsVisible"
+                                    Value="False" />
                         </DataTrigger>
                     </Grid.Triggers>
                     <Frame Grid.Column="0"
                            Padding="0,10"
                            StyleClass="Base">
-                        <StackLayout HorizontalOptions="CenterAndExpand" Orientation="Horizontal">
+                        <StackLayout HorizontalOptions="CenterAndExpand"
+                                     Orientation="Horizontal">
                             <Label FontSize="Small"
                                    Text="Interval:"
                                    TextColor="{DynamicResource Text}"
@@ -115,7 +127,8 @@
                     <Frame Grid.Column="1"
                            Padding="0,10"
                            StyleClass="Base">
-                        <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                        <StackLayout HorizontalOptions="FillAndExpand"
+                                     Orientation="Horizontal">
                             <Button Command="{Binding ToggleButtonClickCommand}"
                                     FontSize="{OnPlatform iOS='Default',
                                                           Android='Micro'}"
@@ -156,11 +169,17 @@
                                    Text="Coordinates" />
                             <Grid Style="{DynamicResource DetailCoordinateGrid}">
                                 <Grid.Triggers>
-                                    <DataTrigger TargetType="Grid" Binding="{Binding ShowLogEditor}" Value="True">
-                                        <Setter Property="IsVisible" Value="False"/>
+                                    <DataTrigger TargetType="Grid"
+                                                 Binding="{Binding ShowLogEditor}"
+                                                 Value="True">
+                                        <Setter Property="IsVisible"
+                                                Value="False" />
                                     </DataTrigger>
-                                    <DataTrigger TargetType="Grid" Binding="{Binding ShowLogEditor}" Value="False">
-                                        <Setter Property="IsVisible" Value="True"/>
+                                    <DataTrigger TargetType="Grid"
+                                                 Binding="{Binding ShowLogEditor}"
+                                                 Value="False">
+                                        <Setter Property="IsVisible"
+                                                Value="True" />
                                     </DataTrigger>
                                 </Grid.Triggers>
                                 <Label Grid.Row="1"
@@ -188,11 +207,17 @@
                                    Style="{StaticResource LabelHeader}"
                                    Text="Timestamp,  Longitude,  Latitude,  Altitude">
                                 <Label.Triggers>
-                                    <DataTrigger TargetType="Label" Binding="{Binding ShowLogEditor}" Value="True">
-                                        <Setter Property="IsVisible" Value="True"/>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding ShowLogEditor}"
+                                                 Value="True">
+                                        <Setter Property="IsVisible"
+                                                Value="True" />
                                     </DataTrigger>
-                                    <DataTrigger TargetType="Label" Binding="{Binding ShowLogEditor}" Value="False">
-                                        <Setter Property="IsVisible" Value="False"/>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding ShowLogEditor}"
+                                                 Value="False">
+                                        <Setter Property="IsVisible"
+                                                Value="False" />
                                     </DataTrigger>
                                 </Label.Triggers>
                             </Label>
@@ -202,7 +227,8 @@
             </StackLayout>
         </DataTemplate>
 
-        <DataTemplate x:Key="ItemTemplate" x:DataType="models:DisplayPosition">
+        <DataTemplate x:Key="ItemTemplate"
+                      x:DataType="models:DisplayPosition">
             <Frame Style="{StaticResource CoordinateItemFrame}">
                 <Grid Margin="0"
                       Padding="0"
@@ -212,11 +238,17 @@
                                Grid.Column="0"
                                IsEnabled="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.ShowAddButton}">
                         <SwipeView.Triggers>
-                            <DataTrigger TargetType="SwipeView" Binding="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.ShowLogEditor}" Value="True">
-                                <Setter Property="IsVisible" Value="False"/>
+                            <DataTrigger TargetType="SwipeView"
+                                         Binding="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.ShowLogEditor}"
+                                         Value="True">
+                                <Setter Property="IsVisible"
+                                        Value="False" />
                             </DataTrigger>
-                            <DataTrigger TargetType="SwipeView" Binding="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.ShowLogEditor}" Value="False">
-                                <Setter Property="IsVisible" Value="True"/>
+                            <DataTrigger TargetType="SwipeView"
+                                         Binding="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.ShowLogEditor}"
+                                         Value="False">
+                                <Setter Property="IsVisible"
+                                        Value="True" />
                             </DataTrigger>
                         </SwipeView.Triggers>
                         <SwipeView.RightItems>
@@ -278,11 +310,17 @@
                           HeightRequest="10"
                           Style="{DynamicResource DetailCoordinateGrid}">
                         <Grid.Triggers>
-                            <DataTrigger TargetType="Grid" Binding="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.ShowLogEditor}" Value="True">
-                                <Setter Property="IsVisible" Value="True"/>
+                            <DataTrigger TargetType="Grid"
+                                         Binding="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.ShowLogEditor}"
+                                         Value="True">
+                                <Setter Property="IsVisible"
+                                        Value="True" />
                             </DataTrigger>
-                            <DataTrigger TargetType="Grid" Binding="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.ShowLogEditor}" Value="False">
-                                <Setter Property="IsVisible" Value="False"/>
+                            <DataTrigger TargetType="Grid"
+                                         Binding="{Binding Source={x:Reference Name=EditFeaturePage}, Path=BindingContext.ShowLogEditor}"
+                                         Value="False">
+                                <Setter Property="IsVisible"
+                                        Value="False" />
                             </DataTrigger>
                         </Grid.Triggers>
                         <Label Grid.Row="1"
@@ -311,7 +349,8 @@
         </DataTemplate>
 
         <DataTemplate x:Key="FooterTemplate">
-            <StackLayout Margin="0" Padding="0">
+            <StackLayout Margin="0"
+                         Padding="0">
                 <Grid Margin="10,0">
                     <!--  Hacky implementation of only top rounded corners  -->
                     <Frame Margin="0,10,0,0"
@@ -326,20 +365,33 @@
                            HasShadow="False"
                            HorizontalOptions="Fill"
                            VerticalOptions="FillAndExpand" />
-                    <StackLayout Margin="0" Padding="0">
-                        <Grid Style="{DynamicResource DetailCoordinateGrid}" RowSpacing="8">
+                    <StackLayout Margin="0"
+                                 Padding="0">
+                        <Grid Style="{DynamicResource DetailCoordinateGrid}"
+                              RowSpacing="8">
                             <Grid.Triggers>
-                                <DataTrigger TargetType="Grid" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.Polygon}">
-                                    <Setter Property="IsVisible" Value="True"/>
+                                <DataTrigger TargetType="Grid"
+                                             Binding="{Binding GeometryType}"
+                                             Value="{x:Static models:GeoJSONType.Polygon}">
+                                    <Setter Property="IsVisible"
+                                            Value="True" />
                                 </DataTrigger>
-                                <DataTrigger TargetType="Grid" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.LineString}">
-                                    <Setter Property="IsVisible" Value="False"/>
+                                <DataTrigger TargetType="Grid"
+                                             Binding="{Binding GeometryType}"
+                                             Value="{x:Static models:GeoJSONType.LineString}">
+                                    <Setter Property="IsVisible"
+                                            Value="False" />
                                 </DataTrigger>
-                                <DataTrigger TargetType="Grid" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.Point}">
-                                    <Setter Property="IsVisible" Value="False"/>
+                                <DataTrigger TargetType="Grid"
+                                             Binding="{Binding GeometryType}"
+                                             Value="{x:Static models:GeoJSONType.Point}">
+                                    <Setter Property="IsVisible"
+                                            Value="False" />
                                 </DataTrigger>
                             </Grid.Triggers>
-                            <TemplatedView Grid.Row="0" Grid.ColumnSpan="5" ControlTemplate="{StaticResource BodySeperator}" />
+                            <TemplatedView Grid.Row="0"
+                                           Grid.ColumnSpan="5"
+                                           ControlTemplate="{StaticResource BodySeperator}" />
                             <Label Grid.Row="1"
                                    Grid.Column="0"
                                    FontSize="Small"
@@ -375,23 +427,36 @@
                                HeightRequest="20"
                                HorizontalOptions="CenterAndExpand">
                             <Frame.Triggers>
-                                <DataTrigger TargetType="Frame" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.Polygon}">
-                                    <Setter Property="IsVisible" Value="True"/>
+                                <DataTrigger TargetType="Frame"
+                                             Binding="{Binding GeometryType}"
+                                             Value="{x:Static models:GeoJSONType.Polygon}">
+                                    <Setter Property="IsVisible"
+                                            Value="True" />
                                 </DataTrigger>
-                                <DataTrigger TargetType="Frame" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.LineString}">
-                                    <Setter Property="IsVisible" Value="True"/>
+                                <DataTrigger TargetType="Frame"
+                                             Binding="{Binding GeometryType}"
+                                             Value="{x:Static models:GeoJSONType.LineString}">
+                                    <Setter Property="IsVisible"
+                                            Value="True" />
                                 </DataTrigger>
-                                <DataTrigger TargetType="Frame" Binding="{Binding GeometryType}" Value="{x:Static models:GeoJSONType.Point}">
-                                    <Setter Property="IsVisible" Value="False"/>
+                                <DataTrigger TargetType="Frame"
+                                             Binding="{Binding GeometryType}"
+                                             Value="{x:Static models:GeoJSONType.Point}">
+                                    <Setter Property="IsVisible"
+                                            Value="False" />
                                 </DataTrigger>
-                                <DataTrigger TargetType="Frame" Binding="{Binding ShowLogEditor}" Value="True">
-                                    <Setter Property="IsVisible" Value="False"/>
+                                <DataTrigger TargetType="Frame"
+                                             Binding="{Binding ShowLogEditor}"
+                                             Value="True">
+                                    <Setter Property="IsVisible"
+                                            Value="False" />
                                 </DataTrigger>
                             </Frame.Triggers>
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding AddPointCommand}" />
                             </Frame.GestureRecognizers>
-                            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                            <StackLayout Orientation="Horizontal"
+                                         VerticalOptions="Center">
                                 <Image HorizontalOptions="Center"
                                        Source="plusColor"
                                        VerticalOptions="Center" />
@@ -409,7 +474,8 @@
                        HeightRequest="170"
                        StyleClass="Base">
                     <StackLayout>
-                        <Label Style="{StaticResource LabelTitle}" Text="Properties" />
+                        <Label Style="{StaticResource LabelTitle}"
+                               Text="Properties" />
                         <!--  ItemsSource has to be Above Footer or list will not display  -->
                         <CollectionView x:Name="PropertiesList"
                                         Margin="10,0,0,0"
@@ -436,29 +502,37 @@
                        StyleClass="Base, Button"
                        IsVisible="{Binding IsExistingFeature}">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding DeleteFeatureCommand}"/>
+                        <TapGestureRecognizer Command="{Binding DeleteFeatureCommand}" />
                     </Frame.GestureRecognizers>
                     <Label HorizontalOptions="Center"
                            VerticalOptions="Center"
                            Style="{StaticResource FrameButtonLabel}"
                            Text="Delete"
-                           TextColor="{StaticResource Delete}"/>
+                           TextColor="{StaticResource Delete}" />
                 </Frame>
                 <!--Hacky fix to help avoid Xamarin's CollectionView scroll issue-->
-                <Frame HasShadow="False" BackgroundColor="Transparent">
+                <Frame HasShadow="False"
+                       BackgroundColor="Transparent">
                     <Frame.Triggers>
-                        <DataTrigger TargetType="Frame" Binding="{Binding IsExistingFeature}" Value="True">
-                            <Setter Property="Margin" Value="10,10,10,320"/>
+                        <DataTrigger TargetType="Frame"
+                                     Binding="{Binding IsExistingFeature}"
+                                     Value="True">
+                            <Setter Property="Margin"
+                                    Value="10,10,10,320" />
                         </DataTrigger>
-                        <DataTrigger TargetType="Frame" Binding="{Binding IsExistingFeature}" Value="False">
-                            <Setter Property="Margin" Value="10,10,10,340"/>
+                        <DataTrigger TargetType="Frame"
+                                     Binding="{Binding IsExistingFeature}"
+                                     Value="False">
+                            <Setter Property="Margin"
+                                    Value="10,10,10,340" />
                         </DataTrigger>
                     </Frame.Triggers>
                 </Frame>
             </StackLayout>
         </DataTemplate>
 
-        <DataTemplate x:Key="PropertyItemTemplate" x:DataType="models:Property">
+        <DataTemplate x:Key="PropertyItemTemplate"
+                      x:DataType="models:Property">
             <Grid Padding="0,0,10,0"
                   ColumnDefinitions="3*,*,15"
                   RowDefinitions="*,2*,*,2*"
@@ -522,7 +596,8 @@
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddPropertyCommand}" />
                     </Frame.GestureRecognizers>
-                    <StackLayout Orientation="Vertical" VerticalOptions="Center">
+                    <StackLayout Orientation="Vertical"
+                                 VerticalOptions="Center">
                         <Image HeightRequest="20"
                                HorizontalOptions="Center"
                                Source="plusColor"

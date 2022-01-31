@@ -6,7 +6,8 @@
              xmlns:viewModels="clr-namespace:Groundsman.ViewModels"
              x:DataType="viewModels:MapViewModel"
              Style="{StaticResource PageStyle}">
-    <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+    <AbsoluteLayout HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand">
         <ContentView AbsoluteLayout.LayoutBounds="0,0,1,1"
                      AbsoluteLayout.LayoutFlags="All"
                      Content="{Binding Map}" />

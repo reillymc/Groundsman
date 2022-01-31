@@ -5,62 +5,36 @@
              xmlns:viewModels="clr-namespace:Groundsman.ViewModels"
              x:Name="this">
     <ContentView.Content>
-        <StackLayout MinimumHeightRequest="48">
-            <StackLayout.BackgroundColor>
-                <OnPlatform x:TypeArguments="Color"
-                            Android="{StaticResource greenPrimary}"
-                            iOS="{StaticResource Background}" />
-            </StackLayout.BackgroundColor>
-            <Grid Margin="15,7,15,0" ColumnDefinitions="Auto,*,70">
+        <StackLayout MinimumHeightRequest="48"
+                     BackgroundColor="{OnPlatform iOS={StaticResource Background}, Android={StaticResource greenPrimary}}">
+            <Grid Margin="15,7,15,0"
+                  ColumnDefinitions="Auto,*,70">
                 <Button Grid.Column="0"
+                        Text="{OnPlatform Default='Cancel', Android=''}"
+                        ImageSource="{OnPlatform Default='', Android='cancel_icon'}"
                         Command="{Binding OnCancelTappedCommand}"
                         HorizontalOptions="Start"
                         Style="{StaticResource ModalButton}"
-                        WidthRequest="{OnPlatform iOS=50,
-                                                  Android=40}">
-                    <Button.Text>
-                        <OnPlatform x:TypeArguments="x:String"
-                                    Android=""
-                                    Default="Cancel"
-                                    iOS="Cancel" />
-                    </Button.Text>
-
-                    <Button.ImageSource>
-                        <OnPlatform x:TypeArguments="ImageSource"
-                                    Android="cancel_icon"
-                                    Default=""
-                                    iOS="" />
-                    </Button.ImageSource>
+                        WidthRequest="{OnPlatform iOS=50, Android=40}">
                 </Button>
                 <Label Grid.Column="1"
-                       FontAttributes="{OnPlatform iOS=Bold,
-                                                   Android=Bold}"
-                       FontSize="{OnPlatform iOS=16,
-                                             Android=20}"
-                       HorizontalOptions="{OnPlatform iOS=CenterAndExpand,
-                                                      Android=StartAndExpand}"
+                       FontAttributes="{OnPlatform iOS=Bold, Android=Bold}"
+                       FontSize="{OnPlatform iOS=16, Android=20}"
+                       HorizontalOptions="{OnPlatform iOS=CenterAndExpand, Android=StartAndExpand}"
                        LineBreakMode="TailTruncation"
                        MaxLines="1"
                        Text="{Binding Title}"
-                       TextColor="{OnPlatform iOS={StaticResource Text},
-                                              Android={StaticResource Foreground}}"
+                       TextColor="{OnPlatform iOS={StaticResource Text}, Android={StaticResource Foreground}}"
                        VerticalOptions="Center" />
                 <Button Grid.Column="2"
                         BindingContext="{x:Reference this}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:BaseViewModel}}, Path=OnDoneTappedCommand}"
-                        FontAttributes="{OnPlatform iOS=Bold,
-                                                    Android=Bold}"
+                        FontAttributes="{OnPlatform iOS=Bold, Android=Bold}"
                         HorizontalOptions="End"
                         IsVisible="{Binding Path=HasDoneButton}"
-                        MinimumWidthRequest="{OnPlatform iOS=50,
-                                                         Android=80}"
+                        MinimumWidthRequest="{OnPlatform iOS=50, Android=80}"
+                        Text="{OnPlatform Default='Done', Android='Save'}"
                         Style="{StaticResource ModalButton}">
-                    <Button.Text>
-                        <OnPlatform x:TypeArguments="x:String"
-                                    Android="Save"
-                                    Default="Done"
-                                    iOS="Done" />
-                    </Button.Text>
                 </Button>
             </Grid>
         </StackLayout>
