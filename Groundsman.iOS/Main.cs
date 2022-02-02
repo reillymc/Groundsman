@@ -1,10 +1,9 @@
 ﻿using UIKit;
 
-namespace Groundsman.iOS
+namespace Groundsman.iOS;
+
+public class Application
 {
-    public class Application
-    {
-        // This is the main entry point of the application.
-        private static void Main(string[] args) => UIApplication.Main(args, null, typeof(AppDelegate));
-    }
+    // This is the main entry point of the application.
+    private static void Main(string[] args) => UIApplication.Main(args, null, typeof(AppDelegate));
 }

@@ -9,6 +9,7 @@
       },
       "properties": {
         "author": "Groundsman",
+        "date": "15/01/2022",
         "Default String Property": "This is a sample point",
         "Default Integer Property": 3,
         "Default Float Property": 3.3,

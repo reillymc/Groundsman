@@ -37,6 +37,7 @@
     <BundleAssemblies>false</BundleAssemblies>
     <MandroidI18n />
     <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
+    <LangVersion>10.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>
@@ -53,6 +54,7 @@
     <EnableLLVM>false</EnableLLVM>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <BundleAssemblies>false</BundleAssemblies>
+    <LangVersion>10.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
@@ -231,6 +233,7 @@
     <ProjectReference Include="..\Groundsman\Groundsman.csproj">
       <Project>{B3D87493-1DCF-4840-A1AE-AE73CDB618B0}</Project>
       <Name>Groundsman</Name>
+      <ReferenceSourceTarget></ReferenceSourceTarget>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

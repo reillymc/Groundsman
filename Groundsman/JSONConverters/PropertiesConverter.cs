@@ -1,34 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace Groundsman.JSONConverters
+namespace Groundsman.JSONConverters;
+
+/// <summary>
+/// This converter is used to delete internal dictionary entries that shouldnt be exported when writing JSON
+/// </summary>
+/// <typeparam name="TKey"></typeparam>
+/// <typeparam name="TValue"></typeparam>
+public class PropertiesConverter<TKey, TValue> : JsonConverter<IDictionary<string, object>>
 {
-    /// <summary>
-    /// This converter is used to delete internal dictionary entries that shouldnt be exported when writing JSON
-    /// </summary>
-    /// <typeparam name="TKey"></typeparam>
-    /// <typeparam name="TValue"></typeparam>
-    public class PropertiesConverter<TKey, TValue> : JsonConverter<IDictionary<string, object>>
+    public override bool CanRead => false;
+
+    public override IDictionary<string, object> ReadJson(JsonReader reader, Type objectType, IDictionary<string, object> existingValue, bool hasExistingValue, JsonSerializer serializer) => throw new NotImplementedException();
+
+    public override void WriteJson(JsonWriter writer, IDictionary<string, object> value, JsonSerializer serializer)
     {
-        public override bool CanRead => false;
+        writer.WriteStartObject();
 
-        public override IDictionary<string, object> ReadJson(JsonReader reader, Type objectType, IDictionary<string, object> existingValue, bool hasExistingValue, JsonSerializer serializer) => throw new NotImplementedException();
-
-        public override void WriteJson(JsonWriter writer, IDictionary<string, object> value, JsonSerializer serializer)
+        foreach (KeyValuePair<string, object> pair in value)
         {
-            writer.WriteStartObject();
-
-            foreach (KeyValuePair<string, object> pair in value)
+            if (pair.Key != "id")
             {
-                if (pair.Key != "id")
-                {
-                    writer.WritePropertyName(pair.Key);
+                writer.WritePropertyName(pair.Key);
 
-                    serializer.Serialize(writer, pair.Value);
-                }
+                serializer.Serialize(writer, pair.Value);
             }
-            writer.WriteEndObject();
         }
+        writer.WriteEndObject();
     }
 }

@@ -66,7 +66,7 @@ namespace Groundsman.Tests
         {
             AddFeature();
 
-            _ = featureService.DeleteItem(featureService.FeatureList[0]);
+            _ = featureService.DeleteItem(DefaultPoint.Id);
 
             Assert.AreEqual(0, featureService.FeatureList.Count);
         }
@@ -79,11 +79,11 @@ namespace Groundsman.Tests
         public void UpdateFeatureTest()
         {
             AddFeature();
-            Feature feature = featureService.FeatureList[0];
+            Feature feature = DefaultPoint;
             feature.Properties.Add("Test", "Test");
             _ = featureService.SaveItem(feature);
 
-            Assert.IsTrue(featureService.FeatureList[0].Properties.ContainsKey("Test"));
+            Assert.IsTrue(DefaultPoint.Properties.ContainsKey("Test"));
         }
 
 

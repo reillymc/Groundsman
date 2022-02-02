@@ -1,80 +1,77 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using Groundsman.Models;
+﻿using Groundsman.Models;
 using Xamarin.Essentials;
 
-namespace Groundsman
+namespace Groundsman;
+
+public static class Constants
 {
-    public static class Constants
+    // Files paths and names
+    private static readonly string DATA_PATH = FileSystem.AppDataDirectory;
+    private static readonly string CACHE_PATH = FileSystem.CacheDirectory;
+
+    private const string FEATURES_FILENAME = "locations.json";
+    private const string DELETED_FEATURE_FILENAME = "deleted.json";
+    private const string EXPORT_LOG_FILENAME = "Groundsman Log.csv";
+
+    public static readonly string FEATURES_FILE = Path.Combine(DATA_PATH, FEATURES_FILENAME);
+    public static readonly string DELETED_FEATURE_FILE = Path.Combine(CACHE_PATH, DELETED_FEATURE_FILENAME);
+    public static readonly string EXPORT_LOG_FILE = Path.Combine(CACHE_PATH, EXPORT_LOG_FILENAME);
+
+    // Preference keys
+    public const string UserIDKey = "UserID";
+    public const string GPSPrecisionKey = "GPSPrecision";
+    public const string DecimalAccuracyKey = "DecimalAccuracy";
+    public const string ListOrderingKey = "ListOrdering";
+    public const string ShakeToUndoKey = "EnableShakeToUndo";
+    public const string MapPreviewKey = "MapPreview";
+    public const string MapDrawPointsKey = "ShowPointsOnMap";
+    public const string MapDrawLinesKey = "ShowLinesOnMap";
+    public const string MapDrawPolygonsKey = "ShowPolygonsOnMap";
+    public const string LoggerExportFormatKey = "LoggerExportFormat";
+
+
+    // Hardcoded feature property keys
+    public const string IdentifierProperty = "id";
+    public const string NameProperty = "name";
+    public const string DateProperty = "date";
+    public const string AuthorProperty = "author";
+    public const string LogTimestampsProperty = "timestamps";
+
+    public static string[] GroundsmanProperties = new string[] { IdentifierProperty, NameProperty, DateProperty, AuthorProperty, LogTimestampsProperty };
+
+    // Feature property values
+    public const string DefaultUserValue = "Groundsman";
+    public const int DefaultGPSPrecisionValue = 2;
+    public const int DefaultDecimalAccuracyValue = 6;
+    public const int DefaultListOrderingValue = 0;
+    public const int LoggerExportFormatDefaultValue = 0;
+
+    /// <summary>
+    /// Fetches the local features list file if it exists, otherwise the default feature list
+    /// </summary>
+    /// <returns>Contents of file (serialised GeoJSON)</returns>
+    public static string FeaturesFileContents => File.Exists(FEATURES_FILE) ? File.ReadAllText(FEATURES_FILE) : null;
+
+    /// <summary>
+    /// Gives the correct export file name and extension
+    /// </summary>
+    /// <param name="fileName">Name of the export file</param>
+    /// <param name="type">the filetype to export to</param>
+    /// <returns>Full export file path string</returns>
+    public static string GetExportFile(string fileName, ExportType type) => type switch
     {
-        // Files paths and names
-        private static readonly string DATA_PATH = FileSystem.AppDataDirectory;
-        private static readonly string CACHE_PATH = FileSystem.CacheDirectory;
+        ExportType.GeoJSON => Path.Combine(CACHE_PATH, fileName + ".json"),
+        ExportType.CSV => Path.Combine(CACHE_PATH, fileName + ".csv"),
+        _ => Path.Combine(CACHE_PATH, fileName),
+    };
 
-        private const string FEATURES_FILENAME = "locations.json";
-        private const string DELETED_FEATURE_FILENAME = "deleted.json";
-        private const string EXPORT_LOG_FILENAME = "Groundsman Log.csv";
+    public static bool FirstRun
+    {
+        get => Preferences.Get(nameof(FirstRun), true);
+        set => Preferences.Set(nameof(FirstRun), value);
+    }
 
-        public static readonly string FEATURES_FILE = Path.Combine(DATA_PATH, FEATURES_FILENAME);
-        public static readonly string DELETED_FEATURE_FILE = Path.Combine(CACHE_PATH, DELETED_FEATURE_FILENAME);
-        public static readonly string EXPORT_LOG_FILE = Path.Combine(CACHE_PATH, EXPORT_LOG_FILENAME);
-
-        // Preference keys
-        public const string UserIDKey = "UserID";
-        public const string GPSPrecisionKey = "GPSPrecision";
-        public const string DecimalAccuracyKey = "DecimalAccuracy";
-        public const string ListOrderingKey = "ListOrdering";
-        public const string ShakeToUndoKey = "EnableShakeToUndo";
-        public const string MapPreviewKey = "MapPreview";
-        public const string MapDrawPointsKey = "ShowPointsOnMap";
-        public const string MapDrawLinesKey = "ShowLinesOnMap";
-        public const string MapDrawPolygonsKey = "ShowPolygonsOnMap";
-        public const string LoggerExportFormatKey = "LoggerExportFormat";
-
-
-        // Hardcoded feature property keys
-        public const string IdentifierProperty = "id";
-        public const string NameProperty = "name";
-        public const string DateProperty = "date";
-        public const string AuthorProperty = "author";
-        public const string LogTimestampsProperty = "timestamps";
-
-        public static string[] GroundsmanProperties = new string[] { IdentifierProperty, NameProperty, DateProperty, AuthorProperty, LogTimestampsProperty };
-
-        // Feature property values
-        public const string DefaultUserValue = "Groundsman";
-        public const int DefaultGPSPrecisionValue = 2;
-        public const int DefaultDecimalAccuracyValue = 6;
-        public const int DefaultListOrderingValue = 0;
-        public const int LoggerExportFormatDefaultValue = 0;
-
-        /// <summary>
-        /// Fetches the local features list file if it exists, otherwise the default feature list
-        /// </summary>
-        /// <returns>Contents of file (serialised GeoJSON)</returns>
-        public static string FeaturesFileContents => File.Exists(FEATURES_FILE) ? File.ReadAllText(FEATURES_FILE) : null;
-
-        /// <summary>
-        /// Gives the correct export file name and extension
-        /// </summary>
-        /// <param name="fileName">Name of the export file</param>
-        /// <param name="type">the filetype to export to</param>
-        /// <returns>Full export file path string</returns>
-        public static string GetExportFile(string fileName, ExportType type) => type switch
-        {
-            ExportType.GeoJSON => Path.Combine(CACHE_PATH, fileName + ".json"),
-            ExportType.CSV => Path.Combine(CACHE_PATH, fileName + ".csv"),
-            _ => Path.Combine(CACHE_PATH, fileName),
-        };
-
-        public static bool FirstRun
-        {
-            get => Preferences.Get(nameof(FirstRun), true);
-            set => Preferences.Set(nameof(FirstRun), value);
-        }
-
-        public static List<Feature> DefaultFeatures = new List<Feature> {
+    public static List<Feature> DefaultFeatures = new List<Feature> {
              new Feature(
                  new Polygon(
                      new List <LinearRing> {
@@ -151,5 +148,4 @@ namespace Groundsman
                  },
              }),
          };
-    }
 }

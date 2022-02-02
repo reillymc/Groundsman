@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+		<LangVersion>10.0</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -30,5 +31,8 @@
 		<Compile Update="Views\WelcomeView.xaml.cs">
 			<DependentUpon>WelcomeView.xaml</DependentUpon>
 		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <None Include="..\.editorconfig" />
 	</ItemGroup>
 </Project>

@@ -1,8 +1,7 @@
 ﻿using Xamarin.Forms.Maps;
 
-namespace Groundsman
+namespace Groundsman;
+
+public class CustomMap : Map
 {
-    public class CustomMap : Map
-    {
-    }
 }

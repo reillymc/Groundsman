@@ -1,9 +1,8 @@
 ﻿using Android.App;
 
-namespace Groundsman.Droid.Helpers
+namespace Groundsman.Droid.Helpers;
+
+public interface INotification
 {
-    public interface INotification
-    {
-        Notification ReturnNotif();
-    }
+    Notification ReturnNotif();
 }

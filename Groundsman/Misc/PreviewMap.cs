@@ -1,8 +1,7 @@
 ﻿using Xamarin.Forms.Maps;
 
-namespace Groundsman
+namespace Groundsman;
+
+public class PreviewMap : Map
 {
-    public class PreviewMap : Map
-    {
-    }
 }

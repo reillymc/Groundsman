@@ -1,8 +1,7 @@
 ﻿using Xamarin.Forms;
 
-namespace Groundsman.Misc
+namespace Groundsman.Misc;
+
+public class CustomPicker : Picker
 {
-    public class CustomPicker : Picker
-    {
-    }
 }

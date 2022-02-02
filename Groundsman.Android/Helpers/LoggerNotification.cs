@@ -7,49 +7,48 @@ using Groundsman.Droid.Helpers;
 using XamarinForms.LocationService.Droid.Helpers;
 
 [assembly: Xamarin.Forms.Dependency(typeof(LoggerNotification))]
-namespace XamarinForms.LocationService.Droid.Helpers
+namespace XamarinForms.LocationService.Droid.Helpers;
+
+internal class LoggerNotification : INotification
 {
-    internal class LoggerNotification : INotification
+    private static readonly string foregroundChannelId = "9001";
+    private static readonly Context context = global::Android.App.Application.Context;
+
+
+    public Notification ReturnNotif()
     {
-        private static readonly string foregroundChannelId = "9001";
-        private static readonly Context context = global::Android.App.Application.Context;
+        Intent intent = new Intent(context, typeof(MainActivity));
+        intent.AddFlags(ActivityFlags.SingleTop);
+        intent.PutExtra("Groundsman Logger", "Now recording a log of your positions.");
 
+        PendingIntent pendingIntent = PendingIntent.GetActivity(context, 0, intent, PendingIntentFlags.UpdateCurrent);
 
-        public Notification ReturnNotif()
+        NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context, foregroundChannelId)
+            .SetContentTitle("Groundsman Logger")
+            .SetContentText("Now recording a log of your positions.")
+            .SetSmallIcon(Resource.Mipmap.ic_launcher_foreground)
+            .SetOngoing(true)
+            .SetContentIntent(pendingIntent);
+
+        if (global::Android.OS.Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
-            Intent intent = new Intent(context, typeof(MainActivity));
-            intent.AddFlags(ActivityFlags.SingleTop);
-            intent.PutExtra("Groundsman Logger", "Now recording a log of your positions.");
-
-            PendingIntent pendingIntent = PendingIntent.GetActivity(context, 0, intent, PendingIntentFlags.UpdateCurrent);
-
-            NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context, foregroundChannelId)
-                .SetContentTitle("Groundsman Logger")
-                .SetContentText("Now recording a log of your positions.")
-                .SetSmallIcon(Resource.Mipmap.ic_launcher_foreground)
-                .SetOngoing(true)
-                .SetContentIntent(pendingIntent);
-
-            if (global::Android.OS.Build.VERSION.SdkInt >= BuildVersionCodes.O)
+            NotificationChannel notificationChannel = new NotificationChannel(foregroundChannelId, "Groundsman", NotificationImportance.Low)
             {
-                NotificationChannel notificationChannel = new NotificationChannel(foregroundChannelId, "Groundsman", NotificationImportance.Low)
-                {
-                    Importance = NotificationImportance.High
-                };
-                notificationChannel.EnableLights(true);
-                notificationChannel.EnableVibration(true);
-                notificationChannel.SetShowBadge(true);
-                notificationChannel.SetVibrationPattern(new long[] { 100, 200, 300 });
+                Importance = NotificationImportance.High
+            };
+            notificationChannel.EnableLights(true);
+            notificationChannel.EnableVibration(true);
+            notificationChannel.SetShowBadge(true);
+            notificationChannel.SetVibrationPattern(new long[] { 100, 200, 300 });
 
-                NotificationManager notifManager = context.GetSystemService(Context.NotificationService) as NotificationManager;
-                if (notifManager != null)
-                {
-                    notifBuilder.SetChannelId(foregroundChannelId);
-                    notifManager.CreateNotificationChannel(notificationChannel);
-                }
+            NotificationManager notifManager = context.GetSystemService(Context.NotificationService) as NotificationManager;
+            if (notifManager != null)
+            {
+                notifBuilder.SetChannelId(foregroundChannelId);
+                notifManager.CreateNotificationChannel(notificationChannel);
             }
-
-            return notifBuilder.Build();
         }
+
+        return notifBuilder.Build();
     }
 }

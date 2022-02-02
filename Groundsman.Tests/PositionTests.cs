@@ -71,5 +71,18 @@ namespace Groundsman.Tests
             Assert.AreEqual(position.Altitude, 30);
         }
 
+        /// <summary>
+        /// Check that two positions return true for equality checks
+        /// </summary>
+        [TestMethod]
+        public void CheckPositionEquality()
+        {
+            Position position = new Position(10, 20, 30);
+            Position position2 = new Position(10, 20, 30);
+
+            Assert.AreEqual(position, position2);
+            //Assert.IsTrue(position == position2);
+            Assert.IsTrue(position.Equals(position2));
+        }
     }
 }

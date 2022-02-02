@@ -23,5 +23,20 @@ namespace Groundsman.Tests
 
             Assert.IsTrue(point.Coordinates.Equals(TestData.Position1));
         }
+
+
+        /// <summary>
+        /// Check that two points return true for equality checks
+        /// </summary>
+        [TestMethod]
+        public void CheckPositionEquality()
+        {
+            Point point = new Point(new Position(10, 20, 30));
+            Point point2 =  new Point(new Position(10, 20, 30));
+
+            Assert.AreEqual(point.Coordinates, point2.Coordinates);
+            Assert.IsTrue(point.Equals(point2));
+            Assert.IsTrue(point == point2);
+        }
     }
 }

@@ -532,7 +532,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="PropertyItemTemplate"
-                      x:DataType="models:Property">
+                      x:DataType="models:DisplayProperty">
             <Grid Padding="0,0,10,0"
                   ColumnDefinitions="3*,*,15"
                   RowDefinitions="*,2*,*,2*"
@@ -555,7 +555,7 @@
                        VerticalOptions="End" />
                 <Picker Grid.Row="1"
                         Grid.Column="1"
-                        SelectedIndex="{Binding Type}"
+                        SelectedIndex="{Binding DisplayType}"
                         Style="{StaticResource PropertyPicker}"
                         VerticalOptions="Start">
                     <Picker.ItemsSource>

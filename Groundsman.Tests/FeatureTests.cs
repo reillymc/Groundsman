@@ -18,10 +18,20 @@ namespace Groundsman.Tests
         {
             Feature point = (Feature)GeoJSONObject.ImportGeoJSON(File.ReadAllText("point.json"));
 
-            var countEqal = point.Properties.Count == TestData.PointPropertySet.Count;
+            var importCount = point.Properties.Count;
+            var existingCount = TestData.PointPropertySet.Count;
+
+            var countEqual = importCount == existingCount;
             var exceptions = point.Properties.Except(TestData.PointPropertySet);
 
-            Assert.IsTrue(countEqal && !exceptions.Any());
+            Assert.IsTrue(point.Properties["author"].ToString() == TestData.PointPropertySet["author"].ToString());
+            Assert.IsTrue(DateTime.Parse(point.Properties["date"].ToString()) == DateTime.Parse(TestData.PointPropertySet["date"].ToString()));
+            Assert.IsTrue(point.Properties["Default String Property"].ToString() == TestData.PointPropertySet["Default String Property"].ToString());
+            Assert.IsTrue(Convert.ToInt32(point.Properties["Default Integer Property"]) == Convert.ToInt32(TestData.PointPropertySet["Default Integer Property"]));
+            Assert.IsTrue(Convert.ToSingle(point.Properties["Default Float Property"]) == Convert.ToSingle(TestData.PointPropertySet["Default Float Property"]));
+            Assert.IsTrue(Convert.ToBoolean(point.Properties["favourite"]) == Convert.ToBoolean(TestData.PointPropertySet["favourite"]));
+            Assert.IsTrue(point.Properties["name"].ToString() == TestData.PointPropertySet["name"].ToString());
+            Assert.IsTrue(countEqual && !exceptions.Any());
         }
 
         /// <summary>
@@ -38,8 +48,8 @@ namespace Groundsman.Tests
             Feature importFeature = (Feature)GeoJSONObject.ImportGeoJSON(export);
             Point importPoint = (Point)importFeature.Geometry;
 
-            Assert.AreEqual(feature.Properties.Count, importFeature.Properties.Count - 1); // TODO: proper deep compare of properties
-            Assert.IsTrue(point.Equals(importPoint));
+            Assert.AreEqual(feature.Properties.Count, importFeature.Properties.Count); // TODO: proper deep compare of properties
+            Assert.IsTrue(point == importPoint);
         }
     }
 }
