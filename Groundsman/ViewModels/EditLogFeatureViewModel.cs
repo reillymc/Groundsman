@@ -291,7 +291,7 @@ namespace Groundsman.ViewModels
                         share = new ShareFileRequest
                         {
                             Title = "Share Log",
-                            File = new ShareFile(await FeatureHelper.ExportLog(saveFeature), "text/csv"),
+                            File = new ShareFile(await FeatureHelper.ExportLog(saveFeature, Positions), "text/csv"),
                             PresentationSourceBounds = DeviceInfo.Platform == DevicePlatform.iOS && DeviceInfo.Idiom == DeviceIdiom.Tablet ? bounds : System.Drawing.Rectangle.Empty
                         };
                     }
