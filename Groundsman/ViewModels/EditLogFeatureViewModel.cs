@@ -272,7 +272,7 @@ public class EditLogFeatureViewModel : BaseEditFeatureViewModel
                     var share = new ShareFileRequest
                     {
                         Title = "Share Log",
-                        File = new ShareFile(await FeatureHelper.ExportLog(saveFeature), "text/csv"),
+                        File = new ShareFile(await FeatureHelper.ExportLog(saveFeature, Positions), "text/csv"),
                         PresentationSourceBounds =  bounds
                     };
                     await Share.RequestAsync(share);

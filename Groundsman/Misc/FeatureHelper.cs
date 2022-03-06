@@ -34,11 +34,10 @@ public static class FeatureHelper
     /// </summary>
     /// <param name="item">Feature to export</param>
     /// <returns>Export file path</returns>
-    public static async Task<string> ExportLog(Feature item)
+    public static async Task<string> ExportLog(Feature item, IEnumerable<DisplayPosition> displayPositions)
     {
-        var log = (LineString)item.Geometry;
         string logString = "Timestamp, Longitude, Latitude, Altitude\n";
-        foreach (Position position in log.Coordinates.Reverse())
+        foreach (DisplayPosition position in displayPositions.Reverse())
         {
             logString += $"{position}\n";
         }
