@@ -46,6 +46,8 @@ public static class Constants
     public const int DefaultListOrderingValue = 0;
     public const int LoggerExportFormatDefaultValue = 0;
 
+    public static readonly Xamarin.Forms.Maps.MapSpan DefaultLocation = Xamarin.Forms.Maps.MapSpan.FromCenterAndRadius(new Xamarin.Forms.Maps.Position(-27.47, 153.021), Xamarin.Forms.Maps.Distance.FromMiles(1.0));
+
     /// <summary>
     /// Fetches the local features list file if it exists, otherwise the default feature list
     /// </summary>

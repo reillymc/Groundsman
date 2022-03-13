@@ -38,11 +38,11 @@ namespace Groundsman.Views
             if (Device.RuntimePlatform == Device.Android)
             {
                 if (lastCell != null)
-                    lastCell.View.BackgroundColor = Color.Default;
+                    lastCell.View.BackgroundColor = App.AppTheme == App.Theme.Light ? Color.White : Color.Black;
                 ViewCell viewCell = (ViewCell)sender;
                 if (viewCell.View != null)
                 {
-                    viewCell.View.BackgroundColor = App.AppTheme == App.Theme.Light ? Color.White : Color.FromHex("#111111");
+                    viewCell.View.BackgroundColor = App.AppTheme == App.Theme.Light ? Color.White : Color.Black;
                     lastCell = viewCell;
                 }
             }

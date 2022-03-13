@@ -38,10 +38,12 @@
     <MandroidI18n />
     <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
     <LangVersion>10.0</LangVersion>
+    <AndroidHttpClientHandlerType>AndroidClientHandler</AndroidHttpClientHandlerType>
+    <AndroidTlsProvider>Default (Native TLS 1.2+)</AndroidTlsProvider>
+    <AndroidLinkTool></AndroidLinkTool>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>
-    </DebugType>
+    <DebugType></DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>

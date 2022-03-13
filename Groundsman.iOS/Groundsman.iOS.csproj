@@ -29,6 +29,7 @@
     <MtouchDebug>true</MtouchDebug>
     <CodesignKey>Apple Development: Reilly Mackenzie-Cree (ZH63974M2B)</CodesignKey>
     <LangVersion>10.0</LangVersion>
+    <CodesignProvision>Automatic</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>

@@ -50,15 +50,14 @@ public abstract class BaseEditFeatureViewModel : BaseViewModel
         AddPropertyCommand = new Command(() => Properties.Add(new DisplayProperty("", "")));
         DeletePropertyCommand = new Command<DisplayProperty>((item) => Properties.Remove(item));
 
-        Map = new PreviewMap
-        {
-            InputTransparent = true,
-        };
 
         if (Preferences.Get(Constants.MapPreviewKey, false))
         {
             ShowMapPreview = true;
-            _ = CenterMapOnUser();
+            Map = new PreviewMap(Constants.DefaultLocation)
+            {
+                InputTransparent = true,
+            };
         }
 
         Positions.CollectionChanged += Positions_CollectionChanged;
@@ -83,18 +82,17 @@ public abstract class BaseEditFeatureViewModel : BaseViewModel
         }
     }
 
-    private void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private async void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName != "Altitude")
         {
-            UpdateMap();
+            await UpdateMap();
         }
     }
 
-    public void UpdateMap()
+    public async Task UpdateMap()
     {
-        if (!Preferences.Get(Constants.MapPreviewKey, true)) return;
-
+        if (!Preferences.Get(Constants.MapPreviewKey, true) || Map == null) return;
         if (Positions.Count > 0 && Positions.All<DisplayPosition>(position => !position.HasBlankCoordinate()))
         {
             Map.MapElements.Clear();
@@ -133,14 +131,11 @@ public abstract class BaseEditFeatureViewModel : BaseViewModel
             catch // Silently fail to render
             {
             }
+        } else
+        {
+            var location = await HelperServices.GetGeoLocation();
+            Map.MoveToRegion(MapSpan.FromCenterAndRadius(new XFMPosition(location.Latitude, location.Longitude), Distance.FromMiles(0.3)));
         }
-    }
-
-    private async Task CenterMapOnUser()
-    {
-        var location = await HelperServices.GetGeoLocation();
-        Map.MoveToRegion(MapSpan.FromCenterAndRadius(new XFMPosition(location.Latitude, location.Longitude), Distance.FromMiles(0.3)));
-
     }
 
     public Feature GetValidatedFeature()

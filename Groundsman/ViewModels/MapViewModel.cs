@@ -20,12 +20,12 @@ public class MapViewModel : BaseViewModel
 
     public MapViewModel()
     {
-        Map = new CustomMap();
+        Map = new CustomMap(Constants.DefaultLocation);
         CenterMapOnUser();
         Map.MapClicked += OnMapClicked;
     }
 
-    // Only center map on user if location permissions are granted otherwise center on Brisbane
+    // Center map on user if location permissions are granted;
     private async void CenterMapOnUser()
     {
         try
@@ -33,10 +33,7 @@ public class MapViewModel : BaseViewModel
             Position location = await HelperServices.GetGeoLocation();
             Map.MoveToRegion(MapSpan.FromCenterAndRadius(new XFMPosition(location.Latitude, location.Longitude), Distance.FromMiles(1.0)));
         }
-        catch
-        {
-            Map.MoveToRegion(MapSpan.FromCenterAndRadius(new XFMPosition(-27.47, 153.021), Distance.FromMiles(1.0)));
-        }
+        catch { } // Silenty fail
     }
 
     public async void RefreshMap()
@@ -164,5 +161,5 @@ public class MapViewModel : BaseViewModel
         }
     }
 
-    
+
 }
