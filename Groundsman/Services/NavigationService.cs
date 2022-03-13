@@ -49,6 +49,12 @@ public class NavigationService : INavigationService<Feature>
         await currentPage.Navigation.PushModalAsync(new WelcomeView());
     }
 
+    public async Task PushAboutPage()
+    {
+        Page currentPage = GetCurrentPage();
+        await currentPage.Navigation.PushModalAsync(new AboutView());
+    }
+
     public async Task NavigateBack(bool modal)
     {
         Page currentPage = GetCurrentPage();
@@ -95,6 +101,6 @@ public class NavigationService : INavigationService<Feature>
     public async Task ShowImportAlert(int successfulImports)
     {
         Page currentPage = GetCurrentPage();
-        await currentPage.DisplayAlert("Feature Import", $"Groundsman has successfully imported {successfulImports} features!", "Ok");
+        await currentPage.DisplayAlert("Feature Import", $"Groundsman has successfully imported {successfulImports} feature{(successfulImports == 1 ? "" : "s")}!", "Ok");
     }
 }

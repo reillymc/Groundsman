@@ -222,6 +222,10 @@
       <Generator>
       </Generator>
     </AndroidResource>
+    <AndroidResource Include="Resources\drawable-hdpi\empty.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\empty.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\empty.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\empty.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values-night\colors.xml">

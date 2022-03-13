@@ -38,6 +38,8 @@ public abstract class BaseEditFeatureViewModel : BaseViewModel
     public string NameEntry { get; set; }
     public DateTime DateEntry { get; set; }
 
+    public int PositionCount => Positions.Count + 1;
+
     public PreviewMap Map { get; private set; }
 
     public BaseEditFeatureViewModel()
@@ -64,6 +66,7 @@ public abstract class BaseEditFeatureViewModel : BaseViewModel
 
     private void Positions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
+        OnPropertyChanged(nameof(PositionCount));
         if (e.NewItems != null)
         {
             foreach (object item in e.NewItems)

@@ -17,17 +17,6 @@ public class EditFeatureViewModel : BaseEditFeatureViewModel
     public ICommand AddPointCommand { get; set; }
     public ICommand DeletePointCommand { get; set; }
 
-    private int _NumPointFields;
-    public int NumPointFields
-    {
-        get => _NumPointFields;
-        set
-        {
-            _NumPointFields = value;
-            OnPropertyChanged();
-        }
-    }
-
     /// <summary>
     /// ViewModel constructor for creating a new feature.
     /// </summary>
@@ -56,7 +45,6 @@ public class EditFeatureViewModel : BaseEditFeatureViewModel
             default:
                 throw new ArgumentException("Feature type not supported", geometryType.ToString());
         }
-        NumPointFields = Positions.Count + 1;
 
         InitCommandBindings();
     }
@@ -104,11 +92,8 @@ public class EditFeatureViewModel : BaseEditFeatureViewModel
                 throw new ArgumentException("Feature type not supported", feature.Type.ToString());
 
         }
-        NumPointFields = Positions.Count + 1;
-
 
         InitCommandBindings();
-        UpdateMap();
     }
 
     /// <summary>
@@ -207,9 +192,7 @@ public class EditFeatureViewModel : BaseEditFeatureViewModel
         for (int i = 0; i < count; i++)
         {
             Positions.Add(new DisplayPosition((Positions.Count + 1).ToString(), "", "", ""));
-            NumPointFields++;
         }
-        UpdateMap();
         IsBusy = false;
     }
 
@@ -242,8 +225,6 @@ public class EditFeatureViewModel : BaseEditFeatureViewModel
         {
             Positions[i].Index = (i + 1).ToString();
         }
-        NumPointFields--;
-        UpdateMap();
         IsBusy = false;
     }
 }

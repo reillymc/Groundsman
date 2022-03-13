@@ -10,6 +10,9 @@ namespace Groundsman.ViewModels;
 /// </summary>
 public class FeatureListViewModel : BaseViewModel
 {
+    public bool IsListEmpty { get => FeatureList.Count == 0; }
+    public string FeatureCount { get => $"{FeatureList.Count} Feature{(FeatureList.Count == 1 ? "" : "s")}"; }
+
     public Command AddButtonTappedCommand { set; get; }
     public Command ShareButtonTappedCommand { set; get; }
     public Command ItemTappedCommand { set; get; }
@@ -28,6 +31,14 @@ public class FeatureListViewModel : BaseViewModel
         ShareEntryCommand = new Command<Feature>(async (feature) => await ShareFeature(feature));
 
         Title = "My Features";
+
+        FeatureList.CollectionChanged += FeatureList_CollectionChanged;
+    }
+
+    private void FeatureList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(IsListEmpty));
+        OnPropertyChanged(nameof(FeatureCount));
     }
 
     public async Task ShareFeature(Feature feature)

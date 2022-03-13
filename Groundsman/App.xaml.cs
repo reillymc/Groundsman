@@ -38,9 +38,13 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
+
         shakeService = new ShakeService(this);
         DependencyService.Register<FeatureService>();
         DependencyService.Register<NavigationService>();
+
+        VersionTracking.Track();
+
         MainPage = new NavigationPage(HomePage.Instance);
 
         // If the user ID hasn't been set yet, prompt the user to create one upon app launch.

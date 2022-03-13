@@ -60,10 +60,15 @@ public class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDe
     public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
     {
         {
-            using (StreamReader reader = new StreamReader(url.Path))
+            try
             {
+                using StreamReader reader = new(url.Path);
                 string filecontent = reader.ReadToEnd();
                 _ = mainForms.ImportRawGeoJSON(filecontent);
+            }
+            catch
+            {
+                _ = mainForms.NavigationService.ShowAlert("Import Error", "Groundsman is unable to access this file. Ensure the file is stored locally and allows reading. Alternatively, import via the file button on the Add Features screen.", false);
             }
         }
         return true;

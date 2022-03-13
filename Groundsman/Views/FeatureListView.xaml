@@ -78,7 +78,8 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <AbsoluteLayout x:Name="absLayout">
+    <AbsoluteLayout x:Name="absLayout"
+                    BackgroundColor="{DynamicResource Background}">
         <ListView x:Name="listView"
                   ItemsSource="{Binding FeatureList}"
                   HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}"
@@ -89,10 +90,37 @@
             <ListView.Footer>
                 <Label Padding="10"
                        FontSize="Small"
-                       Text="{Binding FeatureList.Count, StringFormat='{0} Features'}"
+                       Text="{Binding FeatureCount}"
                        TextColor="{DynamicResource TextSecondary}" />
             </ListView.Footer>
+            <ListView.Triggers>
+                <DataTrigger TargetType="ListView"
+                             Binding="{Binding IsListEmpty}"
+                             Value="True">
+                    <Setter Property="IsVisible"
+                            Value="False" />
+                </DataTrigger>
+            </ListView.Triggers>
         </ListView>
+        <StackLayout AbsoluteLayout.LayoutBounds="0.5,0.35,-1, -1"
+                     AbsoluteLayout.LayoutFlags="PositionProportional">
+            <StackLayout.Triggers>
+                <DataTrigger TargetType="StackLayout"
+                             Binding="{Binding IsListEmpty}"
+                             Value="False">
+                    <Setter Property="IsVisible"
+                            Value="False" />
+                </DataTrigger>
+            </StackLayout.Triggers>
+            <Image Source="empty"
+                   HorizontalOptions="CenterAndExpand"
+                   HeightRequest="120"
+                   WidthRequest="120"/>
+            <Label Text="No features available"
+                   HorizontalOptions="CenterAndExpand"
+                   TextColor="{DynamicResource TextSecondary}"/>
+        </StackLayout>
+
         <Button Margin="16"
                 AbsoluteLayout.LayoutBounds="1.0,1.0,-1,-1"
                 AbsoluteLayout.LayoutFlags="PositionProportional"

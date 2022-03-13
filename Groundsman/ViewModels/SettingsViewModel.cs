@@ -83,7 +83,7 @@ public class SettingsViewModel : BaseViewModel
     {
         Title = "Settings";
         DeleteAllFeatures = new Command(async () => await ExecuteDeleteAllFeaturesCommand());
-        InfoButtonTappedCommand = new Command(async () => await NavigationService.ShowAlert("Credits", "Development:\nReilly MacKenzie-Cree\nGeorge Delosa\nAri Luangamath", false));
+        InfoButtonTappedCommand = new Command(async () => await NavigationService.PushAboutPage());
     }
 
     private async Task ExecuteDeleteAllFeaturesCommand()

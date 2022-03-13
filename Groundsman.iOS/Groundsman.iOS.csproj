@@ -74,6 +74,7 @@
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <LangVersion>10.0</LangVersion>
+    <CodesignProvision>Groundsman Distribution 20220308</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <AppExtensionDebugBundleId />
@@ -274,19 +275,13 @@
     <ImageAsset Include="Resources\Assets.xcassets\fileImport.symbolset\square.and.arrow.down.svg">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Resources\Assets.xcassets\Symbol.symbolset\Contents.json">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Resources\Assets.xcassets\Symbol.symbolset\doc.on.clipboard.svg">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Resources\Assets.xcassets\share.symbolset\Contents.json">
-      <Visible>false</Visible>
-    </ImageAsset>
     <ImageAsset Include="Resources\Assets.xcassets\paste.symbolset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Resources\Assets.xcassets\paste.symbolset\doc.on.clipboard.svg">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\share.symbolset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Resources\Assets.xcassets\add.imageset\Contents.json">
@@ -409,6 +404,14 @@
     <ImageAsset Include="Resources\Assets.xcassets\logo.imageset\.DS_Store">
       <Visible>false</Visible>
     </ImageAsset>
+    <ImageAsset Include="Resources\Assets.xcassets\empty.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Assets.xcassets\empty.imageset\Empty1x.png" />
+    <ImageAsset Include="Resources\Assets.xcassets\empty.imageset\Empty2x.png" />
+    <ImageAsset Include="Resources\Assets.xcassets\empty.imageset\Empty3x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\Assets.xcassets\empty.imageset\" />
+    <Folder Include="Resources\Assets.xcassets\share.imageset\" />
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
