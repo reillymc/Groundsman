@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+    xmlns:viewmodels="clr-namespace:Groundsman.ViewModels"
+    x:Class="Groundsman.Pages.EditPage"
+    x:DataType="viewmodels:EditViewModel"
+    ios:Page.ModalPresentationStyle="FormSheet"
+    Title="{Binding Feature.Name}"
+    Shell.PresentationMode="Modal">
+
+    <StackLayout>
+        <Label
+            Text="Edit Feature"
+            VerticalOptions="Center"
+            HorizontalOptions="Center" />
+    </StackLayout>
+</ContentPage>

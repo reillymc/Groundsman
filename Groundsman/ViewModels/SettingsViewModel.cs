@@ -1,98 +1,86 @@
-﻿using Xamarin.Essentials;
-using Xamarin.Forms;
+﻿using Microsoft.Toolkit.Mvvm.Input;
+using Groundsman.Helpers;
+using Groundsman.Services;
+using Groundsman.Pages;
 
 namespace Groundsman.ViewModels;
 
-public class SettingsViewModel : BaseViewModel
+public partial class SettingsViewModel : BaseViewModel
 {
-    public Command DeleteAllFeatures { get; set; }
-    public Command InfoButtonTappedCommand { get; set; }
+    private FeatureService featureService;
 
-    public string IDEntry
+    public string UserName
     {
-        get => Preferences.Get(Constants.UserIDKey, Constants.DefaultUserValue);
-        set
-        {
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                Preferences.Set(Constants.UserIDKey, value);
-            }
-            else
-            {
-                Preferences.Set(Constants.UserIDKey, Constants.DefaultUserValue);
-            }
-        }
+        get => Settings.UserName;
+        set => Settings.UserName = !string.IsNullOrWhiteSpace(value) ? value : "Groundsman";
     }
 
-    public int DecimalAccuracyEntry
+    public int DecimalPrecision
     {
-        get => Preferences.Get(Constants.DecimalAccuracyKey, Constants.DefaultDecimalAccuracyValue);
-        set => Preferences.Set(Constants.DecimalAccuracyKey, value);
-    }
-    public int GPSPrecisionEntry
-    {
-        get => Preferences.Get(Constants.GPSPrecisionKey, Constants.DefaultGPSPrecisionValue);
-        set => Preferences.Set(Constants.GPSPrecisionKey, value);
+        get => Settings.DecimalPrecision;
+        set => Settings.DecimalPrecision = value;
     }
 
-    public int ListOrdering
+    public int GeolocationAccuracy
     {
-        get => Preferences.Get(Constants.ListOrderingKey, Constants.DefaultListOrderingValue);
-        set
-        {
-            Preferences.Set(Constants.ListOrderingKey, value);
-            _ = FeatureStore.GetItemsAsync();
-        }
+        get => Settings.GeolocationAccuracy;
+        set => Settings.GeolocationAccuracy = value;
     }
 
-    public bool EnableShakeToUndo
+    public bool ShakeToUndo
     {
-        get => Preferences.Get(Constants.ShakeToUndoKey, true);
-        set => Preferences.Set(Constants.ShakeToUndoKey, value);
+        get => Settings.ShakeToUndo;
+        set => Settings.ShakeToUndo = value;
     }
 
-    public bool EnableMapPreview
+    public bool EditorMapPreview
     {
-        get => Preferences.Get(Constants.MapPreviewKey, true);
-        set => Preferences.Set(Constants.MapPreviewKey, value);
+        get => Settings.EditorMapPreview;
+        set => Settings.EditorMapPreview = value;
     }
 
     public int LoggerExportFormat
     {
-        get => Preferences.Get(Constants.LoggerExportFormatKey, Constants.LoggerExportFormatDefaultValue);
-        set => Preferences.Set(Constants.LoggerExportFormatKey, value);
+        get => Settings.LoggerExportFormat;
+        set => Settings.LoggerExportFormat = value;
     }
 
-    public bool ShowPointsOnMap
+    public bool MapRenderPoints
     {
-        get => Preferences.Get(Constants.MapDrawPointsKey, true);
-        set => Preferences.Set(Constants.MapDrawPointsKey, value);
+        get => Settings.MapRenderPoints;
+        set => Settings.MapRenderPoints = value;
     }
-    public bool ShowLinesOnMap
+    public bool MapRenderLines
     {
-        get => Preferences.Get(Constants.MapDrawLinesKey, true);
-        set => Preferences.Set(Constants.MapDrawLinesKey, value);
+        get => Settings.MapRenderLines;
+        set => Settings.MapRenderLines = value;
     }
-    public bool ShowPolygonsOnMap
+    public bool MapRenderPolygons
     {
-        get => Preferences.Get(Constants.MapDrawPolygonsKey, true);
-        set => Preferences.Set(Constants.MapDrawPolygonsKey, value);
-    }
-
-    public SettingsViewModel()
-    {
-        Title = "Settings";
-        DeleteAllFeatures = new Command(async () => await ExecuteDeleteAllFeaturesCommand());
-        InfoButtonTappedCommand = new Command(async () => await NavigationService.PushAboutPage());
+        get => Settings.MapRenderPolygons;
+        set => Settings.MapRenderPolygons = value;
     }
 
-    private async Task ExecuteDeleteAllFeaturesCommand()
+    public SettingsViewModel(FeatureService featureService)
     {
-        bool yesResponse = await NavigationService.ShowAlert("Reset Feature List?", "This will permanently erase all saved features. Do you wish to continue?", true);
-        if (yesResponse)
+        this.featureService = featureService;
+    }
+
+    [ICommand]
+    private async Task ViewInfo()
+    {
+        await Shell.Current.GoToAsync(nameof(AboutPage));
+    }
+
+    [ICommand]
+    private async Task DeleteAllFeatures()
+    {
+        var confirmation = await Shell.Current.DisplayAlert("Reset Feature List?", "This will permanently erase all saved features.", "Reset", "Cancel");
+        if (confirmation)
         {
-            await FeatureStore.ClearItems();
-            _ = await FeatureStore.GetItemsAsync();
+            _ = featureService.ClearItems();
         }
+        return;
     }
 }
+

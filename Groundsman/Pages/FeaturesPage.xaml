@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+    xmlns:viewmodels="clr-namespace:Groundsman.ViewModels"
+    xmlns:models="clr-namespace:Groundsman.Models"
+    xmlns:views="clr-namespace:Groundsman.Views"
+    ios:Page.LargeTitleDisplay="Always"
+    ios:NavigationPage.PrefersLargeTitles="True"
+    x:Class="Groundsman.Pages.FeaturesPage"
+    x:DataType="viewmodels:FeaturesViewModel"
+    Title="My Features">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Order="Default"
+            IconImageSource="{OnPlatform share.png, iOS=share_ios.png, Android=share_android.png}"
+            Command="{Binding ShareFeaturesCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate
+                x:Key="FeatureItemTemplate"
+                x:DataType="models:Feature">
+                <SwipeView>
+                    <SwipeView.RightItems>
+                        <SwipeItems
+                            Mode="Reveal">
+                            <SwipeItem
+                                Command="{Binding Source={x:Reference FeatureListCollectionView}, Path=BindingContext.DeleteFeatureCommand}"
+                                CommandParameter="{Binding .}"
+                                Text="Delete"
+                                BackgroundColor="Red"
+                                IsDestructive="True" />
+                            <SwipeItem
+                                Command="{Binding Source={x:Reference FeatureListCollectionView}, Path=BindingContext.ShareFeatureCommand}"
+                                CommandParameter="{Binding .}"
+                                BackgroundColor="{StaticResource Gray300}"
+                                Text="Share" />
+                        </SwipeItems>
+                    </SwipeView.RightItems>
+                    <HorizontalStackLayout
+                        Padding="10,5,0,5"
+                        HorizontalOptions="FillAndExpand"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={x:Reference FeatureListCollectionView}, Path=BindingContext.EditFeatureCommand}"
+                                CommandParameter="{Binding .}" />
+                        </HorizontalStackLayout.GestureRecognizers>
+                        <Image
+                            HeightRequest="24"
+                            VerticalOptions="Center"
+                            Margin="0,0,5,0"
+                            Shadow="{StaticResource ShadowLight}"
+                            WidthRequest="25">
+                            <Image.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding Geometry.Type}"
+                                    TargetType="Image"
+                                    Value="Point">
+                                    <Setter
+                                        Property="Source"
+                                        Value="point.png" />
+                                </DataTrigger>
+                                <DataTrigger
+                                    Binding="{Binding Geometry.Type}"
+                                    TargetType="Image"
+                                    Value="LineString">
+                                    <Setter
+                                        Property="Source"
+                                        Value="line.png" />
+                                </DataTrigger>
+                                <DataTrigger
+                                    Binding="{Binding Geometry.Type}"
+                                    TargetType="Image"
+                                    Value="Polygon">
+                                    <Setter
+                                        Property="Source"
+                                        Value="polygon.png" />
+                                </DataTrigger>
+                            </Image.Triggers>
+                        </Image>
+                        <VerticalStackLayout
+                            Padding="5,0">
+                            <Label
+                                Style="{StaticResource ListLabelStyle}"
+                                Text="{Binding Name}"
+                                VerticalOptions="EndAndExpand" />
+                            <Label
+                                FontSize="Small"
+                                HorizontalTextAlignment="Start"
+                                LineBreakMode="TailTruncation"
+                                TextColor="{DynamicResource TextSecondary}"
+                                VerticalOptions="StartAndExpand">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span
+                                            Text="{Binding Date, StringFormat='{0:d/M/yy}'}" />
+                                        <Span
+                                            Text=" · " />
+                                        <Span
+                                            Text="{Binding Author}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </VerticalStackLayout>
+                        <views:Separator />
+                    </HorizontalStackLayout>
+                </SwipeView>
+            </DataTemplate>
+            <DataTemplate
+                x:Key="EmptyViewTemplate">
+                <VerticalStackLayout>
+                    <Image
+                        Source="empty"
+                        HorizontalOptions="CenterAndExpand"
+                        HeightRequest="120"
+                        WidthRequest="120" />
+                    <Label
+                        Text="No features available"
+                        HorizontalOptions="CenterAndExpand" />
+                </VerticalStackLayout>
+            </DataTemplate>
+            <DataTemplate
+                x:Key="FooterTemplate">
+                <Label
+                    Padding="10"
+                    FontSize="Small"
+                    Text="{Binding FeatureCount}" />
+
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <CollectionView
+            x:Name="FeatureListCollectionView"
+            ItemsSource="{Binding Features}"
+            ItemTemplate="{StaticResource FeatureItemTemplate}"
+            EmptyViewTemplate="{StaticResource EmptyViewTemplate}"
+            FooterTemplate="{StaticResource FooterTemplate}"
+            Footer="{Binding .}">
+
+        </CollectionView>
+        <Button
+            VerticalOptions="End"
+            HorizontalOptions="End"
+            Margin="20"
+            Background="{StaticResource PrimaryGradientBrush}"
+            Shadow="{StaticResource ShadowDark}"
+            HeightRequest="60"
+            WidthRequest="60"
+            CornerRadius="120"
+            ImageSource="plus.png"
+            Command="{Binding AddFeatureCommand}" />
+    </Grid>
+</ContentPage>

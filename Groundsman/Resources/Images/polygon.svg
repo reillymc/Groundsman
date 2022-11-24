@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+  <rect width="100%" height="100%" fill="url(#gradient-fill)" mask="url(#shape-mask)" />
+  <defs>
+    <mask id="shape-mask">
+      <path d="M 17.0611 4.6178 a 5 5 0 0 1 5.8779 0 l 11.9205 8.6608 a 5 5 0 0 1 1.8164 5.5902 l -4.5532 14.0134 a 5 5 0 0 1 -4.7553 3.4549 l -14.7346 0 a 5 5 0 0 1 -4.7553 -3.4549 l -4.5532 -14.0134 a 5 5 0 0 1 1.8164 -5.5902 Z"
+        stroke="#fff"
+        stroke-width="6"
+        fill="url(#gradient-fill)"
+        fill-opacity="20%" />
+    </mask>
+    <linearGradient id="gradient-fill" x1="0%" y1="0%" x2="100%" y2="100%" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1edc14" />
+      <stop offset="1" stop-color="#0a9605" />
+    </linearGradient>
+  </defs>
+</svg>

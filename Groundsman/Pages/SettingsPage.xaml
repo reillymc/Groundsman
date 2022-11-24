@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:Groundsman.ViewModels"
+    x:Class="Groundsman.Pages.SettingsPage"
+    x:DataType="viewmodels:SettingsViewModel"
+    Title="Settings">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Order="Default"
+            IconImageSource="{OnPlatform info.png, iOS=info_ios.png, Android=info_android.png}"
+            Command="{Binding ViewInfoCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <TableView
+        Intent="Settings">
+        <TableRoot>
+            <TableSection
+                Title="Profile">
+                <ViewCell>
+                    <Entry
+                        Margin="20, 0"
+                        VerticalOptions="CenterAndExpand"
+                        Placeholder="Name"
+                        HorizontalOptions="Fill"
+                        Text="{Binding UserName}" />
+                </ViewCell>
+            </TableSection>
+            <TableSection
+                Title="Data Precision">
+                <ViewCell>
+                    <Grid
+                        RowDefinitions="Auto,Auto"
+                        ColumnDefinitions="0.5*,0.5*"
+                        VerticalOptions="CenterAndExpand"
+                        Margin="20, 0">
+                        <Label
+                            Text="Geolocation Accuracy"
+                            VerticalOptions="Center" />
+                        <Picker
+                            Title="Geolocation Accuracy"
+                            HorizontalOptions="EndAndExpand"
+                            HorizontalTextAlignment="Center"
+                            SelectedIndex="{Binding GeolocationAccuracy}"
+                            Grid.Column="1"
+                            WidthRequest="95">
+                            <Picker.ItemsSource>
+                                <x:Array
+                                    Type="{x:Type x:String}">
+                                    <x:String>Best</x:String>
+                                    <x:String>High</x:String>
+                                    <x:String>Medium</x:String>
+                                    <x:String>Low</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </Grid>
+                </ViewCell>
+                <ViewCell>
+                    <Grid
+                        RowDefinitions="Auto,Auto"
+                        ColumnDefinitions="0.5*,0.5*"
+                        VerticalOptions="CenterAndExpand"
+                        Margin="20, 0">
+                        <Label
+                            VerticalOptions="Center">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span
+                                        Text="{Binding Source={x:Reference DecimalPrecisionStepper}, Path=Value}" />
+                                    <Span
+                                        Text=" Decimal Places" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Stepper
+                            x:Name="DecimalPrecisionStepper"
+                            HorizontalOptions="EndAndExpand"
+                            Increment="1"
+                            Minimum="2"
+                            Maximum="12"
+                            Grid.Column="1"
+                            Value="{Binding DecimalPrecision}" />
+                    </Grid>
+                </ViewCell>
+            </TableSection>
+            <TableSection
+                Title="Feature List and Editor">
+                <SwitchCell
+                    Text="Enable Shake to Undo Delete"
+                    On="{Binding ShakeToUndo}" />
+                <SwitchCell
+                    Text="Show Map Preview in Editor"
+                    On="{Binding EditorMapPreview}" />
+                <ViewCell>
+                    <Grid
+                        RowDefinitions="Auto,Auto"
+                        ColumnDefinitions="0.5*,0.5*"
+                        Margin="20, 0"
+                        VerticalOptions="CenterAndExpand">
+                        <Label
+                            Text="Logger Export Format"
+                            VerticalOptions="Center" />
+                        <Picker
+                            Title="Logger Export Format"
+                            HorizontalOptions="EndAndExpand"
+                            HorizontalTextAlignment="Center"
+                            SelectedIndex="{Binding LoggerExportFormat}"
+                            Grid.Column="1"
+                            WidthRequest="95">
+                            <Picker.ItemsSource>
+                                <x:Array
+                                    Type="{x:Type x:String}">
+                                    <x:String>CSV</x:String>
+                                    <x:String>GeoJSON</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </Grid>
+                </ViewCell>
+                <ViewCell>
+                    <Grid
+                        RowDefinitions="Auto,Auto"
+                        ColumnDefinitions="1*"
+                        Margin="20, 0"
+                        VerticalOptions="CenterAndExpand">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding DeleteAllFeaturesCommand}" />
+                        </Grid.GestureRecognizers>
+                        <Label
+                            FontAttributes="Bold"
+                            Text="Reset Feature List" />
+                    </Grid>
+                </ViewCell>
+            </TableSection>
+            <TableSection
+                Title="Map">
+                <SwitchCell
+                    Text="Show Points"
+                    On="{Binding MapRenderPoints}" />
+                <SwitchCell
+                    Text="Show Lines"
+                    On="{Binding MapRenderLines}" />
+                <SwitchCell
+                    Text="Show Polygons"
+                    On="{Binding MapRenderPolygons}" />
+            </TableSection>
+        </TableRoot>
+    </TableView>
+</ContentPage>

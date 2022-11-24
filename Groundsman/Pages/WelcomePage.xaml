@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Groundsman.Pages.WelcomePage"
+    Title="Welcome To Groundsman"
+    Shell.PresentationMode="Modal">
+
+    <StackLayout>
+        <Label
+            Text="About Groundsman"
+            VerticalOptions="Center"
+            HorizontalOptions="Center" />
+    </StackLayout>
+</ContentPage>

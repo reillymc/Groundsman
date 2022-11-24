@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using Groundsman.JSONConverters;
+using Groundsman.Helpers;
 using Newtonsoft.Json;
 
 namespace Groundsman.Models;
@@ -17,12 +17,12 @@ public class Feature : GeoJSONObject
     {
         get
         {
-            if (Properties.TryGetValue(Constants.IdentifierProperty, out object value)) return (string)value;
+            if (Properties.TryGetValue(DefaultProperties.Id, out object value)) return (string)value;
             var newId = Guid.NewGuid().ToString();
-            Properties[Constants.IdentifierProperty] = newId;
+            Properties[DefaultProperties.Id] = newId;
             return newId;
         }
-        set => Properties[Constants.IdentifierProperty] = value;
+        set => Properties[DefaultProperties.Id] = value;
     }
 
     [JsonIgnore]
@@ -30,11 +30,11 @@ public class Feature : GeoJSONObject
     {
         get
         {
-            if (Properties.TryGetValue(Constants.NameProperty, out object value)) return (string)value;
+            if (Properties.TryGetValue(DefaultProperties.Name, out object value)) return (string)value;
             if (Geometry != null) return Geometry.Type.ToString();
             return "Feature";
         }
-        set => Properties[Constants.NameProperty] = value;
+        set => Properties[DefaultProperties.Name] = value;
     }
 
     [JsonIgnore]
@@ -42,28 +42,28 @@ public class Feature : GeoJSONObject
     {
         get
         {
-            if (Properties.TryGetValue(Constants.DateProperty, out object value) && DateTime.TryParseExact((string)value, "d/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date)) return date;
+            if (Properties.TryGetValue(DefaultProperties.Date, out object value) && DateTime.TryParseExact((string)value, "d/M/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date)) return date;
             return DateTime.Now;
         }
         set
         {
-            Properties[Constants.DateProperty] = value.ToShortDateString();
+            Properties[DefaultProperties.Date] = value.ToShortDateString();
         }
     }
 
     [JsonIgnore]
     public string Author
     {
-        get => Properties.TryGetValue(Constants.AuthorProperty, out object value) ? (string)value : Constants.DefaultUserValue;
+        get => Properties.TryGetValue(DefaultProperties.Author, out object value) ? (string)value : Constants.DefaultUserId;
         set
         {
             if (value.Length > 30)
             {
-                Properties[Constants.AuthorProperty] = value.Substring(0, 30);
+                Properties[DefaultProperties.Author] = value.Substring(0, 30);
             }
             else
             {
-                Properties[Constants.AuthorProperty] = value;
+                Properties[DefaultProperties.Author] = value;
             }
         }
     }
@@ -89,12 +89,12 @@ public class Feature : GeoJSONObject
 
             try
             {
-                if (property.Key == Constants.IdentifierProperty)
+                if (property.Key == DefaultProperties.Id)
                 {
                     if (Guid.TryParse((string)property.Value, out Guid id)) Id = id.ToString();
                 }
 
-                if (property.Key == Constants.NameProperty)
+                if (property.Key == DefaultProperties.Name)
                 {
                     string value = (string)property.Value;
                     value = value.Length >= 20 ? value.Substring(0, 20) : value;
@@ -106,7 +106,7 @@ public class Feature : GeoJSONObject
                     continue;
                 }
 
-                if (property.Key == Constants.DateProperty)
+                if (property.Key == DefaultProperties.Date)
                 {
                     DateTime date = DateTime.Now;
                     DateTime.TryParse((string)property.Value, out date);
@@ -114,9 +114,9 @@ public class Feature : GeoJSONObject
                     continue;
                 }
 
-                if (property.Key == Constants.LogTimestampsProperty)
+                if (property.Key == DefaultProperties.Timestamps)
                 {
-                    Properties[Constants.LogTimestampsProperty] = property.Value;
+                    Properties[DefaultProperties.Timestamps] = property.Value;
                     continue;
                 }
 

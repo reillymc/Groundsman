@@ -1,4 +1,4 @@
-﻿using Groundsman.JSONConverters;
+﻿using Groundsman.Helpers;
 using Newtonsoft.Json;
 
 namespace Groundsman.Models;

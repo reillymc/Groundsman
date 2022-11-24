@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Groundsman.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+    xmlns:pages="clr-namespace:Groundsman.Pages"
+    xmlns:views="clr-namespace:Groundsman.Views"
+    ios:Page.LargeTitleDisplay="Always"
+    Shell.FlyoutBehavior="Disabled">
+
+    <TabBar>
+        <ShellContent
+            Title="My Features"
+            Route="FeaturesPage"
+            Icon="list.png"
+            ContentTemplate="{DataTemplate pages:FeaturesPage}" />
+        <ShellContent
+            Title="Map"
+            Route="MapPage"
+            Icon="map.png"
+            ContentTemplate="{DataTemplate pages:MapPage}" />
+        <ShellContent
+            Title="Settings"
+            Route="SettingsPage"
+            Icon="gear.png"
+            ContentTemplate="{DataTemplate pages:SettingsPage}" />
+    </TabBar>
+</Shell>
