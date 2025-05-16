@@ -1,29 +1,31 @@
 # Groundsman
+
 Groundsman is an educational utility for recording and mapping location data to a features list or location log. Supported GeoJSON standard data types include: Point, LineString and Polygon. Location data can be added manually or by using the device's current location. Valid GeoJSON may be imported and exported for use in other applications.
 
 The app was originally developed for QUT GIS students.
 
-# Information
-- Groundsman is written in C# and built for iOS and Android with Xamarin in Visual Studio.
-- Groundsman is built using the MVVM archetecture.
+<a href="https://apps.apple.com/us/app/groundsman/id1454150064?itscg=30200&itsct=apps_box_badge&mttnsubad=1454150064" style="display: inline-block;">
+<img src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1552694400" alt="Download on the App Store" style="width: 246px; height: 82px; vertical-align: middle; object-fit: contain;" />
+</a>
 
-- The Groundsman project targets the .NET Standard 2.1 framework
-- Minimum requirements are iOS 11.0 and Android 7.0
+# Information
+
+-   Groundsman is written in C# and built for iOS and Android with Xamarin in Visual Studio.
+-   Groundsman is built using the MVVM archetecture.
+
+-   The Groundsman project targets the .NET Standard 2.1 framework
+-   Minimum requirements are iOS 11.0 and Android 7.0
 
 The following packages are used:
-- Newtonsoft.Json
-- Xamarin.Essentials
-- Xamarin.Forms
-- Xamarin.Forms.Maps
-- Xamarin.Plugin.FilePicker
 
-# Support
-For any issues please contact reillymackenziecree@gmail.com
-
-# Distribution
-Groundsman is available on the App Store at https://apps.apple.com/au/app/groundsman/id1454150064 and on Google Play at https://play.google.com/store/apps/details?id=com.Groundsman.GeoApp
+-   Newtonsoft.Json
+-   Xamarin.Essentials
+-   Xamarin.Forms
+-   Xamarin.Forms.Maps
+-   Xamarin.Plugin.FilePicker
 
 # Privacy Policy
+
 QUTGEODEVTEAM built the Groundsman app as a Free app. This SERVICE is provided by QUTGEODEVTEAM at no cost and is intended for use as is.
 
 This page is used to inform visitors regarding our policies with the collection, use, and disclosure of Personal Information if anyone decided to use our Service.
